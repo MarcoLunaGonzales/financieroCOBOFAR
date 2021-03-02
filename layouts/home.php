@@ -2,7 +2,7 @@
   <div class="container">
     <div class="div-center text-center">
       
-      <img src="assets/img/logo_ibnorca.png" width="160" height="160" alt="">
+      <img src="assets/img/farmacias_bolivia_loop.gif" width="450" height="110" alt="">
       <h3>Bienvenido! <?=$_SESSION['globalNameUser'];?></h3>
     </div>
     <div class="row">

@@ -17,8 +17,8 @@ $urmesCurso2="index.php?opcion=mesCurso2";
 ?>
 <div class="main-panel">
 <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
-        <div class="container-fluid">
+      <nav class="navbar navbar-expand-sm navbar-transparent navbar-absolute fixed-top">
+        <div class="container-fluid" style="background: #212f3d">
           <div class="navbar-wrapper">
             <div class="navbar-minimize">
               <button id="minimizeSidebar" class="btn btn-just-icon btn-white btn-fab btn-round">
@@ -44,10 +44,10 @@ $urmesCurso2="index.php?opcion=mesCurso2";
             ?>
             
 
-            <h6>Gesti&oacute;n Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Gestión de Trabajo" style="color:#FF0000; " href='<?=$urlListGestionTrabajo?>' >[<?=$globalNombreGestion;?>]</a></h4>
+            <h6 style="color:#FFFFFF;">Gesti&oacute;n Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Gestión de Trabajo" style="color:#FF0000;" href='<?=$urlListGestionTrabajo?>' >[<?=$globalNombreGestion;?>]</a></h4>
             &nbsp;&nbsp;&nbsp;
-            <h6>Mes Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Mes de Trabajo" style="color:#FF0000; " href='<?=$urmesCurso2?>' >[<?=$globalMes;?>]</a></h4>&nbsp;&nbsp;&nbsp;
-            <h6>Unidad: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Oficina de Trabajo" style="color:#FF0000; " href='<?=$urllistUnidadOrganizacional?>' >[ <?=$globalNombreUnidad;?> ]</a></h4> &nbsp;&nbsp; <h6>Area: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Aceptar Solicitud" style="color:#FF0000; " href='#' >[ <?=$globalNombreArea;?> ]</a></h4>
+            <h6 style="color:#FFFFFF;">Mes Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Mes de Trabajo" style="color:#FF0000; " href='<?=$urmesCurso2?>' >[<?=$globalMes;?>]</a></h4>&nbsp;&nbsp;&nbsp;
+            <h6 style="color:#FFFFFF;">Unidad: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Oficina de Trabajo" style="color:#FF0000; " href='<?=$urllistUnidadOrganizacional?>' >[ <?=$globalNombreUnidad;?> ]</a></h4> &nbsp;&nbsp; <h6 style="color:#FFFFFF;">Area: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Aceptar Solicitud" style="color:#FF0000; " href='#' >[ <?=$globalNombreArea;?> ]</a></h4>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           
           <div class="collapse navbar-collapse justify-content-end">
@@ -119,7 +119,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
               <li class="nav-item dropdown">
                 <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">notifications</i>
+                  <i class="material-icons" style="color:#FFFFFF;">notifications</i>
                   <?=$numeroNot?>
                   <p class="d-lg-none d-md-block">
                     Some Actions
@@ -131,7 +131,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link" href="#pablo" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">person</i>
+                  <i class="material-icons" style="color:#FFFFFF;">person</i>
                   <p class="d-lg-none d-md-block">
                     Account
                   </p>

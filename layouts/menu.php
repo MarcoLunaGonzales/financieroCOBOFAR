@@ -36,7 +36,7 @@ if($menuModulo==0){
 <div class="sidebar" data-color="purple" data-background-color="<?=$estiloMenu?>" data-image="assets/img/scz.jpg">
       <div class="logo">
         <a href="" class="simple-text logo-mini">
-          <img src="assets/img/icono_sm_cobofar.jpg" width="30" />
+          <img src="assets/img/icono_pastilla.png" width="40"/>
         </a>
         <a href="index.php" class="simple-text logo-normal">
           COBOFAR

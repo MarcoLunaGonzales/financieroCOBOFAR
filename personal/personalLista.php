@@ -39,9 +39,7 @@ $stmt->bindColumn('xuonombre', $xuonombre);
 $stmt->bindColumn('xarea', $xarea);
 $stmt->bindColumn('xestado', $xestado);
 $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
-
 ?>
-
 <div class="content">
 	<div class="container-fluid">
       <div class="row">
@@ -85,7 +83,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                       $lugarEmision=obtenerlugarEmision($ci_lugar_emision,1);
                       if ($cod_estadopersonal==3) {
-                          $labelestadoPersonal='<span class="badge badge-danger">';
+                        $labelestadoPersonal='<span class="badge badge-danger">';
                       }elseif ($cod_estadopersonal==1) {
                         $labelestadoPersonal='';
                       }else $labelestadoPersonal='<span class="badge badge-warning">';
@@ -106,7 +104,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                         <td><?=$labelestadoPersonal.$xestado."</span>";?></td>
                         <td class="td-actions text-right">
                           <?php
-                            if($globalAdmin==1 and $cod_estadopersonal!=3){
+                            if( $cod_estadopersonal!=3){
                           ?>
                             <a href='<?=$urlFormPersonalContratos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
                               <i class="material-icons" title="Contratos">assignment</i>
@@ -124,22 +122,16 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                         </td>
                           
                         <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1){
-                          ?>
-                            <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
-                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeletePersonal;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons"><?=$iconDelete;?></i>
-                            </button>
-                            <?php
-                              }
-                            ?>                      
+                          <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <i class="material-icons"><?=$iconEdit;?></i>
+                          </a>
+                          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeletePersonal;?>&codigo=<?=$codigo;?>')">
+                            <i class="material-icons"><?=$iconDelete;?></i>
+                          </button>
                         </td>
                         <td class="td-actions text-right">
                           <?php
-                            if($globalAdmin==1 and $bandera==1 and $cod_estadopersonal!=3){
+                            if($bandera==1 and $cod_estadopersonal!=3){
                           ?>
                             <div class="dropdown">
                               <button class="btn btn-primary dropdown-toggle" type="button" id="editar_otros" data-toggle="dropdown" aria-extended="true">
@@ -170,7 +162,8 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
           if($globalAdmin==1){
           ?>
   				<div class="card-footer fixed-bottom">               
-                <button class="btn btn-success"  onClick="location.href='<?=$urlsaveWSPersonal;?>'">Actualizar Datos</button>
+                <!-- <button class="btn btn-success"  onClick="location.href='<?=$urlsaveWSPersonal;?>'">Actualizar Datos</button> -->
+                <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormPersonal;?>&codigo=0'">Registrar</button>
           </div>
           <div id="resultados">
             <ul></ul>

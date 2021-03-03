@@ -15,18 +15,19 @@
             include("cabecera.php");
             include("home.php");
           }else{
-            if(isset($_GET['q'])){
+            // if(isset($_GET['q'])){
+            //   include("cabecera.php");
+            //   require_once('routing.php');
+            // }else{
+              // if($tipoLogin==1){
+              //   include("menu.php");
+              // }else{
+              //   //include("menuService.php");
+              // }
+              include("menu.php");
               include("cabecera.php");
               require_once('routing.php');
-            }else{
-              if($tipoLogin==1){
-                include("menu.php");
-              }else{
-                include("menuService.php");
-              }
-              include("cabecera.php");
-              require_once('routing.php');
-            }           
+            // }           
           }       
       ?>  
       </div><!-- el div que abre se encuentra dentro de cabecera al principio de NavBar Como en la documentación-->    

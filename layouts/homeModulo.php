@@ -31,16 +31,12 @@ switch ($codModulo) {
 }
 
 ?>
-
-
-       
-   
 <section class="after-loop">
   <div class="container">
     <div class="div-center text-center">
       
      
-     <img src="assets/img/farmacias_bolivia_loop.gif" width="450" height="110" alt="">
+     <img src="assets/img/farmacias_bolivia_loop.gif" width="600" height="210" alt="">
       <h3>Modulo <?=$nombreModulo?></h3>
       <p>
         <a href="index.php" class="btn btn-info btn-lg">IR A LA PAGINA DE INICIO</a>

@@ -803,7 +803,7 @@ if($menuModulo==0){
             </div>
           </li>    
           <!--Solicitud de recursos-->
-          <li class="nav-item ">
+          <!-- <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#SMServiciosSEC">
               <i class="material-icons">content_paste</i>
               <p> Propuestas Capacitación
@@ -851,9 +851,9 @@ if($menuModulo==0){
                 </li> 
               </ul>
             </div>
-          </li>
+          </li> -->
 
-          <li class="nav-item ">
+          <!-- <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#SMServiciosTCPTCS">
               <i class="material-icons">content_paste</i>
               <p> Propuestas TCP/TCS
@@ -896,7 +896,7 @@ if($menuModulo==0){
               </ul>
             </div>
           </li>
-
+ -->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#SMSolicitudes">
               <i class="material-icons">content_paste</i>

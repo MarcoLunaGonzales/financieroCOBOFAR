@@ -83,16 +83,16 @@ if(isset($_POST['numero'])){
   $flagSuccess=$stmtInsert->execute();
 
   //enviar propuestas para la actualizacion de ibnorca
-  $fechaHoraActual=date("Y-m-d H:i:s");
-  $idTipoObjeto=2708;
-  $idObjeto=2721; //regristado
-  $obs="Registro de Solicitud";
-  if(isset($_POST['usuario_ibnored_u'])){
-       $u=$_POST['usuario_ibnored_u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codSolicitud,$fechaHoraActual,$obs);
-  }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSolicitud,$fechaHoraActual,$obs);
-  }
+  // $fechaHoraActual=date("Y-m-d H:i:s");
+  // $idTipoObjeto=2708;
+  // $idObjeto=2721; //regristado
+  // $obs="Registro de Solicitud";
+  // if(isset($_POST['usuario_ibnored_u'])){
+  //      $u=$_POST['usuario_ibnored_u'];
+  //      actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codSolicitud,$fechaHoraActual,$obs);
+  // }else{
+  //      actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSolicitud,$fechaHoraActual,$obs);
+  // }
 
 
 
@@ -163,23 +163,23 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         $stmtInsert = $dbh->prepare($sqlInsert);
         $flagArchivo=$stmtInsert->execute();    
         
-        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
-          //sibir archivos al servidor de documentos
-          $parametros=array(
-            "idD" => 15,
-            "idR" => $codArchivoAdjunto,
-            "idusr" => 90,
-            "Tipodoc" => 3596,
-            "descripcion" => $descripcion,
-            "codigo" => "",
-            "observacion" => "-",
-            "r" => "http://www.google.com",
-            "v" => true
-            );
-           $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
-           //unlink($target_path);
-           //print_r($resultado);        
-        }
+        // if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+        //   //sibir archivos al servidor de documentos
+        //   $parametros=array(
+        //     "idD" => 15,
+        //     "idR" => $codArchivoAdjunto,
+        //     "idusr" => 90,
+        //     "Tipodoc" => 3596,
+        //     "descripcion" => $descripcion,
+        //     "codigo" => "",
+        //     "observacion" => "-",
+        //     "r" => "http://www.google.com",
+        //     "v" => true
+        //     );
+        //    $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+        //    //unlink($target_path);
+        //    //print_r($resultado);        
+        // }
         
       } else {    
           echo "error";

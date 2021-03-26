@@ -13,9 +13,10 @@ $globalUnidad=$_SESSION["globalUnidad"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("SELECT *,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo,
+$sql="SELECT *,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo,
   (select a.abreviatura from areas a where a.codigo=cod_area)as nombre_area
-  from tipos_caja_chica where cod_estadoreferencial=1 and cod_uo=$globalUnidad and cod_estado is null");//and cod_personal=$globalUser
+  from tipos_caja_chica where cod_estadoreferencial=1 and cod_uo=$globalUnidad";
+$stmt = $dbh->prepare($sql);//and cod_personal=$globalUser
 
 //ejecutamos
 $stmt->execute();

@@ -2578,6 +2578,18 @@
      $stmt->execute();
      return $stmt;
   }
+  function obtenerCodigoPersonal(){
+    $dbh = new Conexion(); 
+    $sql="SELECT codigo from personal order by codigo desc limit 1";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+    }
+    $valor++;
+    return ($valor);
+  }
   function contarSolicitudDetalle($codigo){
      $dbh = new Conexion();
      $sql="";

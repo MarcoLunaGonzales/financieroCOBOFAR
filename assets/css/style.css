@@ -178,7 +178,7 @@ input[type=number] {
   text-decoration:none
   }
 .after-loop .card-themes{
-  background-color:#dd3d31
+  background-color:#00ae9b
   }
   .after-loop .card-snippets{
   background-color:#ffc107
@@ -191,6 +191,34 @@ input[type=number] {
   }
 
 /* Colores del menu lateral*/
+   /* CELESTE BEBE */
+.sidebar[data-background-color=celestebebe]{
+  background-color:#00ae9b
+  }
+.sidebar[data-background-color=celestebebe] .nav .nav-item .nav-link{
+    color:#fff
+  }
+.sidebar[data-background-color=celestebebe] .nav .nav-item i{
+    color:hsla(0,0%,100%,.8)
+    }
+.sidebar[data-background-color=celestebebe] .nav .nav-item.active [data-toggle=collapse],.sidebar[data-background-color=celestebebe] .nav .nav-item:hover [data-toggle=collapse]{
+  color:#fff
+  }
+.sidebar[data-background-color=celestebebe] .nav .nav-item.active [data-toggle=collapse] i,.sidebar[data-background-color=celestebebe] .nav .nav-item:hover [data-toggle=collapse] i{
+  color:hsla(0,0%,100%,.8)
+  }
+.sidebar[data-background-color=celestebebe] .simple-text,.sidebar[data-background-color=celestebebe] .user a{
+  color:#fff
+  }
+.sidebar[data-background-color=celestebebe] .sidebar-background:after{
+  background:#00ae9b;opacity:.8
+  }
+.sidebar[data-background-color=celestebebe] .logo:after,.sidebar[data-background-color=celestebebe] .nav li.separator:after,.sidebar[data-background-color=celestebebe] .user:after{
+  background-color:hsla(0,0%,100%,.3)
+  }
+.sidebar[data-background-color=celestebebe] .nav li.active>[data-toggle=collapse],.sidebar[data-background-color=celestebebe] .nav li:hover:not(.active)>a{
+  background-color:hsla(0,0%,100%,.1)
+  }
 
 /* ROJO */
 .sidebar[data-background-color=rojo]{

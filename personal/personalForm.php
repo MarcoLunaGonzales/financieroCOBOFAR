@@ -2,8 +2,6 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'rrhh/configModule.php';
-
-
 //$dbh = new Conexion();
 $dbh = new Conexion();
 $codigo=$codigo;
@@ -294,13 +292,13 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Ciudad</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_departamento" id="cod_departamento" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
+                                        <select name="cod_ciudad" id="cod_ciudad" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
                                             <option value=""></option>
                                             <?php 
                                             $queryUO = "SELECT codigo,nombre,abreviatura from personal_ciudad where cod_estadoreferencial=1 order by nombre";
                                             $statementUO = $dbh->query($queryUO);
                                             while ($row = $statementUO->fetch()){ ?>
-                                                <option <?=($cod_departamento==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                                                <option <?=($cod_ciudad==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -316,13 +314,13 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Estado Civil</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_departamento" id="cod_departamento" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
+                                        <select name="cod_estadocivil" id="cod_estadocivil" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
                                             <option value=""></option>
                                             <?php 
                                             $queryUO = "SELECT * from tipos_estado_civil where cod_estadoreferencial=1 order by nombre";
                                             $statementUO = $dbh->query($queryUO);
                                             while ($row = $statementUO->fetch()){ ?>
-                                                <option <?=($cod_departamento==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                                                <option <?=($cod_estadocivil==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -331,13 +329,13 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Genero</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_departamento" id="cod_departamento" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
+                                        <select name="cod_genero" id="cod_genero" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
                                             <option value=""></option>
                                             <?php 
                                             $queryUO = "SELECT * from tipos_genero where cod_estadoreferencial=1 order by nombre";
                                             $statementUO = $dbh->query($queryUO);
                                             while ($row = $statementUO->fetch()){ ?>
-                                                <option <?=($cod_departamento==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                                                <option <?=($cod_genero==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                             <?php } ?>
                                         </select>
                                     
@@ -348,7 +346,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Fecha Nacimiento</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="fecha_nacimiento" id="fecha_nacimiento"  value="<?=$fecha_nacimiento;?>"/>
+                                        <input class="form-control" type="date" name="fecha_nacimiento" id="fecha_nacimiento"  value="<?=$fecha_nacimiento;?>"/>
                                     </div>
                                 </div>
                             </div><!--Fecha Nac-->
@@ -357,22 +355,22 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Paterno</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="paterno"  id="paterno"  value="<?=$paterno;?>" required="true"/>
+                                        <input class="form-control" type="text" name="paterno"  id="paterno"  value="<?=$paterno;?>" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                     </div>
                                 </div>
 
                                 <label class="col-sm-2 col-form-label">Materno</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="materno" id="materno"  value="<?=$materno;?>" required="true"/>
+                                        <input class="form-control" type="text" name="materno" id="materno"  value="<?=$materno;?>" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                     </div>
                                 </div>
                             </div><!--fin campo materno -->
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Primer Nombre</label>
+                                <label class="col-sm-2 col-form-label">Nombre</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="primer_nombre" id="primer_nombre"  value="<?=$primer_nombre;?>" required="true"/>
+                                        <input class="form-control" type="text" name="primer_nombre" id="primer_nombre"  value="<?=$primer_nombre;?>" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                     </div>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Telefono</label>
@@ -400,7 +398,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Direccion</label>
                                 <div class="col-sm-7">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="direccion" id="direccion" value="<?=$direccion;?>" required="true"/>
+                                        <input class="form-control" type="text" name="direccion" id="direccion" value="<?=$direccion;?>" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                     </div>                    
                                 </div>                        
                             </div><!--fin campo direccion -->
@@ -484,7 +482,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <div id="div_contenedor_cargo">
-                                                <select name="cod_cargo"  class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
+                                                <select name="cod_cargo"  class="selectpicker form-control form-control-sm" data-style="btn btn-info">
                                                     <option value=""></option>
                                                     <?php 
                                                     $queryCargos = "SELECT codigo,nombre,abreviatura from cargos where cod_estadoreferencial=1";

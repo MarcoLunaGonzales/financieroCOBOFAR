@@ -1,23 +1,14 @@
 <?php 
-if(isset($_GET['q'])){
-       $q=$_GET['q'];
-       $url= $_GET["opcion"];
- ?><!--<a class='flotante' title="Cambiar la sesión" href='#'><img src='assets/img/nuevoUser.svg' width="35" height="35" border="0" onclick="alerts.showSwal('warning-message-change-user','change.php?q=<?=$q;?>&url=<?=$url?>')"/></a>--><?php
- $urlListGestionTrabajo="#";
-$urllistUnidadOrganizacional="#";
-$urmesCurso="#";
-$urmesCurso2="#";
-}else{
- $urlListGestionTrabajo="index.php?opcion=listGestionTrabajo";
-$urllistUnidadOrganizacional="index.php?opcion=listUnidadOrganizacional";
-$urmesCurso="index.php?opcion=mesCurso";
-$urmesCurso2="index.php?opcion=mesCurso2"; 
-}
+
+  $urlListGestionTrabajo="index.php?opcion=listGestionTrabajo";
+  $urllistUnidadOrganizacional="index.php?opcion=listUnidadOrganizacional";
+  $urmesCurso="index.php?opcion=mesCurso";
+  $urmesCurso2="index.php?opcion=mesCurso2"; 
 ?>
-<div class="main-panel">
+<div class="panel">
 <!-- Navbar -->
       <nav class="navbar navbar-expand-sm navbar-transparent navbar-absolute fixed-top">
-        <div class="container-fluid" style="background: #212f3d" >
+        <div class="container-fluid" style="background: #212f3d">
           <div class="navbar-wrapper">
             <div class="navbar-minimize">
               <button id="minimizeSidebar" class="btn btn-sm btn-just-icon btn-white btn-fab btn-round">
@@ -25,14 +16,8 @@ $urmesCurso2="index.php?opcion=mesCurso2";
                 <i class="material-icons design_bullet-list-67 visible-on-sidebar-mini">view_list</i>
               </button>
             </div>
-            <a class="navbar-brand" href="#pablo"></a>
+     
           </div>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-          </button>
             <?php 
               $globalNombreGestion=$_SESSION['globalNombreGestion'];
               $globalMes=$_SESSION['globalMes'];
@@ -41,8 +26,6 @@ $urmesCurso2="index.php?opcion=mesCurso2";
               $fechaSistema=date("d/m/Y");
               $horaSistema=date("H:i");
             ?>
-            
-
             <h6 style="color:#FFFFFF;">Gesti&oacute;n Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Gestión de Trabajo" style="color:#FF0000;" href='<?=$urlListGestionTrabajo?>' >[<?=$globalNombreGestion;?>]</a></h4>
             &nbsp;&nbsp;&nbsp;
             <h6 style="color:#FFFFFF;">Mes Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Mes de Trabajo" style="color:#FF0000; " href='<?=$urmesCurso2?>' >[<?=$globalMes;?>]</a></h4>&nbsp;&nbsp;&nbsp;
@@ -51,7 +34,6 @@ $urmesCurso2="index.php?opcion=mesCurso2";
           
           <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav">
-              
 <?php
 require_once 'conexion.php';
 require_once 'functions.php';

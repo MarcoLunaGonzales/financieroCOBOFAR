@@ -36,10 +36,11 @@ switch ($codModulo) {
     <div class="div-center text-center">
       
      
-     <img src="assets/img/farmacias_bolivia_loop.gif" width="600" height="210" alt="">
-      <h3>Modulo <?=$nombreModulo?></h3>
+     <img src="assets/img/farmacias_bolivia_loop.gif" width="500" height="150" alt="">
+      
+       <h3><b><FONT FACE="courier">Modulo <?=$nombreModulo?></FONT></b></h3>
       <p>
-        <a href="index.php" class="btn btn-info btn-lg">IR A LA PAGINA DE INICIO</a>
+        <a href="index.php" class="btn btn-lg" style="background-color: #00ae9b; ">IR A LA PAGINA DE INICIO</a>
       </p>     
     </div>
   </div>

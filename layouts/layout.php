@@ -12,7 +12,7 @@
 
           if(!isset($_GET['opcion'])){
             $_SESSION['modulo']=0;
-            include("cabecera.php");
+            include("cabecera_home.php");
             include("home.php");
           }else{
             // if(isset($_GET['q'])){

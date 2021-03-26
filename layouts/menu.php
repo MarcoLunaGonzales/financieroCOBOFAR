@@ -12,7 +12,9 @@ $menuModulo=$_SESSION['modulo'];
 switch ($menuModulo) {
   case 1:
    $nombreModulo="RRHH";
-   $estiloMenu="rojo";
+   // $estiloMenu="rojo";
+   $estiloMenu="celestebebe";
+   
   break;
   case 2:
   $nombreModulo="Activos Fijos";

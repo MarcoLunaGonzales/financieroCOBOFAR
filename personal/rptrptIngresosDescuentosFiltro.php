@@ -22,7 +22,7 @@ $dbh = new Conexion();
             <label class="col-sm-2 col-form-label">Oficina</label>
             <div class="col-sm-8">
               <div class="form-group">
-                  <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" onChange="ajaxOficinaPersonal(this);">
+                  <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-info btn-sm" data-show-subtext="true" data-live-search="true" onChange="ajaxOficinaPersonal(this);">
                       <option value=""></option>
                       <?php 
                       $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
@@ -49,7 +49,7 @@ $dbh = new Conexion();
               <div class="col-sm-8">
               <div class="form-group">
                   <div id="div_contenedor_personal">
-                      <select id="cod_personal" name="cod_personal" class="selectpicker form-control" data-style="btn btn-info" data-size="5">
+                      <select id="cod_personal" name="cod_personal" class="selectpicker form-control" data-style="btn btn-info btn-sm" data-size="5">
                           
                       </select>
 

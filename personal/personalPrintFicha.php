@@ -116,7 +116,7 @@ $html.='<body>'.
           '}'.
         '</script>';
 $html.=  '<header class="header">'.        
-            '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
+            '<img class="imagen-logo-izq" src="../assets/img/icono_sm_cobofar.jpg">'.
             '<div id="header_titulo_texto">Ficha De Personal</div>'.
         
             '<br>'.'<br>'.'<br>'.'<br>'.

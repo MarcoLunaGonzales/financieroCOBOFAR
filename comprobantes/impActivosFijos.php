@@ -82,7 +82,7 @@ $html.='<body>'.
       '}'.
     '</script>';
 $html.=  '<header class="header">'.            
-            '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
+            '<img class="imagen-logo-izq" src="../assets/img/icono_sm_cobofar.jpg">'.
             '<div id="header_titulo_texto">Comprobante de Contabilidad</div>'.
 
          '<div id="info_izq">

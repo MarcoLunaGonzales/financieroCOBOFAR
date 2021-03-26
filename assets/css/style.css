@@ -378,7 +378,7 @@ input[type=number] {
 .cargar-ajax div h4::before{
   color: #2CEEBC !important;
   font-weight: negrita;
-  content: "IBNORCA: ";
+  content: "COBOFAR: ";
 }
 .cargar-reporte{
   position: fixed;

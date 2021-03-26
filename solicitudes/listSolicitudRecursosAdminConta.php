@@ -8,30 +8,30 @@ $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalMesActivo=$_SESSION['globalMes'];
 $userAdmin=obtenerValorConfiguracion(74);
 $dbh = new Conexion();
-if(isset($_GET['q'])){
-  $q=$_GET['q'];
-  $item_3=$_GET['r'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
+// if(isset($_GET['q'])){
+//   $q=$_GET['q'];
+//   $item_3=$_GET['r'];
+//   $s=$_GET['s'];
+//   $u=$_GET['u'];
 
-    $arraySql=explode("IdArea=",$s);
-    $codigoArea=trim($arraySql[1]);
-    $sqlAreas="and sr.cod_area=".$codigoArea;
+//     $arraySql=explode("IdArea=",$s);
+//     $codigoArea=trim($arraySql[1]);
+//     $sqlAreas="and sr.cod_area=".$codigoArea;
 
-    // $sqlAreas=""; quitar cuando se registre la unidad y el area de la solicitud propuesta
-  ?>
-  <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
-  <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
+//     // $sqlAreas=""; quitar cuando se registre la unidad y el area de la solicitud propuesta
+//   ?>
+  <!--  <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
+   <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
   <input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
-  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
-<?php
-}else{
+   <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/> -->
+ <?php
+// }else{
   //$item_3=obtenerIdRolDeIbnorca($globalUser);
   $item_3=79;
   $s=0;
   $u=0;
   $sqlAreas="";
-}
+// }
 
 $montoCaja=obtenerValorConfiguracion(85);
 // Preparamos
@@ -131,17 +131,17 @@ $item_1=2708;
                 <div class="card-header card-header-text">
                   <a href="#" onclick="cambiarTresDivPantallaClase('list_div_1','list_div_2','list_div_3','bg-info')">
                     <div id="button_list_div_1" class="card-text bg-default bg-info text-white">
-                      <h4 class="">SOL. IBNORCA <span class="badge bg-info d-none" id="n_list_div_1"></span></h4>
+                      <h4 class="">SOLICITUDES <span class="badge bg-info d-none" id="n_list_div_1"></span></h4>
                     </div>
                   </a>
-                  <a href="#" onclick="cambiarTresDivPantallaClase('list_div_2','list_div_1','list_div_3','bg-info')">
+                  <!-- <a href="#" onclick="cambiarTresDivPantallaClase('list_div_2','list_div_1','list_div_3','bg-info')">
                      <div id="button_list_div_2" class="card-text bg-default text-white">
                         <h4 class="">SOL. PROYECTO SIS <span class="badge bg-info d-none" id="n_list_div_2"></span></h4>
                      </div>
-                  </a>
+                  </a> -->
                   <a href="#" onclick="cambiarTresDivPantallaClase('list_div_3','list_div_1','list_div_2','bg-info')">
                      <div id="button_list_div_3" class="card-text bg-default text-white">
-                        <h4 class="">SOL. IBNORCA < <?=$montoCaja?> <span class="badge bg-info d-none" id="n_list_div_3"></span></h4>
+                        <h4 class="">SOLICITUDES  < <?=$montoCaja?> <span class="badge bg-info d-none" id="n_list_div_3"></span></h4>
                      </div>
                   </a>
                   <h4 class="card-title float-right"><b>Contabilización</b> - Mes y Gestión de Trabajo <b style="color:#FF0000;">[<?=nombreMes($globalMesActivo);?> - <?=$globalNombreGestion?>]</b></h4>

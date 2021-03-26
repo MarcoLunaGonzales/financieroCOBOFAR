@@ -1,5 +1,5 @@
 <section class="after-loop">
-  <div class="page-header login-page header-filter" filter-color="black" style="background-image: url('assets/img/conta.jpg'); background-size: cover;  height: 100px;" >
+  <div class="page-header login-page header-filter" filter-color="black" style="background-image: url('assets/img/login_farmacias.jpg'); background-size: cover;  height: 100px; " >
     <div class="container">
       <div class="div-center text-center">
         <img src="assets/img/farmacias_bolivia1.gif" width="460" height="90" alt="">

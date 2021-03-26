@@ -74,12 +74,12 @@ if($estado==8){
          $idTipoObjeto=2708;
          $idObjeto=2725; //regristado
          $obs="Solicitud Contabilizada";
-         if(isset($_GET['u'])){
-          $u=$_GET['u'];
-           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-          }else{
-           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-          }
+         // if(isset($_GET['u'])){
+         //  $u=$_GET['u'];
+         //   actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+         //  }else{
+         //   actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+         //  }
         ///
 }
 
@@ -105,12 +105,12 @@ if($estado!=1){
     $idTipoObjeto=2708;
     $idObjeto=2722; //regristado
     $obs="En Aprobacion Solicitud";
-    if(isset($_GET['q'])){
-       $u=$_GET['q'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-     }
+    // if(isset($_GET['q'])){
+    //    $u=$_GET['q'];
+    //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+    //  }else{
+    //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+    //  }
     
 	}else{
   if($estado==6){
@@ -119,12 +119,12 @@ if($estado!=1){
     $idTipoObjeto=2708;
     $idObjeto=2822; //regristado
     $obs="En Pre Aprobacion Solicitud";
-    if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-     }   
+    // if(isset($_GET['u'])){
+    //    $u=$_GET['u'];
+    //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+    //  }else{
+    //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+    //  }   
    }else{
     if($estado==7){
      //enviar propuestas para la actualizacion de ibnorca
@@ -132,12 +132,12 @@ if($estado!=1){
      $idTipoObjeto=2708;
      $idObjeto=3107; //ESTADO PARA PROYECTO SIS
      $obs="Enviado a Gestión SIS";
-     if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-      }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-      } 
+     // if(isset($_GET['u'])){
+     //   $u=$_GET['u'];
+     //   actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+     //  }else{
+     //   actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+     //  } 
     }else{
       if($estado==5){
              //enviar propuestas para la actualizacion de ibnorca
@@ -145,12 +145,12 @@ if($estado!=1){
          $idTipoObjeto=2708;
          $idObjeto=2725; //regristado
          $obs="Solicitud Contabilizada";
-         if(isset($_GET['u'])){
-          $u=$_GET['u'];
-           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-          }else{
-           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-          }
+         // if(isset($_GET['u'])){
+         //  $u=$_GET['u'];
+         //   actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+         //  }else{
+         //   actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+         //  }
         ///
       }else{
          if($estado==3){
@@ -160,12 +160,12 @@ if($estado!=1){
              $idTipoObjeto=2708;
              $idObjeto=2722; //regristado
              $obs="En Aprobacion Solicitud";
-             if(isset($_GET['q'])){
-                $u=$_GET['q'];
-                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-              }else{
-                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-              }
+             // if(isset($_GET['q'])){
+             //    $u=$_GET['q'];
+             //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+             //  }else{
+             //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+             //  }
 
              //enviar propuestas para la actualizacion de ibnorca
              /*$fechaHoraActual=date("Y-m-d H:i:s");
@@ -191,12 +191,12 @@ if($estado!=1){
     $idTipoObjeto=2708;
     $idObjeto=2721; //regristado
     $obs="Registro de Solicitud";
-    if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-     }
+    // if(isset($_GET['u'])){
+    //    $u=$_GET['u'];
+    //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+    //  }else{
+    //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+    //  }
     
  }
 

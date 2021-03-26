@@ -89,7 +89,8 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                             while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                                 $solicitante=namePersonal($codPersonalX);
                                 $fechaSolicitud=strftime('%d/%m/%Y',strtotime($fechaX));
-                                $codigoServicio=obtenerCodigoServicioPorIdServicio($idServicioX);
+                                //$codigoServicio=obtenerCodigoServicioPorIdServicio($idServicioX);
+                                $codigoServicio=0;
                                 $anioSol=strftime('%Y',strtotime($fechaX));
                                 $mesSol=strftime('%m',strtotime($fechaX));
                                 $observacionGlobal=$glosa_estadoX;
@@ -196,12 +197,12 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                   $nombreOficinaXX=abrevUnidad_solo($codOficinaXX);
                   $nombreAreaXX=abrevArea_solo($codAreaXX);
 
-                  $datosSeg=obtenerPresupuestoEjecucionDelServicio($codOficinaXX,$codAreaXX,$anioSol,(int)$mesSol,$numeroCuentaX);
+                  // $datosSeg=obtenerPresupuestoEjecucionDelServicio($codOficinaXX,$codAreaXX,$anioSol,(int)$mesSol,$numeroCuentaX);
             
-                  if(!($datosSeg->presupuesto==null||$datosSeg->presupuesto==0)){
-                     $segPres=$datosSeg->presupuesto;
-                     $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
-                  }
+                  // if(!($datosSeg->presupuesto==null||$datosSeg->presupuesto==0)){
+                  //    $segPres=$datosSeg->presupuesto;
+                  //    $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
+                  // }
                   $codActividadX=$rowDetalles["cod_actividadproyecto"]; 
 
                   $tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
@@ -271,42 +272,42 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                 </thead>
                 <tbody id="tabla_archivos">
                   <?php
-                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
-                  $stmtArchivo->execute();
-                  $filaA=0;
-                  while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
-                     $filaA++;
-                     $codigoX=$rowArchivo['idClaDocumento'];
-                     $nombreX=$rowArchivo['Documento'];
-                     $ObligatorioX=$rowArchivo['Obligatorio'];
-                     $Obli='NO';
-                     if($ObligatorioX==1){
-                      $Obli='SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
-                     }
-                     //2708 cabecera //27080 detalle
-                     $verificarArchivo=verificarArchivoAdjuntoExistente(2708,$codigo,0,$codigoX);
-                     //$nombreX=$verificarArchivo[1];
-                     $urlArchivo=$verificarArchivo[2];
-                     $urlArchivoMostrar=$verificarArchivo[2];
-                     $codigoArchivoX=$verificarArchivo[3];
-                     $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
-                     $onClick='onClick="quitarArchivoSistemaAdjunto('.$filaA.','.$codigoArchivoX.',0)"';
-                     
-                     $arrayArchivo=explode("/",$urlArchivo);
-                     $nombreArchivo=$arrayArchivo[count($arrayArchivo)-1];
-                     if(obtenerValorConfiguracion(93)==1){
-                      $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivoX);
-                      if($banderaArchivo>0){
-                         $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
-                         //$urlArchivoMostrar="file:///C:".obtenerPathArchivoIbnorca($banderaArchivo);
-                         $urlArchivoMostrar="../mostrarArchivos.php?name=".obtenerPathArchivoIbnorca($banderaArchivo);
-                         $downloadFile='target="_blank"';
-                         $globalServerDelete=obtenerValorConfiguracion(94);
-                         $onClick='onClick="ajaxDeleteArchivo(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\')"';
-                      }                      
-                     } 
+                  // $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
+                  // $stmtArchivo->execute();
+                  // $filaA=0;
+                  // while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
+                  //   $filaA++;
+                  //   $codigoX=$rowArchivo['idClaDocumento'];
+                  //   $nombreX=$rowArchivo['Documento'];
+                  //   $ObligatorioX=$rowArchivo['Obligatorio'];
+                  //   $Obli='NO';
+                  //   if($ObligatorioX==1){
+                  //   $Obli='SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
+                  //   }
+                  //   //2708 cabecera //27080 detalle
+                  //   $verificarArchivo=verificarArchivoAdjuntoExistente(2708,$codigo,0,$codigoX);
+                  //   //$nombreX=$verificarArchivo[1];
+                  //   $urlArchivo=$verificarArchivo[2];
+                  //   $urlArchivoMostrar=$verificarArchivo[2];
+                  //   $codigoArchivoX=$verificarArchivo[3];
+                  //   $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
+                  //   $onClick='onClick="quitarArchivoSistemaAdjunto('.$filaA.','.$codigoArchivoX.',0)"';
+
+                  //   $arrayArchivo=explode("/",$urlArchivo);
+                  //   $nombreArchivo=$arrayArchivo[count($arrayArchivo)-1];
+                  //   if(obtenerValorConfiguracion(93)==1){
+                  //     $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivoX);
+                  //     if($banderaArchivo>0){
+                  //        $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                  //        //$urlArchivoMostrar="file:///C:".obtenerPathArchivoIbnorca($banderaArchivo);
+                  //        $urlArchivoMostrar="../mostrarArchivos.php?name=".obtenerPathArchivoIbnorca($banderaArchivo);
+                  //        $downloadFile='target="_blank"';
+                  //        $globalServerDelete=obtenerValorConfiguracion(94);
+                  //        $onClick='onClick="ajaxDeleteArchivo(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\')"';
+                  //     }                      
+                  //   } 
                   ?>
-                  <tr>
+                 <!--  <tr>
                     <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
                     <td class="text-center"><?=$Obli?></td>
                     <td class="text-right">
@@ -318,7 +319,6 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                       }else{
                         ?>
                         <small id="existe_archivo_cabecera<?=$filaA?>"></small>
-
                         <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
                         <span class="input-archivo">
                           <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
@@ -329,22 +329,17 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                             <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' <?=$downloadFile?>><i class='material-icons'>vertical_align_bottom</i></a>           
                             <a class='btn btn-sm btn-primary' id="boton_previo<?=$filaA?>" href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivoMostrar?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
                             <script>
-                               >/* if ( navigator.userAgent.indexOf("MSIE")>0|| navigator.userAgent.indexOf("Firefox")>0){
-                                    $("#boton_previo"+<?=$filaA?>).prepend("X").addClass("btn-danger").attr("title","Puede que su navegador no muestre las firmas digitales en PDF, Recomendamos usar Chrome");    
-                                   }*/
                             </script>
                           </div>
-                        <!--<a href="#" class="btn btn-button btn-sm">Registrado</a>
-                        <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  -->
                         </div> 
                         <?php
                       }
                     ?>  
                     </td>    
                     <td><?=$nombreX;?></td>
-                  </tr> 
+                  </tr>  -->
                   <?php
-                   }
+                  //}
                   $stmtArchivo = $dbh->prepare("SELECT * from archivos_adjuntos where cod_tipoarchivo=-100 and cod_tipopadre=2708 and cod_objeto=$codigo and cod_padre=0"); //2708 //2708 localhost
                   $stmtArchivo->execute();
                   $filaE=0;
@@ -442,33 +437,33 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                       $observacionGlobal= "".$glosaArray[0].""."<u class='text-muted'> ".$glosaArray[1]."</u>";
                   }
 
-                  $stmtEstado = $dbh->prepare("SELECT e.*,c.Descripcion
-                         FROM ibnorca.estadoobjeto e 
-                         join ibnorca.clasificador c on c.idClasificador=e.idEstado
-                         where e.idtipoobjeto=2708 and e.idobjeto=$codigo ORDER BY e.fechaestado;");
-                  $stmtEstado->execute();
-                  $stmtEstado->bindColumn('IdEstadoObjeto', $idEstadoObjetoX);
-                  $stmtEstado->bindColumn('IdEstado', $idEstadoX);
-                  $stmtEstado->bindColumn('idResponsable', $idResponsableX);
-                  $stmtEstado->bindColumn('FechaEstado', $fechaEstadoX);
-                  $stmtEstado->bindColumn('Descripcion', $observacionesX);
-                  $index=0;
-                  while ($rowEstado = $stmtEstado->fetch(PDO::FETCH_BOUND)) {
-                    $index++;
-                    $responsableX=namePersonal(obtenerPersonaClienteCambioEstado($idResponsableX));
-                    $estadoActualX=obtenerNombreEstadoSol(obtenerEstadoIfinancieroSolicitudes($idEstadoX));
-                    $estadoAnteriorX=obtenerEstadoAnteriorEstadoObjeto(2708,$codigo,$idEstadoObjetoX);
+                  // $stmtEstado = $dbh->prepare("SELECT e.*,c.Descripcion
+                  //        FROM ibnorca.estadoobjeto e 
+                  //        join ibnorca.clasificador c on c.idClasificador=e.idEstado
+                  //        where e.idtipoobjeto=2708 and e.idobjeto=$codigo ORDER BY e.fechaestado;");
+                  // $stmtEstado->execute();
+                  // $stmtEstado->bindColumn('IdEstadoObjeto', $idEstadoObjetoX);
+                  // $stmtEstado->bindColumn('IdEstado', $idEstadoX);
+                  // $stmtEstado->bindColumn('idResponsable', $idResponsableX);
+                  // $stmtEstado->bindColumn('FechaEstado', $fechaEstadoX);
+                  // $stmtEstado->bindColumn('Descripcion', $observacionesX);
+                  // $index=0;
+                  // while ($rowEstado = $stmtEstado->fetch(PDO::FETCH_BOUND)) {
+                  //   $index++;
+                  //   $responsableX=namePersonal(obtenerPersonaClienteCambioEstado($idResponsableX));
+                  //   $estadoActualX=obtenerNombreEstadoSol(obtenerEstadoIfinancieroSolicitudes($idEstadoX));
+                  //   $estadoAnteriorX=obtenerEstadoAnteriorEstadoObjeto(2708,$codigo,$idEstadoObjetoX);
                     ?>
-                    <tr id="<?=$index?>_fila_estado">
+                    <!-- <tr id="<?=$index?>_fila_estado">
                       <td><?=$index?></td>
                       <td class="text-left"><?=$estadoAnteriorX?></td>
                       <td id="<?=$index?>_nombre_fila_estado" class="text-left font-weight-bold"><?=$estadoActualX?></td>
                       <td class="text-left font-weight-bold"><?=$responsableX?></td>         
                       <td><?=strftime('%d/%m/%Y %H:%M:%S',strtotime($fechaEstadoX));?></td>
                       <td id="<?=$index?>_nombre_observacion"></td>
-                    </tr>
+                    </tr> -->
                     <?php
-                  }
+                  //}
                   ?> 
                 </tbody>
               </table>

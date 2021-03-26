@@ -9317,11 +9317,10 @@ function cargarDatosRegistroProveedor(){
            $("#datosProveedorNuevo").html(resp);
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#pais_empresa").val("26"); //para el pais de BOLIVIA
-           seleccionarDepartamentoServicio();
+           //seleccionarDepartamentoServicio();
            $('.selectpicker').selectpicker("refresh");
            $("#modalAgregarProveedor").modal("show");
-           autocompletarAjaxListado("nombre_empresa","cod_proveedor_encontrado");
-           
+           //autocompletarAjaxListado("nombre_empresa","cod_proveedor_encontrado");
         }
     });
 }

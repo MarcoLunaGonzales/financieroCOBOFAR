@@ -435,8 +435,8 @@ $i=0;
                 <?php
                }
               ?>  
-               <a href="#" onclick="cargarDatosRegistroProveedor()" title="Agregar Proveedor" class="btn btn-warning float-right"><i class="material-icons">group_add</i></a>
-               <a href="#" onclick="actualizarRegistroProveedor()" title="Actualizar Lista Proveedores" class="btn btn-info float-right"><i class="material-icons">find_replace</i></a>
+               <!-- <a href="#" onclick="cargarDatosRegistroProveedor()" title="Agregar Proveedor" class="btn btn-warning float-right"><i class="material-icons">group_add</i></a>
+               <a href="#" onclick="actualizarRegistroProveedor()" title="Actualizar Lista Proveedores" class="btn btn-info float-right"><i class="material-icons">find_replace</i></a> -->
                <!--DISTRIBUCION-->
                <input type="hidden" id="cantidad_filas_proyecto" value="0"> 
                  <input type="hidden" name="n_distribucion" id="n_distribucion" value="0">

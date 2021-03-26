@@ -63,17 +63,25 @@ if((int)$globalNombreGestion<(int)$anioActual){
 
     //glosa detalle
     //"".." F/".$numeroFac." ".$proveedorX." ".$detalleX
-    $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
-    $codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicio);
+    //$IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
+    $IdTipo=0;
+    //$codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicio);
+    $codObjeto=0;
     $datosServicio="";
-    if(obtenerServiciosTipoObjetoNombre($codObjeto)!=""){
-      $datosServicio.=obtenerServiciosTipoObjetoNombre($codObjeto);  
-    }
+    // if(obtenerServiciosTipoObjetoNombre($codObjeto)!=""){
+    //   $datosServicio.=obtenerServiciosTipoObjetoNombre($codObjeto);  
+    // }
 
-    if(obtenerServiciosClaServicioTipoNombre($IdTipo)!=""){
-      $datosServicio.=obtenerServiciosClaServicioTipoNombre($IdTipo);  
-    }
-//
+    // if(obtenerServiciosClaServicioTipoNombre($IdTipo)!=""){
+    //   $datosServicio.=obtenerServiciosClaServicioTipoNombre($IdTipo);  
+    // }
+//  
+    $facturaCabecera=1;
+    $numeroSol=1;
+    $nombreCliente="";
+
+    $cod_unidadX=1;
+    $cod_areaX=1; 
     $glosa=" ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio."  F/".$facturaCabecera." ".$nombreCliente." SR ".$numeroSol;
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
     $unidadSol=$cod_unidadX;
@@ -670,19 +678,19 @@ if($flagSuccessCompro==true){
     $idTipoObjeto=2708;
     $idObjeto=2725; //regristado
     $obs="Solicitud Contabilizada";
-    if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-     }
+    // if(isset($_GET['u'])){
+    //    $u=$_GET['u'];
+    //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+    //  }else{
+    //    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+    //  }
     
   if($deven==0){
     $datosSolicitud=obtenerDatosSolicitudRecursos($codigo);
     $correoPersonal=$datosSolicitud['email_empresa'];
     $descripcionEstado=obtenerNombreEstadoSol(8);
     if($correoPersonal!=""){
-      $envioCorreoPersonal=enviarCorreoSimple($correoPersonal,'CAMBIO DE ESTADO - SOLICITUD DE RECURSOS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$datosSolicitud['solicitante'].', el sistema IFINANCIERO le notifica que su Solicitud de Recursos cambio del estado <b>'.$datosSolicitud['estado'].'</b> a <b>'.$descripcionEstado.'</b>. <br> Personal que realizo el cambio:'.namePersonalCompleto($globalUser)."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br>Estado Anterior: <b>".$datosSolicitud['estado']."</b><br>Estado Actual: <b>".$descripcionEstado."</b><br><br>Saludos - IFINANCIERO");  
+      $envioCorreoPersonal=enviarCorreoSimple($correoPersonal,'CAMBIO DE ESTADO - SOLICITUD DE RECURSOS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$datosSolicitud['solicitante'].', el sistema CFINANCIERO le notifica que su Solicitud de Recursos cambio del estado <b>'.$datosSolicitud['estado'].'</b> a <b>'.$descripcionEstado.'</b>. <br> Personal que realizo el cambio:'.namePersonalCompleto($globalUser)."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br>Estado Anterior: <b>".$datosSolicitud['estado']."</b><br>Estado Actual: <b>".$descripcionEstado."</b><br><br>Saludos - IFINANCIERO");  
     }
     
     $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codigo";
@@ -713,15 +721,15 @@ if(isset($_GET['admin'])){
   }
   
   $urlList2=$urlList;
-  $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;
-  if(isset($_GET['reg'])){
-    $urlList2=$urlList3;
-  }
+  // $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;
+  // if(isset($_GET['reg'])){
+  //   $urlList2=$urlList3;
+  // }
 }else{
-  $urlc="&q=".$q."&s=".$s."&u=".$u;
-  if(isset($_GET['r'])){
-    $urlc=$urlc."&r=".$_GET['r'];
-  }
+  // $urlc="&q=".$q."&s=".$s."&u=".$u;
+  // if(isset($_GET['r'])){
+  //   $urlc=$urlc."&r=".$_GET['r'];
+  // }
 }
 if(isset($_GET['q'])){
 	$q=$_GET['q'];

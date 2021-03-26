@@ -52,7 +52,8 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     $nombreCliente=obtenerNombreClienteSimulacion($codSimulacionServicioX);
 
     //
-    $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
+    //$IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
+    $IdTipo="";
     $codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicioX);
 
     $datosServicio=obtenerServiciosTipoObjetoNombre($codObjeto)." - ".obtenerServiciosClaServicioTipoNombre($IdTipo);
@@ -62,67 +63,80 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 
           $nombreEstado_registro=obtenerNombreEstadoSol(1);
           $personal_registro=namePersonal($codPersonalX);
-          $fecha_registro=obtenerFechaCambioEstado($objeto_sol,$codigoX,2721);//estado registro
+          //$fecha_registro=obtenerFechaCambioEstado($objeto_sol,$codigoX,2721);//estado registro
+          $fecha_registro="";
 
           
-          $userRevisado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2722);  //autorizado       
+          //$userRevisado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2722);  //autorizado       
+          $userRevisado="";
           $nombreEstado_revisado=obtenerNombreEstadoSol(4);
           if($userRevisado==0){
              $fecha_revisado="";    
              $personal_revisado="";    
           }else{
              $personal_revisado=namePersonal($userRevisado);
-             $fecha_revisado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2722);
+             //$fecha_revisado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2722);
+             $fecha_revisado="";
           }
 
-          $userAprobado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2723);
+          //$userAprobado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2723);
+          $userAprobado="";
           $nombreEstado_aprobacion=obtenerNombreEstadoSol(3);
           if($userAprobado==0){
              $fecha_aprobacion="";    
              $personal_aprobacion="";    
           }else{
              $personal_aprobacion=namePersonal($userAprobado);
-             $fecha_aprobacion=obtenerFechaCambioEstado($objeto_sol,$codigoX,2723);
+             //$fecha_aprobacion=obtenerFechaCambioEstado($objeto_sol,$codigoX,2723);
+             $fecha_aprobacion="";
           }
 
-          $userprocesado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2725);//contabiliado        
+          //$userprocesado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2725);//contabiliado        
+          $userprocesado="";
           $nombreEstado_procesado=obtenerNombreEstadoSol(5);
           if($userprocesado==0){
              $personal_procesado="";    
              $fecha_procesado="";
           }else{
              $personal_procesado=namePersonal($userprocesado);    
-             $fecha_procesado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2725);
+             //$fecha_procesado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2725);
+             $fecha_procesado="";
           }
 
-          $userRevision=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2822);//enviado autorizacion        
+          //$userRevision=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2822);//enviado autorizacion
+          $userRevision="";        
           $nombreEstado_revision=obtenerNombreEstadoSol(6);
           if($userRevision==0){
              $personal_revision="";    
              $fecha_revision="";
           }else{
              $personal_revision=namePersonal($userRevision);    
-             $fecha_revision=obtenerFechaCambioEstado($objeto_sol,$codigoX,2822);
+             //$fecha_revision=obtenerFechaCambioEstado($objeto_sol,$codigoX,2822);
+             $fecha_revision="";
           }
 
-          $userSIS=obtenerPersonaCambioEstado($objeto_sol,$codigoX,3107);//procesado        
+          //$userSIS=obtenerPersonaCambioEstado($objeto_sol,$codigoX,3107);//procesado        
+          $userSIS="";
           $nombreEstado_SIS=obtenerNombreEstadoSol(7);
           if($userSIS==0){
              $personal_SIS="";    
              $fecha_SIS="";
           }else{
              $personal_SIS=namePersonal($userSIS);    
-             $fecha_SIS=obtenerFechaCambioEstado($objeto_sol,$codigoX,3107);
+             //$fecha_SIS=obtenerFechaCambioEstado($objeto_sol,$codigoX,3107);
+             $fecha_SIS="";
           }
           
-          $useranulado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2724);//contabiliado        
+          //$useranulado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2724);//contabiliado        
+          $useranulado="";
           $nombreEstado_anulado=obtenerNombreEstadoSol(2);
           if($useranulado==0){
              $personal_anulado="";    
              $fecha_anulado="";
           }else{
              $personal_anulado=namePersonal($useranulado);    
-             $fecha_anulado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2724);
+             //$fecha_anulado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2724);
+             $fecha_anulado="";
           }
     
     $fechaC=$fechaX;
@@ -133,15 +147,15 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     $numeroC=$numeroX;
     $solicitante=namePersonal($codPersonalX);
     $codigoServicio="-";
-            $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
-            $stmt1=$dbh->prepare($sql);
-            $stmt1->execute();
-            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-              $codigoServicio=$row1['codigo'];
-              if($codigoServicio==""){
-                $codigoServicio="-";
-              }
-            }
+            // $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
+            // $stmt1=$dbh->prepare($sql);
+            // $stmt1->execute();
+            // while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+            //   $codigoServicio=$row1['codigo'];
+            //   if($codigoServicio==""){
+            //     $codigoServicio="-";
+            //   }
+            // }
     $observacionesC=$observacionesX;                
     if($observacionesX==""){
       $observacionesC="";  
@@ -172,8 +186,8 @@ $tituloImporte="";
 <!--CONTENIDO-->
      <table class="table">
          <tr>
-            <td class="s1 text-center" colspan="4">INSTITUTO BOLIVIANO DE NORMALIZACION Y CALIDAD</td>
-            <td rowspan="3" class="text-center imagen-td"><img class="imagen-logo-izq_2" src="../assets/img/logo_ibnorca_origen_3.jpg" width="90" height="90"></td>
+            <td class="s1 text-center" colspan="4">CORPORACION BOLIVIANA DE FARMACIAS S.A.</td>
+            <td rowspan="3" class="text-center imagen-td"><img class="imagen-logo-izq_2" src="../assets/img/icono_sm_cobofar.jpg" width="90" height="90"></td>
         </tr>
         <tr>
             <td class="s2 text-center" colspan="4">REGISTRO</td>
@@ -269,10 +283,10 @@ $tituloImporte="";
             $nombreCuentaX=trim($row['nombre']);
             $datosSeg=obtenerPresupuestoEjecucionDelServicio($codOficinaXX,$codAreaXX,$anioSol,(int)$mesSol,$numeroCuentaX);
             
-            if(!($datosSeg->presupuesto==null||$datosSeg->presupuesto==0||$datosSeg->presupuesto=="")){
-               $segPres=$datosSeg->presupuesto;
-               $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
-            }
+            // if(!($datosSeg->presupuesto==null||$datosSeg->presupuesto==0||$datosSeg->presupuesto=="")){
+            //    $segPres=$datosSeg->presupuesto;
+            //    $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
+            // }
             $datosBen[$index-1]=trim($row["nombre_beneficiario"]);
             if($row["apellido_beneficiario"]==""){
               $datosBen[$index-1]=trim($row["nombre_beneficiario"])." ".trim($row["apellido_beneficiario"]);
@@ -417,49 +431,49 @@ $tituloImporte="";
                       $observacionGlobal= "".$glosaArray[0].""."<u class='text-muted'> ".$glosaArray[1]."</u>";
                   }
                   
-                  $stmtEstadoCantidad = $dbh->prepare("SELECT count(*) as cantidad
-                         FROM ibnorca.estadoobjeto e 
-                         join ibnorca.clasificador c on c.idClasificador=e.idEstado
-                         where e.idtipoobjeto=2708 and e.idobjeto=$codigoGeneral ORDER BY e.fechaestado;");
-                  $stmtEstadoCantidad->execute();
-                  $stmtEstadoCantidad->bindColumn('cantidad', $cantidadEstados);
+                  // $stmtEstadoCantidad = $dbh->prepare("SELECT count(*) as cantidad
+                  //        FROM ibnorca.estadoobjeto e 
+                  //        join ibnorca.clasificador c on c.idClasificador=e.idEstado
+                  //        where e.idtipoobjeto=2708 and e.idobjeto=$codigoGeneral ORDER BY e.fechaestado;");
+                  // $stmtEstadoCantidad->execute();
+                  // $stmtEstadoCantidad->bindColumn('cantidad', $cantidadEstados);
                   $cantidadEstadosGlobal=0;
-                  while ($rowEstadoCantidad = $stmtEstadoCantidad->fetch(PDO::FETCH_BOUND)) {
-                      $cantidadEstadosGlobal=$cantidadEstados;
-                  }
+                  // while ($rowEstadoCantidad = $stmtEstadoCantidad->fetch(PDO::FETCH_BOUND)) {
+                  //     $cantidadEstadosGlobal=$cantidadEstados;
+                  // }
 
-                  $stmtEstado = $dbh->prepare("SELECT e.*,c.Descripcion
-                         FROM ibnorca.estadoobjeto e 
-                         join ibnorca.clasificador c on c.idClasificador=e.idEstado
-                         where e.idtipoobjeto=2708 and e.idobjeto=$codigoGeneral ORDER BY e.fechaestado;");
-                  $stmtEstado->execute();
-                  $stmtEstado->bindColumn('IdEstadoObjeto', $idEstadoObjetoX);
-                  $stmtEstado->bindColumn('IdEstado', $idEstadoX);
-                  $stmtEstado->bindColumn('idResponsable', $idResponsableX);
-                  $stmtEstado->bindColumn('FechaEstado', $fechaEstadoX);
-                  $stmtEstado->bindColumn('Descripcion', $observacionesX);
-                  $index=0;
-                  while ($rowEstado = $stmtEstado->fetch(PDO::FETCH_BOUND)) {
-                    $index++;
-                    $responsableX=namePersonal(obtenerPersonaClienteCambioEstado($idResponsableX));
-                    $estadoActualX=obtenerNombreEstadoSol(obtenerEstadoIfinancieroSolicitudes($idEstadoX));
-                    $estadoAnteriorX=obtenerEstadoAnteriorEstadoObjeto(2708,$codigoGeneral,$idEstadoObjetoX);
-                    $observacionGlobalFila=""; 
-                    if($index==$cantidadEstadosGlobal){
-                      $estadoActualX.=" (Actual)";
-                      $observacionGlobalFila=$observacionGlobal;
-                    }
+                  // $stmtEstado = $dbh->prepare("SELECT e.*,c.Descripcion
+                  //        FROM ibnorca.estadoobjeto e 
+                  //        join ibnorca.clasificador c on c.idClasificador=e.idEstado
+                  //        where e.idtipoobjeto=2708 and e.idobjeto=$codigoGeneral ORDER BY e.fechaestado;");
+                  // $stmtEstado->execute();
+                  // $stmtEstado->bindColumn('IdEstadoObjeto', $idEstadoObjetoX);
+                  // $stmtEstado->bindColumn('IdEstado', $idEstadoX);
+                  // $stmtEstado->bindColumn('idResponsable', $idResponsableX);
+                  // $stmtEstado->bindColumn('FechaEstado', $fechaEstadoX);
+                  // $stmtEstado->bindColumn('Descripcion', $observacionesX);
+                  // $index=0;
+                  // while ($rowEstado = $stmtEstado->fetch(PDO::FETCH_BOUND)) {
+                  //   $index++;
+                  //   $responsableX=namePersonal(obtenerPersonaClienteCambioEstado($idResponsableX));
+                  //   $estadoActualX=obtenerNombreEstadoSol(obtenerEstadoIfinancieroSolicitudes($idEstadoX));
+                  //   $estadoAnteriorX=obtenerEstadoAnteriorEstadoObjeto(2708,$codigoGeneral,$idEstadoObjetoX);
+                  //   $observacionGlobalFila=""; 
+                  //   if($index==$cantidadEstadosGlobal){
+                  //     $estadoActualX.=" (Actual)";
+                  //     $observacionGlobalFila=$observacionGlobal;
+                  //   }
                     ?>
-                    <tr id="<?=$index?>_fila_estado" class="s3 text-left">
+                    <!-- <tr id="<?=$index?>_fila_estado" class="s3 text-left">
                       <td><?=$index?></td>
                       <td><?=$estadoAnteriorX?></td>
                       <td id="<?=$index?>_nombre_fila_estado"><?=$estadoActualX?></td>
                       <td><?=$responsableX?></td>         
                       <td><?=strftime('%d/%m/%Y %H:%M:%S',strtotime($fechaEstadoX));?></td>
                       <td><small><small><?=$observacionGlobalFila?></small></small></td>
-                    </tr>
+                    </tr> -->
                     <?php
-                  }
+                  // }
                   ?> 
                 </tbody>
               </table>
@@ -469,7 +483,7 @@ $tituloImporte="";
      <footer class="footer">
         <table class="table">
           <tr>
-            <td class="s4 text-left" width="25%">IBNORCA</td>
+            <td class="s4 text-left" width="25%">COBOFAR</td>
             <td class="s4 text-left" width="25%">Codigo: REG-PRE-SA-04-01.05</td>
             <td class="s4 text-left" width="25%">V: 2015-09-21</td>
             <td class="s4 text-left" width="25%"></td>

@@ -60,10 +60,7 @@ $stmtProyecto = $dbh->prepare("SELECT (select p.nombre from proyectos_financiaci
 $stmtProyecto->execute();
 $stmtProyecto->bindColumn('proyecto', $nombre_proyecto);
 $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
-
-
 ?>
-
 <div class="content">
 	<div class="container-fluid">
     <div class="row">
@@ -75,8 +72,8 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
             </div>
             <h4 class="card-title"><?=$moduleNamePlural6?></h4>
             <h4 align="right">
-              <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalBuscador">
-                <i class="material-icons" title="Buscador">search</i>
+              <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador">
+                <i class="material-icons" title="Buscador Avanzado">search</i>
               </button>                      
             </h4>
           </div>
@@ -93,7 +90,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                         <th>F. Alta</th>
                         <th>Rubro/TipoBien</th>
                         <th>Responsable</th>
-                        <th>Proyecto</th>
+                        <!-- <th>Proyecto</th> -->
                         <th>Acc/Eventos</th>
                         <th></th>
                         <th></th>
@@ -114,7 +111,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                           <td class="text-center small"><?=$fechalta;?></td>
                           <td class="text-left small"><?=$dep_nombre;?>/<?=$tb_tipo;?></td>
                           <td class="text-left small"><?=strtoupper($nombre_responsable)?></td>
-                          <td class="text-left small"><?=$proy_financiacion;?></td>
+                          <!-- <td class="text-left small"><?=$proy_financiacion;?></td> -->
                           <td class="td-actions text-right">
                           <?php
                             if($globalAdmin==1){
@@ -263,6 +260,12 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
           <label class="col-sm-3 text-center" style="color:#0040FF;">Descripción</label> 
           <div class="form-group col-sm-8">
             <input class="form-control input-sm" type="text" name="glosaBusqueda" id="glosaBusqueda"  >
+          </div>           
+        </div> 
+        <div class="row">
+          <label class="col-sm-3 text-center" style="color:#0040FF;">Código Activo</label> 
+          <div class="form-group col-sm-8">
+            <input class="form-control input-sm" type="text" name="codigoBusqueda" id="codigoBusqueda"  >
           </div>           
         </div> 
 

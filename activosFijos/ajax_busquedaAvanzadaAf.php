@@ -29,6 +29,7 @@ $tipoAlta=$_GET['tipoAlta'];
 $proyecto=$_GET['proyecto'];
 
 $glosa=$_GET['glosa'];
+$codigo=$_GET['codigo'];
 
 // $unidadOrgString=implode(",", $cod_uo);
 
@@ -63,6 +64,9 @@ if($proyecto!=""){
 if($glosa!=""){
   $sql.=" and af.activo like '%$glosa%'";
 }
+if($codigo!=""){
+  $sql.=" and af.codigoactivo like '%$codigo%'";
+}
 // $sql.=" order by c.fecha desc, c.numero desc;";
 // echo $sql; 
 
@@ -95,7 +99,6 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                         <th>F. Alta</th>
                         <th>Rubro/TipoBien</th>
                         <th>Responsable</th>
-                        <th>Proyecto</th>
                         <th>Acc/Eventos</th>
                         <th></th>
                         <th></th>
@@ -116,7 +119,6 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                           <td class="text-center small"><?=$fechalta;?></td>
                           <td class="text-left small"><?=$dep_nombre;?>/<?=$tb_tipo;?></td>
                           <td class="text-left small"><?=strtoupper($nombre_responsable)?></td>
-                          <td class="text-left small"><?=$proy_financiacion;?></td>
                           <td class="td-actions text-right">
                           <?php
                             if($globalAdmin==1){

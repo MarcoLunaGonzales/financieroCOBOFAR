@@ -48,11 +48,11 @@ $banderaLogin=0;
 if($banderaLogin==1 || $tipoLogin==1){
 	$sql="";
 	if($tipoLogin==1){
-		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil 
+		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil,pd.admin
 			from personal p, personal_datosadicionales pd 
 			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";		
 	}else{
-		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, 1 as perfil
+		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, 1 as perfil,pd.admin
 			from personal p 
 			where p.codigo='$idUsuarioSW' ";		
 	}
@@ -66,6 +66,7 @@ if($banderaLogin==1 || $tipoLogin==1){
 	$stmt->bindColumn('cod_area', $codArea);
 	$stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
 	$stmt->bindColumn('perfil', $perfil);
+	$stmt->bindColumn('admin', $admin_x);
 
 	while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 		//echo "ENTRO A DETALLE";
@@ -94,8 +95,6 @@ if($banderaLogin==1 || $tipoLogin==1){
 		$_SESSION['globalGestion']=$codGestionActiva;
 		$_SESSION['globalMes']=$codMesActiva;
 		$_SESSION['globalNombreGestion']=$nombreGestion;
-
-
 		$_SESSION['globalUnidad']=$codUnidad;
 		$_SESSION['globalNombreUnidad']=$nombreUnidad;
 
@@ -103,16 +102,12 @@ if($banderaLogin==1 || $tipoLogin==1){
 		$_SESSION['globalNombreArea']=$nombreArea;
 		$_SESSION['logueado']=1;
 		$_SESSION['globalPerfil']=$perfil;
-
-		if($codigo==8){
-			$_SESSION['globalAdmin']=1;
-			if($codigo==8){
-				$_SESSION['globalNombreUnidad']="RLP";	
-				$_SESSION['globalUnidad']="1";				
-			}
-		}else{
-			$_SESSION['globalAdmin']=0;	
-		}
+		$_SESSION['globalAdmin']=$admin_x;
+		// if($codigo==8){
+		// 	$_SESSION['globalAdmin']=1;	
+		// }else{
+		// 	$_SESSION['globalAdmin']=0;	
+		// }
 		
 		//$_SESSION['globalServerArchivos']="http://ibnored.ibnorca.org/itranet/documentos/";
 

@@ -51,7 +51,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
               <div class="card" >
                 <div class="card-header <?=$colorCard;?> card-header-icon">
                     <h4 class="card-title"> 
-                        <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
+                        <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">
                         Depreciación De Activos Fijos Por Mes Y Gestión
                     </h4>
                     <h6 class="card-title">Mes: <?php echo nameMes($mes); ?><br>

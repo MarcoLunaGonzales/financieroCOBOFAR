@@ -63,7 +63,7 @@ $html.='<body>'.
       '}'.
     '</script>';
 $html.=  '<header class="header">'.            
-            '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
+            '<img class="imagen-logo-izq" src="../assets/img/pastilla_comillas.png">'.
             '<div id="header_titulo_texto">Ficha Activo Fijo Asignado</div>'.
 
             '<br><br><br><br>'.

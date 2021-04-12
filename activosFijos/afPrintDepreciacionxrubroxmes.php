@@ -66,7 +66,7 @@ $total_valorNeto=0;
                     <!-- <h6 class="card-title">Exportar como:</h6> -->
                   </div>
                   <h4 class="card-title"> 
-                    <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:150px;">
+                    <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">
                       Depreciación De Activos Fijos Por Rubro Por Mes
                   </h4>
                   <h6 class="card-title">

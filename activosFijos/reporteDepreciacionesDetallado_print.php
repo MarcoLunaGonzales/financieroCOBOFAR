@@ -70,7 +70,7 @@ $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
               <div class="card" >
                 <div class="card-header <?=$colorCard;?> card-header-icon">
                     <h4 class="card-title"> 
-                        <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
+                        <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">
                         Depreciación De Activos Fijos Detallada
                     </h4>
                     <h6 class="card-title">Mes: <?php echo nameMes($mes2); ?><br>

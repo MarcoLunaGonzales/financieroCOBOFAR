@@ -423,7 +423,12 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Etiquetas Impresión</span>
                     </a>
                 </li>
-
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=afConstanciasTraspaso">
+                      <span class="sidebar-mini"> CT </span>
+                      <span class="sidebar-normal"> Constancias de Traspaso</span>
+                    </a>
+                </li>
               </ul>
             </div>
           </li>

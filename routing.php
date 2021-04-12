@@ -881,6 +881,10 @@
 		if ($_GET['opcion']=='afEtiquetasFiltro') {
 			require_once('activosFijos/afEtiquetasFiltro.php');
 		}
+		//impresion etiquetas activos fijos
+		if ($_GET['opcion']=='afConstanciasTraspaso') {
+			require_once('reportes_activosfijos/afConstanciasTraspaso.php');
+		}
         
 
 

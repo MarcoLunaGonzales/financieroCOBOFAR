@@ -2712,17 +2712,18 @@ function filaTablaGeneral(tabla,index){
 function ajaxCodigoActivo(combo){
   var contenedor;
   var codigo=combo.value;
-  contenedor = document.getElementById('divCodigoAF');
-  ajax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo.php?codigo='+codigo,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
-      $('.selectpicker').selectpicker(["refresh"]);
-      ajaxDepreciacion(codigo);
-    }
-  }
-  ajax.send(null)  
+  ajaxDepreciacion(codigo);
+  // contenedor = document.getElementById('divCodigoAF');
+  // ajax=nuevoAjax();
+  // ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo.php?codigo='+codigo,true);
+  // ajax.onreadystatechange=function() {
+  //   if (ajax.readyState==4) {
+  //     contenedor.innerHTML = ajax.responseText;
+  //     $('.selectpicker').selectpicker(["refresh"]);
+  //     ajaxDepreciacion(codigo);
+  //   }
+  // }
+  // ajax.send(null)  
 
 }
 function ajaxDepreciacion(codigo){

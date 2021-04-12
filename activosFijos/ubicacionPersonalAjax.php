@@ -5,22 +5,22 @@ require_once 'configModule.php';
 $codigo_UO=$_GET["codigo_UO"];
 $db = new Conexion();
 
-$stmt0 = $db->prepare("SELECT valor_configuracion from configuraciones where id_configuracion=15 ");
-$stmt0->execute();
-$result0=$stmt0->fetch();
-$codigo_dn=$result0['valor_configuracion'];
-$stmt1 = $db->prepare("SELECT valor_configuracion from configuraciones where id_configuracion=16 ");
-$stmt1->execute();
-$result1=$stmt1->fetch();
-$codigo_sis=$result1['valor_configuracion'];
+// $stmt0 = $db->prepare("SELECT valor_configuracion from configuraciones where id_configuracion=15 ");
+// $stmt0->execute();
+// $result0=$stmt0->fetch();
+// $codigo_dn=$result0['valor_configuracion'];
+// $stmt1 = $db->prepare("SELECT valor_configuracion from configuraciones where id_configuracion=16 ");
+// $stmt1->execute();
+// $result1=$stmt1->fetch();
+// $codigo_sis=$result1['valor_configuracion'];
 
 
-//personal SN controla SIS
-if($codigo_UO==$codigo_sis) $codigo_UO=$codigo_dn;
+// //personal SN controla SIS
+// if($codigo_UO==$codigo_sis) $codigo_UO=$codigo_dn;
 
 $stmt = $db->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
-from personal p, ubicaciones u, unidades_organizacionales uo 
-where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and uo.codigo=:codigo_UO order by 2");
+from personal p, unidades_organizacionales uo 
+where uo.codigo=p.cod_unidadorganizacional and uo.codigo=:codigo_UO order by 2");
 $stmt->bindParam(':codigo_UO', $codigo_UO);
 $stmt->execute();
 

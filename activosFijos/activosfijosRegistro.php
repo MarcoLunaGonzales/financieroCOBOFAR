@@ -116,7 +116,7 @@ if ($codigo > 0){
     $codigo_aux = $result['id']+1; 
     
     //$codigoactivo = "AF-".$codigo_aux;
-    $codigoactivo = "-";
+    $codigoactivo = "";
 
     $tipoalta = '';
     $fechalta = '';
@@ -174,7 +174,7 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <div id="divCodigoAF">
-                                            <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigoactivo;?>"/>
+                                            <input type="text" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigoactivo;?>"/>
                                         </div>
                                     </div>
                                 </div>
@@ -396,6 +396,7 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                 <div class="form-group">
                                     <select id="cod_responsables_autorizadopor" name="cod_responsables_autorizadopor" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" required="true">
+                                        <option value=""></option>
                                         <?php while ($row = $statementPersonal2->fetch()){ ?>
                                             <option <?=($cod_responsables_autorizadopor==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>">
                                                 <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
@@ -429,7 +430,7 @@ if ($codigo > 0){
                                     </div>
                                 </div>
                                 </div>      
-                                <div class="col-sm-2">
+                                <!-- <div class="col-sm-2">
                                     <div class="form-group">                                
                                       <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroProveedorActivoFijo(<?=$codigo?>)">
                                         <i class="material-icons" title="Add Proveedor">add</i>
@@ -438,7 +439,7 @@ if ($codigo > 0){
                                         <i class="material-icons" title="Actualizar Proveedor">update</i>
                                       </a> 
                                     </div>
-                                </div>                          
+                                </div>         -->                  
                             </div>
 
 

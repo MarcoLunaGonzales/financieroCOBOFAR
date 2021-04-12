@@ -77,7 +77,7 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
                     <h6 class="card-title">Exportar como:</h6>
                   </div>
                   <h4 class="card-title"> 
-                    <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
+                    <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">
                       Reporte De Activos Fijos Por Oficina
                   </h4>
                   <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                        

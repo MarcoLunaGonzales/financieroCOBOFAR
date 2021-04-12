@@ -84,7 +84,7 @@ $stmtActivos->bindColumn('observaciones_devolucion', $observacion_devolucion);
                   <div class="float-right col-sm-2">
                     <h6 class="card-title">Exportar como:</h6>
                   </div>
-                  <h4 class="card-title"> <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">  Reporte De Activos Fijos Asignados</h4>
+                  <h4 class="card-title"> <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">  Reporte De Activos Fijos Asignados</h4>
                   <h6 class="card-title">Estados: <?=$stringEstados;?></h6>   
                   <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                        
                   <h6 class="card-title">Areas: <?=$stringAreas;?></h6>  

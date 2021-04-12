@@ -12975,11 +12975,10 @@ function botonBuscarActivoFijo(){
   var valor_tipoAlta=$("#tipoAlta").val();
   var valor_proyecto=$("#proyecto").val();
   var valor_glosa=$("#glosaBusqueda").val();
-  
-  
+  var valor_codigo=$("#codigoBusqueda").val();
   ajax=nuevoAjax();
   ajax.open('GET', 'activosFijos/ajax_busquedaAvanzadaAf.php?cod_uo='+valor_uo+'&rubro='+valor_rubro+'&fechaI='+valor_fi+'&fechaF='+valor_ff+
-    '&responsable='+valor_responsable+'&tipoAlta='+valor_tipoAlta+'&proyecto='+valor_proyecto+'&glosa='+valor_glosa,true);
+    '&responsable='+valor_responsable+'&tipoAlta='+valor_tipoAlta+'&proyecto='+valor_proyecto+'&glosa='+valor_glosa+'&codigo='+valor_codigo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_activosFijos");

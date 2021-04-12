@@ -21,12 +21,12 @@ $hasta=$_POST['hasta'];
 
 
 try{
-    $sqlActivos="SELECT c.codigo,a.codigoactivo,a.activo,
-(SELECT cod_unidadorganizacional from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion limit 1)as unidad_origen,
-(SELECT cod_area from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion limit 1)as area_origen,
-(SELECT cod_personal from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion limit 1)as personal_origen 
+    $sqlActivos="SELECT c.fechaasignacion, c.codigo,a.codigoactivo,a.activo,
+(SELECT cod_unidadorganizacional from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion desc limit 1)as unidad_origen,
+(SELECT cod_area from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion desc limit 1)as area_origen,
+(SELECT cod_personal from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion desc limit 1)as personal_origen 
 
-FROM `activofijos_asignaciones` c join activosfijos a on a.codigo=c.cod_activosfijos where c.fechaasignacion between '$desde' and '$hasta'
+FROM `activofijos_asignaciones` c join activosfijos a on a.codigo=c.cod_activosfijos where c.fechaasignacion between '$desde 00:00:00' and '$hasta 23:59:59'
 and c.cod_personal=$cod_responsable and c.cod_unidadorganizacional=$cod_unidadorganizacional and c.cod_area=$cod_area
 having unidad_origen=$cod_unidadorganizacionaldesde and area_origen=$cod_areadesde and personal_origen=$cod_responsabledesde;";  
 //echo $sqlActivos;
@@ -43,19 +43,19 @@ having unidad_origen=$cod_unidadorganizacionaldesde and area_origen=$cod_areades
      <table class="table">
          <tr>
             <td rowspan="2" class="text-center imagen-td"><img class="imagen-logo-izq_2" src="../assets/img/logo_cobofar.png" width="100" height="25"></td>
-            <td class="s1 text-center" colspan="3">CORPORACION BOLIVIANA DE FARMACIAS S.A.</td>
+            <td class="s2 text-center" colspan="3">CORPORACION BOLIVIANA DE FARMACIAS S.A.</td>
 
         </tr>
         <tr>
-            <td class="s2 text-center" colspan="3">DEPARTAMENTO DE ACTIVOS FIJOS</td>
+            <td class="s2 text-center" colspan="3">ACTIVOS FIJOS</td>
         </tr>
         <tr>
-            <td class="s2 text-center" colspan="4">CONSTANCIA DE TRASPASO DE ACTIVOS FUNGIBLES</td>
+            <td class="s2 text-center" colspan="4">CONSTANCIA DE TRANSFERENCIA DE ACTIVOS & FUNGIBLES</td>
         </tr>
         <tr>
             <td class="s3 text-left bg-celeste" width="18%">Fecha:</td>
             <td class="s3 text-left" width="39%"><?=strftime('%d/ %m/ %Y',strtotime($desde))?> - <?=strftime('%d/ %m/ %Y',strtotime($hasta))?></td>
-            <td class="s3 text-right" colspan="2"><small><small><small>NOTA DE TRASPADO</small></small></small></td>
+            <td class="s3 text-right" colspan="2"><small><small><small></small></small></small></td>
         </tr>
         <tr>
             <td class="s3 text-left bg-celeste">ENTREGA:</td>
@@ -75,17 +75,20 @@ having unidad_origen=$cod_unidadorganizacionaldesde and area_origen=$cod_areades
         <tr class="bg-celeste">
             <td class="s3 text-center">N°</td>
             <td class="s3 text-center">CÓDIGO</td>
-            <td class="s3 text-center">DESCRIPCION DEL ACTIVO</td>
+             <td class="s3 text-center">FECHA</td>
+            <td class="s3 text-center" width="70%">DESCRIPCION</td>
 
         <?php
         $index=1;
         while ($row = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
           $codActivo=$row['codigoactivo'];
           $activo=$row['activo'];
+          $fecha=$row['fechaasignacion'];
            ?>
         <tr>
             <td class="s3 text-center" width="4%"><?=$index?></td>
             <td class="s3 text-center"><?=$codActivo?></td>
+            <td class="s3 text-center"><?=strftime('%d/ %m/ %Y',strtotime($fecha))?></td>
             <td class="s3 text-center"><?=$activo?></td>           
         </tr> 
         <?php  
@@ -99,7 +102,7 @@ having unidad_origen=$cod_unidadorganizacionaldesde and area_origen=$cod_areades
             <td class="s3 text-center">OBSERVACIONES</td>
         </tr>
         <tr>
-            <td class="s3 text-left"></td>
+            <td class="s3 text-left"><br><br><br></td>
         </tr>
      </table>
 

@@ -11276,15 +11276,6 @@ function obtenerPathArchivoIbnorca($codigo){
 
 
 
-
-
-
-
-
-
-
-
-
 function obtenerQR_activosfijos($codigo_af){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT codigoactivo,cod_depreciaciones,estadobien,activo,cod_area,cod_unidadorganizacional,cod_responsables_responsable from activosfijos where codigo=$codigo_af");
@@ -11317,7 +11308,7 @@ function obtenerQR_activosfijos($codigo_af){
     $tempDir = 'qr_temp/';
     $fileName = '711_test_custom.jpg';
     $outerFrame = 0;
-    $pixelPerPoint = 2.5;
+    $pixelPerPoint = 2.2;
     $jpegQuality = 95;
     
     // generating frame

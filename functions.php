@@ -4105,7 +4105,22 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     // $pdf = $mydompdf->output();
     // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
   }
-
+  function descargarPDFEtiqueta($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->set_paper(array(0,0,188.99*2,120));
+    //$mydompdf->set_paper('legal', 'landscape');
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
+    $mydompdf->set_base_path('assets/libraries/plantillaPDF3Etiqueta.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
   function descargarPDFRecibo_reporte($nom,$html){//PARA EL REPORTE DE FACTURAS CONJUNTAS
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");
@@ -11255,6 +11270,98 @@ function obtenerPathArchivoIbnorca($codigo){
         $valorX=$row['path'];
      }
      return($valorX);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function obtenerQR_activosfijos($codigo_af){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigoactivo,cod_depreciaciones,estadobien,activo,cod_area,cod_unidadorganizacional,cod_responsables_responsable from activosfijos where codigo=$codigo_af");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $codigoactivo=$row['codigoactivo'];
+    $activo=$row['activo'];
+    $cod_unidadorganizacional=$row['cod_unidadorganizacional'];
+    $cod_area=$row['cod_area'];
+    $cod_responsables_responsable=$row['cod_responsables_responsable'];
+    $estadobien=$row['estadobien'];
+    $cod_depreciaciones=$row['cod_depreciaciones'];
+  }
+  $nombre_depreciaciones=trim(abrevDepreciacion($cod_depreciaciones)," - ");
+  $abrev_uo2=abrevUnidad($cod_unidadorganizacional);
+  $area=abrevArea($cod_area);
+  $nombre_personal=namePersonal_2($cod_responsables_responsable);
+ 
+  $dir = 'qr_temp/';
+  if(!file_exists($dir)){mkdir ($dir);}
+  $fileName = $dir.$codigoactivo.'.jpg';
+  $tamanio = 25; //tamaño de imagen que se creará
+  $level = 'M'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+  $frameSize = 1; //marco de qr                                
+  $contenido = "".$codigoactivo."/".$activo."/".$estadobien[0]; //substr($activo,0,50)
+  //QRcode::text("EQUIPO CPU ORIGINAL DFF 180W CORE I7 7700 DDR 1TB COLOR NEGRO", $fileName, $level, $tamanio,$frameSize);
+
+    $codeContents = $contenido;
+    $tempDir = 'qr_temp/';
+    $fileName = '711_test_custom.jpg';
+    $outerFrame = 0;
+    $pixelPerPoint = 2.5;
+    $jpegQuality = 95;
+    
+    // generating frame
+    $frame = QRcode::text($codeContents, false, QR_ECLEVEL_M);
+    
+    // rendering frame with GD2 (that should be function by real impl.!!!)
+    $h = count($frame);
+    $w = strlen($frame[0]);
+    
+    $imgW = $w + 2*$outerFrame;
+    $imgH = $h + 2*$outerFrame;
+    
+    $base_image = imagecreate($imgW, $imgH);
+    
+    $col[0] = imagecolorallocate($base_image,255,255,255); // BG, white 
+    $col[1] = imagecolorallocate($base_image,0,0,0);     // FG, blue
+
+    imagefill($base_image, 0, 0, $col[0]);
+
+    for($y=0; $y<$h; $y++) {
+        for($x=0; $x<$w; $x++) {
+            if ($frame[$y][$x] == '1') {
+                imagesetpixel($base_image,$x+$outerFrame,$y+$outerFrame,$col[1]); 
+            }
+        }
+    }
+    
+    // saving to file
+    $target_image = imagecreate($imgW * $pixelPerPoint, $imgH * $pixelPerPoint);
+    imagecopyresized(
+        $target_image, 
+        $base_image, 
+        0, 0, 0, 0, 
+        $imgW * $pixelPerPoint, $imgH * $pixelPerPoint, $imgW, $imgH
+    );
+    imagedestroy($base_image);
+    imagejpeg($target_image, $tempDir.$fileName, $jpegQuality);
+    //imagedestroy($target_image);
+
+    // displaying
+   // echo '<img src="'.EXAMPLE_TMP_URLRELPATH.$fileName.'" />';
+
+  //$html.='<img src="'.$fileName.'"/>';
+  return  $tempDir.$fileName;
 }
 
 ?>

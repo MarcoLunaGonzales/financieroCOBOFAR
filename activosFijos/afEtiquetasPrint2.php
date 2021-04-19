@@ -82,7 +82,7 @@ $html.='<body>'.
                            $html.=$htmlFila.'</tr><tr><td colspan="2" align="center"><label style="font-size:13px;font-weight:bold;">FARMACIAS BOLIVIA</label></td><td width="20%"></td><td colspan="2" align="center"><label style="font-size:13px;font-weight:bold;">FARMACIAS BOLIVIA</label></td></tr>';
                            $htmlFila='';
                            $html.=''.'</tbody>'.'</table><div style="page-break-after:always;"></div>';  
-                          // break;
+                          break;
                          }
                     }
                  

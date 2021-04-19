@@ -1679,7 +1679,7 @@
                               columns: ':visible'
                       },
                     customize: function ( doc) {
-                         doc['footer']=(function(page, pages) { return {
+                      doc['footer']=(function(page, pages) { return {
                                columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
                                     text: page.toString(), italics: true 
                                    },' de ',
@@ -1695,6 +1695,7 @@
                           width:50,
                           height:50 
                       } );
+                      doc.defaultStyle.fontSize = 7;
                     }
                   },
                   {

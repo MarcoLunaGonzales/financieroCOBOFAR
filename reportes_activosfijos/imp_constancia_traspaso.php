@@ -10,11 +10,11 @@ set_time_limit(300);
 $cod_unidadorganizacional=$_POST["cod_uo"];
 $cod_area = $_POST['cod_area'];
 $cod_responsable = $_POST["cod_responsables_responsable"];
-
+$cod_responsable2 = $_POST["cod_responsables_responsable2"];
+//origen
 $cod_unidadorganizacionaldesde=$_POST["cod_uodesde"];
 $cod_areadesde = $_POST['cod_areadesde'];
 $cod_responsabledesde = $_POST["cod_responsables_responsabledesde"];
-
 $desde=$_POST['desde'];
 $hasta=$_POST['hasta'];
 
@@ -105,24 +105,47 @@ having unidad_origen=$cod_unidadorganizacionaldesde and area_origen=$cod_areades
             <td class="s3 text-left"><br><br><br></td>
         </tr>
      </table>
-
-     <table class="table">
-        <tr class="bg-celeste">
-            <td class="s3 text-center"><b>FIRMA ENTREGADO</b></td>
-            <td class="s3 text-center"><b>FIRMA RECIBIDO</b></td>
-            <td class="s3 text-center"><b>V°B° ACTIVOS FIJOS</b></td>
-        </tr>
-        <tr class="">
-            <td class="s3 text-center"><br><br><br></td>
-            <td class="s3 text-center"><br><br><br></td>
-            <td class="s3 text-center"><br><br><br></td>
-        </tr>
-        <tr class="bg-celeste">
-            <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsabledesde)?></td>
-            <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsable)?></td>
-            <td class="s3 text-center"><b>Nombre:</b> Lic. Maria Chino</td>
-        </tr>
-     </table>
+     <?php if($cod_responsable2!=""){ ?>
+        <table class="table">
+            <tr class="bg-celeste">
+                <td class="s3 text-center" width="25%"><b>FIRMA ENTREGADO</b></td>
+                <td class="s3 text-center" width="25%"><b>FIRMA RECIBIDO1</b></td>
+                <td class="s3 text-center" width="25%"><b>FIRMA RECIBIDO2</b></td>
+                <td class="s3 text-center" width="25%"><b>V°B° ACTIVOS FIJOS</b></td>
+            </tr>
+            <tr class="">
+                <td class="s3 text-center"><br><br><br></td>
+                <td class="s3 text-center"><br><br><br></td>
+                <td class="s3 text-center"><br><br><br></td>
+                <td class="s3 text-center"><br><br><br></td>
+            </tr>
+            <tr class="bg-celeste">
+                <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsabledesde)?></td>
+                <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsable)?></td>
+                <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsable2)?></td>
+                <td class="s3 text-center"><b>Nombre:</b> Lic. Maria Chino</td>
+            </tr>
+        </table>
+    <?php }else{ ?>
+        <table class="table">
+            <tr class="bg-celeste">
+                <td class="s3 text-center"><b>FIRMA ENTREGADO</b></td>
+                <td class="s3 text-center"><b>FIRMA RECIBIDO</b></td>
+                <td class="s3 text-center"><b>V°B° ACTIVOS FIJOS</b></td>
+            </tr>
+            <tr class="">
+                <td class="s3 text-center"><br><br><br></td>
+                <td class="s3 text-center"><br><br><br></td>
+                <td class="s3 text-center"><br><br><br></td>
+            </tr>
+            <tr class="bg-celeste">
+                <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsabledesde)?></td>
+                <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsable)?></td>
+                <td class="s3 text-center"><b>Nombre:</b> Lic. Maria Chino</td>
+            </tr>
+    </table>
+    <?php } ?>
+    
 
 
 

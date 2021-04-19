@@ -11257,4 +11257,80 @@ function obtenerPathArchivoIbnorca($codigo){
      return($valorX);
 }
 
+function obtenerCodAleternoAF($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigoactivo from activosfijos where codigo=$codigo");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valorX=$row['codigoactivo'];
+  }
+  return($valorX);
+}
+function obtener_codigoAF_asignacion($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_activosfijos from activofijos_asignaciones where codigo=$codigo");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valorX=$row['cod_activosfijos'];
+  }
+  return($valorX);
+}
+
+function obtenerQR_activosfijos_rpt($codigo_af){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigoactivo,cod_depreciaciones,estadobien,activo,cod_area,cod_unidadorganizacional,cod_responsables_responsable from activosfijos where codigo=$codigo_af");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $codigoactivo=$row['codigoactivo'];
+    $activo=$row['activo'];
+    $cod_unidadorganizacional=$row['cod_unidadorganizacional'];
+    $cod_area=$row['cod_area'];
+    $cod_responsables_responsable=$row['cod_responsables_responsable'];
+    $estadobien=$row['estadobien'];
+    $cod_depreciaciones=$row['cod_depreciaciones'];
+  }
+  $nombre_depreciaciones=trim(abrevDepreciacion($cod_depreciaciones)," - ");
+  $abrev_uo2=abrevUnidad($cod_unidadorganizacional);
+  $area=abrevArea($cod_area);
+  $nombre_personal=namePersonal_2($cod_responsables_responsable);
+
+  $dir = 'qr_temp/';
+  if(!file_exists($dir)){mkdir ($dir);}
+  $fileName = $dir.$codigoactivo.'.png';
+  $tamanio = 2; //tamaño de imagen que se creará
+  $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+  $frameSize = 1; //marco de qr                                
+  $contenido = "C:".$codigoactivo."\nD:".$activo."\nR:".$abrev_uo2."/".$nombre_depreciaciones."/".$estadobien."/".$nombre_personal;
+  QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
+  //$html.='<img src="'.$fileName.'"/>';
+  return $fileName;
+}
+
+function obtenerAreaActivo_asig($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_area from activofijos_asignaciones where codigo=$codigo");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valorX=$row['cod_area'];
+  }
+  return($valorX);
+}
+function obtenerUOActivo_asig($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_unidadorganizacional from activofijos_asignaciones where codigo=$codigo");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valorX=$row['cod_unidadorganizacional'];
+  }
+  return($valorX);
+}
+
+
+
+
 ?>

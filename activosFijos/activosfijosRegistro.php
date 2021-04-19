@@ -181,18 +181,18 @@ if ($codigo > 0){
                                 <!-- imagen qr-->
                                 <div class='col-sm-6'>
                                         <?php
-                                            require 'assets/phpqrcode/qrlib.php';
-                                            $dir = 'qr_temp/';
-                                            if(!file_exists($dir)){
-                                                mkdir ($dir);}
-                                            $fileName = $dir.'test.png';
-                                            $tamanio = 3; //tamaño de imagen que se creará
-                                            $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                                            $frameSize = 1; //marco de qr
-                                            $contenido = "Cod:".$codigoactivo."\nRubro:".$nombreRubro."\nDesc:".$activo."\nRespo.:".$nombreUO.' - '.$nombreResponsable;
+                                            // require 'assets/phpqrcode/qrlib.php';
+                                            // $dir = 'qr_temp/';
+                                            // if(!file_exists($dir)){
+                                            //     mkdir ($dir);}
+                                            // $fileName = $dir.'test.png';
+                                            // $tamanio = 3; //tamaño de imagen que se creará
+                                            // $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                                            // $frameSize = 1; //marco de qr
+                                            // $contenido = "Cod:".$codigoactivo."\nRubro:".$nombreRubro."\nDesc:".$activo."\nRespo.:".$nombreUO.' - '.$nombreResponsable;
 
-                                            QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
-                                            echo '<img src="'.$fileName.'"/>';
+                                            // QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
+                                            // echo '<img src="'.$fileName.'"/>';
                                         ?>
                                 </div>
 
@@ -228,7 +228,6 @@ if ($codigo > 0){
                                                 }
                                             ?>
                                             <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" >
-
                                                 <option value=""></option>
                                                 <?php 
                                                 $queryArea = "SELECT codigo,nombre,abreviatura FROM  areas WHERE cod_estado=1 order by nombre";

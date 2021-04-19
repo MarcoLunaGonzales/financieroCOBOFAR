@@ -3,8 +3,10 @@ require_once '../conexion.php';
 require_once 'configModule.php';
 
 $codigoRubro=$_GET["codigo"];
-$db = new Conexion();
+$cod_tiposbienes=$_GET["cod_tiposbienes"];
 
+
+$db = new Conexion();
 $sqlCodAF="SELECT (count(*)+1)as contador, r.abreviatura from activosfijos a, depreciaciones r where a.cod_depreciaciones=r.codigo and a.cod_depreciaciones=:codigo";
 $stmtCodAF = $db->prepare($sqlCodAF);
 //echo $sql;

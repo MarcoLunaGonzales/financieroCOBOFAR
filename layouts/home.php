@@ -10,7 +10,7 @@
          <a href="modulo.php?codigo=2" class="after-loop-item card border-0 card-snippets shadow-lg">
             <div class="card-body d-flex align-items-end flex-column text-right">
                <h4>Activos Fijos</h4>
-               <p class="w-75 text-small">Control de Activos Fijos, Depreciación y su Contabilización. </p>
+               <p class="w-85 text-small">Activos Fijos, Depreciación y su Contabilización.</p>
                <i class="material-icons">home_work</i>
             </div>
          </a>
@@ -19,7 +19,7 @@
          <a href="modulo.php?codigo=1" class="after-loop-item card border-0 card-themes shadow-lg">
             <div class="card-body d-flex align-items-end flex-column text-right">
                <h4>RRHH (Remuneración)</h4>
-               <p class="w-75">Gestión de personal & Gestión de planillas & Contabilización.</p>
+               <p class="w-85">Gestión de personal & Gestión de planillas & Contabilización.</p>
                <i class="material-icons">local_atm</i>
             </div>
          </a>
@@ -28,7 +28,7 @@
          <a href="modulo.php?codigo=3" class="after-loop-item card border-0 card-templates shadow-lg">
             <div class="card-body d-flex align-items-end flex-column text-right">
                <h4>Contabilidad</h4>
-               <p class="w-75">Modulo Base de Contabilidad & Caja Chica.</p>
+               <p class="w-85">Modulo Base de Contabilidad & Caja Chica.</p>
                <i class="material-icons">insert_chart_outlined</i>
             </div>
          </a>

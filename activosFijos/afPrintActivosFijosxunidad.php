@@ -38,17 +38,7 @@ $stringAreas="";
 foreach ($areas as $valor ) {    
     $stringAreas.=" ".abrevArea($valor)." ";
 }
-// $stringPersonal="";
-// foreach ($personal as $valor ) {    
-//     $stringPersonal.=" ".namesPersonal($valor)." ";
-// }
-
-
-
-$sqlActivos="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
-(select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
-(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
-(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable
+$sqlActivos="SELECT codigoactivo, activo, cod_unidadorganizacional,cod_area,cod_depreciaciones,cod_responsables_responsable,estadobien
 from activosfijos 
 where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_responsables_responsable in ($personalString)";  
 
@@ -63,70 +53,72 @@ $stmtActivos->bindColumn('activo', $activoX);
 $stmtActivos->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 $stmtActivos->bindColumn('cod_area', $cod_area);
 $stmtActivos->bindColumn('cod_depreciaciones', $cod_depreciaciones);
-$stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsable);
-
+$stmtActivos->bindColumn('cod_responsables_responsable', $cod_responsables_responsable);
+$stmtActivos->bindColumn('estadobien', $estadobienX);
 
 ?>
 <div class="content">
   <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
-                  <div class="float-right col-sm-2">
-                    <h6 class="card-title">Exportar como:</h6>
-                  </div>
-                  <h4 class="card-title"> 
-                    <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">
-                      Reporte De Activos Fijos Por Oficina
-                  </h4>
-                  <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                        
-                  <h6 class="card-title">Areas: <?=$stringAreas;?></h6>
-                  <!-- <h6 class="card-title">Personal: <?=$stringPersonal?></h6> -->
-                
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-
-                    <?php
-                    $html='<table class="table table-bordered table-condensed" id="tablePaginatorFixed">'.
-                      '<thead class="bg-secondary text-white">'.
-                        '<tr >'.
-                          '<th class="font-weight-bold">-</th>'.
-                          '<th class="font-weight-bold">Codigo Activo</th>'.
-                          '<th class="font-weight-bold">Oficina</th>'.
-                          '<th class="font-weight-bold">Area</th>'.
-                          '<th class="font-weight-bold">Rubro</th>'.
-                          '<th class="font-weight-bold">Activo</th>'.
-                          '<th class="font-weight-bold">Responsable</th>'.
-                        '</tr>'.
-                      '</thead>'.
-                      '<tbody>';
-                        //<?php  
-                          $contador = 0;
-                          while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
-                          $contador++;   
-                        $html.='<tr>'.
-                          '<td class="text-center small">'.$contador.'</td>'.
-                          '<td class="text-center small">'.$codigoActivoX.'</td>'.
-                          '<td class="text-center small">'.$cod_unidadorganizacional.'</td>'.
-                          '<td class="text-center small">'.$cod_area.'</td>'.
-                          '<td class="text-left small">'.$cod_depreciaciones.'</td>'.
-                          '<td class="text-left small">'.$activoX.'</td>'.
-                          '<td class="text-left small">'.$responsables_responsable.'</td>'.
-                        '</tr>';
-                         
-                          } 
-                      $html.='</tbody>'.
-                      
-                    '</table>';
-                    echo $html;
-                    ?>
-
-                  </div>
-                </div>
-              </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header <?=$colorCard;?> card-header-icon">
+            <div class="float-right col-sm-2">
+              <h6 class="card-title">Exportar como:</h6>
             </div>
-          </div>  
+            <h4 class="card-title"> 
+              <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">
+                Reporte De Activos Fijos Por Oficina
+            </h4>
+            <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                        
+            <h6 class="card-title">Areas: <?=$stringAreas;?></h6>
+            <!-- <h6 class="card-title">Personal: <?=$stringPersonal?></h6> -->
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <?php
+              $html='<table class="table table-bordered table-condensed" id="tablePaginatorFixed">'.
+                '<thead class="bg-secondary text-white">'.
+                  '<tr >'.
+                    '<th class="font-weight-bold">-</th>'.
+                    '<th class="font-weight-bold"><small>Cod.Activo</small></th>'.
+                    '<th class="font-weight-bold"><small>Oficina</small></th>'.
+                    '<th class="font-weight-bold"><small>Area</small></th>'.
+                    '<th class="font-weight-bold" width="10%"><small>Rubro</small></th>'.
+                    '<th class="font-weight-bold"><small>Activo</small></th>'.
+                    '<th class="font-weight-bold"><small>STA.Bien</small></th>'.
+                    '<th class="font-weight-bold"><small>Responsable</small></th>'.
+                  '</tr>'.
+                '</thead>'.
+                '<tbody>';
+                  //<?php  
+                    $contador = 0;
+                    while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
+                      $rubro=nameDepreciacion($cod_depreciaciones);
+                      $uo=abrevUnidad($cod_unidadorganizacional);
+                      $area=abrevArea($cod_area);
+                      $personal=nombrePersona($cod_responsables_responsable);
+                    $contador++;   
+                  $html.='<tr>'.
+                    '<td class="text-center small"><small>'.$contador.'</small></td>'.
+                    '<td class="text-center small"><small>'.$codigoActivoX.'</small></td>'.
+                    '<td class="text-center small"><small>'.$uo.'</small></td>'.
+                    '<td class="text-center small"><small>'.$area.'</small></td>'.
+                    '<td class="text-left small"><small>'.$rubro.'</small></td>'.
+                    '<td class="text-left small"><small>'.$activoX.'</small></td>'.
+                    '<td class="text-left small"><small>'.$estadobienX.'</small></td>'.
+                    '<td class="text-left small"><small>'.$personal.'</small></td>'.
+                  '</tr>';
+                    } 
+                $html.='</tbody>'.
+                
+              '</table>';
+              echo $html;
+              ?>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+    </div>  
+  </div>
+</div>

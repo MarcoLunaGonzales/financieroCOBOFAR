@@ -83,6 +83,9 @@ $urlRegistrar_activosfijos="index.php?opcion=activofijoRegister";//form
 $printAlta="activosFijos/afPrintAlta.php";
 $printDepreciacion1="activosFijos/afPrintDepreciacion1.php";//de un solo mes
 
+
+$printEtiqueta_af="activosFijos/afEtiquetasPrint3.php";//de un solo mes
+
 $printAFCustodia="activosFijos/afPrintCustodia.php";//
 
 //ejecutar LA DEDRECIACION

@@ -11361,6 +11361,22 @@ function obtenerQR_activosfijos($codigo_af){
   return $fileName;
 }
 
+function descargarPDFEtiqueta($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->set_paper(array(0,0,188.99*2,120));
+    //$mydompdf->set_paper('legal', 'landscape');
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
+    $mydompdf->set_base_path('assets/libraries/plantillaPDF3Etiqueta.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
 
 
 ?>

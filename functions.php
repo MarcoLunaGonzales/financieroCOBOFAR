@@ -11304,7 +11304,7 @@ function obtenerQR_activosfijos($codigo_af){
   $contenido = "".$codigoactivo."/".$activo."/".$estadobien[0]; //substr($activo,0,50)
   //QRcode::text("EQUIPO CPU ORIGINAL DFF 180W CORE I7 7700 DDR 1TB COLOR NEGRO", $fileName, $level, $tamanio,$frameSize);
 
-    $codeContents = $contenido;
+    $codeContents = substr($contenido,0,60);
     $tempDir = 'qr_temp/';
     $fileName = '711_test_custom.jpg';
     $outerFrame = 0;

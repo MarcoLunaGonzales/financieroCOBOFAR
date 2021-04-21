@@ -1,4 +1,4 @@
-  <?php
+<?php
   require_once 'conexion.php';
   require_once 'conexion_externa.php';
   //Enviar correo con funcion Enviar
@@ -11351,9 +11351,9 @@ function obtenerQR_activosfijos($codigo_af){
  
   $dir = 'qr_temp/';
   if(!file_exists($dir)){mkdir ($dir);}
-  $fileName = $dir.$codigoactivo.'.png';
+  $fileName = $dir.$codigoactivo.'.jpg';
   $tamanio = 2; //tamaño de imagen que se creará
-  $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+  $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
   $frameSize = 1; //marco de qr                                
   $contenido = "".$codigoactivo."/".$activo."/".$estadobien[0]; //substr($activo,0,50)
   //QRcode::text("EQUIPO CPU ORIGINAL DFF 180W CORE I7 7700 DDR 1TB COLOR NEGRO", $fileName, $level, $tamanio,$frameSize);
@@ -11362,7 +11362,7 @@ function obtenerQR_activosfijos($codigo_af){
     $tempDir = 'qr_temp/';
     $fileName = '711_test_custom.jpg';
     $outerFrame = 0;
-    $pixelPerPoint = 2.2;
+    $pixelPerPoint = 2.8;
     $jpegQuality = 95;
     
     // generating frame
@@ -11405,12 +11405,9 @@ function obtenerQR_activosfijos($codigo_af){
     // displaying
    // echo '<img src="'.EXAMPLE_TMP_URLRELPATH.$fileName.'" />';
 
-  //$contenido = "C:".$codigoactivo."\nD:".$activo."\nR:".$abrev_uo2."/".$nombre_depreciaciones."/".$estadobien."/".$nombre_personal;
-  QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
   //$html.='<img src="'.$fileName.'"/>';
-  return $fileName;
+  return  $tempDir.$fileName;
 }
-
 
 
 function descargarPDFEtiqueta($nom,$html){

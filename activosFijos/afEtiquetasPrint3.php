@@ -60,7 +60,7 @@ $html.='<body>'.
                       $stmtRubro->execute();
                       $resultRubro = $stmtRubro->fetch();
                       $nombreRubro = $resultRubro['nombreRubro'];
-                      $htmlFila.='<td align="center" width="50%"><img src="../assets/img/logo_4.png" width="100" height="65" style="padding-top:-0.3cm" /><br><hr><label style="font-weight:bolder;font-size:16px;">'.$codigoActivoX.'</label><br><label style="font-weight:bolder;font-size:10px;">ACTIVOS FIJOS</label><br><label style="font-weight:bolder;font-size:10px;">GESTION '.date("Y").'</label></td><td style="" align="right" width="50%">';
+                      $htmlFila.='<td align="center" width="50%"><img src="../assets/img/logo_4.png" width="80" height="55" style="padding-top:-0.3cm" /><br><hr><label style="font-weight:bolder;font-size:16px;">'.$codigoActivoX.'</label><br><label style="font-weight:bolder;font-size:10px;">ACTIVOS FIJOS</label><br><label style="font-weight:bolder;font-size:10px;">GESTION '.date("Y").'</label></td><td style="" align="right" width="50%">';
                       $fileName=obtenerQR_activosfijos($codigoX);
                       $htmlFila.= '<img src="'.$fileName.'"/>';
                       $htmlFila.='</td><td width="1%">&nbsp;</td>';
@@ -79,7 +79,7 @@ $html.='<body>'.
                       $stmtRubro->execute();
                       $resultRubro = $stmtRubro->fetch();
                       $nombreRubro = $resultRubro['nombreRubro'];
-                      $htmlFila.='<td align="center" width="50%"><img src="../assets/img/logo_4.png" width="100" height="65" style="padding-top:-0.3cm" /><br><hr><label style="font-weight:bolder;font-size:16px;">'.$codigoActivoX.'</label><br><label style="font-weight:bolder;font-size:10px;">ACTIVOS FIJOS</label><br><label style="font-weight:bolder;font-size:10px;">GESTION '.date("Y").'</label></td><td style="" align="right" width="50%">';
+                      $htmlFila.='<td align="center" width="50%"><img src="../assets/img/logo_4.png" width="80" height="55" style="padding-top:-0.3cm" /><br><hr><label style="font-weight:bolder;font-size:16px;">'.$codigoActivoX.'</label><br><label style="font-weight:bolder;font-size:10px;">ACTIVOS FIJOS</label><br><label style="font-weight:bolder;font-size:10px;">GESTION '.date("Y").'</label></td><td style="" align="right" width="50%">';
                       $fileName=obtenerQR_activosfijos($codigoX);
                       $htmlFila.= '<img src="'.$fileName.'"/>';
                       $htmlFila.='</td><td width="1%">&nbsp;</td>';

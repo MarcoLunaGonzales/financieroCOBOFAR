@@ -11309,7 +11309,6 @@ function obtenerQR_activosfijos_rpt($codigo_af){
   return $fileName;
 }
 
-
 function obtenerAreaActivo_asig($codigo){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT cod_area from activofijos_asignaciones where codigo=$codigo");
@@ -11356,7 +11355,6 @@ function obtenerQR_activosfijos($codigo_af){
   $tamanio = 2; //tamaño de imagen que se creará
   $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
   $frameSize = 1; //marco de qr                                
-
   $contenido = "".$codigoactivo."/".$activo."/".$estadobien[0]; //substr($activo,0,50)
   //QRcode::text("EQUIPO CPU ORIGINAL DFF 180W CORE I7 7700 DDR 1TB COLOR NEGRO", $fileName, $level, $tamanio,$frameSize);
 
@@ -11406,6 +11404,10 @@ function obtenerQR_activosfijos($codigo_af){
 
     // displaying
    // echo '<img src="'.EXAMPLE_TMP_URLRELPATH.$fileName.'" />';
+
+  //$contenido = "C:".$codigoactivo."\nD:".$activo."\nR:".$abrev_uo2."/".$nombre_depreciaciones."/".$estadobien."/".$nombre_personal;
+  QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
+  //$html.='<img src="'.$fileName.'"/>';
   return $fileName;
 }
 

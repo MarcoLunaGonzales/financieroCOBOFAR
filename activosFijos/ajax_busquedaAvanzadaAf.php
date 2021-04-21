@@ -65,10 +65,10 @@ if($glosa!=""){
   $sql.=" and af.activo like '%$glosa%'";
 }
 if($codigo!=""){
-  $sql.=" and af.codigoactivo like '%$codigo%'";
+  $sql.=" and af.codigoactivo like '$codigo'";
 }
 // $sql.=" order by c.fecha desc, c.numero desc;";
-// echo $sql; 
+echo $sql; 
 
 
 

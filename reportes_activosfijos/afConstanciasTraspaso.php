@@ -99,17 +99,17 @@ $fechaDesde=date("Y-m-d");
                         </div>
                       </div>
                     </div><!--fin campo area -->
-                    <div class="row">
+                    <!-- <div class="row">
                       <label class="col-sm-2 col-form-label">Responsable Destino</label>
                       <div class="col-sm-7">
-                      <div class="form-group">
+                      <div class="form-group"> -->
                           <div id="div_personal_UO">
                             
                           </div>
+                      <!-- </div>
                       </div>
-                      </div><!--fin campo cod_responsables_responsable -->
-                   </div>
-<br>
+                   </div> -->
+                    <br>
                    <div class="row">
                       <label class="col-sm-2 col-form-label">Del</label>
                       <div class="col-sm-3">

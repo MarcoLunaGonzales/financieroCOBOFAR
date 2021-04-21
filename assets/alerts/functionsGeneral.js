@@ -2749,10 +2749,29 @@ function ajaxTipoBien(codigo){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
+      ajaxCodigoCorrelativo(codigo);
     }
   }
   ajax.send(null)
 }
+
+function ajaxCodigoCorrelativo(codigo){
+  
+  var cod_tiposbienes=$("#cod_tiposbienes").val();
+  var contenedor;
+  contenedor = document.getElementById('divCodigoAF');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo.php?codigo='+codigo+'&cod_tiposbienes='+cod_tiposbienes,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajaxDepreciacion(codigo);
+    }
+  }
+  ajax.send(null)  
+}
+
 
 // function ajaxAFunidadorganizacional(combo){
 //   var contenedor;
@@ -2834,6 +2853,7 @@ function ajaxPersonalUbicacionTrasfer(combo){
   }
   ajax.send(null)
 }
+
 function ajaxPersonalUbicacionTrasferDesde(combo){
   var contenedor;
   var codigo_UO=combo.value;

@@ -15,11 +15,15 @@ $_POST["cod_empresa"] = 1;
 
 // Preparamos
 //echo $table;
-//$stmt = $dbh->prepare("select * from depreciaciones where cod_empresa = ".$_POST["cod_empresa"].";");
-$stmt = $dbh->prepare("SELECT d.codigo, d.cod_empresa, d.nombre, d.abreviatura,d.vida_util, d.cod_estado, 
+$sql="SELECT d.codigo, d.cod_empresa, d.nombre, d.abreviatura,d.vida_util, d.cod_estado, 
   (SELECT v.codigocuenta from v_af_cuentacontablepararubros v where v.codigo=d.cod_cuentacontable)as codigocuenta,
   (SELECT v.cuentacontable from v_af_cuentacontablepararubros v where v.codigo=d.cod_cuentacontable)as cuentacontable
-   from depreciaciones d where d.cod_estado=1 ");
+   from depreciaciones d where d.cod_estado=1";
+//echo "<br><br><br>".$sql;
+// $sql="SELECT d.codigo, d.cod_empresa, d.nombre, d.abreviatura,d.vida_util, d.cod_estado, 
+//   0 codigocuenta, 0 as cuentacontable
+//    from depreciaciones d where d.cod_estado=1";
+$stmt = $dbh->prepare($sql);
 // Ejecutamos
 $stmt->execute();
 // bindColumn

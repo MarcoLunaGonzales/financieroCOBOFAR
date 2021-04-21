@@ -2,6 +2,7 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'configModule.php';
+require 'assets/phpqrcode/qrlib.php';
 
 
 
@@ -84,12 +85,12 @@ $responsable='';
                                   $nombre_personal=namePersonal($cod_responsables_responsable);
                                   $nombre_uo=abrevUnidad_solo($cod_unidadorganizacional);
                                 }
-                                //para el qr  
-                                $stmt = $dbh->prepare("SELECT (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombreRubro
-                                from activosfijos where codigo=$codigo");
-                                $stmt->execute();
-                                $result = $stmt->fetch();
-                                $nombreRubro = $result['nombreRubro'];
+                                //para el qr
+                                // $stmt = $dbh->prepare("SELECT (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombreRubro
+                                // from activosfijos where codigo=$codigo");
+                                // $stmt->execute();
+                                // $result = $stmt->fetch();
+                                // $nombreRubro = $result['nombreRubro'];
                                 ?>
 
                              <tr>
@@ -97,16 +98,17 @@ $responsable='';
                                 <td><?=$activo;?></td>
                                 <td>
                                   <?php
-                                  require 'assets/phpqrcode/qrlib.php';
-                                  $dir = 'qr_temp/';
-                                  if(!file_exists($dir)){
-                                      mkdir ($dir);}
-                                  $fileName = $dir.'test.png';
-                                  $tamanio = 2.5; //tamaño de imagen que se creará
-                                  $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                                  $frameSize = 1; //marco de qr                                  
-                                  $contenido = "Cod:".$codigo."\nRubro:".$nombreRubro."\nDesc:".$activo."\nRespo.:".$nombre_uo.' - '.$nombre_personal;
-                                  QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
+                                  $fileName=obtenerQR_activosfijos_rpt($codigo_af);
+                                  
+                                  // $dir = 'qr_temp/';
+                                  // if(!file_exists($dir)){
+                                  //     mkdir ($dir);}
+                                  // $fileName = $dir.'test.png';
+                                  // $tamanio = 2.5; //tamaño de imagen que se creará
+                                  // $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                                  // $frameSize = 1; //marco de qr                                  
+                                  // $contenido = "Cod:".$codigo."\nRubro:".$nombreRubro."\nDesc:".$activo."\nRespo.:".$nombre_uo.' - '.$nombre_personal;
+                                  // QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
                                   echo '<img src="'.$fileName.'"/>';
                                   ?>
                                 </td>

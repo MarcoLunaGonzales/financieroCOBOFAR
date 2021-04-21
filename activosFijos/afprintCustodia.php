@@ -72,7 +72,6 @@ $html.=  '<header class="header">'.
                 '<tr>'.
                     '<td  >'.
                         '<table class="table table-condensed">'.
-                            
                                 '<tr>'.
                                     '<td  class="text-left" >Codigo AF :</td>'.
                                     '<td class="text-left" >'.$cod_activosfijos.'</td>'.
@@ -137,7 +136,7 @@ $html.=  '<header class="header">'.
             '</header>'.      
     '</body>'.
       '</html>';           
-descargarPDF("IBNORCA - ",$html);
+descargarPDF("COBOFAR - ",$html);
 
 ?>
 

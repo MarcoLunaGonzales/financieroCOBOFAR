@@ -15,7 +15,7 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="SELECT afa.cod_activosfijos as cod_activo,(SELECT abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional) as cod_unidadorganizacional,(Select abreviatura from areas where codigo=afa.cod_area)as cod_area,af.activo,afa.fechaasignacion,afa.cod_estadoasignacionaf,(select nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf) as estado_asignacionaf,afa.cod_personal,afa.fecha_recepcion
+$sql="SELECT afa.codigo as cod_asignacion,afa.cod_activosfijos as cod_activo,(SELECT abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional) as cod_unidadorganizacional,(Select abreviatura from areas where codigo=afa.cod_area)as cod_area,af.activo,afa.fechaasignacion,afa.cod_estadoasignacionaf,(select nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf) as estado_asignacionaf,afa.cod_personal,afa.fecha_recepcion
 from activofijos_asignaciones afa, activosfijos af
 where  af.cod_estadoactivofijo=1 and afa.cod_activosfijos=af.codigo and afa.cod_personal=$globalUser";
 
@@ -23,6 +23,7 @@ $stmt = $dbh->prepare($sql);
 //ejecutamos
 $stmt->execute();
 //bindColumn
+$stmt->bindColumn('cod_asignacion', $cod_asignacion);
 $stmt->bindColumn('cod_activo', $cod_activo);
 $stmt->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 $stmt->bindColumn('cod_area', $cod_area);
@@ -53,37 +54,37 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                     <table class="table" id="tablePaginator">
                       <thead>
                         <tr>
-                            <th></th>
-                            <th>Nro.</th>
-                            <th>Código</th>
-                            <th>Oficina</th>
-                            <th>Area</th>
-                            <th>Activo</th>
-                            <th>F. Asignación</th>
-                            <th>Estado Asignación AF</th>
-                            <th>Fecha Recepción</th>
+                            <th colspan="2"><small><b>Index</small></b></th>
+                            <th><small><b>Código</small></b></th>
+                            <th><small><b>Oficina</small></b></th>
+                            <th><small><b>Area</small></b></th>
+                            <th><small><b>Activo</small></b></th>
+                            <th><small><b>F. Asignación</small></b></th>
+                            <th><small><b>Estado Asignación AF</small></b></th>
+                            <th><small><b>Fecha Recepción</small></b></th>
                             <th></th>
                         </tr>
                       </thead>
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-                            $datos =$cod_activo."-".$cod_personal;
-                            if($cod_estadoasignacionaf==1){
-                              $label='<span class="badge badge-warning">';
-                            }
-                            if($cod_estadoasignacionaf==2){
-                              $label='<span class="badge badge-success">';
-                            }
-                            if($cod_estadoasignacionaf==3){
-                              $label='<span class="badge badge-danger">';
-                            }
-                            if($cod_estadoasignacionaf==4){
-                              $label='<span class="badge badge-primary">';
-                            }
-                            if($cod_estadoasignacionaf==5){
-                              $label='<span class="badge badge-dark">';
-                            }
+                          $CodigoAlternoAF=obtenerCodAleternoAF($cod_activo);
+                          $datos =$cod_asignacion."-".$cod_personal;
+                          if($cod_estadoasignacionaf==1){
+                            $label='<span class="badge badge-warning">';
+                          }
+                          if($cod_estadoasignacionaf==2){
+                            $label='<span class="badge badge-success">';
+                          }
+                          if($cod_estadoasignacionaf==3){
+                            $label='<span class="badge badge-danger">';
+                          }
+                          if($cod_estadoasignacionaf==4){
+                            $label='<span class="badge badge-primary">';
+                          }
+                          if($cod_estadoasignacionaf==5){
+                            $label='<span class="badge badge-dark">';
+                          }
                           ?>                          
                             <tr>
                                 <td  class="td-actions text-right">
@@ -95,13 +96,13 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                                   </a>
                                 </td>
                                 <td><?=$index?></td>
-                                <td><?=$cod_activo;?></td>
-                                <td><?=$cod_unidadorganizacional;?></td>
-                                <td><?=$cod_area;?></td>
-                                <td><?=$activo;?></td>
-                                <td><?=$fecha_asignacion;?></td>
-                                <td><?=$label.$estado_asignacionaf."</span>";?></td>
-                                <td><?=$fecha_recepcion;?></td>                                
+                                <td><small><?=$CodigoAlternoAF;?></small></td>
+                                <td><small><?=$cod_unidadorganizacional;?></small></td>
+                                <td><small><?=$cod_area;?></small></td>
+                                <td><small><?=$activo;?></small></td>
+                                <td><small><?=$fecha_asignacion;?></small></td>
+                                <td><small><?=$label.$estado_asignacionaf."</span>";?></small></td>
+                                <td><small><?=$fecha_recepcion;?></small></td>                                
                                 <td class="td-actions text-right">
                                   <?php
                                     if($cod_estadoasignacionaf==1){
@@ -130,6 +131,9 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                 <div class="card-footer fixed-bottom">
                   <?php if($cod_estadoasignacionaf==2){?>
                   <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalDevolverAll" >Devolver todos los AF</button>
+                  <?php }?>
+                  <?php if($globalUser==16){?>
+                  <button class="<?=$buttonNormal;?>" onClick="location.href='activosFijos/save_aceptarAF_asignacion_all.php'">Recepcionar Todos los AF</button>
                   <?php }?>
                 </div>
                 

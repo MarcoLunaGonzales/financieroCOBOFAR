@@ -83,10 +83,6 @@ try{
 
     $stmt2->execute();
     //resultado
-    //$stmt2->bindColumn('codigoactivo', $codigoactivo);
-    //$stmt2->bindColumn('activo', $activo);
-
-
     $stmt2->bindColumn('mes', $mes3);
     $stmt2->bindColumn('gestion', $gestion3);
     $stmt2->bindColumn('ufvinicio', $ufvinicio);
@@ -106,16 +102,11 @@ try{
     $stmt2->bindColumn('d10_valornetobs', $d10_valornetobs);
     $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
 
-
-
     //asignaciones
-    $query2 = "SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as u_o,
-    (select a.abreviatura from areas a where a.codigo=cod_area)as area,fechaasignacion,estadobien_asig,
-    (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as nombre_personal,cod_estadoasignacionaf,
-    (select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,
+    $query2 = "SELECT cod_unidadorganizacional,cod_area,fechaasignacion,estadobien_asig,cod_personal,cod_personal2,cod_estadoasignacionaf,cod_estadoasignacionaf,
     fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
     from activofijos_asignaciones
-    where cod_activosfijos =".$codigo_af." order by fecha_recepcion desc";
+    where cod_activosfijos =".$codigo_af." order by fechaasignacion desc";
         $statement2 = $dbh->query($query2);
 
 
@@ -137,7 +128,7 @@ $html.='<body>'.
       '}'.
     '</script>';
 $html.=  '<header class="header">'.            
-            '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
+            '<img class="imagen-logo-izq" src="../assets/img/icono_sm_cobofar.jpg" style="width: 70px; height:70px;">'.
             '<div id="header_titulo_texto">Ficha De Activo Fijo</div>'.
 
             '<br><br><br><br>'.
@@ -169,16 +160,17 @@ $html.=  '<header class="header">'.
                         '<td class="text-center small">'; if($imagen!="" || $imagen!=null){
                             $html.='<img src="imagenes/'.$imagen.'" style="width: 100px; height:100px;"><br>';
                             }
+                            $fileName=obtenerQR_activosfijos_rpt($codigo_af);
                                                         
-                                $dir = 'qr_temp/';
-                                if(!file_exists($dir)){
-                                    mkdir ($dir);}
-                                $fileName = $dir.$codigoactivo.'.png';
-                                $tamanio = 2; //tamaño de imagen que se creará
-                                $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                                $frameSize = 1; //marco de qr                                
-                                $contenido = "Cod:".$codigoactivo."\nRubro:".$nombre_depreciaciones."\nDesc:".$activo."\nRespo.:".$abrev_uo2." - ".$nombre_personal."\n NC:".$comprobante;
-                                QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
+                                // $dir = 'qr_temp/';
+                                // if(!file_exists($dir)){
+                                //     mkdir ($dir);}
+                                // $fileName = $dir.$codigoactivo.'.png';
+                                // $tamanio = 2; //tamaño de imagen que se creará
+                                // $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                                // $frameSize = 1; //marco de qr                                
+                                // $contenido = "Cod:".$codigoactivo."\nRubro:".$nombre_depreciaciones."\nDesc:".$activo."\nRespo.:".$abrev_uo2." - ".$nombre_personal."\n NC:".$comprobante;
+                                // QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                 $html.='<img src="'.$fileName.'"/>';
                         $html.='</td>'.
                     '</tr>'.
@@ -197,44 +189,45 @@ $html.=  '<header class="header">'.
 
             '</table>'.
             '<br><br><br><br>'.
-            '<h4> Asignaciones</h4>'.
+            '<h4> ASIGNACIONES</h4>'.
             '<table class="table">'.
                 '<thead>'.
                     '<tr>'.
-                        '<th class="font-weight-bold">Fecha Asig.</th>'.
-                        '<th class="font-weight-bold">Estado bien Asig.</th>'.
-                        '<th class="font-weight-bold">Personal</th>'.
-                        '<th class="font-weight-bold">Oficina</th>'.
-                        '<th class="font-weight-bold">Area</th>'.
-
-                        '<th class="font-weight-bold">Estado Asignación</th>'.
-                        '<th class="font-weight-bold">F. Recepción</th>'.
-                        '<th class="font-weight-bold">Obs. Recepción</th>'.
-                        '<th class="font-weight-bold">F. Devolución</th>'.
-                        '<th class="font-weight-bold">Obs. Devolución</th>'.
+                        '<th class="font-weight-bold"><small>Fecha Asig.</small></th>'.
+                        '<th class="font-weight-bold"><small>Estado bien</small></th>'.
+                        '<th class="font-weight-bold"><small>Personal</small></th>'.
+                        '<th class="font-weight-bold"><small>Personal 2</small></th>'.
+                        '<th class="font-weight-bold"><small>Oficina</small></th>'.
+                        '<th class="font-weight-bold"><small>Area</small></th>'.
+                        '<th class="font-weight-bold"><small>Estado Asignación</small></th>'.
+                        '<th class="font-weight-bold"><small>F. Recepción</small></th>'.
+                        '<th class="font-weight-bold"><small>Obs. Recepción</small></th>'.
+                        '<th class="font-weight-bold"><small>F. Devolución</small></th>'.
+                        '<th class="font-weight-bold"><small>Obs. Devolución</small></th>'.
                     '</tr>'.
                 '</thead>'.
                 '<tbody>';
                     while ($row = $statement2->fetch()) {
                        $html.='<tr>'.
-                            '<td class="text-left small">'.$row["fechaasignacion"].'</td>'.
-                            '<td class="text-left small">'.$row["estadobien_asig"].'</td>'.
-                            '<td class="text-left small">'.$row["nombre_personal"].'</td>'.
-                            '<td class="text-left small">'.$row["u_o"].'</td>'.
-                            '<td class="text-left small">'.$row["area"].'</td>'.
+                            '<td class="text-left"><small><small>'.$row["fechaasignacion"].'</small></small></td>'.
+                            '<td class="text-left"><small><small>'.$row["estadobien_asig"].'</small></small></td>'.
+                            '<td class="text-left"><small><small>'.namePersonal($row["cod_personal"]).'</small></small></td>'.
+                            '<td class="text-left"><small><small>'.namePersonal($row["cod_personal2"]).'</small></small></td>'.
+                            '<td class="text-left"><small><small>'.abrevUnidad($row["cod_unidadorganizacional"]).'</small></small></td>'.
+                            '<td class="text-left"><small><small>'.abrevArea($row["cod_area"]).'</small></small></td>'.
 
-                            '<td class="text-left small">'.$row["estadoAsigAF"].'</td>'.
-                            '<td class="text-left small">'.$row["fecha_recepcion"].'</td>'.
-                            '<td class="text-left small">'.$row["observaciones_recepcion"].'</td>'.
-                            '<td class="text-left small">'.$row["fecha_devolucion"].'</td>'.
-                            '<td class="text-left small">'.$row["observaciones_devolucion"].'</td>'.
+                            '<td class="text-left"><small><small>'.nameTipoAsignacion($row["cod_estadoasignacionaf"]).'</small></small></td>'.
+                            '<td class="text-left"><small><small>'.$row["fecha_recepcion"].'</small></small></td>'.
+                            '<td class="text-left"><small><small>'.$row["observaciones_recepcion"].'</small></small></td>'.
+                            '<td class="text-left"><small><small>'.$row["fecha_devolucion"].'</small></small></td>'.
+                            '<td class="text-left"><small><small><small>'.$row["observaciones_devolucion"].'</small></small></small></td>'.
                      '</tr>';
                      } 
                 $html.='</tbody>'.
             '</table>'.        
         '</body>'.
       '</html>';           
-descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDF("COBOFAR  ".$codigoactivo,$html);
 
 ?>
 

@@ -2,7 +2,7 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'configModule.php';
-
+require 'assets/phpqrcode/qrlib.php';
 
 
 $dbh = new Conexion();
@@ -64,6 +64,7 @@ $responsable='';
                               while ($row = $statement2->fetch()) { 
                                   $codigo=$row["codigo"];
                                   $cod_activosfijos=$row["cod_activosfijos"];
+                                  $CodigoAlterno=obtenerCodAleternoAF($cod_activosfijos);
                                   $fechaasignacion=$row["fechaasignacion"];
                                   $estadobien_asig=$row["estadobien_asig"];
                                   $nombre_personal=$row["nombre_personal"];
@@ -72,23 +73,13 @@ $responsable='';
                                   $nombreRubro=$row["nombreRubro"];
                                   $nombreBien=$row["nombreBien"];
                                   // $nombreUO=$row["nombreUO"];
-                                  
                                 }?>
                              <tr>
-                                <td><?=$cod_activosfijos;?></td>
+                                <td><?=$CodigoAlterno;?></td>
                                 <td><small><?=$nombreActivo;?></small></td>
                                 <td>
                                   <?php
-                                  require 'assets/phpqrcode/qrlib.php';
-                                  $dir = 'qr_temp/';
-                                  if(!file_exists($dir)){
-                                      mkdir ($dir);}
-                                  $fileName = $dir.'test.png';
-                                  $tamanio = 2.5; //tamaño de imagen que se creará
-                                  $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                                  $frameSize = 1; //marco de qr
-                                  $contenido = "Cod:".$cod_activosfijos."\nRubro:".$nombreRubro."\nDesc:".$nombreActivo."\nRespo.:".$nombre_uo.' - '.$nombre_personal;
-                                  QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
+                                  $fileName=obtenerQR_activosfijos_rpt($codigo_af);
                                   echo '<img src="'.$fileName.'"/>';
                                   ?>
                                 </td>
@@ -97,20 +88,13 @@ $responsable='';
                                 </td>
                                 <td><?=$fechaasignacion;?></td>
                                 <td><?=$estadobien_asig;?></td>
-                     
                                 <td><?=$nombre_personal;?></td>
                                 <td><?=$nombre_uo;?></td>
-                                  
                               </tr>
-                          
                           </tbody>
                       </table>
                     </div>
                   </div><!--card body-->
-                  <div class="card-footer fixed-bottom">
-                      <button type="submit" class="<?=$buttonNormal;?>">guardar</button>
-                      <a href="?opcion=activosfijosLista" class="<?=$buttonCancel;?>"> <-- Volver </a>
-                  </div>
                 </div> 
 
                 <div class="card">
@@ -120,13 +104,12 @@ $responsable='';
                     </div>
                   </div>
                   <div class="card-body ">
-
-                    
                     <div class="row">
                       <label class="col-sm-2 col-form-label">Código Activo</label>
                       <div class="col-sm-4">
                           <div class="form-group">
-                              <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigo_af;?>"/>
+                              <input type="hidden" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigo_af;?>"/>
+                              <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="codigoalternoAF" id="codigoalternoAF" required="true"  value="<?=$CodigoAlterno;?>"/>
                           </div>
                       </div>
                     </div>
@@ -139,11 +122,8 @@ $responsable='';
                             <option value=""></option>
                             <?php while ($row = $statementUO->fetch()){ ?>
                               <option  value="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
-
-                                <!-- <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option> -->
                             <?php } ?> 
                             </select>
-
                         </div>
                       </div>
                     </div><!--fin campo unidad-->
@@ -152,26 +132,20 @@ $responsable='';
                       <div class="col-sm-7">
                         <div class="form-group">
                           <div id="div_contenedor_area">
-                            
-
                           </div>
-                            
                         </div>
                       </div>
                     </div><!--fin campo area -->
-                    <div class="row">
-                      <label class="col-sm-2 col-form-label">Responsable</label>
-                      <div class="col-sm-7">
-                      <div class="form-group">
-                          <div id="div_personal_UO">
-                            
-                          </div>
-                      </div>
-                      </div><!--fin campo cod_responsables_responsable -->
                     
-                  </div>
+                    <div id="div_personal_UO">
+                          
+                    </div>
+                  
                 </div>
-
+                <div class="card-footer fixed-bottom">
+                    <button type="submit" class="<?=$buttonNormal;?>">guardar</button>
+                    <a href="?opcion=activosfijosLista" class="<?=$buttonCancel;?>"> <-- Volver </a>
+                </div>
               </form>
             </div>
 

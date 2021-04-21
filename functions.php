@@ -4105,22 +4105,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     // $pdf = $mydompdf->output();
     // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
   }
-  function descargarPDFEtiqueta($nom,$html){
-    //aumentamos la memoria  
-    ini_set("memory_limit", "128M");
-    // Cargamos DOMPDF
-    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
-    $mydompdf = new DOMPDF();
-    ob_clean();
-    $mydompdf->load_html($html);
-    $mydompdf->set_paper(array(0,0,188.99*2,120));
-    //$mydompdf->set_paper('legal', 'landscape');
-    $mydompdf->render();
-    $canvas = $mydompdf->get_canvas();
-    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
-    $mydompdf->set_base_path('assets/libraries/plantillaPDF3Etiqueta.css');
-    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
-  }
+
   function descargarPDFRecibo_reporte($nom,$html){//PARA EL REPORTE DE FACTURAS CONJUNTAS
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");
@@ -11272,9 +11257,79 @@ function obtenerPathArchivoIbnorca($codigo){
      return($valorX);
 }
 
+function obtenerCodAleternoAF($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigoactivo from activosfijos where codigo=$codigo");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valorX=$row['codigoactivo'];
+  }
+  return($valorX);
+}
+function obtener_codigoAF_asignacion($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_activosfijos from activofijos_asignaciones where codigo=$codigo");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valorX=$row['cod_activosfijos'];
+  }
+  return($valorX);
+}
+
+function obtenerQR_activosfijos_rpt($codigo_af){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigoactivo,cod_depreciaciones,estadobien,activo,cod_area,cod_unidadorganizacional,cod_responsables_responsable from activosfijos where codigo=$codigo_af");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $codigoactivo=$row['codigoactivo'];
+    $activo=$row['activo'];
+    $cod_unidadorganizacional=$row['cod_unidadorganizacional'];
+    $cod_area=$row['cod_area'];
+    $cod_responsables_responsable=$row['cod_responsables_responsable'];
+    $estadobien=$row['estadobien'];
+    $cod_depreciaciones=$row['cod_depreciaciones'];
+  }
+  $nombre_depreciaciones=trim(abrevDepreciacion($cod_depreciaciones)," - ");
+  $abrev_uo2=abrevUnidad($cod_unidadorganizacional);
+  $area=abrevArea($cod_area);
+  $nombre_personal=namePersonal_2($cod_responsables_responsable);
+
+  $dir = 'qr_temp/';
+  if(!file_exists($dir)){mkdir ($dir);}
+  $fileName = $dir.$codigoactivo.'.png';
+  $tamanio = 2; //tamaño de imagen que se creará
+  $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+  $frameSize = 1; //marco de qr                                
+  $contenido = "C:".$codigoactivo."\nD:".$activo."\nR:".$abrev_uo2."/".$nombre_depreciaciones."/".$estadobien."/".$nombre_personal;
+  QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
+  //$html.='<img src="'.$fileName.'"/>';
+  return $fileName;
+}
 
 
-
+function obtenerAreaActivo_asig($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_area from activofijos_asignaciones where codigo=$codigo");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valorX=$row['cod_area'];
+  }
+  return($valorX);
+}
+function obtenerUOActivo_asig($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_unidadorganizacional from activofijos_asignaciones where codigo=$codigo");
+  $stmt->execute();
+  $valorX="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valorX=$row['cod_unidadorganizacional'];
+  }
+  return($valorX);
+}
 
 function obtenerQR_activosfijos($codigo_af){
   $dbh = new Conexion();
@@ -11297,10 +11352,11 @@ function obtenerQR_activosfijos($codigo_af){
  
   $dir = 'qr_temp/';
   if(!file_exists($dir)){mkdir ($dir);}
-  $fileName = $dir.$codigoactivo.'.jpg';
-  $tamanio = 25; //tamaño de imagen que se creará
-  $level = 'M'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+  $fileName = $dir.$codigoactivo.'.png';
+  $tamanio = 2; //tamaño de imagen que se creará
+  $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
   $frameSize = 1; //marco de qr                                
+
   $contenido = "".$codigoactivo."/".$activo."/".$estadobien[0]; //substr($activo,0,50)
   //QRcode::text("EQUIPO CPU ORIGINAL DFF 180W CORE I7 7700 DDR 1TB COLOR NEGRO", $fileName, $level, $tamanio,$frameSize);
 
@@ -11350,9 +11406,27 @@ function obtenerQR_activosfijos($codigo_af){
 
     // displaying
    // echo '<img src="'.EXAMPLE_TMP_URLRELPATH.$fileName.'" />';
-
-  //$html.='<img src="'.$fileName.'"/>';
-  return  $tempDir.$fileName;
+  return $fileName;
 }
+
+
+
+function descargarPDFEtiqueta($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->set_paper(array(0,0,188.99*2,120));
+    //$mydompdf->set_paper('legal', 'landscape');
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
+    $mydompdf->set_base_path('assets/libraries/plantillaPDF3Etiqueta.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
+
 
 ?>

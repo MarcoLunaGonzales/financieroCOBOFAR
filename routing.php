@@ -508,6 +508,13 @@
 			require_once('solicitudes/listSolicitudRecursosAdminRegHistorico.php');
 		}
 
+		if ($_GET['opcion']=='listSolicitudIngresosAlmacen') {
+			require_once('ingresos_almacen/list.php');
+		}
+		if ($_GET['opcion']=='listSolicitudIngresosAlmacenHistorico') {
+			require_once('ingresos_almacen/list2.php');
+		}
+
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
 			require_once('estados_cuenta/list.php');

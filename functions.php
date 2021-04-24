@@ -11428,4 +11428,65 @@ function descargarPDFEtiqueta($nom,$html){
   }
 
 
+function obtenerIngresosPendientesContabilizar(){
+    $direccion=obtenerValorConfiguracion(99);//direccion des servicio web
+    $sIde = "farma";
+    $sKey = "89i6u32v7xda12jf96jgi30lh";
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoIngresosFactura");
+    $parametros=json_encode($parametros);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$direccion."wsfarm/ws_obtener_listado_ingresos_almacen.php");
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    return json_decode($remote_server_output);
+  }
+function obtenerIngresoPendienteDatos($codIngreso){
+    $direccion=obtenerValorConfiguracion(99);//direccion des servicio web
+    $sIde = "farma";
+    $sKey = "89i6u32v7xda12jf96jgi30lh";
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoIngresosFactura","cod_ingreso"=>$codIngreso);
+    $parametros=json_encode($parametros);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$direccion."wsfarm/ws_obtener_listado_ingresos_almacen.php");
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    return json_decode($remote_server_output);
+  }
+
+  function actualizarIngresoComprobante($codIngreso,$codComprobante){
+    $direccion=obtenerValorConfiguracion(99);//direccion des servicio web
+    $sIde = "farma";
+    $sKey = "89i6u32v7xda12jf96jgi30lh";
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"actualizarComprobanteIngreso","cod_ingreso"=>$codIngreso,"cod_comprobante"=>$codComprobante);
+    $parametros=json_encode($parametros);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$direccion."wsfarm/ws_actualizar_estado_ingreso.php");
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    return json_decode($remote_server_output);
+  }
+  function obtenerIngresosPendientesContabilizarHistorico(){
+    $direccion=obtenerValorConfiguracion(99);//direccion des servicio web
+    $sIde = "farma";
+    $sKey = "89i6u32v7xda12jf96jgi30lh";
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListadoIngresosFacturaHistorico");
+    $parametros=json_encode($parametros);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$direccion."wsfarm/ws_obtener_listado_ingresos_almacen_historico.php");
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    return json_decode($remote_server_output);
+  }
 ?>

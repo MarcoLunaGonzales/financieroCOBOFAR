@@ -590,6 +590,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Procesar Solitudes Rec. < <?=obtenerValorConfiguracion(85)?></span>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="?opcion=listSolicitudIngresosAlmacen" style="background:rgba(9, 98, 143 ,0.6); color:#DEDEDE;font-weight:bold;">
+                    <span class="sidebar-mini"> PIA </span>
+                    <span class="sidebar-normal"> Procesar Ingresos Almacen</span>
+                  </a>
+                </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSolicitudRecursosSisActividad">
                     <span class="sidebar-mini"> ASR </span>

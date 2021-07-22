@@ -35,8 +35,11 @@ $stmt->bindColumn('estado', $estado);
                   </div>
                   <h4 class="card-title"><?=$moduleNamePlural7?></h4>
                   <a target="_blank" href="activosFijos/respaldoCargadoInicialAF.php">
-                      <i class="material-icons" title='Inicial AF' style="color:red">history</i>
-                    </a>
+                    <i class="material-icons" title='Inicial AF Detallado' style="color:red">history</i>
+                  </a>
+                  <a target="_blank" href="activosFijos/respaldoCargadoInicialAF_resumen.php">
+                    <i class="material-icons" title='Inicial AF Resumen' style="color:blue">history</i>
+                  </a>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">

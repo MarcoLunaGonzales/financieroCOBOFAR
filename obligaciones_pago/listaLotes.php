@@ -7,7 +7,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_lotes sr join estados_pago e on sr.cod_estadopagolote=e.codigo order by sr.codigo desc");
+$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_lotes sr join estados_pago e on sr.cod_estadopagolote=e.codigo where cod_estadoreferencial=1 order by sr.codigo desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -60,28 +60,27 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $datosArray=obtenerDatosProveedoresPagoDetalleLote($codigo);
+                          $codComprobante=obtenerComprobantePago($codigo);
                           $descripcion=obtenerGlosaComprobante($codComprobante);
                           if(strlen($descripcion)>50){
                             $descripcion=substr($descripcion, 0, 50)."...";
                           }
-                          /*if($nombre_lote!=""){
-                            $datosArray[0]="<a href='#' title='".$datosArray[0]."' class='btn btn-primary btn-sm'><i class='material-icons'>view_comfy</i> ".$nombre_lote."</a>";
-                          }*/
+                          
                           switch ($codEstado) {
-                            case 1:
-                              $btnEstado="btn-default";
-                            break;
                             case 2:
                               $btnEstado="btn-danger";
+                              $estado="Anulado";
                             break;
-                            case 3:
+                            default:
+                            if($codComprobante==0){
+                              $codEstado=1; 
                               $btnEstado="btn-success";
-                            break;
-                            case 4:
-                              $btnEstado="btn-warning";
-                            break;
-                            case 5:
+                              $estado="Registrado";
+                            }else{
+                              $codEstado=5; 
                               $btnEstado="btn-info";
+                              $estado="Pagado";
+                            }
                             break;
                           }
 ?>
@@ -94,36 +93,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                           <td class="text-muted"><?=$estado?></td>
                           <td class="td-actions text-right">
                             <?php 
-                            if($cod_ebisa==0){
-                              ?>
-                               <div class="btn-group dropdown">
-                                     <button type="button" class="btn btn-info dropdown-toggle" title="Archivo TXT" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                       <i class="material-icons">note</i>
-                                     </button>
-                                    <div class="dropdown-menu">
-                                             <a href="<?=$urlGenerarEbisaLote?>?cod=<?=$codigo?>&a=0" class="dropdown-item">
-                                                 <i class="material-icons text-dark">note</i> Descargar Archivo
-                                             </a>
-                                             <a href="<?=$urlGenerarEbisaLote;?>?cod=<?=$codigo;?>&a=1" class="dropdown-item">
-                                                 <i class="material-icons text-success">offline_pin</i> Aprobar Ebisa
-                                             </a> 
-                                    </div>
-                                  </div>   
-                              <?php  
-                            }else{
-                              ?>
-                               <div class="btn-group dropdown">
-                                     <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" title="Archivo TXT" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                       <i class="material-icons">offline_pin</i>
-                                     </button>
-                                    <div class="dropdown-menu">
-                                             <a href="<?=$urlGenerarEbisaLote?>?cod=<?=$codigo?>&a=0" class="dropdown-item">
-                                                 <i class="material-icons text-dark">note</i> Descargar Archivo
-                                             </a>
-                                    </div>
-                                  </div>   
-                              <?php 
-                             }
+                            
                             if($codEstado==1){
                               ?>
                                    <a title="Editar Pago Lote- Detalle" target="_self" href='<?=$urlEditPagoLote;?>?cod=<?=$codigo;?>' class="btn btn-info">
@@ -167,30 +137,13 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                                     </a>
                                 <?php 
                                 if($codEstado!=2){
-                                  if($codEstado==1){
-                                    ?><a href="<?=$urlEdit2Lote?>?cod=<?=$codigo?>&estado=4&admin=0" class="dropdown-item">
-                                       <i class="material-icons text-warning">send</i> Enviar Solicitud Lote
-                                    </a><?php 
-                                  }else{
-                                    if($codEstado==3){
-                                        ?>
+                                  
+                                  if($codComprobante==0){ ?>
                                        <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobanteLote?>?cod=<?=$codigo?>')" class="dropdown-item">
                                        <i class="material-icons text-success">attach_money</i> Generar Comprobante Lote
                                       </a> 
                                         <?php
-                                    }else{
-                                      if($codEstado==4){
-                                        ?><a href="<?=$urlEdit2Lote?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
-                                       <i class="material-icons text-danger">clear</i> Cancelar Envio Lote
-                                      </a><?php
-                                      }else{
-                                        //cod 5 PAGADO
-                                        ?><a href="#" class="dropdown-item">
-                                       <i class="material-icons text-info">attach_money</i> Pago Lote Registrado
-                                      </a><?php
-                                      }        
-                                    }               
-                                 }
+                                    }
                                 }
                                ?>
                                       

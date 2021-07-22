@@ -664,6 +664,13 @@
 			$codigo=$_GET['codigo'];
 			require_once('activosFijos/saveDelete2.php');
 		}
+		if ($_GET['opcion']=='afdardebaja') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/saveDardebaja.php');
+		}
+		if ($_GET['opcion']=='afdardebaja_rpt') {
+			require_once('reportes_activosfijos/reporte_bajasaf_filtro.php');
+		}
         if ($_GET['opcion']=='saveUbicaciones') {
             require_once('activosFijos/ubicacionesSave.php');
 		}
@@ -736,6 +743,9 @@
 		//ACTIVOS FIJOS
 		if ($_GET['opcion']=='activosfijosLista') {
 			require_once('activosFijos/activosfijosLista.php');
+		}
+		if ($_GET['opcion']=='activosfijosLista_fungibles') {
+			require_once('activosFijos/activosfijosLista_fungibles.php');
 		}
 		if ($_GET['opcion']=='activofijoRegister') {
 			$codigo=$_GET['codigo'];
@@ -886,7 +896,13 @@
 			require_once('reportes_activosfijos/afConstanciasTraspaso.php');
 		}
         
-
+        //utilitarios AF
+        if ($_GET['opcion']=='cambiarResponsableAF') {
+			require_once('activosFijos/cambiar_responsable.php');
+		}
+		if ($_GET['opcion']=='cambiarResponsableAFsave') {
+            require_once('activosFijos/cambiar_responsable_save.php');
+		}
 
 		//*************************************************************************************************************/
 		//*************************************************************************************************************/

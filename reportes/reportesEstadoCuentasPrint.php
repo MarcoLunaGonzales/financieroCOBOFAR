@@ -82,7 +82,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                         <h6 class="card-title">Exportar como:</h6>
                       </div>
                       <h4 class="card-title"> 
-                        <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
+                        <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">
                           Estado de Cuentas
                       </h4>
                       <!-- <h4 class="card-title text-center">Reporte De Activos Fijos Por Unidad</h4> -->

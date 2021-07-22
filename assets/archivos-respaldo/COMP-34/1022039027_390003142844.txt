@@ -1,0 +1,24 @@
+
+NÚMERO DE TRAMITE: 390003142844
+
+
+
+NÚMERO DE AUTORIZACIÓN: 271401100546239
+LLAVE DE DOSIFICACION: 
+a(\Jx]px$C*FT7GK8(K[GsH#dGVJn%H4Qm$3VMM2M+WSfm9IHc-7n-EWQ(ZCCbVI
+
+_____________________________________________________________________
+Una vez recabado este dato, proceda con la configuración de su sistema de
+facturación computarizada, ingresando información de dosificación contenida 
+en el Certificado de Activación de Dosificación de Facturas, además de la llave de dosificación recibida.
+Concluido este proceso su sistema de facturación computarizada estará en
+condiciones de emitir las facturas dosificadas por el SIN, generando e 
+imprimiendo en cada una el Código de Control correspondiente.
+Considerando la importancia del proceso de configuración de la dosificación 
+en el Sistema de Facturación Computarizada, este deberá contemplar la doble captura de los siguientes datos:
+- Número de autorización.
+- Número inicial de la factura.
+- Fecha límite de emisión.
+- Llave de dosificación.
+Dada la sensibilidad de este dato (llave de dosificación), su conocimiento
+y divulgación serán de ENTERA Y ABSOLUTA RESPONSABILIDAD DEL CONTRIBUYENTE.

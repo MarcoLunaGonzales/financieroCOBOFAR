@@ -380,7 +380,7 @@ $tituloImporte="";
             <td class="s3 text-center" colspan="2">FORMA DE PAGO</td>
         </tr>
         <tr>
-            <td class="s3 text-left" width="30%"><?=strtoupper($tipoPago)?></td>
+            <td class="s3 text-left" width="30%">&nbsp;<?=strtoupper($tipoPago)?></td>
             <td class="s3 text-left"><?=strtoupper($beneficiarios)?></td>
         </tr>
      </table>
@@ -390,23 +390,10 @@ $tituloImporte="";
             <td class="s3 text-center">OBSERVACIONES</td>
         </tr>
         <tr>
-            <td class="s3 text-left"><?=$observacionesC?></td>
+            <td class="s3 text-left">&nbsp;<?=$observacionesC?></td>
         </tr>
      </table>
-     <?php 
-   if($distribucionGlosa!=""){
-    ?> 
-    <table class="table">
-        <tr class="bg-celeste">
-            <td class="s3 text-center">DISTRIBUCIÓN</td>
-        </tr>
-        <tr>
-            <td class="s3 text-left"><?=$distribucionGlosa?></td>
-        </tr>
-     </table>
-<?php     
-   }
-  ?>
+
   <table class="table">
                 <thead>
                   <tr class="bg-celeste s3 text-center">

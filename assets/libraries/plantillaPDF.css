@@ -1,9 +1,15 @@
+/*body{font-family:  sans-serif; font-size: 10px;}
+@page { margin-top: 60px; margin-left: 40px; margin-right: 40px; margin-bottom: 60px;}
+*/
+
+
 body{font-family:  sans-serif; font-size: 10px;}
-@page { margin-top: 210px; margin-left: 40px; margin-right: 40px; margin-bottom: 170px;}
+@page { margin-top: 210px; margin-left: 40px; margin-right: 40px; margin-bottom: 50px;}
 
 
 header { position: fixed; top: -155px; left: 0px; right: 0px; height: 70px;}
-footer { position: fixed; bottom: -70px; left: 0px; right: 0px; height: 50px; }
+footer { position: relative;top: 20px; left: 0px; right: 0px; height: 50px; }
+
 
 .imagen-logo-izq{
   position: absolute;
@@ -11,8 +17,8 @@ footer { position: fixed; bottom: -70px; left: 0px; right: 0px; height: 50px; }
   padding-left: 50px;
   padding-top: -25px;
   left: 0px;
-  width:70px;
-  height:70px;
+  width:50px;
+  height:50px;
 }
 .imagen-logo-der{
   position: absolute;
@@ -86,9 +92,7 @@ border-collapse: collapse;
     border: 1px solid black;
 }
 
-.td-border-none{
-  border: none !important;
-}
+
 .table .table-title{
  font-size: 12px;
 }
@@ -116,6 +120,12 @@ border-collapse: collapse;
 }
 .td-border-none{
   border: none !important;
+}
+.td-pading{
+  padding-top: 10px;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 10px;
 }
 .table2 .table-title{
  font-size: 12px;

@@ -6,6 +6,7 @@ require_once '../functions.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 $monedaBimon=1;
 session_start();
+
 if(!isset($_GET['comp'])){
     header("location:list.php");
 }else{
@@ -31,8 +32,8 @@ $stmtX->execute();
 // Preparamos
 $stmt = $dbh->prepare("SELECT (select u.nombre from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad,
 (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)cod_unidad,c.cod_gestion, 
-(select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, (select m.codigo from monedas m where m.codigo=c.cod_moneda)cod_moneda,
-(select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa, c.cod_unidadorganizacional
+(select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, (select m.codigo from monedas m where m.codigo=c.cod_moneda)cod_moneda,c.cod_tipocomprobante,
+(select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.numero_cheque,c.codigo, c.glosa, c.cod_unidadorganizacional,c.created_by
 from comprobantes c where c.codigo=$codigo;");
 // Ejecutamos
 $stmt->execute();
@@ -45,12 +46,22 @@ $stmt->bindColumn('cod_moneda', $codigoMoneda);
 $stmt->bindColumn('tipo_comprobante', $nombreTipoComprobante);
 $stmt->bindColumn('fecha', $fechaComprobante);
 $stmt->bindColumn('numero', $nroCorrelativo);
+$stmt->bindColumn('numero_cheque', $numero_cheque);
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('glosa', $glosaComprobante);
 $stmt->bindColumn('cod_unidadorganizacional', $codigoUO);
+$stmt->bindColumn('created_by', $created_by);
+$stmt->bindColumn('cod_tipocomprobante', $cod_tipocomprobante);
+
+
+
 
 $nameEntidad="";
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+    // $globalUser=$_SESSION['globalMes'];
+    $nombre_usuario=namePersonal_2($created_by);
+
     $fechaC=$fechaComprobante;
     
     $tamanioGlosa=obtenerValorConfiguracion(72); 
@@ -68,9 +79,9 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 }
 //estado anulado
 if($estadoComp==2){
-  $glosaC="***************"." CONCEPTO: ".$glosaC." ***************";
+  $glosaC="***************"." GLOSA: ".$glosaC." ***************";
 }else{
-  $glosaC="CONCEPTO: ".$glosaC;
+  $glosaC="GLOSA: ".$glosaC;
 }
 
 //INICIAR valores de las sumas
@@ -138,26 +149,14 @@ $html.=  '<header class="header">'.
               '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' N&uacute;mero: '.generarNumeroCeros(6,$numeroC).'</td>'.
             '</tr>'.
             '<tr>'.
-            '<td colspan="3">'.$glosaC.'</td>'.
-            '</tr>'.
-         '</table>'.
+            '<td colspan="3">'.$glosaC.'</td></tr>';
+            if($numero_cheque!=""){
+                $html.='<tr><td colspan="3">Cheque: '.$numero_cheque.'</td></tr>';
+            }
+         $html.='</table>'.
          '</header>';
-         $html.='
-         <footer class="footer"><table class="table">'.
-             '<tr class="text-center" valign="top">'.
-               '<td width="25%" class="text-center"></td>'.
-               '<td width="25%" class="text-center"></td>'.
-               '<td width="25%" class="text-center"></td>'.
-               '<td width="25%" class="text-left"><p>Firma/Sello  ___________________</p>Nombre:</td>'.
-             '</tr>'.
-             '<tr class="text-center" valign="top">'.
-               '<td width="25%" class="text-center">ELABORADO POR</td>'.
-               '<td width="25%" class="text-center">REVISADO POR<br>_________________</td>'.
-               '<td width="25%" class="text-center">APROBADO POR<br>__________________.</td>'.
-               '<td width="25%" class="text-left">C.I. Nº</td>'.
-             '</tr>'.
-           '</table></footer>'.
-         '<table class="table">'.
+
+         $html.='<table class="table">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
               '<td colspan="2" class="td-border-none"></td>'.
@@ -188,8 +187,8 @@ $html.=  '<header class="header">'.
 
               // print_r($row['nombre']);
              $html.='<tr>'.
-                      '<td>'.$row['numero'].'<br>'.$row['unidadAbrev'].'<br>'.$row['abreviatura'].'</td>'.
-                      '<td>'.$row['nombre'].' - '.$row['nombrecuentaauxiliar'].'<br>'.$row['glosa'].'</td>';
+                      '<td><b><span style="font-size:70%">'.$row['numero'].'</span></b><br>'.$row['unidadAbrev'].'<br>'.$row['abreviatura'].'</td>'.
+                      '<td><b><span style="font-size:75%">'.$row['nombre'].'</span></b> - '.$row['nombrecuentaauxiliar'].'<br>'.$row['glosa'].'</td>';
                       if($tcUSD==0){$tcUSD=1;}
 
                       $tDebeBol+=$row['debe']/$tcUSD;$tHaberBol+=$row['haber']/$tcUSD;
@@ -223,7 +222,7 @@ $html.=  '<header class="header">'.
               $html.='</tr>'.
               '</tbody>';
 $html.=    '</table>';
-$html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 '.$nombreMonedaG.'</p>';         
+$html.='<p style="font-size:12px;" class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 '.$nombreMonedaG.'</p>';         
 if($monedaBimon!=1){
       $entero=floor($tDebeBol);
       $decimal=$tDebeBol-$entero;
@@ -231,8 +230,59 @@ if($monedaBimon!=1){
       if($centavos<10){
         $centavos="0".$centavos;
       }
- $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Dólares</p>';          
+ $html.='<p style="font-size:12px;" class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Dólares</p>';          
 }
+
+
+if($cod_tipocomprobante==2){
+     $html.='
+ <footer class="footer"><table class="table">'.
+     '<tr class="text-center" valign="top">'.
+       '<td width="25%" class="text-center"></td>'.
+       '<td width="25%" class="text-center"></td>'.
+       '<td width="25%" class="text-center"></td>'.
+       '<td width="25%" class="text-center"><p>&nbsp;<br>&nbsp;</p></td>'.
+
+       '<td width="25%" class="text-left" ><p>Firma/Sello  _____________<br>Nombre:</p></td>'.
+       
+     
+     '</tr>'.
+     '<tr class="text-center" valign="top">'.
+       '<td width="25%" class="text-center"><span style="font-size:50%">ELABORADO POR <br>'.$nombre_usuario.'</span></td>'.
+       '<td width="25%" class="text-center">CONTABILIDAD<br></td>'.
+       '<td width="25%" class="text-center">G.A.F.<br>&nbsp;</td>'.
+       '<td width="25%" class="text-center">GERENCIA GRAL.<br></td>'.
+       '<td width="25%" class="text-left">C.I. Nº</td>'.
+     '</tr>'.
+   '</table></footer>';
+
+}else{
+     $html.='
+ <footer class="footer"><table class="table">'.
+     '<tr class="text-center" valign="top">'.
+       '<td width="25%" class="text-center"></td>'.
+       '<td width="25%" class="text-center"></td>'.
+       '<td width="25%" class="text-center"></td>'.
+       '<td width="25%" class="text-center"><p>&nbsp;<br>&nbsp;</p></td>'.
+
+       // '<td width="25%" class="text-left" ><p>Firma/Sello  _____________<br>Nombre:</p></td>'.
+       '<td width="25%" class="text-left" rowspan="2"></td>'.
+     
+     '</tr>'.
+     '<tr class="text-center" valign="top">'.
+       '<td width="25%" class="text-center"><span style="font-size:50%">ELABORADO POR <br>'.$nombre_usuario.'</span></td>'.
+       '<td width="25%" class="text-center">CONTABILIDAD<br></td>'.
+       '<td width="25%" class="text-center">G.A.F.<br>&nbsp;</td>'.
+       '<td width="25%" class="text-center">GERENCIA GRAL.<br></td>'.
+       // '<td width="25%" class="text-left">C.I. Nº</td>'.
+     '</tr>'.
+   '</table></footer>';
+}
+
+
+
+
+
 $html.='</body>'.
       '</html>';
 //detectando el error 
@@ -247,5 +297,5 @@ $html.='</body>'.
 //$html = mb_convert_encoding($html,'UTF-8', 'ISO-8859-1');
 
  //echo $html;           
-descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDF("COBOFAR - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
 ?>

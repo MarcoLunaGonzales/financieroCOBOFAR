@@ -14,8 +14,9 @@
                <i class="material-icons">home_work</i>
             </div>
          </a>
-        </div>     
-        <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
+        </div>  
+        <?php if($perfil==1){?>
+          <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
          <a href="modulo.php?codigo=1" class="after-loop-item card border-0 card-themes shadow-lg">
             <div class="card-body d-flex align-items-end flex-column text-right">
                <h4>RRHH (Remuneración)</h4>
@@ -42,6 +43,9 @@
             </div>
          </a>
         </div>
+        <?php } ?>
+           
+        
       </div>
     </div>
   </div>

@@ -1592,7 +1592,7 @@
                   text:      '<i class="material-icons">picture_as_pdf</i>',
                   titleAttr: 'Pdf',
                   title: 'Reporte De Activos Fijos',
-                  //messageTop:'Reporte Libro Diario',
+                  orientation: 'landscape',
                   exportOptions: {
                           columns: ':visible'
                   },
@@ -1613,6 +1613,7 @@
                       width:60,
                       height:60 
                   } );
+                  doc.defaultStyle.fontSize = 7;
                 }
               },
               {
@@ -1620,6 +1621,88 @@
                   text:      '<i class="material-icons">print</i>',
                   titleAttr: 'Imprimir',
                   title: 'Reporte De Activos Fijos',
+                  exportOptions: {
+                      columns: ':visible'
+                  }
+              }
+            ]
+          });
+       var table_af=$('#tablePaginatorFixed_af_baja').DataTable({
+            "paging":   false,
+              "info":     false,
+              "language": {
+                  "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+              },
+              "order": false,
+              "searching": false,
+              fixedHeader: {
+                header: true,
+                footer: true
+              },
+              dom: 'Bfrtip',
+              buttons:[
+
+              {
+                  extend: 'copy',
+                  text:      '<i class="material-icons">file_copy</i>',
+                  titleAttr: 'Copiar',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
+                  exportOptions: {
+                      columns: ':visible'
+                  }
+              },
+              {
+                  extend: 'csv',
+                  text:      '<i class="material-icons">list_alt</i>',
+                  titleAttr: 'CSV',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
+                  exportOptions: {
+                      columns: ':visible'
+                  }
+              },
+              {
+                  extend: 'excel',
+                  text:      '<i class="material-icons">assessment</i>',
+                  titleAttr: 'Excel',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
+                  exportOptions: {
+                      columns: ':visible'
+                  }
+              },
+              {
+                  extend: 'pdf',
+                  text:      '<i class="material-icons">picture_as_pdf</i>',
+                  titleAttr: 'Pdf',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
+                  orientation: 'landscape',
+                  exportOptions: {
+                          columns: ':visible'
+                  },
+                customize: function ( doc) {
+                     doc['footer']=(function(page, pages) { return {
+                           columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
+                                text: page.toString(), italics: true 
+                               },' de ',
+                               { text: pages.toString(), italics: true }]
+                            }],
+                           margin: [10, 5]
+                          }
+                     });
+                  doc.content.splice( 1, 0, {
+                      margin: [ 0, -50, 0, 12 ],
+                      alignment: 'left',
+                      image: imageLogo,
+                      width:60,
+                      height:60 
+                  } );
+                  doc.defaultStyle.fontSize = 7;
+                }
+              },
+              {
+                  extend: 'print',
+                  text:      '<i class="material-icons">print</i>',
+                  titleAttr: 'Imprimir',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
                   exportOptions: {
                       columns: ':visible'
                   }
@@ -1646,7 +1729,7 @@
                       extend: 'copy',
                       text:      '<i class="material-icons">file_copy</i>',
                       titleAttr: 'Copiar',
-                      title: 'Reporte De Activos Fijos Por Unidad',
+                      title: 'Reporte De Activos Fijos Por Oficina',
                       exportOptions: {
                           columns: ':visible'
                       }
@@ -1664,7 +1747,7 @@
                       extend: 'excel',
                       text:      '<i class="material-icons">assessment</i>',
                       titleAttr: 'Excel',
-                      title: 'Reporte De Activos Fijos Por Unidad',
+                      title: 'Reporte De Activos Fijos Por Oficina',
                       exportOptions: {
                           columns: ':visible'
                       }
@@ -1673,7 +1756,8 @@
                       extend: 'pdf',
                       text:      '<i class="material-icons">picture_as_pdf</i>',
                       titleAttr: 'Pdf',
-                      title: 'Reporte De Activos Fijos Por Unidad',
+                      orientation: 'landscape',
+                      title: 'Reporte De Activos Fijos Por Oficina',
                       //messageTop:'Reporte Libro Diario',
                       exportOptions: {
                               columns: ':visible'
@@ -1757,7 +1841,7 @@
                       text:      '<i class="material-icons">picture_as_pdf</i>',
                       titleAttr: 'Pdf',
                       title: 'Depreciación De Activos Fijos Por Mes Y Gestión',
-                      //messageTop:'Reporte Libro Diario',
+                      orientation: 'landscape',
                       exportOptions: {
                               columns: ':visible'
                       },
@@ -1778,6 +1862,7 @@
                           width:50,
                           height:50 
                       } );
+                      doc.defaultStyle.fontSize = 7;
                     }
                   },
                   {
@@ -1838,7 +1923,7 @@
                             text:      '<i class="material-icons">picture_as_pdf</i>',
                             titleAttr: 'Pdf',
                             title: 'Depreciación De Activos Fijos Por Rubro Por Mes',
-                            //messageTop:'Reporte Libro Diario',
+                            orientation: 'landscape',
                             exportOptions: {
                                     columns: ':visible'
                             },
@@ -1859,6 +1944,7 @@
                                 width: 50,
                                 height:50 
                             } );
+                            doc.defaultStyle.fontSize = 7;
                           }
                         },
                         {
@@ -1915,33 +2001,34 @@
               }
           },
           {
-              extend: 'pdf',
-              text:      '<i class="material-icons">picture_as_pdf</i>',
-              titleAttr: 'Pdf',
-              title: 'Reporte De Activos Fijos Asignados',
-              //messageTop:'Reporte Libro Diario',
-              exportOptions: {
-                      columns: ':visible'
-              },
-            customize: function ( doc) {
-                 doc['footer']=(function(page, pages) { return {
-                       columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
-                            text: page.toString(), italics: true 
-                           },' de ',
-                           { text: pages.toString(), italics: true }]
-                        }],
-                       margin: [10, 5]
-                      }
-                 });
-              doc.content.splice( 1, 0, {
-                  margin: [ 0, -50, 0, 12 ],
-                  alignment: 'left',
-                  image: imageLogo,
-                  width:50,
-                  height:50 
-              } );
-            }
-          },
+            extend: 'pdf',
+            text:      '<i class="material-icons">picture_as_pdf</i>',
+            titleAttr: 'Pdf',
+            title: 'Reporte De Activos Fijos Asignados',
+            orientation: 'landscape',
+            exportOptions: {
+                    columns: ':visible'
+            },
+          customize: function ( doc) {
+            doc['footer']=(function(page, pages) { return {
+                     columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
+                          text: page.toString(), italics: true 
+                         },' de ',
+                         { text: pages.toString(), italics: true }]
+                      }],
+                     margin: [10, 5]
+                    }
+               });
+            doc.content.splice( 1, 0, {
+                margin: [ 0, -50, 0, 12 ],
+                alignment: 'left',
+                image: imageLogo,
+                width:50,
+                height:50 
+            } );
+            doc.defaultStyle.fontSize = 7;
+          }},
+
           {
               extend: 'print',
               text:      '<i class="material-icons">print</i>',

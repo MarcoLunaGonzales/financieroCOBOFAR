@@ -109,7 +109,7 @@ if(isset($_GET['admin'])){
 </div> 
 </div>
 <div class="row">
-<label class="col-sm-1 col-form-label" style="color:#000000; ">N Solicitud:</label>
+<label class="col-sm-1 col-form-label" style="color:#000000; ">N Comprobante:</label>
 <div class="col-sm-2">
   <div class="form-group">
   	<input type="text" class="form-control" readonly="true" value="<?=$datosArray[5]?>" style="background-color:#E3CEF6;text-align: left" >
@@ -142,7 +142,7 @@ if(isset($_GET['admin'])){
 									<th>Detalle</th>
 									<th>Tipo Pago</th>
 									<th class="text-right">Presupuestado</th>
-									<th class="text-right">Solicitado</th>
+									<!-- <th class="text-right">Solicitado</th> -->
                   <th class="text-right">Pagado</th>			
 									<th>Proveedor</th>
 								</tr>
@@ -151,15 +151,16 @@ if(isset($_GET['admin'])){
 							<?php 
 							$solicitudDetalle=obtenerPagoProveedorDetalle($codigo);
 							$index=1;$totalImportePres=0;$totalImporte=0;$totalPago=0;
-                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+              while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                              	$codCuentaX=$rowDetalles['cod_plancuenta'];
-                             	$detalleX=$rowDetalles["detalle"];
-                             	$importeX=$rowDetalles["importe_presupuesto"];
-							    $importeSolX=$rowDetalles["importe"];
+                             	$detalleX=$rowDetalles["glosa_auxiliar"];
+                             	 $importeX=$rowDetalles["monto"];
+							    // $importeSolX=$rowDetalles["pago"];
 							    $proveedorX=nameProveedor($rowDetalles["cod_proveedor"]);
-							    $retencionX=$rowDetalles["cod_confretencion"];
+							    // $retencionX=$rowDetalles["cod_confretencion"];
+                  $retencionX=0;
 							    $totalImportePres+=$importeX;
-							    $totalImporte+=$importeSolX;
+							    //$totalImporte+=$importeSolX;
 							    if($retencionX!=0){
 							   	  $tituloImporte="<strong>".nameRetencion($retencionX)."</strong>";
 							    }else{
@@ -177,7 +178,7 @@ if(isset($_GET['admin'])){
                                     <td><?=$detalleX?></td>
                                     <td><?=$rowDetalles['tipo_pago']?></td>
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>
-                                    <td class="text-right"><?=number_format($importeSolX, 2, '.', ',')?></td>
+                                    
                                     <td class="text-right"><?=number_format($pagoX, 2, '.', ',')?></td>
                                     <td><?=$proveedorX?></td>
                                     
@@ -188,7 +189,7 @@ if(isset($_GET['admin'])){
                         	  <tr class="font-weight-bold bg-white text-dark">
                         	  	    <td colspan="5" class="text-left">Total</td>
                                     <td class="text-right"><?=number_format($totalImportePres, 2, '.', ',')?></td>
-                                    <td class="text-right"><?=number_format($totalImporte, 2, '.', ',')?></td>
+                                    <!-- <td class="text-right"><?=number_format($totalImporte, 2, '.', ',')?></td> -->
                                     <td class="text-right"><?=number_format($totalPago, 2, '.', ',')?></td>
                                     <td></td>
                         	  </tr>

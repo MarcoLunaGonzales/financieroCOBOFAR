@@ -8,25 +8,26 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //echo "n".$_POST["codigo"]."n"; 
 if ($_POST["codigo"] == 0){
     $codigo = $_POST["codigo"];
+
+
     $cod_depreciaciones = $_POST["cod_depreciaciones"];
     $tipo_bien = $_POST["tipo_bien"];
+
+    $codigo_alterno=obtener_codcorrelativo_alterno_tipobien($cod_depreciaciones);
     $codEstado=1;
-    try {
         //$stmt = $dbh->prepare("INSERT INTO TABLA(cod_depreciaciones,tipo_bien) values (:cod_depreciaciones, :tipo_bien)");
-        $stmt = $dbh->prepare("INSERT INTO tiposbienes (cod_depreciaciones, tipo_bien, cod_estado) values (:cod_depreciaciones, :tipo_bien, :cod_estado)");
+        $stmt = $dbh->prepare("INSERT INTO tiposbienes (cod_depreciaciones, tipo_bien, cod_estado,codigo_alterno) values (:cod_depreciaciones, :tipo_bien, :cod_estado,:codigo_alterno)");
         //Bind
         $stmt->bindParam(':cod_depreciaciones', $cod_depreciaciones);
         $stmt->bindParam(':tipo_bien', $tipo_bien);
         $stmt->bindParam(':cod_estado', $codEstado);
+        $stmt->bindParam(':codigo_alterno', $codigo_alterno);
         $flagSuccess=$stmt->execute();
         $tabla_id = $dbh->lastInsertId();
 
         showAlertSuccessError($flagSuccess,$urlList5);
-    } catch(PDOException $ex){
-        echo "Un error ocurrio".$ex->getMessage();
-    }
 } else {//update
-    try {
+
         //echo "entra";
         $codigo = $_POST["codigo"];
         $cod_depreciaciones = $_POST["cod_depreciaciones"];
@@ -40,8 +41,5 @@ if ($_POST["codigo"] == 0){
         //$flagSuccess=$stmt->execute();
         $flagSuccess=$stmt->execute();
         showAlertSuccessError($flagSuccess,$urlList5);
-    } catch(PDOException $ex){
-        echo "Un error ocurrio".$ex->getMessage();
-    }
 }    
 ?>

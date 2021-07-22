@@ -6,12 +6,14 @@ require_once 'functions.php';
 require_once 'configModule.php';
 require_once 'functionsDepreciacion.php';
 ini_set('display_errors',1);
-
+session_start();
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 try {
+    echo "<br><br><br><br>";
     $codigoactivo=$_POST["codigoactivo"];
     $tipoalta=$_POST["tipoalta"];
     
@@ -46,18 +48,17 @@ try {
     $reevaluo=0;
     $fechalta_depreciacion=obtener_cantidad_meses_depreciacion($cod_depreciaciones);
     
+    $cod_responsables_responsable=$_POST["cod_responsables_responsable"];
+    $cod_responsables_responsable2=$_POST["cod_responsables_responsable2"];
 
-    if(isset($_POST["cod_responsables_responsable"])){
-        $cod_responsables_responsable=$_POST["cod_responsables_responsable"];
-    }
     if(isset($_POST["cod_responsables_autorizadopor"])){
         $cod_responsables_autorizadopor=$_POST["cod_responsables_autorizadopor"];
     }
 
-    //$created_at=$_POST["created_at"];
-    //$created_by=$_POST["created_by"];
-    //$modified_at=$_POST["modified_at"];
-    //$modified_by=$_POST["modified_by"];    
+    $created_at=date('Y-m-d h:m:s');
+    $created_by=$globalUser;
+    $modified_at=date('Y-m-d h:m:s');
+    $modified_by=$globalUser;
     if(isset($_POST["proveedores"])){
         $cod_af_proveedores=$_POST["proveedores"];
     }else $cod_af_proveedores=null;
@@ -68,7 +69,6 @@ try {
     $cod_proy_finan = $_POST['cod_proy_finan'];
 
     // echo "llego: ".$cod_proy_finan;
-
     $cod_area=0;
     if(isset($_POST['cod_area'])){
         $cod_area = $_POST['cod_area'];
@@ -78,14 +78,15 @@ try {
 
 
     if ($_POST["codigo"] == 0){
+        $codigoactivo=obtenerCodigoReferencialActivo($cod_tiposactivos,$cod_depreciaciones,$cod_tiposbienes);//obtener codigo correlativo 2 de activo
         $stmt = $dbh->prepare("INSERT INTO activosfijos(codigoactivo,tipoalta,fechalta,indiceufv,tipocambio,moneda,valorinicial,
         depreciacionacumulada,valorresidual,cod_depreciaciones,cod_tiposbienes,vidautilmeses, vidautilmeses_restante,estadobien,otrodato,cod_ubicaciones,
         cod_empresa,activo,cod_responsables_responsable,cod_responsables_autorizadopor, cod_af_proveedores, numerofactura,
-        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo,tipo_af,fecha_iniciodepreciacion,cantidad_meses_depreciacion) values
+        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo,tipo_af,fecha_iniciodepreciacion,cantidad_meses_depreciacion,cod_responsables_responsable2,created_at,created_by) values
         (:codigoactivo, :tipoalta, :fechalta, :indiceufv, :tipocambio, :moneda, :valorinicial, :depreciacionacumulada, :valorresidual,
         :cod_depreciaciones, :cod_tiposbienes, :vidautilmeses, :vidautilmeses_restante, :estadobien, :otrodato, :cod_ubicaciones, :cod_empresa, :activo,
         :cod_responsables_responsable, :cod_responsables_autorizadopor, :cod_af_proveedores, :numerofactura,
-        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo,:cod_tiposactivos,:fecha_iniciodepreciacion,:cantidad_meses_depreciacion)");
+        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo,:cod_tiposactivos,:fecha_iniciodepreciacion,:cantidad_meses_depreciacion,:cod_responsables_responsable2,:created_at,:created_by)");
 
         //necesito guardar en una segunda tabla: activofijos_asignaciones
 
@@ -115,6 +116,7 @@ try {
         $stmt->bindParam(':cod_empresa', $cod_empresa);
         $stmt->bindParam(':activo', $activo);
         $stmt->bindParam(':cod_responsables_responsable', $cod_responsables_responsable);
+        $stmt->bindParam(':cod_responsables_responsable2', $cod_responsables_responsable2);
         $stmt->bindParam(':cod_responsables_autorizadopor', $cod_responsables_autorizadopor);
 
         $stmt->bindParam(':cod_af_proveedores', $cod_af_proveedores);
@@ -131,10 +133,10 @@ try {
         $stmt->bindParam(':cantidad_meses_depreciacion', $fechalta_depreciacion);
         
         
-        //$stmt->bindParam(':created_at', $created_at);
-        //$stmt->bindParam(':created_by', $created_by);
-        //$stmt->bindParam(':modified_at', $modified_at);
-        //$stmt->bindParam(':modified_by', $modified_by);
+        $stmt->bindParam(':created_at', $created_at);
+        $stmt->bindParam(':created_by', $created_by);
+        // $stmt->bindParam(':modified_at', $modified_at);
+        // $stmt->bindParam(':modified_by', $modified_by);
 
         $flagSuccess=$stmt->execute();
         ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,23 +146,26 @@ try {
         //LA PRIMERA ASIGNACION INGRESA POR ACA.
         $ultimo = $dbh->lastInsertId();
         //echo $ultimo;
-        $stmt2 = $dbh->prepare("INSERT INTO activofijos_asignaciones(codigo,cod_activosfijos,fechaasignacion,
-            cod_ubicaciones,cod_personal, estadobien_asig, cod_unidadorganizacional, cod_area, cod_estadoasignacionaf)
-            values (:codigo,:cod_activosfijos, now(),
-            :cod_ubicaciones, :cod_personal, :estadobien_asig, :cod_unidadorganizacional, :cod_area, :cod_estadoasignacionaf)");
-
+        $sql="INSERT INTO activofijos_asignaciones(cod_activosfijos,fechaasignacion,
+            cod_ubicaciones,cod_personal, estadobien_asig, cod_unidadorganizacional, cod_area, cod_estadoasignacionaf,cod_personal2,created_at,created_by)
+            values (:cod_activosfijos, now(),
+            :cod_ubicaciones, :cod_personal, :estadobien_asig, :cod_unidadorganizacional, :cod_area, :cod_estadoasignacionaf,:cod_personal2,:created_at,:created_by)";
+        $stmt2 = $dbh->prepare($sql);
         $codEstadoAsignacionAF="1";
-        $stmt2->bindParam(':codigo', $ultimo);
+        
         $stmt2->bindParam(':cod_activosfijos', $ultimo);
         //$stmt2->bindParam(':fechaasignacion', $fechalta);
         $stmt2->bindParam(':cod_ubicaciones', $cod_ubicaciones);
         $stmt2->bindParam(':cod_personal', $cod_responsables_responsable);
+        $stmt2->bindParam(':cod_personal2', $cod_responsables_responsable2);
         $stmt2->bindParam(':estadobien_asig', $estadobien);
         $stmt2->bindParam(':cod_unidadorganizacional', $cod_unidadorganizacional);
         $stmt2->bindParam(':cod_area', $cod_area);
         $stmt2->bindParam(':cod_estadoasignacionaf', $codEstadoAsignacionAF);
-        //$stmt2->bindParam(':created_by', 1);
-        //$stmt2->bindParam(':modified_by', 1);
+
+        $stmt2->bindParam(':created_by', $created_by);
+        $stmt2->bindParam(':created_at', $created_at);
+
         $flagSuccess=$stmt2->execute();
         
 
@@ -181,11 +186,6 @@ try {
             echo "Sin imagen".$_FILES["image"]["error"];//sale error 0
 
         $flagSuccess=$stmt3->execute();
-        //$stmt3->debugDumpParams();
-
-        //$arr = $stmt->errorInfo();
-        //print_r($arr);
-        //$tabla_id = $dbh->lastInsertId();;
         
         showAlertSuccessError($flagSuccess,$urlList6);
 
@@ -194,14 +194,12 @@ try {
         //UPDATE
         $codigo = $_POST["codigo"];
         //obtener unos datos antes de actualizar...
-        $stmtPREVIO = $dbh->prepare("SELECT * FROM activosfijos where codigo =:codigo");
+        $stmtPREVIO = $dbh->prepare("SELECT valorinicial FROM activosfijos where codigo =:codigo");
         //Ejecutamos;
         $stmtPREVIO->bindParam(':codigo',$codigo);
         $stmtPREVIO->execute();
         $resultPREVIO = $stmtPREVIO->fetch();
         //$codigo = $result['codigo'];
-        $idubicacion222 = $resultPREVIO['cod_ubicaciones'];
-        $idresponsable222 = $resultPREVIO['cod_responsables_responsable'];
         $valorinicial222 = $resultPREVIO['valorinicial'];
         //SI EL VALOR DEL ACTIVO CAMBIA... se actualiza el valor bandera_depreciar a NO
         $bandera_depreciar = 'SI';
@@ -215,8 +213,7 @@ try {
         cod_depreciaciones=:cod_depreciaciones,cod_tiposbienes=:cod_tiposbienes,
         vidautilmeses=:vidautilmeses,estadobien=:estadobien,otrodato=:otrodato,cod_empresa=:cod_empresa,activo=:activo,
         vidautilmeses_restante=:vidautilmeses_restante,cod_af_proveedores=:cod_af_proveedores,
-        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion,tipo_af=:cod_tiposactivos where codigo = :codigo";
-
+        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion,tipo_af=:cod_tiposactivos,modified_at=:modified_at,modified_by=:modified_by where codigo = :codigo";
         $stmt = $dbh->prepare($sql);
         //bind
         //created_at=:created_at,created_by=:created_by,modified_at=:modified_at,modified_by=:modified_by,
@@ -244,6 +241,8 @@ try {
         $stmt->bindParam(':bandera_depreciar', $bandera_depreciar);
         $stmt->bindParam(':cod_proy_financiacion', $cod_proy_finan);
         $stmt->bindParam(':cod_tiposactivos', $cod_tiposactivos);
+        $stmt->bindParam(':modified_at', $modified_at);
+        $stmt->bindParam(':modified_by', $modified_by);
 
         $flagSuccess=$stmt->execute();
 
@@ -269,9 +268,7 @@ try {
                 $stmt3 = $dbh->prepare("UPDATE activosfijosimagen set imagen = :imagen where codigo = :codigo");    
             } else {
                 $stmt3 = $dbh->prepare("INSERT into activosfijosimagen (codigo, imagen) values (:codigo, :imagen)");
-            }
-
-                        
+            }                       
             $stmt3->bindParam(':codigo', $codigo);
             $stmt3->bindParam(':imagen', $_FILES['image']['name']);//la url esta poniendo
             //if (move_uploaded_file($_FILES['image']['name'], APP_PATH . DIRECTORY_SEPARATOR ."imagenes".DIRECTORY_SEPARATOR.$_FILES['image']['name']))
@@ -289,7 +286,6 @@ try {
 
             $flagSuccess=$stmt3->execute();
         }
-
         showAlertSuccessError($flagSuccess,$urlList6);
 
     }//si es insert o update

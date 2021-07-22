@@ -23,6 +23,11 @@ $urlSave2="?opcion=saveUbicaciones";//query guardar
 $urlEdit2="index.php?opcion=registerUbicacion";//form
 $urlSaveEdit2="?opcion=saveUbicaciones";//guardar
 $urlDelete2="index.php?opcion=deleteUbicacion";
+
+
+$urlDardeBaja="index.php?opcion=afdardebaja";
+
+
 $urlRegistrar_ubicacion="index.php?opcion=registerUbicacion";//form
 
 //deprecionaciones
@@ -66,6 +71,8 @@ $urlRegistrar_tiposbienes="index.php?opcion=registerTipoBien";
 $moduleNameSingular6="Activo Fijo";
 $moduleNamePlural6="Activos Fijos";
 $urlList6="?opcion=activosfijosLista";
+$urlcambiar_respo="?opcion=cambiarResponsableAF";
+$urlSave_cambiar_resp="?opcion=cambiarResponsableAFsave";//guardar
 $urlSave6="?opcion=saveActivosfijos";//guardar
 $urlSaveTransfer="?opcion=saveTransferActivosfijos";//guardar transferencia de af
 $urlSaveReevaluoAF="?opcion=saveReevaluoAF";//
@@ -79,6 +86,8 @@ $urlafEventos="index.php?opcion=activofijoEventos";
 $urlSaveEdit6="?opcion=saveActivosfijos";//guardar
 $urlDelete6="index.php?opcion=deleteDepreciacion";
 $urlRegistrar_activosfijos="index.php?opcion=activofijoRegister";//form
+
+$urlList_fungibles="?opcion=activosfijosLista_fungibles";
 //$printAlta="index.php?opcion=activofijoPrintAlta";
 $printAlta="activosFijos/afPrintAlta.php";
 $printDepreciacion1="activosFijos/afPrintDepreciacion1.php";//de un solo mes

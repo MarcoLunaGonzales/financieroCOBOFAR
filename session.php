@@ -15,39 +15,10 @@ $password=$_POST["password"];
 //OBTENEMOS EL VALOR DE LA CONFIGURACION 1 -> LOGIN PROPIO DE MONITOREO    2-> LOGIN POR SERVICIO WEB
 $tipoLogin=obtieneValorConfig(-10);
 $banderaLogin=0;
-// if($tipoLogin==2){
-// 	$sIdentificador = "ifinanciero";
-// 	$sKey="ce94a8dabdf0b112eafa27a5aa475751";
-// 	$nombreuser=$user;
-// 	$claveuser=$password;
-// 	$claveuser=md5($password);
-// 	$datos=array("sIdentificador"=>$sIdentificador, "sKey"=>$sKey, 
-// 				 "operacion"=>"Login", "nombreUser"=>$nombreuser, "claveUser"=>$claveuser);
-// 	$datos=json_encode($datos);
-// 	$ch = curl_init();
-// 	curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/verifica/ws-user-personal.php");
-// 	curl_setopt($ch, CURLOPT_POST, TRUE);
-// 	curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
-// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-// 	$remote_server_output = curl_exec ($ch);
-// 	curl_close ($ch);
-// 	$obj=json_decode($remote_server_output);
 
-// 	//header('Content-type: application/json'); 	
-// 	//print_r($remote_server_output); 
-
-// 	$banderaLogin=$obj->estado;
-// 	if($banderaLogin=="true"){
-// 		$banderaLogin=1;
-// 	}
-// 	$idUsuarioSW=$obj->usuario->IdUsuario;
-
-// 	//echo $banderaLogin;
-// }
-
-if($banderaLogin==1 || $tipoLogin==1){
+if($tipoLogin==1){
 	$sql="";
-	if($tipoLogin==1){
+	if($tipoLogin==1){//
 		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil,pd.admin
 			from personal p, personal_datosadicionales pd 
 			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";		

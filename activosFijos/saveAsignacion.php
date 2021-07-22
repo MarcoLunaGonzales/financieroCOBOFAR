@@ -23,8 +23,7 @@ $observacion=$_POST['observacion'];
 //echo "llega ".$cod_asignacion;
 
 $fecha_recepcion=date("Y-m-d H:i:s");
-if($cod_estadoasignacionaf==5){
-	//cuando devuelve AF
+if($cod_estadoasignacionaf==5){ //cuando devuelve AF
 	// Prepare
 	$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
 	set cod_estadoasignacionaf=:cod_estadoasignacionaf,observaciones_devolucion=:observacion,fecha_devolucion=:fecha_devolucion
@@ -35,8 +34,7 @@ if($cod_estadoasignacionaf==5){
 	$stmtU->bindParam(':fecha_devolucion', $fecha_recepcion);
 	$stmtU->bindParam(':observacion', $observacion);
 
-}elseif($cod_estadoasignacionaf==6){
-	//cuando se acepta devolucion de AF
+}elseif($cod_estadoasignacionaf==6){ //cuando se acepta devolucion de AF
 	// Prepare
 	$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
 	set cod_estadoasignacionaf=4
@@ -44,21 +42,17 @@ if($cod_estadoasignacionaf==5){
 	// Bind
 	$stmtU->bindParam(':cod_asignacion', $cod_asignacion);
 	//$stmtU->execute();
-}elseif($cod_estadoasignacionaf==7){
-	//cuando se rechaza devolucion AF
+}elseif($cod_estadoasignacionaf==7){ //cuando se rechaza devolucion AF
 	// Prepare
 	$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
 	set cod_estadoasignacionaf=2
 	where codigo=:cod_asignacion");
 	// Bind
 	$stmtU->bindParam(':cod_asignacion', $cod_asignacion);
-	
-//$stmtU->execute();
-
-}elseif($cod_estadoasignacionaf==2)//acepta recepcion de af
-{
+}elseif($cod_estadoasignacionaf==2){ //acepta recepcion de af
 	$cod_area=obtenerAreaActivo_asig($cod_asignacion);
 	$cod_uo=obtenerUOActivo_asig($cod_asignacion);
+	$cod_personal2=obtenerCodPersonal2_asignacion($cod_asignacion);
 	$sql="UPDATE activofijos_asignaciones 
 	set cod_estadoasignacionaf='$cod_estadoasignacionaf',observaciones_recepcion='$observacion',fecha_recepcion='$fecha_recepcion'
 	where codigo=$cod_asignacion";
@@ -67,13 +61,12 @@ if($cod_estadoasignacionaf==5){
 	$succees=$stmtU2->execute();
 	if($succees){
 		$sql="UPDATE activosfijos 
-		set cod_responsables_responsable=$cod_personal,cod_area=$cod_area,cod_unidadorganizacional=$cod_uo
+		set cod_responsables_responsable=$cod_personal,cod_responsables_responsable2=$cod_personal2,cod_area=$cod_area,cod_unidadorganizacional=$cod_uo
 		where codigo=$cod_af";
 		//echo $sql;
 		$stmtU = $dbhU->prepare($sql);	
 	}
-}
-else{
+}else{
 	// Prepare
 	$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
 	set cod_estadoasignacionaf=:cod_estadoasignacionaf,observaciones_recepcion=:observacion,fecha_recepcion=:fecha_recepcion

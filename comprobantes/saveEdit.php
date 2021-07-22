@@ -129,7 +129,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
             "r" => "http://www.google.com",
             "v" => true
             );
-           $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+           //$resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
            //unlink($target_path);
            //print_r($resultado);        
         }

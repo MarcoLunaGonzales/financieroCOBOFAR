@@ -19,7 +19,7 @@ try{
     $result = $stmtAF->fetch();
     $nom_proy_financiacion = $result['nom_proy_financiacion'];    
 
-    $stmt = $dbh->prepare("SELECT codigo,codigoactivo,tipoalta,DATE_FORMAT(fechalta ,'%d/%m/%Y')as fechalta,activo,depreciacionacumulada,valorresidual,estadobien,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombre_personal,(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo2,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as abrev_uo2,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select c.numero from comprobantes  c where c.codigo=cod_comprobante ) as comprobante from activosfijos WHERE codigo=:codigo");
+    $stmt = $dbh->prepare("SELECT codigo,codigoactivo,tipoalta,DATE_FORMAT(fechalta ,'%d/%m/%Y')as fechalta,activo,otrodato,depreciacionacumulada,valorresidual,estadobien,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombre_personal,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable2) as nombre_personal2,(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo2,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as abrev_uo2,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select c.numero from comprobantes  c where c.codigo=cod_comprobante ) as comprobante from activosfijos WHERE codigo=:codigo");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo_af);
     $stmt->execute();
@@ -40,7 +40,7 @@ try{
     // $cod_tiposbienes = $result['cod_tiposbienes'];
     // $vidautilmeses = $result['vidautilmeses'];
     $estadobien = $result['estadobien'];
-    // $otrodato = $result['otrodato'];
+     $otrodato = $result['otrodato'];
     // $cod_ubicaciones = $result['cod_ubicaciones'];
     // $cod_empresa = $result['cod_empresa'];
     $activo = $result['activo'];
@@ -52,6 +52,7 @@ try{
     $comprobante = $result['modified_by'];
     // $vidautilmeses_restante = $result['vidautilmeses_restante'];
     $nombre_personal = $result['nombre_personal'];
+    $nombre_personal2 = $result['nombre_personal2'];
     $nombre_depreciaciones = $result['nombre_depreciaciones'];
     $tipo_bien = $result['tipo_bien'];
     $edificio = "";
@@ -146,7 +147,8 @@ $html.=  '<header class="header">'.
                                 '<b>Oficina : </b>'.$nombre_uo2.' <br>'.
                                 '<b>Area : </b>'.$nombre_area.' <br>'.
                                 '<b>Rubro : </b>'.$nombre_depreciaciones.' <br>'.
-                                '<b>Responsable : </b>'.$nombre_personal.' <br>'.
+                                '<b>Responsable 1: </b>'.$nombre_personal.' <br>'.
+                                '<b>Responsable 2: </b>'.$nombre_personal2.' <br>'.
                                 '<b>Tipo alta : </b>'.$tipoalta.'<br>'.
                                 // '<b>Ubicación : </b>'.$edificio.'<br>'.
                                 '<b>Estado Bien : </b>'.$estadobien.' <br>'.

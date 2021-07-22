@@ -17,6 +17,14 @@ if($tipoProveedorCliente==1){
 if($tipoProveedorCliente==2){
 	$sql="select c.codigo, c.nombre from clientes c where c.cod_estadoreferencial=1 order by c.nombre";
 }
+if($tipoProveedorCliente==3){//Personal
+    $sql="SELECT codigo, CONCAT_WS(' ',primer_nombre,paterno,materno)as nombre from personal where cod_estadopersonal=1 and cod_estadoreferencial=1 order by nombre";
+}
+if($tipoProveedorCliente==4){//Sucursal
+    $sql="SELECT a.codigo, a.nombre,a.abreviatura from areas a,areas_organizacion ao
+    where a.codigo=ao.cod_area and ao.cod_unidad=2 and a.cod_estado=1 
+    order by 2";
+}
 $stmt = $dbh->prepare($sql);
 $stmt->bindParam(':codigo', $codigo);
 $stmt->bindParam(':nombre', $nombre);

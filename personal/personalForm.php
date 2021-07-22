@@ -68,6 +68,8 @@ if($codigo>0){
     $email_empresa = $result['email_empresa'];
     $personal_confianza = $result['personal_confianza'];
     $cuenta_bancaria = $result['cuenta_bancaria'];
+    $cod_turno=$result['turno'];
+    $cod_tipotrabajo=$result['$cod_tipotrabajo'];
 
 
     //personal discapacitado
@@ -140,6 +142,8 @@ if($codigo>0){
     $personal_confianza = "";
     $cuenta_bancaria = "";
 
+    $cod_turno="";
+    $cod_tipotrabajo="";
 
     //personal discapacitado
     $cod_tipo_persona_discapacitado = "";
@@ -349,6 +353,12 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                         <input class="form-control" type="date" name="fecha_nacimiento" id="fecha_nacimiento"  value="<?=$fecha_nacimiento;?>"/>
                                     </div>
                                 </div>
+                                <label class="col-sm-2 col-form-label">Nombre</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="primer_nombre" id="primer_nombre"  value="<?=$primer_nombre;?>" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    </div>
+                                </div>
                             </div><!--Fecha Nac-->
                             
                             <div class="row">
@@ -367,10 +377,10 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 </div>
                             </div><!--fin campo materno -->
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Nombre</label>
+                                <label class="col-sm-2 col-form-label">Apellido Casada</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="primer_nombre" id="primer_nombre"  value="<?=$primer_nombre;?>" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                        <input class="form-control" type="text" name="apellido_casada" id="apellido_casada" value="<?=$apellido_casada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                     </div>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Telefono</label>
@@ -410,13 +420,37 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                         <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" />                               
                                     </div>
                                 </div>
-                                <label class="col-sm-2 col-form-label">Apellido Casada</label>
+                            </div> <!--fin campo ing contrato y ing planilla-->
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Turno</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="apellido_casada" id="apellido_casada" value="<?=$apellido_casada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                        <select name="turno" id="turno"  class="selectpicker form-control form-control-sm" data-style="btn btn-info">
+                                            <?php 
+                                            $sql="SELECT codigo,nombre from personal_turno where cod_estadoreferencial=1 order by nombre";
+                                            $statementTurno = $dbh->query($sql);
+                                            while ($row = $statementTurno->fetch()) { ?>
+                                                <option <?php if($cod_turno == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <?php } ?>
+                                        </select>           
+
                                     </div>
                                 </div>
-                            </div> <!--fin campo ing contrato y ing planilla-->
+                                
+                                <label class="col-sm-2 col-form-label">Tipo Trabajo</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <select name="tipo_trabajo" id="tipo_trabajo"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
+                                            <?php 
+                                            $sql="SELECT codigo,nombre from personal_tipotrabajo where cod_estadoreferencial=1 order by nombre";
+                                            $statementTipoTrabajo = $dbh->query($sql);
+                                            while ($row = $statementTipoTrabajo->fetch()) { ?>
+                                                <option <?php if($cod_tipotrabajo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Personal de Confianza</label>
                                 <div class="col-sm-4">

@@ -180,8 +180,8 @@ alerts = {
     }
     else if (type == 'warning-message-and-confirmationGeneral') {
       swal({
-        title: '¿Estás Seguro?',
-        text: "¡No podrá revertir el Proceso!",
+        title: '¿Estás Segur@?',
+        text: "¡No podrás revertir el Proceso!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',

@@ -8,7 +8,7 @@
 <div class="panel">
 <!-- Navbar -->
       <nav class="navbar navbar-expand-sm navbar-transparent navbar-absolute fixed-top">
-        <div class="container-fluid" style="background: #212f3d">
+        <div class="container-fluid" style="background: #212f3d" >
           <div class="navbar-wrapper">
             <div class="navbar-minimize">
               <button id="minimizeSidebar" class="btn btn-sm btn-just-icon btn-white btn-fab btn-round">

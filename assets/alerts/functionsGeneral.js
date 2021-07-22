@@ -2749,46 +2749,92 @@ function ajaxTipoBien(codigo){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      ajaxCodigoCorrelativo(codigo);
+      //ajaxCodigoCorrelativo(codigo);
     }
   }
   ajax.send(null)
 }
 
-function ajaxCodigoCorrelativo(codigo){
-  
-  var cod_tiposbienes=$("#cod_tiposbienes").val();
+function ajaxCodigoCorrelativo(combo){
+  var cod_tiposbienes=combo.value;
+  var cod_depreciaciones=$("#cod_depreciaciones").val();
   var contenedor;
   contenedor = document.getElementById('divCodigoAF');
   ajax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo.php?codigo='+codigo+'&cod_tiposbienes='+cod_tiposbienes,true);
+  ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo.php?cod_depreciaciones='+cod_depreciaciones+'&cod_tiposbienes='+cod_tiposbienes,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      ajaxDepreciacion(codigo);
+      //ajaxDepreciacion(codigo);
     }
   }
   ajax.send(null)  
 }
 
 
-// function ajaxAFunidadorganizacional(combo){
-//   var contenedor;
-//   var codigo_ub=combo.value;
-//   contenedor = document.getElementById('div_contenedor_UO');
-//   ajax=nuevoAjax();
-//   ajax.open('GET', 'activosFijos/ubicacionesUnidadAjax.php?codigo_UO='+codigo_ub,true);
-//   ajax.onreadystatechange=function() {
-//     if (ajax.readyState==4) {
-//       contenedor.innerHTML = ajax.responseText;
-//       $('.selectpicker').selectpicker(["refresh"]);
-      
-//       ajaxPersonalUbicacion();
-//     }
-//   }
-//   ajax.send(null)  
-// }
+
+function ajaxCodigoCorrelativo_fungible(combo){
+
+  var codigo=combo.value;
+  var contenedor;
+  contenedor = document.getElementById('divCodigoAF');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo_fungible.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      //ajaxDepreciacion(codigo);
+    }
+  }
+  ajax.send(null)  
+}
+
+function ajaxBuscar_personal_af_cambio(){
+  var cod_responable1=document.getElementById("cod_responable1").value;
+  var cod_responable2=document.getElementById("cod_responable2").value;
+  var contenedor; 
+  if(cod_responable1!=""){
+    iniciarCargaAjax();
+    contenedor = document.getElementById('contenedor_detalle');
+    ajax=nuevoAjax();
+    ajax.open('GET', 'activosFijos/ajax_cambiar_responsable.php?resp1='+cod_responable1+'&resp2='+cod_responable2,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        var detalle_comprobante=document.getElementById("detalle_comprobante").value;
+        // alert(detalle_comprobante);
+        if(detalle_comprobante!="NO ENCONTRADO"){
+          ajaxVisibleButtonElimProdSave(1);
+          //$("#guardarElimProc").removeClass("d-none"); 
+        }else{
+          ajaxVisibleButtonElimProdSave(0);
+            //$("#guardarElimProc").addClass("d-none"); 
+        }
+        detectarCargaAjax();
+      }
+    }
+    ajax.send(null);
+  }else{
+      Swal.fire("Informativo!", "Seleccione al menos Responsable 1", "warning");
+  }
+  
+}
+
+function ajaxVisibleButtonElimProdSave(index){  
+  var contenedor;
+  contenedor = document.getElementById('contenedor_boton_save_elimprod');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajax_cambiarrespoafForm_btnSave.php?sw='+index,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+    }
+  }
+  ajax.send(null);
+}
+
 
 function ajaxRPTAF_oficina(){
   var contenedor;
@@ -2818,7 +2864,7 @@ function ajaxAFunidadorganizacionalArea(combo){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);   
-      ajaxPersonalUbicacion(codigo_UO);       
+      //ajaxPersonalUbicacion(codigo_UO);       
     }
   }
   ajax.send(null)  
@@ -11226,6 +11272,71 @@ function mostrarDatosChequeDetalle(fila){
   }
 }
 
+function mostrarDatosChequeDetalle_lotes(combo){
+  var tipo=combo.value;
+  // alert(tipo);
+  if(tipo==1){
+     if(($("#div_cheques_s").hasClass("d-none"))){
+       $("#div_cheques_s").removeClass("d-none");
+    } 
+  }else{
+    if(!($("#div_cheques_s").hasClass("d-none"))){
+      $("#div_cheques_s").addClass("d-none"); 
+    }
+    if(!($("#div_chequesemitidos_s").hasClass("d-none"))){
+      $("#div_chequesemitidos_s").addClass("d-none");
+    }
+    if(!($("#numero_cheque_s").is("[readonly]"))){
+      $("#numero_cheque_s").attr("readonly",true);
+      $("#numero_cheque_s").val("0");
+      $("#beneficiario_s").attr("readonly",true);
+    }
+  }
+}
+function cargarChequesPagoDetalle_lotes(combo){
+  var banco=combo.value;
+   var parametros={"banco":banco};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "obligaciones_pago/ajaxListChequesBanco.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando Cheques..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+           detectarCargaAjax();
+           if(($("#div_chequesemitidos_s").hasClass("d-none"))){
+             $("#div_chequesemitidos_s").removeClass("d-none");
+           }
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#div_chequesemitidos_s").html(resp);
+           $('.selectpicker').selectpicker("refresh");
+        }
+      }); 
+}
+function ponerNumeroChequePagoDetalle_lotes(combo){
+  var valor=combo.value;
+  var valor2= valor.split("####");
+  $("#numero_cheque_s").val(valor2[1]);
+  $("#numero_cheque_s").attr("min",valor2[1]);
+  if(valor==""||valor==null){
+    if(!($("#numero_cheque_s").is("[readonly]"))){
+      $("#numero_cheque_s").attr("readonly",true);
+      $("#beneficiario_s").attr("readonly",true);
+      $("#numero_cheque_s").val("0");
+    }
+  }else{
+    if(($("#numero_cheque_s").is("[readonly]"))){
+      $("#beneficiario_s").removeAttr("readonly");  
+      $("#beneficiario_s").attr("type","text");
+      $("#numero_cheque_s").removeAttr("readonly");
+      $("#numero_cheque_s").attr("type","number");
+    }
+  }
+}
+
 function cargarChequesPagoDetalle(fila){
   var banco=$("#banco_pago"+fila).val();
    var parametros={"banco":banco,"fila":fila};
@@ -13017,44 +13128,67 @@ function actualizarRegistroClientes(){
 }
 
 
-function botonBuscarActivoFijo(){
+function botonBuscarActivoFijo(){ 
+  iniciarCargaAjax();
   var valor_uo=$("#OficinaBusqueda").val();
   var valor_rubro=$("#rubro").val();
   var valor_fi=$("#fechaBusquedaInicio").val();
   var valor_ff=$("#fechaBusquedaFin").val();
   var valor_responsable=$("#responsable").val();
   var valor_tipoAlta=$("#tipoAlta").val();
-  var valor_proyecto=$("#proyecto").val();
+  var valor_area=$("#areas").val();
   var valor_glosa=$("#glosaBusqueda").val();
   var valor_codigo=$("#codigoBusqueda").val();
+
   ajax=nuevoAjax();
   ajax.open('GET', 'activosFijos/ajax_busquedaAvanzadaAf.php?cod_uo='+valor_uo+'&rubro='+valor_rubro+'&fechaI='+valor_fi+'&fechaF='+valor_ff+
-    '&responsable='+valor_responsable+'&tipoAlta='+valor_tipoAlta+'&proyecto='+valor_proyecto+'&glosa='+valor_glosa+'&codigo='+valor_codigo,true);
+    '&responsable='+valor_responsable+'&tipoAlta='+valor_tipoAlta+'&areas='+valor_area+'&glosa='+valor_glosa+'&codigo='+valor_codigo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_activosFijos");
       contenedor.html(ajax.responseText);
+      
+      //cargar_dataTable_ajax_listas('tablePaginatorHead');
+      detectarCargaAjax();
       $("#modalBuscador").modal("hide");
+      cargar_dataTable_ajax_listas_search('tablePaginatorHead'); 
+      //cargar_filtro_datatable_ajax('modalBuscador');
+      
+
     }
   }
   ajax.send(null)
 } 
 
-// function sacandoUFVDepreAF(){
-//     var gestion=document.getElementById("gestion").value; 
-//     var mes=document.getElementById("mes").value; 
-//     jax=nuevoAjax();
-//   ajax.open('GET', 'activosFijos/ajax_depreciaocionUFV.php?gestion='+gestion+'&mes='+mes,true);
-//   ajax.onreadystatechange=function() {
-//     if (ajax.readyState==4) {
-//       var contenedor=$("#data_activosFijos");
-//       contenedor.html(ajax.responseText);
-//       // $("#modalBuscador").modal("hide");
-//     }
-//   }
-//   ajax.send(null)
-    
-//   }
+function botonBuscarActivoFijo_fungible(){ 
+  iniciarCargaAjax();
+  var valor_uo=$("#OficinaBusqueda").val();
+  var valor_fi=$("#fechaBusquedaInicio").val();
+  var valor_ff=$("#fechaBusquedaFin").val();
+  var valor_responsable=$("#responsable").val();
+  var valor_tipoAlta=$("#tipoAlta").val();
+  var valor_area=$("#areas").val();
+  var valor_glosa=$("#glosaBusqueda").val();
+  var valor_codigo=$("#codigoBusqueda").val();
+
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajax_busquedaAvanzadaAf_fungibles.php?cod_uo='+valor_uo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+
+    '&responsable='+valor_responsable+'&tipoAlta='+valor_tipoAlta+'&areas='+valor_area+'&glosa='+valor_glosa+'&codigo='+valor_codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_activosFijos");
+      contenedor.html(ajax.responseText);
+      
+      //cargar_dataTable_ajax_listas('tablePaginatorHead');
+      $("#modalBuscador").modal("hide");
+      detectarCargaAjax();
+      cargar_dataTable_ajax_listas_search('tablePaginatorHead'); 
+      //cargar_filtro_datatable_ajax('modalBuscador');
+    }
+  }
+  ajax.send(null)
+} 
+
 
 function sacandoUFVDepreAF(){
   
@@ -14919,7 +15053,7 @@ function listarArrayTabla(array,cuerpo){
      var row = $('<tr>').addClass('');
      row.append($('<td>').addClass('').text(i+1));
      row.append($('<td>').addClass('font-weight-bold text-left').text(array[i].nombre));
-     row.append($('<td>').addClass('').html('<input type="number" onkeyup="calcularTotalesSolicitudDistribucion()" onkeydown="calcularTotalesSolicitudDistribucion()" step="0.01" class="form-control text-right" id="'+cuerpo+'_'+(i+1)+'" value="'+redondeo(array[i].porcentaje)+'">'));    
+     row.append($('<td>').addClass('').html('<input type="number" onkeyup="calcularTotalesSolicitudDistribucion()" onkeydown="calcularTotalesSolicitudDistribucion()" step="0.01" class="form-control text-right" id="'+cuerpo+'_'+(i+1)+'" value="'+array[i].porcentaje+'">'));    
      table.append(row);
    }   
    var row = $('<tr>').addClass('bg-plomo');
@@ -15069,8 +15203,8 @@ function guardarDistribucionSolicitudRecurso(){
    if(sumaOfi!=100&&$("#nueva_distribucion").val()!=2){
     Swal.fire("Informativo!", "El porcentaje Total de Oficina debe ser 100 !", "warning");
    }else{
-    if(sumaArea!=100&&$("#nueva_distribucion").val()!=1){
-     Swal.fire("Informativo!", "El porcentaje Total de Area debe ser 100 !", "warning");
+    if(redondeo(sumaArea)!=100&&$("#nueva_distribucion").val()!=1){
+     Swal.fire("Informativo!", "El porcentaje Total de Area debe ser 100 ! ", "warning");
     }else{
        saveDistribucionSolicitudRecurso();
     }
@@ -15134,10 +15268,10 @@ function calcularTotalesSolicitudDistribucion(){
    }
   }
  if($("#total_cuerpo_tabladistofi").length>0){
-   $("#total_cuerpo_tabladistofi").text(redondeo(sumaOfi));
+   $("#total_cuerpo_tabladistofi").text(sumaOfi);
  }
  if($("#total_cuerpo_tabladistarea").length>0){
-   $("#total_cuerpo_tabladistarea").text(redondeo(sumaArea));
+   $("#total_cuerpo_tabladistarea").text(sumaArea);
  }
 }
 function calcularTotalesSolicitudDistribucionGeneral(){
@@ -16861,32 +16995,72 @@ function cargarLotesPago(){
   $("#modalLotesPago").modal("show");
 }
 
-function cargarDatosProveedorPagosLote(fila){
-  var prov = $("#proveedor").val().split("####");
-  var proveedor = prov[0];
-  if($("#cod_pagoloteedit").length>0){
+function seleccionar_proveedor_pagos(sw_edit){
+  var contenedor = document.getElementById('contenedor_proveedor');
+  var cod_cuenta=$("#cuentas_proveedor").val();
+  if(cod_cuenta==""){
+    Swal.fire("Informativo!", "Seleccione un Cuenta Por favor", "warning");
+  }else{
+    ajax=nuevoAjax();
+    if(sw_edit==0){//no es Edit
+      ajax.open('GET', 'obligaciones_pago/ajax_selectproveedor_cuentas.php?cod_cuenta='+cod_cuenta,true);
+    }else{
+      ajax.open('GET', '../obligaciones_pago/ajax_selectproveedor_cuentas.php?cod_cuenta='+cod_cuenta,true);
+    }
+    
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;      
+        $('.selectpicker').selectpicker(["refresh"]);
+      }
+    }
+    ajax.send(null)  
+  }
+}
+
+function cargarDatosProveedorPagosLote(sw_edit){
+  var cuentas = $("#cuentas_proveedor").val();
+  var prov = $("#proveedor").val();
+
+  var fechainicio = $("#fechainicio").val();
+  var fechafin = $("#fechafin").val();
+
+  if(cuentas!="" && prov !=""){
+    if($("#cod_pagoloteedit").length>0){
       var url ="ajaxListPagosLote.php";
     }else{
-      var url ="obligaciones_pago/ajaxListPagosLote.php";
+      if(sw_edit==0){//no es edit
+        var url ="obligaciones_pago/ajaxListPagosLote.php";
+      }else{
+        var url ="../obligaciones_pago/ajaxListPagosLote.php";
+      }
     } 
-  var parametros={"proveedor":proveedor,"proveedor_nombre":prov[1],"fila":fila};
-     $.ajax({
-        type: "GET",
-        dataType: 'html',
-        url: url,
-        data: parametros,
-        beforeSend: function () {
-        $("#texto_ajax_titulo").html("Listando Pagos  de "+prov[1]); 
-          iniciarCargaAjax();
-        },        
-        success:  function (resp) {
-          detectarCargaAjax();
-           $("#texto_ajax_titulo").html("Procesando Datos");
-           $("#data_pagosproveedores").append(resp);
-           $('.selectpicker').selectpicker("refresh");
-        }
-      });
+    var parametros={"proveedor":prov,"cuentas":cuentas,"fechainicio":fechainicio,"fechafin":fechafin};
+    $.ajax({
+      type: "GET",
+      dataType: 'html',
+      url: url,
+      data: parametros,
+      beforeSend: function () {
+      $("#texto_ajax_titulo").html("Listando Pagos de proveedores..."); 
+        iniciarCargaAjax();
+      },        
+      success:  function (resp) {
+        detectarCargaAjax();
+         $("#texto_ajax_titulo").html("Procesando Datos");
+         $("#tabla_proveedor").html(resp);
+          cargar_dataTable_ajax_list_totales('libreta_bancaria_reporte_modal');
+          cargar_filtro_datatable_ajax('modalLotesPago');
+         $('.selectpicker').selectpicker("refresh");
+      }
+    });
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar un proveedor.", "warning");
+  }
 }
+
+
+
 function agregarLotePago(){
 
  if($("#proveedor").val()!="####"){
@@ -16909,6 +17083,64 @@ cant++;
    Swal.fire("Informativo!", "Debe seleccionar un proveedor.", "warning");        
  }
 }
+
+function agregarLotePago_seleccionados(){
+  var cant= parseInt($("#cantidad_proveedores_modal").val());
+  var cuentas = $("#cuentas_proveedor").val();
+  var prov = $("#proveedor").val();
+  var contador_check=0;
+  var codigos_aux="";//iran concatenados todos los codigos
+  for (var i = 1; i <= cant; i++) {
+    if(typeof($("#pagos_seleccionados"+i)) != "undefined"){      
+      var check=document.getElementById("pagos_seleccionados"+i);
+      if(check.checked){
+        contador_check++;        
+        var codigo_auxiliar =$("#codigo_auxiliar"+i).val();
+        codigos_aux+=codigo_auxiliar+"PPPPP";
+      }
+    }
+  }
+  //alert("activos:"+contador_check);
+  if(contador_check>0){        
+    if($("#cod_pagoloteedit").length>0){
+      var url ="ajaxListPagosLote_seleccionados.php";
+    }else{
+      var url ="obligaciones_pago/ajaxListPagosLote_seleccionados.php";
+    } 
+    var parametros={"contador_check":contador_check,"codigos_aux":codigos_aux,"cuentas":cuentas,"prov":prov};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: url,
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando Pagos  Seleccionados..."); 
+          iniciarCargaAjax();
+          $("#modalLotesPago").modal("hide");
+        },        
+        success:  function (resp) {
+          detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#data_pagosproveedores").append(resp);
+           $('.selectpicker').selectpicker("refresh");
+        }
+      });
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar al menos un pago.", "warning");        
+  }
+}
+
+function activar_input_prontopago(index){
+  var check=document.getElementById("pagos_seleccionados_2"+index);
+  if(check.checked){
+    
+    document.getElementById("pronto_pago_s"+index).value=1;
+  }else{
+    
+    document.getElementById("pronto_pago_s"+index).value=0;
+  }
+}
+
 
 function removeListaPago(codigo){
   $('.fila_proveedor'+codigo).remove();
@@ -17239,6 +17471,36 @@ function cargar_dataTable_ajax_listas(tabla){
     },
     "ordering": false,
     "searching":false
+  });
+}
+function cargar_dataTable_ajax_listas_search(tabla){
+  // DataTable
+  var table = $('#'+tabla+'').DataTable({
+    "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    fixedHeader: {
+      header: true
+    },
+    "ordering": true,
+    "searching":true
+  });
+}
+function cargar_dataTable_ajax_list_totales(tabla){
+  // DataTable
+  var table = $('#'+tabla+'').DataTable({
+    "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    fixedHeader: {
+      header: false
+    },
+    "searching":false,
+    "order": false,
+      "paging":   false,
+      "info":     false,          
+      "scrollY":        "400px",
+      "scrollCollapse": true
   });
 }
 function cargar_filtro_datatable_ajax(modal){
@@ -18033,7 +18295,7 @@ function botonBuscarSolicitudes_gral(){
       contenedor.html(ajax.responseText);
       $("#modalBuscador_solicitudes").modal("hide");
       detectarCargaAjax();
-      cargar_dataTable_ajax_listas('tablePaginator50NoFinder');
+      cargar_dataTable_ajax_listas('tablePaginator50NoFinder'); 
     }
   }
   ajax.send(null)
@@ -19231,4 +19493,55 @@ function ajax_mostrar_periodo_fechas(){
   }else{
     $("#contenedor_periodo_fechas").addClass("d-none");
   }
+}
+
+function agregaformActivoFijo_baja(codigo){
+  //console.log("datos: "+datos);
+  document.getElementById("cod_activo_b").value=codigo;
+}
+function save_obs_AF_baja(codigo_af,obs_baja,sw){
+  iniciarCargaAjax();
+  $.ajax({
+    type:"POST",
+    data:"codigo="+codigo_af+"&obs="+obs_baja,
+    url:"activosFijos/saveDardebaja.php",
+    success:function(r){
+      detectarCargaAjax();
+      if(r==1){
+        if(sw==1){
+          alerts.showSwal('success-message','index.php?opcion=activosfijosLista');
+        }else{
+          alerts.showSwal('success-message','index.php?opcion=activosfijosLista_fungibles');
+        }
+        
+      }else{
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
+    }
+  });
+}
+
+
+function calcularTotalFilaEstadoCuentaPagoProvedores(){
+
+  var sumal=0;  
+  var total= $("#cantidad_proveedores_modal").val();
+  for (var i=1;i<=(total);i++){
+    var importe_a_pagar=$("#modal_estadocuenta_saldo"+i).val();
+    var monto_importe_total=parseFloat(importe_a_pagar);
+    var check=document.getElementById("pagos_seleccionados"+i).checked;
+      if(check) {//BUSACMOS LOS CHECK ACTIVOS
+        //sumanos los importes
+        sumal+=monto_importe_total;
+      } 
+  } 
+
+  // var resulta=sumal;
+  var resulta=parseFloat(Math.round(sumal * 100) / 100).toFixed(2);
+  
+  document.getElementById("total_saldo_ec").value=number_format(resulta,2);//con formato
+
+  // var total123= $("#total_saldo_ec").val();
+
+  //alert("aqui:"+total123);
 }

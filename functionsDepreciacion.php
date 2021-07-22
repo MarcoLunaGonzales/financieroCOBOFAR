@@ -35,8 +35,8 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
     $numeroMesesDepreciacion++;
     $ufvInicio=obtenerUFV($fechaInicioDepreciacion);
     $ufvFinal=obtenerUFV($fechaFinalDepreciacion);
-    echo $fechaInicioDepreciacion."__".$fechaFinalDepreciacion."<br>";
-    echo $ufvInicio."-".$ufvFinal."<br>";
+    // echo $fechaInicioDepreciacion."__".$fechaFinalDepreciacion."<br>";
+    // echo $ufvInicio."-".$ufvFinal."<br>";
     $valorUFVActualizacion=0;
     if($ufvInicio>0){
         $valorUFVActualizacion=($ufvFinal/$ufvInicio);//cuando no està registrado la ufv
@@ -120,7 +120,7 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
             $depreciacionActualAcumulada_9=58.16;
         }
     }
-    echo "ValorAnt:".$valorResidual_2."depreAcum:".$depreciacionAcumulada_6."-incremeDepreAc:".$incrementoDepreciacionAcumulada_7."-DeprePeriodo".$depreciacionPeriodo_8."=DepreActualAcum:".$depreciacionActualAcumulada_9." NEto:".$valorNetoActivo_10."<br>";
+    //echo "ValorAnt:".$valorResidual_2."depreAcum:".$depreciacionAcumulada_6."-incremeDepreAc:".$incrementoDepreciacionAcumulada_7."-DeprePeriodo".$depreciacionPeriodo_8."=DepreActualAcum:".$depreciacionActualAcumulada_9." NEto:".$valorNetoActivo_10."<br>";
     $sqlInsertDet="INSERT INTO mesdepreciaciones_detalle (cod_mesdepreciaciones, cod_activosfijos, d2_valorresidual, d3_factoractualizacion, d4_valoractualizado, d5_incrementoporcentual, d6_depreciacionacumuladaanterior, d7_incrementodepreciacionacumulada, d8_depreciacionperiodo, d9_depreciacionacumuladaactual, d10_valornetobs, fecha_inicio, fecha_fin,d11_vidarestante) values ('$ultimoIdInsertado', '$codActivo', '$valorResidual_2', '$factorActualizacion_3', '$valorActivoActualizado_4', '$valorIncrementoPorcentual_5', '$depreciacionAcumulada_6', '$incrementoDepreciacionAcumulada_7', '$depreciacionPeriodo_8', '$depreciacionActualAcumulada_9','$valorNetoActivo_10', '$fechaInicioDepreciacion', '$fechaFinalDepreciacion','$vida_util_restante')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
     $stmtInsertDet -> execute();    
@@ -132,7 +132,7 @@ function correrDepreciacion2($codActivo,$fechaInicioDepreciacion,$fechaFinalDepr
     $numeroMesesDepreciacion++;
     $ufvInicio=obtenerUFV($fechaInicioDepreciacion);
     $ufvFinal=obtenerUFV($fechaFinalDepreciacion);
-    echo $fechaInicioDepreciacion."__".$fechaFinalDepreciacion."<br>";
+    //echo $fechaInicioDepreciacion."__".$fechaFinalDepreciacion."<br>";
     $valorUFVActualizacion=0;
     if($ufvInicio>0){
         $valorUFVActualizacion=($ufvFinal/$ufvInicio);//cuando no està registrado la ufv

@@ -399,22 +399,15 @@ if($menuModulo==0){
                     </a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=rptxrubrosxmes">
-                      <span class="sidebar-mini"> RM </span>
-                      <span class="sidebar-normal"> Por Rubro por Mes</span>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=rptDepreciacionesDetalladoFiltro">
-                      <span class="sidebar-mini"> RMD </span>
-                      <span class="sidebar-normal"> Por Rubro, por Mes Detallado</span>
-                    </a>
-                </li>
-
-                <li class="nav-item ">
                     <a class="nav-link" href="?opcion=rptactivosfijosxunidad">
-                      <span class="sidebar-mini"> RU </span>
+                      <span class="sidebar-mini"> RUAR </span>
                       <span class="sidebar-normal"> Por Oficina, Area y Responsable</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=afdardebaja_rpt">
+                      <span class="sidebar-mini"> AFB </span>
+                      <span class="sidebar-normal"> Activos Fijos Baja</span>
                     </a>
                 </li>
                 <li class="nav-item ">
@@ -429,6 +422,40 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Constancias de Traspaso</span>
                     </a>
                 </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptxrubrosxmes">
+                      <span class="sidebar-mini"> RM </span>
+                      <span class="sidebar-normal">Dep. Por Rubro por Mes</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptDepreciacionesDetalladoFiltro">
+                      <span class="sidebar-mini"> RMD </span>
+                      <span class="sidebar-normal">Dep. Por Rubro, por Mes Detallado</span>
+                    </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <!-- utilitarios -->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#utilitarios">
+              <i class="material-icons">build</i>
+              <p> Utilitarios
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="utilitarios">
+              <ul class="nav">
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=cambiarResponsableAF">
+                    <span class="sidebar-mini"> CRAF </span>
+                    <span class="sidebar-normal"> Cambiar Responsable AF </span>
+                  </a>
+                </li>
+                
               </ul>
             </div>
           </li>
@@ -554,18 +581,18 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Caja Chica </span>
                   </a>
                 </li>
-                 <li class="nav-item ">
+                <!--  <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios_conta">
                     <span class="sidebar-mini"> SF </span>
                     <span class="sidebar-normal"> Solicitudes de Facturación</span>
                   </a> 
-                </li>
-                <li class="nav-item ">
+                </li> -->
+              <!--   <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasGeneradas">
                     <span class="sidebar-mini"> FG </span>
                     <span class="sidebar-normal"> Facturas Generadas</span>
                   </a>
-                </li>
+                </li> -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=contabilizarLibretasBancarias_lista">
                     <span class="sidebar-mini"> DNF </span>
@@ -925,12 +952,7 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Gesti&oacute;n SR</span>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" style="background:rgba(116, 24, 153,0.6); color:#E2AF0F;font-weight:bold;"  href="?opcion=listSolicitudRecursosAdminSis">
-                    <span class="sidebar-mini"> GSIS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n SR SIS</span>
-                  </a>
-                </li>
+               
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPagoProveedores">
                     <span class="sidebar-mini"> PP </span>
@@ -961,7 +983,7 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Solicitud de Facturacion Venta Normas</span>
                   </a>
                 </li> -->
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios">
                     <span class="sidebar-mini"> SF </span>
                     <span class="sidebar-normal"> Solicitudes de Facturación </span>
@@ -972,7 +994,7 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> GSF </span>
                     <span class="sidebar-normal"> Gesti&oacute;n Solicitudes de Facturación </span>
                   </a>
-                </li>
+                </li> -->
               </ul>
             </div>
           </li>  

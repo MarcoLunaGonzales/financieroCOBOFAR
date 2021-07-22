@@ -74,11 +74,12 @@ if($tipoLogin==1){
 		$_SESSION['logueado']=1;
 		$_SESSION['globalPerfil']=$perfil;
 		$_SESSION['globalAdmin']=$admin_x;
-		// if($codigo==8){
-		// 	$_SESSION['globalAdmin']=1;	
-		// }else{
-		// 	$_SESSION['globalAdmin']=0;	
-		// }
+		 
+		 if($codigo==8){
+		 	$_SESSION['globalAdmin']=1;	
+		 }else{
+		 	$_SESSION['globalAdmin']=0;	
+		 }
 		
 		//$_SESSION['globalServerArchivos']="http://ibnored.ibnorca.org/itranet/documentos/";
 

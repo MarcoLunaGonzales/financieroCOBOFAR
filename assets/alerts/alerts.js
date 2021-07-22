@@ -432,6 +432,7 @@ alerts = {
           location.href=url;
       });
     }
+    
 
   },
 

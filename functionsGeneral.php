@@ -125,6 +125,34 @@ function showAlertSuccessErrorFacturas($bandera, $url){
       </script>";
    }
 }
+function showAlertSuccessErrorComprobantePagos($bandera, $url){
+   if($bandera==true){
+      echo "<script>
+         alerts.showSwal('success-message','$url');
+      </script>";
+   }
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-comprobante-duplicado-pago','$url');
+      </script>";
+   }
+}
+
+function showAlertSuccessErrorComprobanteIngresosAlm($bandera, $url){
+   if($bandera==true){
+      echo "<script>
+         alerts.showSwal('success-message','$url');
+      </script>";
+   }
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-comprobante-duplicado-ingreso-alm','$url');
+      </script>";
+   }
+}
+
+
+
 function clean_string($string)
 {
  

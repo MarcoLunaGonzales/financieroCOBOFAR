@@ -57,13 +57,13 @@ $stmt2->bindColumn('tipo_compra', $tipo_compra);
 $cant_unidad=sizeof($unidad);
 
 if($cant_unidad>1){
-  $cod_unidad_x=5;
+  $cod_unidad_x=1;
 }else{  
   
   if($stringUnidadesX==9 || $stringUnidadesX==10 ){
     $cod_unidad_x=$stringUnidadesX;
   }else{    
-    $cod_unidad_x=5;
+    $cod_unidad_x=1;
   }
 }
 

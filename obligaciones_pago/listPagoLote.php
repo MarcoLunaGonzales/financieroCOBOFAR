@@ -144,7 +144,6 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                         <thead>
                           <tr style="background:#21618C; color:#fff;">                           
                             <td class="text-left">Of</td>
-                            <td class="text-left">CC</td>
                             <td class="text-left">Tipo/#</td>
                             <td class="text-left">F Comp.</td>
                             <td class="text-left">F.EC</td>
@@ -162,7 +161,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                         </tbody>
                         <tfoot>
                           <tr class="bg-white det-estados" >
-                            <td class="text-left small"></td>
+                            
                             <td class="text-left small"></td>
                             <td class="text-center small"></td>
                             <td class="text-left small"></td>
@@ -184,6 +183,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
               </div>
               <div class="card-footer fixed-bottom">
                 <button type="submit" class="btn btn-white" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</button>
+                <a href="<?=$urlListPagoLotes;?>" class="btn btn-danger">Volver</a>
               </div>
               </form> 
             </div>
@@ -306,7 +306,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                      <label class="col-sm-2 col-form-label">Saldo de la Solicitud</label>
                      <div class="col-sm-4">                     
                        <div class="form-group">
-                         <input type="number" readonly class="form-control" name="saldo_pago" id="saldo_pago" value="<?=$saldoXInput?>">
+                         <input type="number" readonly class="form-control" name="saldo_pago" id="saldo_pago" value="0">
                        </div>
                      </div>
                      <label class="col-sm-2 col-form-label">Proveedor</label>
@@ -329,7 +329,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                 $codigoSel=$rowSel['codigo'];
                                 $nombreSelX=$rowSel['nombre'];
-                                $abrevSelX=$rowSel['abreviaruta'];
+                                // $abrevSelX=$rowSel['abreviaruta'];
                                 ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
                                }
                               ?>
@@ -349,7 +349,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                    while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                     $codigoSel=$rowSel['codigo'];
                                     $nombreSelX=$rowSel['nombre'];
-                                    $abrevSelX=$rowSel['abreviaruta'];
+                                    // $abrevSelX=$rowSel['abreviaruta'];
                                     ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
                                    }
                                   ?>

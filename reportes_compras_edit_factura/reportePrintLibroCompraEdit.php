@@ -408,19 +408,19 @@ $fechaActual=date("Y-m-d");
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Importe</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input class="form-control" type="number" readonly step="0.01" name="imp_fac" id="imp_fac"/>
+                                <input class="form-control" type="number"  step="0.01" name="imp_fac" id="imp_fac"/>
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Exento</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input class="form-control" type="number" readonly step="0.01" name="exe_fac" id="exe_fac"value="0" />
+                                <input class="form-control" type="number"  step="0.01" name="exe_fac" id="exe_fac"value="0" />
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">ICE</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input class="form-control" type="number" readonly step="0.01" name="ice_fac" id="ice_fac" value="0" />
+                                <input class="form-control" type="number" step="0.01" name="ice_fac" id="ice_fac" value="0" />
                               </div>
                              </div>
                           </div>                                                                  

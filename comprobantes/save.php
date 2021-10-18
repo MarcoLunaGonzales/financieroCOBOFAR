@@ -146,17 +146,17 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         //print_r($sqlInsert);
         if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
             //sibir archivos al servidor de documentos
-            $parametros=array(
-            "idD" => 15,
-            "idR" => $codArchivoAdjunto,
-            "idusr" => 90,
-            "Tipodoc" => 3596,
-            "descripcion" => $descripcion,
-            "codigo" => "",
-            "observacion" => "-",
-            "r" => "http://www.google.com",
-            "v" => true
-            );
+            // $parametros=array(
+            // "idD" => 15,
+            // "idR" => $codArchivoAdjunto,
+            // "idusr" => 90,
+            // "Tipodoc" => 3596,
+            // "descripcion" => $descripcion,
+            // "codigo" => "",
+            // "observacion" => "-",
+            // "r" => "http://www.google.com",
+            // "v" => true
+            // );
             //$resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
            //unlink($target_path);
            //print_r($resultado);        
@@ -183,6 +183,13 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
 		$unidadDetalle=$_POST["unidad".$i];
 		$area=$_POST["area".$i];
+    if($unidadDetalle==null){
+      $unidadDetalle=1;
+    }
+    if($area==null){
+      $area=522;
+    }
+
 		$debe=$_POST["debe".$i];
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];

@@ -18,7 +18,8 @@ $cuentas=$_GET['cuentas'];
 $cuentas=implode(",", $cuentas);
 // $codigo_formateado = str_replace("PPPPP", ",", $codigos_aux);
 // $codigo_formateado=trim($codigo_formateado,",");
-$contador_items=0;
+// $contador_items=0;
+$contador_items=$_GET['cantidad_proveedores'];
   
 $i=0;$saldo=0;
 $indice=0;
@@ -26,7 +27,8 @@ $totalCredito=0;
 $totalDebito=0;
 $codPlanCuentaAuxiliarPivotX=-10000;
 $ver_saldo=1;
-$sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentas) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux in ($proveedoresString) and e.codigo in ($codigos_string) order by e.fecha";
+$sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos 
+FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentas) and e.cod_comprobantedetalleorigen=0  and e.codigo in ($codigos_string) order by e.fecha,d.glosa";
 $stmt = $dbh->prepare($sql);
 //echo $sql;
 $stmt->execute();
@@ -98,7 +100,7 @@ while ($row = $stmt->fetch()) {
       $glosaMostrar=$glosaX;
   }
   list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
-  $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
+  // $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
 
   $nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
   $nombreUnidadCabecera=abrevUnidad_solo($codUnidadCabecera);
@@ -132,8 +134,8 @@ while ($row = $stmt->fetch()) {
     $saldo_x=$montohaber_x-$montodebe_x;
     $nombreProveedorX=nameProveedor($codProveedor);?>  
     <tr class="bg-white det-estados <?=$estiloEstados?> <?=$mostrarFilasEstado?>" <?=$estiloFilasEstado?> >
-        <td class="text-left small"><input type="hidden" id="codigo_auxiliar_s<?=$contador_items?>" name="codigo_auxiliar_s<?=$contador_items?>"  value="<?=$codigoX?>"><?=$nombreUnidadCabecera?></td>
-        <td class="text-left small"><?=$nombreUnidadO?>-<?=$nombreAreaCentroCosto?></td>
+        <!-- <td class="text-left small"><?=$nombreUnidadCabecera?></td> -->
+        <td class="text-left small"><input type="hidden" id="codigo_auxiliar_s<?=$contador_items?>" name="codigo_auxiliar_s<?=$contador_items?>"  value="<?=$codigoX?>"><?=$nombreUnidadO?>-<?=$nombreAreaCentroCosto?></td>
         <td class="text-center small"><?=$nombreComprobanteX?></td>
         <td class="text-left small"><?=$fechaComprobante?></td>
         <td class="text-left small"><?=$fechaX?></td>          
@@ -146,9 +148,9 @@ while ($row = $stmt->fetch()) {
           <?php 
           if(($montoX-$montoEstado)>0){
             ?>
-            <input type="number" step="any" required class="form-control text-right text-success" value="<?=$montoX?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"><?php
+            <input type="number" step="any" required class="form-control text-right text-success" value="<?=$saldo_x?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"><?php
           }else{ ?>
-            <input type="number" step="any" required class="form-control text-right text-success" readonly value="<?=$montoX?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"> <?php
+            <input type="number" step="any" required class="form-control text-right text-success" readonly value="<?=$saldo_x?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"> <?php
           } ?>
         </td>
         <td class="text-right">
@@ -172,8 +174,8 @@ while ($row = $stmt->fetch()) {
     $saldo_x=$montodebe_x-$montohaber_x;
     $nombreProveedorX=nameProveedor($codProveedor);?>  
     <tr class="bg-white det-estados <?=$estiloEstados?> <?=$mostrarFilasEstado?>" <?=$estiloFilasEstado?> >
-      <td class="text-left small"><input type="hidden" id="codigo_auxiliar_s<?=$contador_items?>" name="codigo_auxiliar_s<?=$contador_items?>"  value="<?=$codigoX?>"><?=$nombreUnidadCabecera?></td>
-      <td class="text-left small"><?=$nombreUnidadO?>-<?=$nombreAreaCentroCosto?></td>
+      <!-- <td class="text-left small"><?=$nombreUnidadCabecera?></td> -->
+      <td class="text-left small"><input type="hidden" id="codigo_auxiliar_s<?=$contador_items?>" name="codigo_auxiliar_s<?=$contador_items?>"  value="<?=$codigoX?>"><?=$nombreUnidadO?>-<?=$nombreAreaCentroCosto?></td>
       <td class="text-center small"><?=$nombreComprobanteX?></td>
       <td class="text-left small"><?=$fechaComprobante?></td>
       <td class="text-left small"><?=$fechaX?></td>          
@@ -186,9 +188,9 @@ while ($row = $stmt->fetch()) {
         <?php 
         if(($montoX-$montoEstado)>0){
           ?>
-          <input type="number" step="any" required class="form-control text-right text-success" value="<?=$montoX?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"><?php
+          <input type="number" step="any" required class="form-control text-right text-success" value="<?=$saldo_x?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"><?php
         }else{ ?>
-          <input type="number" step="any" required class="form-control text-right text-success" readonly value="<?=$montoX?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"> <?php
+          <input type="number" step="any" required class="form-control text-right text-success" readonly value="<?=$saldo_x?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"> <?php
         } ?>
       </td>
       <td class="text-right"> 

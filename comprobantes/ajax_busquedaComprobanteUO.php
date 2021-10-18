@@ -56,7 +56,7 @@ if($cuenta!=""){
 }
 $sql.=" GROUP BY c.codigo order by c.cod_tipocomprobante, c.numero desc;";
 
-// echo $sql;
+ //echo $sql;
 
 $stmt = $dbh->prepare($sql);
 $stmt->execute();

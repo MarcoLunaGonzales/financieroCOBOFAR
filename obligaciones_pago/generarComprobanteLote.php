@@ -1,12 +1,16 @@
 <?php
 require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
+require_once '../conexion2.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
-$dbh_detalle = new Conexion();
+$dbh_detalle = new Conexion2();
+
+
+$dbh->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 $codigo=$_GET["cod"];
 session_start();
 $globalUser=$_SESSION["globalUser"];
@@ -21,7 +25,10 @@ $fecha_pago=date("Y-m-d H:i:s");
 $total_monto_debe=0;
 $total_monto_haber=0;
 
-//creacion del comprobante de pago
+$flagSuccess=false;
+$sw=verificar_relacion_comprobante_pagoproveedores($codigo);
+if($sw==0){
+    //creacion del comprobante de pago
     $codComprobante=obtenerCodigoComprobante();
     $anioActual=date("Y");
     $mesActual=date("m");
@@ -40,9 +47,8 @@ $total_monto_haber=0;
         $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo." ".$horasActual;
       } 
     }
-    
-    $tipoComprobante=2;
-    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,2,$globalMes);
+    $tipoComprobante=obtenerValorConfiguracion(108);
+    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,$tipoComprobante,$globalMes);
     $glosa="PAGOS  ";
     $userSolicitud=$globalUser;
     $unidadSol=$globalUnidad;
@@ -84,7 +90,7 @@ $total_monto_haber=0;
        $cod_solicitudrecursosdetalle=$row["cod_solicitudrecursosdetalle"];//se encuentra el codigo de detalle comprobante 
        //comprobante detalle
        
-       $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$proveedor);
+       $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$proveedor,$cod_plancuenta);
         //$cuentaAuxiliar=0;
        //echo $cod_plancuenta."--<br>";
         // $cuenta=obtenerCuentaPasivaSolicitudesRecursos($cod_plancuenta);
@@ -132,14 +138,16 @@ $total_monto_haber=0;
         $cuentaAuxiliar=0;
         $numeroCuenta=trim(obtieneNumeroCuenta($cuenta));
         $inicioNumero=$numeroCuenta[0];
-        $unidadarea=obtenerUnidadAreaCentrosdeCostos($inicioNumero);
-        if($unidadarea[0]==0){
-            $unidadDetalle=$unidadSol;
-            $area=$areaSol;
-        }else{
-            $unidadDetalle=$unidadarea[0];
-            $area=$unidadarea[1];
-        }
+        //$unidadarea=obtenerUnidadAreaCentrosdeCostos($inicioNumero);
+        // if($unidadarea[0]==0){
+        //     $unidadDetalle=$unidadSol;
+        //     $area=$areaSol;
+        // }else{
+        //     $unidadDetalle=$unidadarea[0];
+        //     $area=$unidadarea[1];
+        // }
+        $unidadDetalle=obtenerValorConfiguracion(15);
+        $area=obtenerValorConfiguracion(29);
         $debe=0;
         $haber=$monto_total_prontopago;
         $glosaDetalle=nameCuenta($cuenta);
@@ -191,14 +199,9 @@ $total_monto_haber=0;
         $stmtUpdate = $dbh_detalle->prepare($sqlUpdate);
         $stmtUpdate->execute();    
     }
+    $dbh="";
+    $dbh_detalle="";
+}
+showAlertSuccessErrorComprobantePagos($flagSuccess,"../".$urlListPagoLotes);    
 
-    
-
-$dbh="";
-$dbh_detalle="";
-if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlListPagoLotes);	
-   }else{
-	showAlertSuccessError(false,"../".$urlListPagoLotes);
-   }
 ?>

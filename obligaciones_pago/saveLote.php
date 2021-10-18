@@ -23,8 +23,9 @@ $porFecha = explode("/", $_POST['fecha_pago']);
 $fecha_pago=$porFecha[2]."-".$porFecha[1]."-".$porFecha[0];
 $observaciones_pago=$_POST['observaciones_pago'];
 $cod_pagolote=obtenerCodigoPagoLote();
-$sqlInsert="INSERT INTO pagos_lotes (codigo,nombre,abreviatura, fecha,cod_comprobante,cod_estadopagolote,cod_ebisalote,cod_estadoreferencial) 
-VALUES ('".$cod_pagolote."','".$nombre_lote."','','".$fecha_pago."','0',1,".$tipo_pago.",1)";
+$nro_correlativo=obtenerCorrelativoPagoLote();
+$sqlInsert="INSERT INTO pagos_lotes (codigo,nombre,abreviatura, fecha,cod_comprobante,cod_estadopagolote,cod_ebisalote,cod_estadoreferencial,observaciones,nro_correlativo,created_at, created_by) 
+VALUES ('".$cod_pagolote."','".$nombre_lote."','','".$fecha_pago."','0',1,".$tipo_pago.",1,'".$observaciones_pago."',".$nro_correlativo.",NOW(), $globalUser)";
 $stmtInsert = $dbh->prepare($sqlInsert);
 $stmtInsert->execute();
 //ya se insertó la cebecera
@@ -36,6 +37,18 @@ for ($pro=1; $pro <= $cantidadItems ; $pro++){
   $codigo_auxiliar_s=$_POST["codigo_auxiliar_s".$pro];//codigo estado de cuenta relacionado
   $monto_pago_s=$_POST["monto_pago_s".$pro];
   $glosa_detalle_s=$_POST["glosa_detalle_s".$pro];
+  $fecha_ex_s=$_POST["fecha_ex_s".$pro];
+
+  
+
+  // $patron15 = "/[^a-zA-Z0-9]+/";//solo numeros,letras M y m, tildes y la ñ
+  $patron1="[\n|\r|\n\r]";
+  $glosa_detalle_s = preg_replace($patron1, ", ", $glosa_detalle_s);//quitamos salto de linea
+  $glosa_detalle_s = str_replace('"', " ", $glosa_detalle_s);//quitamos comillas dobles  
+  $glosa_detalle_s = str_replace("'", " ", $glosa_detalle_s);//quitamos comillas simples
+  $glosa_detalle_s = str_replace('<', "(", $glosa_detalle_s);//quitamos comillas dobles
+  $glosa_detalle_s = str_replace('>', ")", $glosa_detalle_s);//quitamos comillas dobles
+
   // $cod_tipopagoproveedor=48;
   $sql="SELECT cod_comprobantedetalle,cod_plancuenta,cod_proveedor,cod_cuentaaux from estados_cuenta where codigo='$codigo_auxiliar_s'";
   // echo "<br>..".$sql;
@@ -65,7 +78,7 @@ for ($pro=1; $pro <= $cantidadItems ; $pro++){
       $stmtInsert->execute();
       $cod_pagoproveedordetalle=obtenerCodigoPagoProveedorDetalle();
       $sqlInsert2="INSERT INTO pagos_proveedoresdetalle (codigo,cod_pagoproveedor,cod_proveedor,cod_solicitudrecursos,cod_solicitudrecursosdetalle,cod_tipopagoproveedor,monto,observaciones,fecha,pronto_pago) 
-       VALUES ('".$cod_pagoproveedordetalle."','".$cod_pagoproveedor."','".$cod_proveedor."','".$codigo_auxiliar_s."','".$cod_comprobantedetalle."','".$tipo_pago."','".$monto_pago_s."','".$glosa_detalle_s."','".$fecha_pago."','".$pronto_pago."')";
+       VALUES ('".$cod_pagoproveedordetalle."','".$cod_pagoproveedor."','".$cod_proveedor."','".$codigo_auxiliar_s."','".$cod_comprobantedetalle."','".$tipo_pago."','".$monto_pago_s."','".$glosa_detalle_s."','".$fecha_ex_s."','".$pronto_pago."')";
       $stmtInsert2 = $dbh->prepare($sqlInsert2);
       $flagSuccess=$stmtInsert2->execute();
 

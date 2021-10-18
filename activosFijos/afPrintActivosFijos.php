@@ -24,12 +24,16 @@ $nameGestion=nameGestion($gestion);
 */
 //recibimos las variables
 $unidadOrganizacional=$_POST["unidad_organizacional"];
+
 $areas=$_POST["areas"];
 $rubros=$_POST["rubros"];
 $tipo=$_POST["tipo"];
 $unidadOrgString=implode(",", $unidadOrganizacional);
 $areaString=implode(",", $areas);
 $rubrosString=implode(",", $rubros);
+
+$fecha_desde=$_POST["fecha_desde"];
+$fecha_hasta=$_POST["fecha_hasta"];
 
 
 // echo $areaString;
@@ -51,6 +55,7 @@ if($tipo==1){
   $sqladd="and tipo_af=2";
 }
 
+
 $sqlActivos="SELECT codigoactivo,otrodato,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
@@ -61,7 +66,7 @@ DATE_FORMAT(fechalta, '%d/%m/%Y')as fechalta,valorinicial,valorresidual,
 (select e.nombre from estados_activofijo e where e.codigo=cod_estadoactivofijo) as estado_af,
 (select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien
 from activosfijos 
-where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd ";  
+where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd and fechalta between '$fecha_desde' and '$fecha_hasta' ";  
 
 //echo $sqlActivos;
 

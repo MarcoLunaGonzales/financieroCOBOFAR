@@ -489,17 +489,17 @@
     	      	<div class="form-group col-sm-3">
             		<!--<label for="nro_cuenta" class="bmd-label-floating">Nro. Cuenta:</label>-->
                 <input type="hidden" id="nro_cuenta_id" name="nro_cuenta_id">
-            		<input type="number" class="form-control" style="background-color:#E3CEF6;text-align: left" id="nro_cuenta" name="nro_cuenta" onkeypress=" pulsar(event,'numero');" onkeyDown="pulsar(event,'numero');" onkeyUp="pulsar(event,'numero');" autofocus><!--onkeypress="buscarCuentaList('numero'); pulsar(event);" onkeyDown="buscarCuentaList('numero');" onkeyUp="buscarCuentaList('numero');"-->
+            		<input type="number" class="form-control" style="background-color:#E3CEF6;text-align: left" id="nro_cuenta" name="nro_cuenta"autofocus><!--onkeypress="buscarCuentaList('numero'); nkeyDown="buscarCuentaList('numero');" onkeyUp="buscarCuentaList('numero');"-->
           		</div>
           		<div class="form-group col-sm-3">
             		<!--<label for="cuenta" class="bmd-label-floating">Cuenta:</label>-->
                 <input type="hidden" id="cuenta_id" name="cuenta_id">
-            		<input type="text" class="form-control" id="cuenta" style="background-color:#E3CEF6;text-align: left" name="cuenta" onkeypress="pulsar(event,'nombre')" onkeyDown="pulsar(event,'nombre');" onkeyUp="pulsar(event,'nombre');"><!--onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
+            		<input type="text" class="form-control" id="cuenta" style="background-color:#E3CEF6;text-align: left" name="cuenta"  ><!--onkeypress="buscarCuentaList('nombre');keyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
           		</div>
               <div class="form-group col-sm-2">
                 <!--<label for="cuenta" class="bmd-label-floating">Cuenta Auxiliar:</label>-->
                 <input type="hidden" id="cuenta_id_auxiliar" name="cuenta_id_auxiliar">
-                <input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal" onkeypress="pulsar(event,'nombre')" onkeyDown="pulsar(event,'nombre');" onkeyUp="pulsar(event,'nombre');"><!--onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
+                <input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal"   value="0"><!--onkeypress="buscarCuentaList('nombre');buscarCuenta(form1)onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
               </div>
               <div class="form-group col-sm-2">
                   <button type="button" class="btn btn-danger btn-sm" onclick="buscarCuenta(form1);">
@@ -664,7 +664,7 @@
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Fecha</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input type="date" class="form-control" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>" required="true">
+                                <input type="date" class="form-control" name="fecha_fac" id="fecha_fac" min="<?=$fecha_ini_factura?>"  max="<?=$fecha_fin_factura?>" required="true">
                                 <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                             </div>
@@ -969,3 +969,10 @@
   </div>
 </div>
 <!-- edit -->
+
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>

@@ -432,6 +432,19 @@ alerts = {
           location.href=url;
       });
     }
+
+    else if(type == 'error-comprobante-duplicado-pago'){
+      swal(":( ERROR!!!", "Éste pago ya tiene Un COMPROBANTE relacionado.", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
+    else if(type == 'error-comprobante-duplicado-ingreso-alm'){
+      swal(":( ERROR!!!", "Éste Ingreso ya tiene Un COMPROBANTE relacionado.", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
     
 
   },

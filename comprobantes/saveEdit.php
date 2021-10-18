@@ -217,7 +217,13 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
 		$unidadDetalle=$_POST["unidad".$i];
 		$area=$_POST["area".$i];
-		$debe=$_POST["debe".$i];
+    if($unidadDetalle==null){
+      $unidadDetalle=1;
+    }
+    if($area==null){
+      $area=522;
+    }
+    $debe=$_POST["debe".$i];
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
     $codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];

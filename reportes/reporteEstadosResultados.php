@@ -46,7 +46,7 @@ $html.='<html>'.
            '</head>';
 $html.='<body>';
 $html.=  '<header class="header">'.            
-            '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
+            '<img class="imagen-logo-izq" src="../assets/img/favicon.png">'.
             '<div id="header_titulo_texto">'.obtenerValorConfiguracion(43).'</div>'.
          '<div id="header_titulo_texto_inf_pegado">Del '.$fechaFormateada.' al '.$fechaFormateadaHasta.'</div>'.
          '<div id="header_titulo_texto_inf_pegado_Max">Expresado en Bolivianos</div>'.
@@ -67,7 +67,7 @@ $html.='<br><table class="table">'.
            $tBolActivo=0;$tBolPasivo=0;
 // Preparamos
 $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.cod_padre, p.nivel, 
-  (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=1 and (p.codigo=4 or p.codigo=5) order by p.numero");
+  (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=1 and (p.codigo=4000 or p.codigo=5000) order by p.numero");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -136,7 +136,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                      $montoX=$montoX*-1;
                    }
                    
-                   if($codigo==5){                    
+                   if($codigo==5000){                    
                     $tBolActivo+=$montoX;
                   }else{
                     //$montoX=abs((float)($rowComp['total_debe']-$rowComp['total_haber']));
@@ -359,5 +359,5 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 $html.='</body>'.
       '</html>';
                     
-descargarPDF("IBNORCA - Estado de Resultados (".$tituloOficinas.")",$html);
+descargarPDF("COBOFAR - Estado de Resultados (".$tituloOficinas.")",$html);
 ?>

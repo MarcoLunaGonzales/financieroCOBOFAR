@@ -195,7 +195,6 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <select name="cod_unidadorganizacional" id="cod_unidadorganizacional" onChange="ajaxAFunidadorganizacionalArea(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
-                                        
                                             <option value=""></option>
                                             <?php 
                                             $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";

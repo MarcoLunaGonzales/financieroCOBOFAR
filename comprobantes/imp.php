@@ -22,8 +22,8 @@ if(!isset($_GET['comp'])){
       $nombreMonedaG="Dólares";
     }
 }
-
-
+$sw_printComprobante=verificarComporbanteCojo($codigo);
+if($sw_printComprobante==0){
 $estadoComp=obtenerEstadoComprobante($codigo);
 $dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
@@ -52,13 +52,8 @@ $stmt->bindColumn('glosa', $glosaComprobante);
 $stmt->bindColumn('cod_unidadorganizacional', $codigoUO);
 $stmt->bindColumn('created_by', $created_by);
 $stmt->bindColumn('cod_tipocomprobante', $cod_tipocomprobante);
-
-
-
-
 $nameEntidad="";
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
-
     // $globalUser=$_SESSION['globalMes'];
     $nombre_usuario=namePersonal_2($created_by);
 
@@ -133,7 +128,7 @@ $html.=  '<header class="header">'.
             '<img class="imagen-logo-izq" src="../assets/img/icono_sm_cobofar.jpg">'.
             '<div id="header_titulo_texto">Comprobante de Contabilidad</div>'.
          '<div id="header_titulo_texto_inf" style="clear: left; border: 1;">&nbsp;</div>'.
-         '<div id="header_titulo_texto_inf" class="left"></div>'.
+
          '<table>'.
             '<tr class="bold table-title">'.
               '<td align="left">Entidad: '.$nameEntidad.'</td>'.
@@ -156,7 +151,7 @@ $html.=  '<header class="header">'.
          $html.='</table>'.
          '</header>';
 
-         $html.='<table class="table">'.
+        $html.='<table class="table">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
               '<td colspan="2" class="td-border-none"></td>'.
@@ -187,7 +182,7 @@ $html.=  '<header class="header">'.
 
               // print_r($row['nombre']);
              $html.='<tr>'.
-                      '<td><b><span style="font-size:70%">'.$row['numero'].'</span></b><br>'.$row['unidadAbrev'].'<br>'.$row['abreviatura'].'</td>'.
+                      '<td><b><span style="font-size:70%">'.$row['numero'].'</span></b><br>'.$row['unidadAbrev'].' - '.$row['abreviatura'].'</td>'.
                       '<td><b><span style="font-size:75%">'.$row['nombre'].'</span></b> - '.$row['nombrecuentaauxiliar'].'<br>'.$row['glosa'].'</td>';
                       if($tcUSD==0){$tcUSD=1;}
 
@@ -232,7 +227,6 @@ if($monedaBimon!=1){
       }
  $html.='<p style="font-size:12px;" class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Dólares</p>';          
 }
-
 
 if($cod_tipocomprobante==2){
      $html.='
@@ -279,10 +273,6 @@ if($cod_tipocomprobante==2){
    '</table></footer>';
 }
 
-
-
-
-
 $html.='</body>'.
       '</html>';
 //detectando el error 
@@ -296,6 +286,33 @@ $html.='</body>'.
 
 //$html = mb_convert_encoding($html,'UTF-8', 'ISO-8859-1');
 
- //echo $html;           
+//echo $html;           
 descargarPDF("COBOFAR - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+
+}else{
+    require_once '../layouts/bodylogin.php';
+   echo  "
+   <script >$(document).ready(function() {
+    swal({
+        title: 'ERROR',
+        text: 'El DEBE Difiere del HABER.. : (',
+        type: 'error',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Ver de todos modos',
+        cancelButtonText: 'Cancelar',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href='imp2.php?comp=".$codigo."&mon=".$moneda."'; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            window.close();
+            return(false);
+          }
+        });
+
+});</script>";
+}
 ?>

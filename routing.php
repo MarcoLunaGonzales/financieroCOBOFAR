@@ -507,13 +507,22 @@
 		if ($_GET['opcion']=='listSolicitudRecursosAdminRegHistorico') {
 			require_once('solicitudes/listSolicitudRecursosAdminRegHistorico.php');
 		}
+		//***
+		// if ($_GET['opcion']=='listSolicitudIngresosAlmacen') {
+		// 	require_once('ingresos_almacen/list.php');
+		// }
+		// if ($_GET['opcion']=='listSolicitudIngresosAlmacenHistorico') {
+		// 	require_once('ingresos_almacen/list2.php');
+		// }
 
+		//***
 		if ($_GET['opcion']=='listSolicitudIngresosAlmacen') {
-			require_once('ingresos_almacen/list.php');
+			require_once('ingresos_almacen_antiguo/list.php');
 		}
-		if ($_GET['opcion']=='listSolicitudIngresosAlmacenHistorico') {
-			require_once('ingresos_almacen/list2.php');
+		if ($_GET['opcion']=='listSolicitudIngresosAlmacen_filtro') {
+			require_once('ingresos_almacen_antiguo/filtro.php');
 		}
+		
 
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
@@ -621,6 +630,9 @@
 		}
 		if ($_GET['opcion']=='listPagoProveedorLote') {
 			require_once('obligaciones_pago/listPagoLote.php');
+		}
+		if ($_GET['opcion']=='listPagoProveedorLote_admin_historico') {
+			require_once('obligaciones_pago/listaAdmin_historial.php');
 		}
 
 		if ($_GET['opcion']=='listPagoProveedoresLotes') {
@@ -1880,8 +1892,6 @@
 			$fl=$_GET['fl'];
 			require_once('flujos_efectivo/plandecuentas_registrer.php');
 		}
-
-		
 		//abm dosificaciones
 		if ($_GET['opcion']=='listDosificaciones') {
 			require_once('dosificaciones/list.php');
@@ -1899,7 +1909,27 @@
 			$cod_sucursal=$_GET['cod_sucursal'];
 			require_once('dosificaciones/saveDelete.php');
 		}
+		//ingresos sucursales
+		if ($_GET['opcion']=='cierrecaja_from') {			
+			require_once('ingresos_sucursales/cierrecaja_diario_from.php');
+		}
 
+		if ($_GET['opcion']=='main_cierrecaja_from') {			
+			require_once('ingresos_sucursales/ventana_principal.php');
+		}
+		
+		if ($_GET['opcion']=='rpt_bajadepositos_from') {			
+			require_once('ingresos_sucursales/rpt_bajadepositos_from.php');
+		}
+		if ($_GET['opcion']=='rpt_bajadepositos_print') {			
+			require_once('ingresos_sucursales/rpt_bajadepositos_print.php');
+		}
+		if ($_GET['opcion']=='rpt_facturasgeneradas_comercial_from') {			
+			require_once('ingresos_sucursales/rpt_facturasgeneradas_comercial_from.php');
+		}
+		if ($_GET['opcion']=='auditoria_sucursales_from') {			
+			require_once('auditorias_traspasos/auditoria_sucursales_from.php');
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}

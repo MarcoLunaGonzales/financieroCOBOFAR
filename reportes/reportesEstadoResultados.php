@@ -30,7 +30,7 @@ $fechaHasta=$y."-12-31";
         <div class="card">
           <div class="card-header <?=$colorCard;?> card-header-text">
           <div class="card-text">
-            <h4 class="card-title">Reporte Estado Resultados</h4>
+            <h4 class="card-title">Estado Resultados Filtro</h4>
           </div>
           </div>
           <div class="card-body ">

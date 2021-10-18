@@ -21,9 +21,11 @@ if($tipoProveedorCliente==3){//Personal
     $sql="SELECT codigo, CONCAT_WS(' ',primer_nombre,paterno,materno)as nombre from personal where cod_estadopersonal=1 and cod_estadoreferencial=1 order by nombre";
 }
 if($tipoProveedorCliente==4){//Sucursal
-    $sql="SELECT a.codigo, a.nombre,a.abreviatura from areas a,areas_organizacion ao
-    where a.codigo=ao.cod_area and ao.cod_unidad=2 and a.cod_estado=1 
+    $sql="SELECT a.codigo, a.nombre,a.abreviatura from areas a where  a.cod_estado=1 and centro_costos=1
     order by 2";
+}
+if($tipoProveedorCliente==5){//personal desvinculado where 
+    $sql="SELECT codigo, CONCAT_WS(' ',primer_nombre,paterno,materno)as nombre from personal where cod_estadopersonal=3 and cod_estadoreferencial=1 order by nombre";
 }
 $stmt = $dbh->prepare($sql);
 $stmt->bindParam(':codigo', $codigo);

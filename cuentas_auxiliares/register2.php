@@ -42,7 +42,7 @@ $nombreCuentaPadre=nameCuenta($codigoCuentaPadre);
 				</div>
 
 				<div class="row">
-				  <label class="col-sm-2 col-form-label">Tipo</label>
+				  	<label class="col-sm-2 col-form-label">Tipo</label>
 						<div class="col-sm-4">
 				        	<div class="form-group">
 					        <select class="selectpicker form-control form-control-sm" name="tipo" id="tipo" data-style="<?=$comboColor;?>" required="true" onChange="ajaxTipoProveedorCliente(this);">

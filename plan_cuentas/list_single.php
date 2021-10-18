@@ -86,12 +86,12 @@ $stmt->bindColumn('cuenta_auxiliar', $cuentaAuxiliar);
                             <?php
                             if($globalAdmin==1){
                             ?>
-                            <a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <!-- <a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
-                            </button>
+                            </button> -->
                             <?php
                             }
                             ?>

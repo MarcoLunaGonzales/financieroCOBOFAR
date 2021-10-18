@@ -3,9 +3,7 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
-
 $dbh = new Conexion();
-
 $sqlwhere="where sr.cod_pagolote=0 or sr.cod_pagolote IS NULL";
 $sqlNombreLote="";
 if(isset($_GET['codigo'])){
@@ -29,9 +27,7 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cod_estadopago', $codEstado);
 $stmt->bindColumn('cod_ebisa', $cod_ebisa);
-$stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);
-
-?>
+$stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);?>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
@@ -51,13 +47,12 @@ $stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);
                     <i class="material-icons">refresh</i>
                   </a>
                   <h4 class="card-title"><b>Pagos<?=$sqlNombreLote?></b></h4>
-                  
                 </div>
                 <div class="card-body">
                     <table class="table table-condesed small" id="tablePaginator">
                       <thead>
                         <tr style="background:#21618C; color:#fff;">
-                          <th>Proveedor</th>
+                          <!-- <th>Proveedor</th> -->
                           <th>Detalle</th>
                           <th>Fecha Pago</th>
                           <th>Fecha EC.</th>
@@ -94,7 +89,7 @@ $stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);
                             break;
                           }  ?>
                         <tr>
-                          <td><?=$datosArray[0]?></td>
+                          <!-- <td><?=$datosArray[0]?></td> -->
                           <td><?=$datosArray[1]?></td>
                           <!--<td><?=$descripcion?></td>-->
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>

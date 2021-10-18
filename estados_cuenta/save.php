@@ -19,13 +19,15 @@ if($porciones[1]=="AUX"){
 	$codPlan=$porciones[0];
 	$codAux="";
 }
+$cod_estadoreferencial=1;
 // Prepare
-$stmt = $dbh->prepare("INSERT INTO $table (cod_plancuenta, cod_cuentaaux,tipo, cod_tipoestadocuenta) VALUES (:cod_plancuenta, :cod_cuentaaux, :tipo, :cod_tipoestadocuenta)");
+$stmt = $dbh->prepare("INSERT INTO $table (cod_plancuenta, cod_cuentaaux,tipo, cod_tipoestadocuenta,cod_estadoreferencial) VALUES (:cod_plancuenta, :cod_cuentaaux, :tipo, :cod_tipoestadocuenta,:cod_estadoreferencial)");
 // Bind
 $stmt->bindParam(':cod_plancuenta', $codPlan);
 $stmt->bindParam(':cod_cuentaaux', $codAux);
 $stmt->bindParam(':tipo', $credito);
 $stmt->bindParam(':cod_tipoestadocuenta', $tipo);
+$stmt->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
 $flagSuccess=$stmt->execute();
 
 

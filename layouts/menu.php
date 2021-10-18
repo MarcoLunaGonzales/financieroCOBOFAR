@@ -623,12 +623,18 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Procesar Ingresos Almacen</span>
                   </a>
                 </li>
-                <li class="nav-item ">
+                <li class="nav-item">
+                  <a class="nav-link" href="?opcion=main_cierrecaja_from" style="background:rgba(9, 98, 143 ,0.6); color:#DEDEDE;font-weight:bold;">
+                    <span class="sidebar-mini"> IS </span>
+                    <span class="sidebar-normal"> Ingresos Sucursales</span>
+                  </a>
+                </li>
+      <!--           <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSolicitudRecursosSisActividad">
                     <span class="sidebar-mini"> ASR </span>
                     <span class="sidebar-normal"> Actividades Solitudes Recursos</span>
                   </a>
-                </li>
+                </li> -->
 
               </ul>
             </div>
@@ -959,23 +965,23 @@ if($menuModulo==0){
                   </a>
                 </li>
                
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPagoProveedores">
                     <span class="sidebar-mini"> PP </span>
                     <span class="sidebar-normal"> Pagos</span>
                   </a>
-                </li>
+                </li> -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPagoProveedoresLotes">
                     <span class="sidebar-mini"> PL </span>
-                    <span class="sidebar-normal"> Pagos por Lotes</span>
+                    <span class="sidebar-normal"> Pagos Proveedores</span>
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPagoProveedoresAdmin">
+                  <!-- <a class="nav-link" style="background:rgba(37, 98, 83,0.6); color:#E2AF0F;font-weight:bold;" href="?opcion=listPagoProveedoresAdmin">
                     <span class="sidebar-mini"> GP </span>
                     <span class="sidebar-normal"> Gestión de Pagos</span>
-                  </a>
+                  </a> -->
                 </li>
                 <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=register_solicitudfacturacion_manual">

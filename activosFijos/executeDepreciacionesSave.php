@@ -8,7 +8,7 @@ require_once 'functionsDepreciacion.php';
 
 $dbh = new Conexion();
 
-
+echo "<br><br><br><br>*** PROCESANDO INFORMACIÓN ... ***";
 //$cod_empresa=$_POST["cod_empresa"];
 $mes=$_POST["mes"];
 $gestion=$_POST["gestion"];
@@ -17,6 +17,8 @@ $fecha_actual_x=date($gestion."-".$mes."-01");//
 $fecha_actual_x=date('Y-m-d',strtotime($fecha_actual_x.'+1 month'));
 $fecha_actual=date('Y-m-d',strtotime($fecha_actual_x.'-1 day'));//
 //verificamos si esa fecha no se registro aun
+$fechaFin=$gestion."-".$mes."-01";
+$fechaFin=date("Y-m-t", strtotime($fechaFin));
 
 set_time_limit(3000);
 $sql="SELECT count(codigo)as contador from mesdepreciaciones where gestion=$gestion and mes=$mes";
@@ -34,9 +36,9 @@ if($codigo_aux==0){
 	$stmtInsertCab -> execute();
 	$ultimoIdInsertado = $dbh->lastInsertId();
 	// $ultimoIdInsertado=29;
-	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1 ";
+	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1 and fechalta<'$fechaFin' and a.cod_estadoactivofijo=1";
 	// 829,9,10,5,8,270 // 271,272,2692 // and cod_unidadorganizacional in (10) and a.codigo in (2274,2275)
-	//echo $sqlActivos;
+		//echo $sqlActivos;
 	$stmtActivos = $dbh->prepare($sqlActivos);
 	$stmtActivos -> execute();
 	$banderaUFVError=0;
@@ -82,9 +84,9 @@ if($codigo_aux==0){
   				$vidautilmeses_restante_af=$vidautilmeses_restante_af-1;//ponemos en estado normal
   				// echo $fechaFinalDepreciacion."<br>";
 			}
-			if($codActivo==1795){//caso especial af a.codigo=1795 llegará en variable $sw_nuevo
-	            $sw_nuevo=$codActivo;
-	        }
+			// if($codActivo==1795){//caso especial af a.codigo=1795 llegará en variable $sw_nuevo
+	  //           $sw_nuevo=$codActivo;
+	  //       }
 			//echo "fechas depre: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;			
 			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
 		}else{			

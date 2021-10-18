@@ -154,7 +154,7 @@ while ($row = $stmt->fetch()) {
         <td class="text-left small"><?=$nombreUnidadO?>-<?=$nombreAreaCentroCosto?></td>
         <td class="text-center small"><?=$nombreComprobanteX?></td>
         <td class="text-left small"><?=$fechaComprobante?></td>
-        <td class="text-left small"><?=$fechaX?></td>          
+        <td class="text-left small"><input type="hidden" id="fecha_ex_s<?=$contador_items?>" name="fecha_ex_s<?=$contador_items?>"  value="<?=$fechaX?>"><?=$fechaX?></td>          
         <td class="text-left small"><?=$nombreCuentaAuxiliarX?></td>
         <td class="text-left small"><input type="hidden" id="glosa_detalle_s<?=$contador_items?>" name="glosa_detalle_s<?=$contador_items?>"  value="<?=$glosaMostrar?>"><?=$glosaMostrar?></td>
         <td class="text-right text-muted font-weight-bold small"><?=formatNumberDec($montoEstado)?></td>

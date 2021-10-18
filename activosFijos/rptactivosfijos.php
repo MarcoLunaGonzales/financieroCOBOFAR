@@ -6,6 +6,10 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 $query = "SELECT * from depreciaciones order by 3";
 $statement = $dbh->query($query);
+
+
+$fechaDesde=date('Y-01-01');
+$fechaHasta=date('Y-12-31');
 ?>
 
 <div class="content">
@@ -91,6 +95,33 @@ $statement = $dbh->query($query);
               </div>
           </div>
           <!--fin campo ufvinicio -->
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="row">
+               <label class="col-sm-4 col-form-label">Desde</label>
+               <div class="col-sm-4">
+                <div class="form-group">
+                  <div id="div_contenedor_fechaI">                              
+                    <input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" value="<?=$fechaDesde?>">  
+                  </div>                                    
+                   </div>
+                </div>
+           </div>
+             </div>
+            <div class="col-sm-4">
+              <div class="row">
+               <label class="col-sm-4 col-form-label">Hasta</label>
+               <div class="col-sm-8">
+                <div class="form-group">
+                  <div id="div_contenedor_fechaH">                              
+                    <input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" value="<?=$fechaHasta?>">
+                  </div>
+                         
+                  </div>
+                </div>
+            </div>
+          </div>
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				  <button type="submit" class="<?=$buttonNormal;?>">Generar</button>

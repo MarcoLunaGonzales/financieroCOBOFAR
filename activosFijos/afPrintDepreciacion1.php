@@ -19,7 +19,7 @@ try{
     $result = $stmtAF->fetch();
     $nom_proy_financiacion = $result['nom_proy_financiacion'];    
 
-    $stmt = $dbh->prepare("SELECT codigo,codigoactivo,tipoalta,DATE_FORMAT(fechalta ,'%d/%m/%Y')as fechalta,activo,otrodato,depreciacionacumulada,valorresidual,estadobien,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombre_personal,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable2) as nombre_personal2,(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo2,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as abrev_uo2,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select c.numero from comprobantes  c where c.codigo=cod_comprobante ) as comprobante from activosfijos WHERE codigo=:codigo");
+    $stmt = $dbh->prepare("SELECT codigo,valorinicial,codigoactivo,tipoalta,DATE_FORMAT(fechalta ,'%d/%m/%Y')as fechalta,activo,otrodato,depreciacionacumulada,valorresidual,estadobien,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombre_personal,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable2) as nombre_personal2,(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo2,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as abrev_uo2,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select c.numero from comprobantes  c where c.codigo=cod_comprobante ) as comprobante from activosfijos WHERE codigo=:codigo");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo_af);
     $stmt->execute();
@@ -33,7 +33,7 @@ try{
     // $indiceufv = $result['indiceufv'];
     // $tipocambio = $result['tipocambio'];
     // $moneda = $result['moneda'];
-    // $valorinicial = $result['valorinicial'];
+    $valorinicial = $result['valorinicial'];
     $depreciacionacumulada = $result['depreciacionacumulada'];
     $valorresidual = $result['valorresidual'];
     // $cod_depreciaciones = $result['cod_depreciaciones'];
@@ -139,6 +139,11 @@ $html.=  '<header class="header">'.
                     $row = $stmt2->fetch();
                         $d2_valorresidual_aux = $row["d2_valorresidual"];
                         $d10_valornetobs_aux = $row["d10_valornetobs"];
+
+                        if($d10_valornetobs_aux==null){
+                            $d10_valornetobs_aux=$valorinicial;
+                        }
+                        
                     $html.='<tr>'.
                         '<td class="text-left small" >'.
                             '<p>'.

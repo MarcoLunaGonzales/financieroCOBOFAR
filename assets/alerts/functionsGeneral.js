@@ -310,8 +310,9 @@ function buscarCuenta(combo){
   var contenedor = document.getElementById('divResultadoBusqueda');
   var nroCuenta=document.getElementById('nro_cuenta').value;
   var nombreCuenta=document.getElementById('cuenta').value;
+  var nombreCuenta_auxiliar=document.getElementById('cuenta_auxiliar_modal').value;
   var padre=$("#padre").val();
-  var parametros={"nro_cuenta":nroCuenta,"cuenta":nombreCuenta,"padre":padre};
+  var parametros={"nro_cuenta":nroCuenta,"cuenta":nombreCuenta,"padre":padre,"auxiliar":nombreCuenta_auxiliar};
   $.ajax({
         type: "GET",
         dataType: 'html',
@@ -326,6 +327,7 @@ function buscarCuenta(combo){
         }
     });
 }
+
 
 function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuentaAux, nombreCuentaAux){
   var fila=filaActiva;
@@ -348,6 +350,30 @@ function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuent
   facturacomprobante(fila);//icono de factura
   configuracionLibretasBancarias(fila,codigoCuenta);
   $('#myModal').modal('hide');
+  $(".selectpicker").selectpicker('refresh');
+  $("#debe"+fila).focus();
+}
+function setBusquedaCuenta_nuevo(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuentaAux, nombreCuentaAux){
+  var fila=filaActiva;
+  //quitarEstadoCuentaFila(fila);
+  var inicio=numeroCuenta.substr(0,1);
+
+  //setar Estados de cuenta y más
+  $("#tipo_estadocuentas"+fila).val("-100");
+  $("#tipo_proveedorcliente"+fila).val("-100");
+  $("#proveedorcliente"+fila).val("-100");
+  $("#tipo_estadocuentas_casoespecial"+fila).val("-100");
+  // fin setear estados de cuenta
+  //console.log(fila);
+  document.getElementById('cuenta'+fila).value=codigoCuenta;
+
+  document.getElementById('cuenta_auxiliar'+fila).value=codigoCuentaAux;
+  document.getElementById('divCuentaDetalle'+fila).innerHTML='<span class=\"text-danger font-weight-bold\">['+numeroCuenta+']-'+nombreCuenta+' </span><br><span class=\"text-primary font-weight-bold small\">'+nombreCuentaAux+'</span>';
+  configuracionCentros(fila,inicio);
+  configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux);
+  facturacomprobante(fila);//icono de factura
+  configuracionLibretasBancarias(fila,codigoCuenta);
+  $('#myModal_buscarcuenta').modal('hide');
   $(".selectpicker").selectpicker('refresh');
   $("#debe"+fila).focus();
 }
@@ -674,6 +700,25 @@ function saveFacturaNuevo(){
     $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");
   }
 }
+function verificar_duplicidadFac(autorizacion,nro_factura){
+  var dato=-1;
+  var parametros={"autorizacion":autorizacion,"nro_factura":nro_factura};
+  $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "ajax_verificar_factura_existente.php",
+    data: parametros,
+    async:false,
+    success:  function (resp) {
+      dato=resp;       
+    }
+  });
+  return dato; 
+
+
+
+
+}
 function saveFactura(){
   $(".error-fac").remove();
   var index=$('#codCuenta').val();
@@ -689,15 +734,20 @@ function saveFactura(){
     iceFac: setValCeroToStringNull($('#ice_fac').val()),
     tazaFac: setValCeroToStringNull($('#taza_fac').val()),
     tipoFac: $('#tipo_fac').val()
-    }
-    
+  }
   var monto_debe_total_comprobante = $("#totaldeb").val();
   var monto_suma_factura=parseInt($('#imp_fac').val())+parseInt($('#ice_fac').val())+parseInt($('#exe_fac').val());
   console.log("FILA:"+index+",SUMAS FACTURAS NIT:"+$('#nit_fac').val()+" monto,"+monto_suma_factura+" "+monto_debe_total_comprobante);
   //if(monto_suma_factura != monto_debe_total_comprobante){
     //alert("El monto registrado en las facturas difiere del total!");
   //}else{
-  var contadorError=0;  
+
+  var nro_factura=$('#nro_fac').val();
+  var autorizacion=$('#aut_fac').val();
+  var sw_duplicado=verificar_duplicidadFac(autorizacion,nro_factura);
+  // console.log(sw_duplicado);
+  if(sw_duplicado==0){
+    var contadorError=0;  
     if(($('#nit_fac').val()==''||$('#nit_fac').val()==0)){
       contadorError++;
       errorCampoAjaxMensaje($('#nit_fac'),'Campo requerido');
@@ -714,7 +764,7 @@ function saveFactura(){
       contadorError++;
       errorCampoAjaxMensaje($('#imp_fac'),'Monto > 0');
     }
-    if($('#aut_fac').val()==''){
+    if($('#aut_fac').val()=='' || $('#aut_fac').val()==0 || $('#aut_fac').val()<1){
       contadorError++;
       errorCampoAjaxMensaje($('#aut_fac'),'campo requerido');
     }              
@@ -735,6 +785,9 @@ function saveFactura(){
        $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
        $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");                
     }
+  }else{
+    Swal.fire("ERROR","Ésta Factura ya se encuentra registrado en el libro de compras!", "warning");
+  }
                 
  // }
 }
@@ -1317,10 +1370,12 @@ function limpiarComprobanteExcel(){
     $("#boton_cargar_datos").removeClass("d-none");
     $("#boton_generar_filas").addClass("d-none");
   }
+  itemDatosComprobante=[];
 }
 
 var itemDatosComprobante=[];
 function cargarComprobanteExcel() {
+  itemDatosComprobante=[];
   $('#div_datos_excel').html("");
     var data = $('textarea[name=data_excel]').val();
     console.log(data);
@@ -1471,6 +1526,7 @@ function abrirPlantilla(id,n,glosa,tipo){
 }
 
 function generarComprobanteExcel(){
+  // iniciarCargaAjax();
   var datos=itemDatosComprobante;
   var parametros={"filas":$("#cantidad_filas").val(),"datos":JSON.stringify(datos)};
   $.ajax({
@@ -1480,10 +1536,10 @@ function generarComprobanteExcel(){
         data: parametros,
         beforeSend:function(){
           iniciarCargaAjax();
-          $("#texto_ajax_titulo").html("Generando Filas");
+          $("#texto_ajax_titulo").html("Generando Filas..");
         },
         success:  function (resp) {
-          detectarCargaAjax();
+          
           $("#texto_ajax_titulo").html("Procesando Datos");
           var fi=$("#fiel");
           fi.append(resp);
@@ -1494,6 +1550,7 @@ function generarComprobanteExcel(){
           $("#boton_cargar_datos").removeClass("d-none");
           $("#boton_generar_filas").addClass("d-none");
           $("#modalPegarDatosComprobante").modal("hide");     
+          detectarCargaAjax();
         }
     }); 
 }
@@ -1952,17 +2009,20 @@ function readSingleFile(evt) {
               var index=$('#codCuenta').val();
               for (var i = 0; i < lines.length; i++) {
                 if(String(lines[i]).trim()!=""){
-                  lines[i]=String(lines[i]).split("\t");
-                console.log(lines[i])
-                   $('#nit_fac').val(lines[i][0]);
-                   $('#nro_fac').val(lines[i][1]);
-                   $('#fecha_fac').val(lines[i][3]);
-                   $('#razon_fac').val("-");
-                   $('#imp_fac').val(lines[i][4]);
-                   $('#exe_fac').val("-");
-                   $('#aut_fac').val(lines[i][2]);
-                   $('#con_fac').val(lines[i][5]);
-                   saveFactura();
+                  lines[i]=String(lines[i]).split("|");
+                  var fecha =lines[i][2];
+                  let arr = fecha.split('/');
+                  var fecha_conv=arr[2]+"-"+arr[1]+"-"+arr[0];
+
+                  $('#fecha_fac').val(fecha_conv);
+                  $('#nit_fac').val(lines[i][3]);
+                  $('#razon_fac').val(lines[i][4]);
+                  $('#nro_fac').val(lines[i][5]);
+                  $('#aut_fac').val(lines[i][7]);
+                  $('#imp_fac').val(lines[i][8]);
+                  $('#ice_fac').val(lines[i][9]);
+                  $('#con_fac').val(lines[i][14]);
+                  saveFactura();
                  } 
                 }
                $("#qrquincho").val(""); 
@@ -3720,6 +3780,23 @@ function editarCuentaComprobante(fila){
     };   
   }
   $('#myModal').modal('show');
+}
+
+function editarCuentaComprobante_nuevo(fila){
+  filaActiva=fila;
+  if($("#cuenta"+fila).val()!=""){
+    var codigo =$("#cuenta"+fila).val();
+    for (var i = 0; i < itemCuentas.length; i++) {
+      if(itemCuentas[i].codigo==codigo){
+        $("#nro_cuenta").val(itemCuentas[i].numero);
+        $("#cuenta").val(itemCuentas[i].nombre);
+        $("#cuenta_auxiliar_modal").val("");
+        buscarCuentaList('numero');
+        break;
+      }
+    };   
+  }
+  $('#myModal_buscarcuenta').modal('show');
 }
 //retenciones funciones
 function borrarRetencionDetalle(cod){
@@ -13796,7 +13873,13 @@ function editFac(fila,i){
   $("#modalEditFac").modal("show");
 }
 function saveFacturaEdit(){
-  var contadorError=0;  
+  var nro_factura=$('#nro_fac_edit').val();
+  var autorizacion=$('#aut_fac_edit').val();
+  var sw_duplicado=verificar_duplicidadFac(autorizacion,nro_factura);
+  // console.log(sw_duplicado);
+  // sw_duplicado=0;
+  // if(sw_duplicado==0){
+    var contadorError=0;  
     if(($('#nit_fac_edit').val()==''||$('#nit_fac_edit').val()==0)){
       contadorError++;
       errorCampoAjaxMensaje($('#nit_fac_edit'),'Campo requerido');
@@ -13813,7 +13896,7 @@ function saveFacturaEdit(){
       contadorError++;
       errorCampoAjaxMensaje($('#imp_fac'),'Monto > 0');
     }
-    if($('#aut_fac_edit').val()==''){
+    if($('#aut_fac_edit').val()=='' || $('#aut_fac_edit').val()<1){
       contadorError++;
       errorCampoAjaxMensaje($('#aut_fac'),'campo requerido');
     }              
@@ -13821,29 +13904,31 @@ function saveFacturaEdit(){
       contadorError++;
       errorCampoAjaxMensaje($('#razon_fac'),'campo requerido');
     }
-             
     if(contadorError==0){
-                    var fila = $("#fila_fac").val();
-                    var i = $("#indice_fac").val();
-                    itemFacturas[fila-1][i].nit=$("#nit_fac_edit").val();
-                    itemFacturas[fila-1][i].nroFac=$("#nro_fac_edit").val();
-                    itemFacturas[fila-1][i].fechaFac=$("#fecha_fac_edit").val();
-                    itemFacturas[fila-1][i].impFac=$("#imp_fac_edit").val();
-                    itemFacturas[fila-1][i].exeFac=$("#exe_fac_edit").val();
-                    itemFacturas[fila-1][i].iceFac=$("#ice_fac_edit").val();
-                    itemFacturas[fila-1][i].tazaFac=$("#taza_fac_edit").val();
-                    itemFacturas[fila-1][i].autFac=$("#aut_fac_edit").val();
-                    itemFacturas[fila-1][i].conFac=$("#con_fac_edit").val();
-                    itemFacturas[fila-1][i].tipoFac=$("#tipo_fac_edit").val();
-                    itemFacturas[fila-1][i].razonFac=$("#razon_fac_edit").val();
-                    limpiarModalCache("modalEditFac");
-                    //$("#modalFac").modal("hide");
-                    $("#modalFac").modal("show");
-                    //$("#modalEditFac").modal("hide");
-                    listarFact(fila);
-                    $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
-                    $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");               
-      }          
+      var fila = $("#fila_fac").val();
+      var i = $("#indice_fac").val();
+      itemFacturas[fila-1][i].nit=$("#nit_fac_edit").val();
+      itemFacturas[fila-1][i].nroFac=$("#nro_fac_edit").val();
+      itemFacturas[fila-1][i].fechaFac=$("#fecha_fac_edit").val();
+      itemFacturas[fila-1][i].impFac=$("#imp_fac_edit").val();
+      itemFacturas[fila-1][i].exeFac=$("#exe_fac_edit").val();
+      itemFacturas[fila-1][i].iceFac=$("#ice_fac_edit").val();
+      itemFacturas[fila-1][i].tazaFac=$("#taza_fac_edit").val();
+      itemFacturas[fila-1][i].autFac=$("#aut_fac_edit").val();
+      itemFacturas[fila-1][i].conFac=$("#con_fac_edit").val();
+      itemFacturas[fila-1][i].tipoFac=$("#tipo_fac_edit").val();
+      itemFacturas[fila-1][i].razonFac=$("#razon_fac_edit").val();
+      limpiarModalCache("modalEditFac");
+      //$("#modalFac").modal("hide");
+      $("#modalFac").modal("show");
+      //$("#modalEditFac").modal("hide");
+      listarFact(fila);
+      $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
+      $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");               
+    }
+  // }else{
+  //   Swal.fire("ERROR","Ésta Factura ya se encuentra registrado en el libro de compras!", "warning");
+  // }
 }
 
 function calcularTotalesSolicitud(){
@@ -17088,6 +17173,7 @@ function agregarLotePago_seleccionados(){
   var cant= parseInt($("#cantidad_proveedores_modal").val());
   var cuentas = $("#cuentas_proveedor").val();
   var prov = $("#proveedor").val();
+  var cantidad_proveedores=$("#cantidad_proveedores").val();
   var contador_check=0;
   var codigos_aux="";//iran concatenados todos los codigos
   for (var i = 1; i <= cant; i++) {
@@ -17107,7 +17193,7 @@ function agregarLotePago_seleccionados(){
     }else{
       var url ="obligaciones_pago/ajaxListPagosLote_seleccionados.php";
     } 
-    var parametros={"contador_check":contador_check,"codigos_aux":codigos_aux,"cuentas":cuentas,"prov":prov};
+    var parametros={"contador_check":contador_check,"codigos_aux":codigos_aux,"cuentas":cuentas,"prov":prov,"cantidad_proveedores":cantidad_proveedores};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -17133,7 +17219,6 @@ function agregarLotePago_seleccionados(){
 function activar_input_prontopago(index){
   var check=document.getElementById("pagos_seleccionados_2"+index);
   if(check.checked){
-    
     document.getElementById("pronto_pago_s"+index).value=1;
   }else{
     
@@ -18479,6 +18564,7 @@ function agregarFilaComprobante(fila){
   }
 }
 
+
 function recorrerCuentaContable(idF){
   var itemFacturasAux=[];
   var itemEstadosCuentasAux=[];
@@ -18507,6 +18593,7 @@ function recorrerCuentaContable(idF){
     }
     calcularTotalesComprobante("null");       
 }
+
 
 
 function cambiarValorElementosComprobante(nuevoId,i,aux,aux2){
@@ -18592,6 +18679,7 @@ function cambiarValorElementosComprobante(nuevoId,i,aux,aux2){
        $('.selectpicker').selectpicker(['refresh']);
       console.log(" Filas "+numFilas+":"+aux2+nuevoId+"->"+aux+i);
 }
+
 
 function contabilizarSolicitudRecursoModal(codigo,tipo,nro,monto,cuentas,url,prov,arry){
   //var validacion=[];
@@ -19285,9 +19373,12 @@ function descargarOfertaPropuesta(inp){
 }
 
 function salvarComprobante(tipo){
+  // document.getElementById("btnsalvarcompro").value = "Enviando...";
+  
   if($("#nro_correlativo").val()>0){
     if($("#cantidad_filas").val()>0){
        salvarComprobanteProceso(tipo);
+       document.getElementById("btnsalvarcompro").disabled = true;
     }else{
        Swal.fire("Informativo!", "Debe registrar al menos un detalle!", "warning");
     }
@@ -19540,8 +19631,101 @@ function calcularTotalFilaEstadoCuentaPagoProvedores(){
   var resulta=parseFloat(Math.round(sumal * 100) / 100).toFixed(2);
   
   document.getElementById("total_saldo_ec").value=number_format(resulta,2);//con formato
+}
 
-  // var total123= $("#total_saldo_ec").val();
+///******ingresos sucursales
+function abrir_detalle_modal_cierres(fecha,cod_ciudad){
+  iniciarCargaAjax();
+  var contenedor;
+  // var codigo_UO=combo.value;
+  contenedor = document.getElementById('tablasA_registradas');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'ajax_detalle_cierres_personal.php?fecha='+fecha+'&cod_ciudad='+cod_ciudad,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      detectarCargaAjax();
+    }
+  }
+  ajax.send(null);
+  $("#modal_detalle_cierre").modal("show");
+}
 
-  //alert("aqui:"+total123);
+
+function seleccionar_ingresos_almacen(){
+  var p= $("#p").val();  
+  var fecha_desde= $("#fecha_desde").val();  
+  var fecha_hasta= $("#fecha_hasta").val();  
+  var glosa= $("#glosa").val();  
+  var id_proveedor= $("#id_proveedor").val();  
+  window.location="../ingresos_almacen_antiguo/seleccionar.php?fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta+"&glosa="+glosa+"&id_proveedor="+id_proveedor+"&p="+p;
+}
+
+
+
+function agregardatosModalEdicionIngresosAlm(datos){  
+  var d=datos.split('/');  
+  document.getElementById("dcto_edit").value=d[0];
+  document.getElementById("factura_edit").value=d[1];
+  document.getElementById("fecha_edit").value=d[2];
+  document.getElementById("nit_edit").value=d[3];
+  document.getElementById("autoriza_edit").value=d[4];
+  document.getElementById("codigocontrol_edit").value=d[5];
+  document.getElementById("monto_edit").value=d[6];
+
+  document.getElementById("fecha_desde_edit").value=d[7];
+  document.getElementById("fecha_hasta_edit").value=d[8];
+  
+}
+
+function guardar_edit_ingreso_alm(dcto_edit,factura_edit,fecha_edit,monto_edit,nit_edit,autoriza_edit,codigocontrol_edit,fecha_desde,fecha_hasta){
+  $.ajax({
+    type:"POST",
+    data:"dcto_edit="+dcto_edit+"&factura_edit="+factura_edit+"&fecha_edit="+fecha_edit+"&monto_edit="+monto_edit+"&nit_edit="+nit_edit+"&autoriza_edit="+autoriza_edit+"&codigocontrol_edit="+codigocontrol_edit,
+    url:"save_edit.php",
+    success:function(r){
+      if(r==1){
+        //alerts.showSwal('success-message','ingresos_almacen_antiguo/seleccionar.php?fecha_desde='+fecha_desde+'&fecha_hasta='+fecha_hasta);
+        Swal.fire("Se procedió con el cambio!", "Por favor actualizar Página.", "success");        
+      }else{
+        Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
+      }
+    }
+  });
+}
+
+function activar_input_ingresos_almacen(index){
+  var check=document.getElementById("ingresos_seleccionados"+index);
+  if(check.checked){
+    document.getElementById("ingresos_activado_s"+index).value=1;
+  }else{
+    document.getElementById("ingresos_activado_s"+index).value=0;
+  }
+}
+
+
+function abrir_detalle_modal(codigo,cod_sucursal){
+  var contenedor;
+  // var codigo_UO=combo.value;
+  contenedor = document.getElementById('tablasA_registradas');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'detalle_facturasgeneradas.php?codigo_salida='+codigo+'&cod_sucursal='+cod_sucursal,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+    }
+  }
+  ajax.send(null);
+  $("#modalDetalleFac").modal("show");  
+}
+
+function redireccionarIngresosAlmacenAnt(cod_personal){
+  //window.open('http://10.10.1.19/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
+  //window.open('http://localhost:8080/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
+  window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php?p='+cod_personal, '_blank'); 
+}
+
+function pendientes_ingreso_almacen_ant(){
+  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
+  //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
 }

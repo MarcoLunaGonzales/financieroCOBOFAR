@@ -21,6 +21,9 @@ $globalArea=$_SESSION["globalArea"];
 $nroCuentaBusqueda=$_GET["nro_cuenta"];
 $nombreCuentaBusqueda=$_GET["cuenta"];
 $padreCuentaBusqueda=$_GET['padre'];
+
+$nombreCuentaBusqueda_auxiliar=$_GET['auxiliar'];
+
 $sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 ";
 if($nroCuentaBusqueda!=""){
 	$sqlBusqueda.=" and p.numero like '%".$nroCuentaBusqueda."%'";
@@ -32,6 +35,12 @@ if($padreCuentaBusqueda!=""){
 	$sqlBusqueda.=" and SUBSTRING(p.numero, 1, 1) = ".$padreCuentaBusqueda;
 }
 $sqlBusqueda.=" order by p.numero";
+
+
+$sqlBusquedaauxiliar="";
+if($nombreCuentaBusqueda_auxiliar!=""){
+	$sqlBusquedaauxiliar=" and nombre like '%".$nombreCuentaBusqueda_auxiliar."%'";
+}
 
 //echo $sqlBusqueda;
 
@@ -60,7 +69,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 			$numeroCuenta=trim($numeroCuenta);
 			$nombreCuenta=trim($nombreCuenta);
 
-			$sqlCuentasAux="SELECT codigo, nombre, cod_tipoauxiliar, cod_proveedorcliente FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
+			$sqlCuentasAux="SELECT codigo, nombre, cod_tipoauxiliar, cod_proveedorcliente FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' $sqlBusquedaauxiliar order by 2 ";
 			$stmtAux = $dbh->prepare($sqlCuentasAux);
 			$stmtAux->execute();
 			$stmtAux->bindColumn('codigo', $codigoCuentaAux);

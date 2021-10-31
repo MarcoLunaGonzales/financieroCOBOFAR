@@ -23,12 +23,21 @@ $glosa=$_POST["glosa"];
 $facturas= json_decode($_POST['facturas']);
 $estadosCuentas= json_decode($_POST['estados_cuentas']);
 session_start();
+if(isset($_SESSION["globalUser"])){
+  $globalUser=$_SESSION["globalUser"];
+  $globalGestion=$_SESSION["globalGestion"];
+  $globalUnidad=$_SESSION["globalUnidad"];
+  $globalArea=$_SESSION["globalArea"];
+  $globalAdmin=$_SESSION["globalAdmin"];
+}else{
+  $globalUser=-100;
+  $globalGestion=-100;
+  $globalUnidad=-100;
+  $globalArea=-100;
+  $globalAdmin=-100;
+}
 
-$globalUser=$_SESSION["globalUser"];
-$globalGestion=$_SESSION["globalGestion"];
-$globalUnidad=$_SESSION["globalUnidad"];
-$globalArea=$_SESSION["globalArea"];
-$globalAdmin=$_SESSION["globalAdmin"];
+
 
 $salvado_temporal=0;
 if(isset($_POST['salvado_temporal'])){
@@ -357,6 +366,7 @@ if($errorInsertar!=0){
   $sqlRolBack="ROLLBACK;";
   $stmtRolBack = $dbh->prepare($sqlRolBack);
   $stmtRolBack->execute();
+  // $flagSuccessDetalle=false;
 }
 $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
 $stmtCommit = $dbh->prepare($sqlCommit);

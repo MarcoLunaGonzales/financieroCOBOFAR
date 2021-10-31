@@ -507,13 +507,7 @@
 		if ($_GET['opcion']=='listSolicitudRecursosAdminRegHistorico') {
 			require_once('solicitudes/listSolicitudRecursosAdminRegHistorico.php');
 		}
-		//***
-		// if ($_GET['opcion']=='listSolicitudIngresosAlmacen') {
-		// 	require_once('ingresos_almacen/list.php');
-		// }
-		// if ($_GET['opcion']=='listSolicitudIngresosAlmacenHistorico') {
-		// 	require_once('ingresos_almacen/list2.php');
-		// }
+
 
 		//***
 		if ($_GET['opcion']=='listSolicitudIngresosAlmacen') {
@@ -522,7 +516,14 @@
 		if ($_GET['opcion']=='listSolicitudIngresosAlmacen_filtro') {
 			require_once('ingresos_almacen_antiguo/filtro.php');
 		}
+		//*** INGRESOS ALMACEN NUEVO
 		
+		if ($_GET['opcion']=='listSolicitudIngresosAlmacen_nuevo') {
+			require_once('ingresos_almacen_nuevo/list.php');
+		}
+		if ($_GET['opcion']=='listSolicitudIngresosAlmacen_nuevo_filtro') {
+			require_once('ingresos_almacen_nuevo/filtro.php');
+		}
 
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
@@ -910,7 +911,7 @@
 		if ($_GET['opcion']=='afEtiquetasFiltro') {
 			require_once('activosFijos/afEtiquetasFiltro.php');
 		}
-		//impresion etiquetas activos fijos
+		
 		if ($_GET['opcion']=='afConstanciasTraspaso') {
 			require_once('reportes_activosfijos/afConstanciasTraspaso.php');
 		}
@@ -1030,7 +1031,10 @@
 			require_once('personal/rptrptIngresosDescuentosFiltro.php');
 		}
 
-
+		//reporte info del personal
+		if ($_GET['opcion']=='rptPersonal_from') {
+			require_once('personal/rptPersonal_from.php');
+		}
 		// if ($_GET['opcion']=='saveTiposContrato') {
 		// 	require_once('personal/tipos_contratosSave.php');
 		// }
@@ -1417,7 +1421,12 @@
 		}
 
 
-
+		if ($_GET['opcion']=='subirBonoExcel_global_from') {
+			require_once('bonos/subirExcel_global_from.php');
+		}
+		if ($_GET['opcion']=='subirBonoExcel_global_save') {
+			require_once('bonos/subirExcel_global_save.php');
+		}
 
 
 
@@ -1540,10 +1549,16 @@
 		if ($_GET['opcion']=='subirAnticipoExcel2') {
 			require_once('anticipos_personal/subirDatosExcel.php');
 		}
-		       //ayuda documento csv
-            if ($_GET['opcion']=='ayudaArchivoCsv') {
-			   require_once('anticipos_personal/helpCsv.php');
-		    }
+	       //ayuda documento csv
+	    if ($_GET['opcion']=='ayudaArchivoCsv') {
+		   require_once('anticipos_personal/helpCsv.php');
+	    }
+
+	    if ($_GET['opcion']=='descargarExcelGlobal') {
+		   require_once('bonos/descargarExcelGlobal.php');
+	    }
+
+		    
 
 		//Escalas Antiguedad
 		if ($_GET['opcion']=='listEscalaAntiguedad') {

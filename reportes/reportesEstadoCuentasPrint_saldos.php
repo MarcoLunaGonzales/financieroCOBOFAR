@@ -38,6 +38,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 $string_periodo="30,60,90";
 $array_periodo=explode(",", $string_periodo);
 
+require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
 ?>
 
 <div class="content">
@@ -65,34 +66,37 @@ $array_periodo=explode(",", $string_periodo);
                     <div class="card-body">
                         <div class="table-responsive">
                             <?php 
-                            $html='<table class="table table-bordered table-condensed" id="tablePaginatorFixedEstadoCuentas">'.
+                            echo '<table class="table table-bordered table-condensed" id="tablePaginatorFixedEstadoCuentas">'.
                                 '<thead>'.
                                     '<tr class="">'.
                                         '<th class="text-left">-</th>'.
                                         '<th class="text-left">Proveedor/Cliente</th>';
                                         $periodo=0;
+                                        $x=0;
                                         foreach ($array_periodo as $periodo) {
-                                            $html.='<th class="text-right">'.$periodo.' Días</th>';
+                                            echo '<th class="text-right">'.$periodo.' Días</th>';
+                                            $monto_periodo[$x]=0;
+                                            $x++;
                                         }
-                                        $html.='<th class="text-right"> > '.$periodo.'</th>';
-                                    $html.='</tr>'.
+                                        $monto_periodo[$x]=0;
+                                        echo '<th class="text-right"> > '.$periodo.'</th>';
+                                    echo '</tr>'.
                                 '</thead>'.
                                 '<tbody>';
                                 foreach ($cuenta as $cuentai ) {
                                     $nombreCuenta=nameCuenta($cuentai);//nombre de cuenta
-                                    $html.='<tr style="background-color:#9F81F7;">
+                                    echo '<tr style="background-color:#9F81F7;">
                                         <td style="display: none;"></td>
                                         <td class="text-left small" colspan="2">CUENTA</td>
-                                        <td class="text-left small" colspan="3">'.$nombreCuenta.'</td>
+                                        <td class="text-left small" colspan="4">'.$nombreCuenta.'</td>
                                         <td style="display: none;"></td>
+                                        <td style="display: none;"></td>                                        
                                         <td style="display: none;"></td>
                                     </tr>'; 
-                                    $sqlFechaEstadoCuenta="and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'"; 
-                                        
-                                    // if(isset($_POST['cierre_anterior'])){
-                                    //   $sqlFechaEstadoCuenta="and e.fecha<='$hasta 23:59:59'";  
-                                    // }
-
+                                    $sqlFechaEstadoCuenta="and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'";
+                                    if(isset($_POST['cierre_anterior'])){
+                                      $sqlFechaEstadoCuenta="and e.fecha<='$hasta 23:59:59'";  
+                                    }
                                     $sql="SELECT e.fecha,e.cod_cuentaaux,ca.nombre,(SELECT c.tipo from configuracion_estadocuentas c where c.cod_plancuenta=d.cod_cuenta)as tipoDebeHaber
                                         FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) GROUP BY e.cod_cuentaaux  order by e.fecha"; //ca.nombre, 
                                     // echo $sql;
@@ -110,23 +114,18 @@ $array_periodo=explode(",", $string_periodo);
                                             // $totalCredito=$totalCredito+$monto_ecX;
                                             // $totalDebito=$totalDebito+$monto_ecD;
                                             // $saldo_X=$monto_ecX-$monto_ecD;
-                                            // $html.='<tr class="bg-white" >
+                                            // echo '<tr class="bg-white" >
                                             //     <td class="text-center small">'.$index.'</td>
                                             //     <td class="text-left small">'.$nombreX.'</td>
                                             //     <td class="text-right small">'.formatNumberDec($saldo_X).'</td>
                                             // </tr>'; 
                                         }else{//cliente
-                                            // $totalCredito=$totalCredito+$monto_ecD;
-                                            // $totalDebito=$totalDebito+$monto_ecX;
-
-                                            // $saldo_X=$monto_ecX-$monto_ecD;
-                                            $saldo_X=0;
-                                            $html.='<tr class="bg-white" >
+                                            echo '<tr class="bg-white" >
                                                 <td class="text-center small">'.$index.'</td>
                                                 <td class="text-left small">'.$nombreX.'</td>';
-                                                
-
-                                                $html.='</tr>'; 
+                                                // include "reportesEstadoCuentasPrint_saldos_detalle.php";
+                                                generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$StringUnidades,$cod_cuentaauxX,$unidadCostoArray,$areaCostoArray,$desde,$hasta,$monto_periodo,$array_periodo);
+                                                echo '</tr>'; 
                                             }
                                         $index++;
                                     }    
@@ -135,16 +134,16 @@ $array_periodo=explode(",", $string_periodo);
                                 // if($totalSaldo<0){
                                 //     $totalSaldo=$totalSaldo*(-1);
                                 // }                         
-                                // $html.='<tr>
+                                // echo '<tr>
                                 //     <td style="display: none;"></td>
                                 //     <td class="text-right small" colspan="2">Total:</td>
                                 //     <td class="text-right small font-weight-bold">'.formatNumberDec($totalDebito).'</td>
                                 //     <td class="text-right small font-weight-bold">'.formatNumberDec($totalCredito).'</td>
                                 //     <td class="text-right small font-weight-bold">'.formatNumberDec($totalSaldo).'</td>
                                 // </tr>';  
-                                $html.='</tbody>
+                                echo '</tbody>
                             </table>';
-                            echo $html;
+                            // echo $html;
                             ?>
                         </div>
                     </div>

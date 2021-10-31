@@ -403,6 +403,7 @@
      $stmt = $dbh->prepare("SELECT nombre FROM cargos where codigo=:codigo");
      $stmt->bindParam(':codigo',$codigo);
      $stmt->execute();
+     $nombreX="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $nombreX=$row['nombre'];
      }
@@ -2270,26 +2271,17 @@
   }
 
 
-  function verificarExistenciaPersona($codigoPersona)
-  {
-    $dbh = new Conexion();
-    $stmt = $dbh->prepare("SELECT codigo FROM personal WHERE codigo=$codigoPersona and cod_estadoreferencial=1");
-    $stmt->execute();
-
-    $cont = 0;
-    $existe = 0;
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      if ($row['codigo'] == $codigoPersona) {
-        $cont++;
-      }
-    }
-    if ($cont == 0) {
+   function verificarExistenciaPersona($codigoPersona)
+   {
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT codigo FROM personal WHERE codigo=$codigoPersona and cod_estadoreferencial=1");
+      $stmt->execute();
       $existe = false;
-    } else {
-      $existe = true;
-    }
-    return ($existe);
-  }
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $existe = true;
+      }
+      return ($existe);
+   }
 
   function nombrePersona($codigoPersona){
     $nombre=null;
@@ -10103,6 +10095,21 @@ function obtenerNombreIdentificacionPersona($codigo,$indice){
   $valor="";
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
     $valor=$row['nombre'];
+  }  
+  return $valor;
+}
+function obtenerNameAfp($codigo,$indice){
+  $dbh = new Conexion();
+  $valor="";
+  $sql="SELECT abreviatura,nombre FROM tipos_afp where codigo=$codigo;";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();  
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+    if($indice==1){
+      $valor=$row['abreviatura'];
+    }else{
+      $valor=$row['nombre'];     
+    }
   }  
   return $valor;
 }

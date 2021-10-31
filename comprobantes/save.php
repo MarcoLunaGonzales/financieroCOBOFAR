@@ -33,19 +33,29 @@ if(isset($_POST['codigo_sr'])&&isset($_POST['codigo_personal'])){
 
 $codPadreArchivos=obtenerValorConfiguracion(84);
 
-$globalUser=$_SESSION["globalUser"];
-$globalGestion=$_SESSION["globalGestion"];
-$globalMes=$_SESSION['globalMes'];
-$globalUnidad=$_SESSION["globalUnidad"];
-$globalArea=$_SESSION["globalArea"];
-$globalAdmin=$_SESSION["globalAdmin"];
+if(isset($_SESSION["globalUser"])){
+  $globalUser=$_SESSION["globalUser"];
+  $globalGestion=$_SESSION["globalGestion"];
+  $globalMes=$_SESSION['globalMes'];
+  $globalUnidad=$_SESSION["globalUnidad"];
+  $globalArea=$_SESSION["globalArea"];
+  $globalAdmin=$_SESSION["globalAdmin"];
+}else{
+  $globalUser=-100;
+  $globalGestion=-100;
+  $globalMes=-100;
+  $globalUnidad=-100;
+  $globalArea=-100;
+  $globalAdmin=-100;
+}
+
 
 $fechaHoraActual=$_POST["fecha"];
 //$porcionesFecha = explode("/", $_POST['fecha']);
 //$fechaHoraActual=$porcionesFecha[2]."-".$porcionesFecha[1]."-".$porcionesFecha[0];
 $fechaHoraSistema=date("Y-m-d H:i:s");
 
-$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$_SESSION['globalUnidad'],$tipoComprobante,$globalMes);
+$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalAdmin,$tipoComprobante,$globalMes);
 
 $codComprobante=obtenerCodigoComprobante();
 $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by,salvado_temporal) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser',$salvado_temporal)";
@@ -144,7 +154,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         $stmtInsert = $dbh->prepare($sqlInsert);
         $flagArchivo=$stmtInsert->execute();    
         //print_r($sqlInsert);
-        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+        //if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
             //sibir archivos al servidor de documentos
             // $parametros=array(
             // "idD" => 15,
@@ -160,7 +170,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
             //$resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
            //unlink($target_path);
            //print_r($resultado);        
-          }
+          //}
 
       } else {    
           echo "error";

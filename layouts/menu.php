@@ -278,7 +278,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Ingresos & Descuentos </span>
                   </a>
                 </li>
-
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=rptPersonal_from">
+                    <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal">Personal </span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
@@ -618,24 +623,17 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="?opcion=listSolicitudIngresosAlmacen" style="background:rgba(9, 98, 143 ,0.6); color:#DEDEDE;font-weight:bold;">
+                  <a class="nav-link" href="?opcion=listSolicitudIngresosAlmacen_nuevo" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
                     <span class="sidebar-mini"> PIA </span>
-                    <span class="sidebar-normal"> Procesar Ingresos Almacen</span>
+                    <span class="sidebar-normal">Ingresos ALMACEN</span>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="?opcion=main_cierrecaja_from" style="background:rgba(9, 98, 143 ,0.6); color:#DEDEDE;font-weight:bold;">
+                  <a class="nav-link" href="?opcion=main_cierrecaja_from" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
                     <span class="sidebar-mini"> IS </span>
-                    <span class="sidebar-normal"> Ingresos Sucursales</span>
+                    <span class="sidebar-normal"> Ingresos SUCURSALES</span>
                   </a>
                 </li>
-      <!--           <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSolicitudRecursosSisActividad">
-                    <span class="sidebar-mini"> ASR </span>
-                    <span class="sidebar-normal"> Actividades Solitudes Recursos</span>
-                  </a>
-                </li> -->
-
               </ul>
             </div>
           </li>
@@ -810,7 +808,6 @@ if($menuModulo==0){
                 <b class="caret"></b>
               </p>
             </a>
-
             <div class="collapse" id="tablasPresSol">
               <ul class="nav">
                 <li class="nav-item ">

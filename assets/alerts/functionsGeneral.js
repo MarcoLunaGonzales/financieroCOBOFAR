@@ -19660,11 +19660,19 @@ function seleccionar_ingresos_almacen(){
   var id_proveedor= $("#id_proveedor").val();  
   window.location="../ingresos_almacen_antiguo/seleccionar.php?fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta+"&glosa="+glosa+"&id_proveedor="+id_proveedor+"&p="+p;
 }
+function seleccionar_ingresos_almacen_nuevo(){
+  var p= $("#p").val();  
+  var fecha_desde= $("#fecha_desde").val();  
+  var fecha_hasta= $("#fecha_hasta").val();  
+  var glosa= $("#glosa").val();  
+  var id_proveedor= $("#id_proveedor").val();  
+  window.location="../ingresos_almacen_nuevo/seleccionar.php?fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta+"&glosa="+glosa+"&id_proveedor="+id_proveedor+"&p="+p;
+}
 
 
 
 function agregardatosModalEdicionIngresosAlm(datos){  
-  var d=datos.split('/');  
+  var d=datos.split('/');
   document.getElementById("dcto_edit").value=d[0];
   document.getElementById("factura_edit").value=d[1];
   document.getElementById("fecha_edit").value=d[2];
@@ -19672,10 +19680,9 @@ function agregardatosModalEdicionIngresosAlm(datos){
   document.getElementById("autoriza_edit").value=d[4];
   document.getElementById("codigocontrol_edit").value=d[5];
   document.getElementById("monto_edit").value=d[6];
-
   document.getElementById("fecha_desde_edit").value=d[7];
   document.getElementById("fecha_hasta_edit").value=d[8];
-  
+  document.getElementById("ningreso_edit").value=d[9];
 }
 
 function guardar_edit_ingreso_alm(dcto_edit,factura_edit,fecha_edit,monto_edit,nit_edit,autoriza_edit,codigocontrol_edit,fecha_desde,fecha_hasta){
@@ -19720,12 +19727,20 @@ function abrir_detalle_modal(codigo,cod_sucursal){
 }
 
 function redireccionarIngresosAlmacenAnt(cod_personal){
-  //window.open('http://10.10.1.19/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
-  //window.open('http://localhost:8080/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
-  window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php?p='+cod_personal, '_blank'); 
+  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
+  //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php?p='+cod_personal, '_blank'); 
 }
 
 function pendientes_ingreso_almacen_ant(){
-  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
+  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
   //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
+}
+function redireccionarIngresosAlmacen_nuevo(cod_personal){ 
+  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_nuevo/filtro.php', '_blank'); 
+  //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_nuevo/filtro.php', '_blank'); 
+}
+
+function pendientes_ingreso_almacen_nuevo(){
+  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_nuevo/rpt_facturas_pendientes_from.php?', '_blank'); 
+  //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_nuevo/rpt_facturas_pendientes_from.php?', '_blank'); 
 }

@@ -18,12 +18,21 @@ $glosa=$_POST["glosa"];
 $facturas= json_decode($_POST['facturas']);
 $estadosCuentas= json_decode($_POST['estados_cuentas']);
 session_start();
+if(isset($_SESSION["globalUser"])){
+  $globalUser=$_SESSION["globalUser"];
+  $globalGestion=$_SESSION["globalGestion"];
+  $globalUnidad=$_SESSION["globalUnidad"];
+  $globalArea=$_SESSION["globalArea"];
+  $globalAdmin=$_SESSION["globalAdmin"];
+}else{
+  $globalUser=-100;
+  $globalGestion=-100;
+  $globalUnidad=-100;
+  $globalArea=-100;
+  $globalAdmin=-100;
+}
 
-$globalUser=$_SESSION["globalUser"];
-$globalGestion=$_SESSION["globalGestion"];
-$globalUnidad=$_SESSION["globalUnidad"];
-$globalArea=$_SESSION["globalArea"];
-$globalAdmin=$_SESSION["globalAdmin"];
+
 
 $fechaHoraActual=date("Y-m-d H:i:s");
 

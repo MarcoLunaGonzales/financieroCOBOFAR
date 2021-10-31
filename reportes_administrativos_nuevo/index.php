@@ -27,18 +27,22 @@ $dbh = new Conexion();
 								<a href="<?=$urlreporte_comprobantessinfacturascompras_from;?>" class="btn btn-success"> Crédito Fiscal VS Libro Compra</a>
 							</div>
 				  		</div>
-				  		<!-- <div class="col-sm-4">
+				  		<div class="col-sm-4">
 							<div class="form-group">
-								<a class="btn btn-rose" href="<?=$urlreporte_comprobantessinfacturascompras_from;?>">
-				                    <span class="sidebar-normal"> Facturas Compra Sin Comprobantes</span>
+								<a class="btn btn-rose" href="<?=$urlreporte_comprobantesincompletos_from;?>">
+				                    <span class="sidebar-normal"> Comprobantes Incompletos</span>
 				                </a>
 							</div>
-				  		</div> -->
+				  		</div>
+				  		<div class="col-sm-4">
+							<div class="form-group">
+								<a class="btn btn-info" href="<?=$urlreporte_comprobantesinEC_from;?>">
+				                    <span class="sidebar-normal"> Comprobantes Sin Estados Cuenta</span>
+				                </a>
+							</div>
+				  		</div>
 					</div>
-					<div class="row">				
-						  	
-				  		
-					</div>
+					
 <!-- 
 					<div class="row">				  	
 				  		<div class="col-sm-4">

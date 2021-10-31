@@ -13,7 +13,7 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="SELECT codigo,fecha,nro_correlativo,glosa,cod_estado,cod_comprobante from ingresos_almacen order by nro_correlativo desc limit 50";
+$sql="SELECT i.codigo,i.fecha,i.nro_correlativo,i.glosa,i.cod_estado,i.cod_comprobante,(select c.cod_estadocomprobante from comprobantes c where c.codigo=i.cod_comprobante)as estado_comprobante from ingresos_almacen i order by i.nro_correlativo desc limit 50";
 $stmt = $dbh->prepare($sql);
 //ejecutamos
 $stmt->execute();
@@ -24,6 +24,8 @@ $stmt->bindColumn('nro_correlativo', $nro_correlativo);
 $stmt->bindColumn('glosa', $glosa);
 $stmt->bindColumn('cod_estado', $cod_estado);
 $stmt->bindColumn('cod_comprobante', $cod_comprobante);
+
+$stmt->bindColumn('estado_comprobante', $cod_estadocomprobante);
 
 ?>
 <div class="content">
@@ -56,7 +58,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       // echo $cod_comprobante."**";
                       if($cod_comprobante>0){
-                        $cod_estadocomprobante=obtenerEstadoComprobante($cod_comprobante);
+                        // $cod_estadocomprobante=obtenerEstadoComprobante($cod_comprobante);
                         switch ($cod_estadocomprobante) {
                           case 1:
                             $estado_comprobante="Registrado";
@@ -92,7 +94,6 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                         $estado="Anulado";
                         $label='<span badge badge-danger>'; 
                       }
-                      
                      ?>
                       <tr>
                           <td width="10%" class="text-center small"><?=$nro_correlativo;?></td>
@@ -105,7 +106,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                               if($cod_comprobante>0 ){?>                                    
                                 <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" target="_blank">
                                    <i class="material-icons" title="Imprimir Comprobante" style="color:red">print</i>
-                               </a> 
+                                </a> 
                               <?php }elseif($cod_estado==1){ ?>
                                 <a href="<?=$urlcontabilizar;?>?codigo=<?=$codigo;?>" target="_blank" > 
                                   <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
@@ -124,10 +125,12 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
         <?php
         if($globalAdmin==1){
         ?>
-        <div class="card-footer fixed-bottom">
-           <!-- <a class="<?=$buttonNormal;?>" target="_blank" onClick="location.href='<?=$urlfiltro;?>'">Registrar</a>  -->
-          <a class="btn btn-success" target="_blank" onClick="redireccionarIngresosAlmacenAnt('<?=$globalUser?>')">Registrar</a>
-          <a class="btn btn-warning" target="blank" onClick="pendientes_ingreso_almacen_ant()">Facturas Pendientes</a>
+        <div class="card-footer fixed-bottom">           
+          <a class="btn btn-success" target="_blank" onClick="redireccionarIngresosAlmacen_nuevo('<?=$globalUser?>')">Seleccionar Nuevo</a>
+          <a class="btn btn-warning" target="blank" onClick="pendientes_ingreso_almacen_nuevo()">Pendientes Nuevo</a>
+
+          <a class="btn btn-info" target="_blank" onClick="redireccionarIngresosAlmacenAnt('<?=$globalUser?>')">Seleccionar Antiguo</a>
+          <a class="btn btn-warning" target="blank" onClick="pendientes_ingreso_almacen_ant()">Pendientes Antiguo</a>
         </div>
         <?php
         }

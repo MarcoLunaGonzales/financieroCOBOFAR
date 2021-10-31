@@ -3,12 +3,12 @@
 require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
 require_once '../conexion2.php';
-require_once '../conexion_sql.php'; 
+require_once '../conexion_comercial_oficial.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
-$dbh = new Conexion();
+$dbh_cabecera = new Conexion();
 $dbh_detalle = new Conexion2();
 
 $p=$_POST['p'];
@@ -22,17 +22,9 @@ if($p==0){
     $globalUser=0;
   } 
 }
-
 //datos de cabecera
 $cantidadItems=$_POST['contador_items'];//total de intems
 $glosa_ingreso=$_POST['glosa_ingreso'];//total de intems
-
-$patron1="[\n|\r|\n\r]";
-$glosa_ingreso = preg_replace($patron1, ", ", $glosa_ingreso);//quitamos salto de linea
-$glosa_ingreso = str_replace('"', " ", $glosa_ingreso);//quitamos comillas dobles  
-$glosa_ingreso = str_replace("'", " ", $glosa_ingreso);//quitamos comillas simples
-$glosa_ingreso = str_replace('<', "(", $glosa_ingreso);//quitamos comillas dobles
-$glosa_ingreso = str_replace('>', ")", $glosa_ingreso);//quitamos comillas dobles
 
 $flagSuccess=false;
 $cod_ingresoalmacen=0;
@@ -40,9 +32,9 @@ while ($cod_ingresoalmacen==0) {
   $nro_correlativo=obtenerCorrelativoingresoAlmacen();
   $cod_estado=1;
   $sqlInsert="INSERT into ingresos_almacen(fecha,nro_correlativo,glosa,cod_estado,created_at,created_by) values(NOW(),$nro_correlativo,'$glosa_ingreso',$cod_estado,NOW(),'$globalUser')";
-  $stmtInsert = $dbh->prepare($sqlInsert);
+  $stmtInsert = $dbh_cabecera->prepare($sqlInsert);
   $flagSuccess=$stmtInsert->execute();
-  $cod_ingresoalmacen = $dbh->lastInsertId();
+  $cod_ingresoalmacen = $dbh_cabecera->lastInsertId();
 }
 
 if($cod_ingresoalmacen>0){
@@ -56,47 +48,32 @@ if($cod_ingresoalmacen>0){
   }
 
   $string_dctos=trim($string_dctos,",");
-  $server=obtenerValorConfiguracion(104);
-  $bdname=obtenerValorConfiguracion(105);
-  $user=obtenerValorConfiguracion(106);
-  $pass=obtenerValorConfiguracion(107);
-  $dbh2=ConexionFarma_all($server,$bdname,$user,$pass);
-  $sql_detalle="SELECT DCTO, IDPROVEEDOR, FECHA, GLO, TIPODOC, DOCUM, FECHA1, FECHA2, REFE, REFE1, RUC, MFACTURA,DESCTO1, DESCTO2, DESCTO3, DESCTO4
-       FROM dbo.AMAESTRO
-       WHERE (TIPO = 'A') and dcto in ($string_dctos) ORDER BY CAST(DOCUM AS INT)";
-  //echo $sql_detalle;
-  $stmtDet = $dbh2->prepare($sql_detalle);
-  //ejecutamos
-  $stmtDet->execute();
-  //bindColumn
-  $stmtDet->bindColumn('DCTO', $DCTO);
-  $stmtDet->bindColumn('IDPROVEEDOR', $IDPROVEEDOR);
-  $stmtDet->bindColumn('FECHA', $FECHA);
-  $stmtDet->bindColumn('GLO', $GLO);
-  $stmtDet->bindColumn('DOCUM', $DOCUM);
-  $stmtDet->bindColumn('FECHA1', $FECHA1);
-  $stmtDet->bindColumn('REFE', $REFE);
-  $stmtDet->bindColumn('REFE1', $REFE1);
-  $stmtDet->bindColumn('RUC', $RUC);
-  $stmtDet->bindColumn('MFACTURA', $MFACTURA);
+  $sql="SELECT ia.cod_ingreso_almacen,ia.nro_correlativo,ia.cod_proveedor,ia.observaciones,ia.nro_factura_proveedor,ia.created_by,ia.created_date,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.aut_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor
+                    from ingreso_almacenes ia
+                    where ia.cod_tipoingreso=1004 and ia.cod_ingreso_almacen in ($string_dctos) ORDER BY nro_factura_proveedor";
+  // echo $sql; 
+  $resp=mysqli_query($dbh,$sql);
+  while($row=mysqli_fetch_array($resp)){  
+    $cod_ingreso_almacen=$row['cod_ingreso_almacen'];
+    $cod_proveedor=$row['cod_proveedor'];
+    $nro_correlativo=$row['nro_correlativo'];
+    $nro_factura_proveedor=$row['nro_factura_proveedor'];
+    $f_factura_proveedor=$row['f_factura_proveedor'];
+    $con_factura_proveedor=$row['con_factura_proveedor'];
+    $aut_factura_proveedor=$row['aut_factura_proveedor'];
+    $nit_factura_proveedor=$row['nit_factura_proveedor'];
+    $monto_factura_proveedor_desc=$row['monto_factura_proveedor_desc'];
 
-  $stmtDet->bindColumn('DESCTO1', $DESCTO1);
-  $stmtDet->bindColumn('DESCTO2', $DESCTO2);
-  $stmtDet->bindColumn('DESCTO3', $DESCTO3);
-  $stmtDet->bindColumn('DESCTO4', $DESCTO4);
-  while ($row = $stmtDet->fetch(PDO::FETCH_BOUND)) {
-
-    // $total_venta=$MFACTURA-$DESCTO1-$DESCTO2-$DESCTO3-$DESCTO4;
-    $total_venta=$MFACTURA-number_format($DESCTO1,2,'.','')-$DESCTO2-$DESCTO3-$DESCTO4;
-    $total_venta=number_format($total_venta,2,'.','');
-
-    // $FECHA=trim($FECHA,' 00:00:00.000');
-    $FECHA1_array=explode(" ", $FECHA1);
-    $FECHA1=$FECHA1_array[0];
+    // // $total_venta=$MFACTURA-$DESCTO1-$DESCTO2-$DESCTO3-$DESCTO4;
+    // $total_venta=$MFACTURA-number_format($DESCTO1,2,'.','')-$DESCTO2-$DESCTO3-$DESCTO4;
+    // $total_venta=number_format($total_venta,2,'.','');
+    // // $FECHA=trim($FECHA,' 00:00:00.000');
+    // $FECHA1_array=explode(" ", $FECHA1);
+    // $FECHA1=$FECHA1_array[0];
     
-    $IDPROVEEDOR_nuevo=codigoProveedorNuevo($IDPROVEEDOR);
+    $IDPROVEEDOR_nuevo=codigoProveedorNuevo($cod_proveedor);
     $sqlInsertDet="INSERT INTO ingresos_almacen_detalle(cod_ingresoalmacen, cod_proveedor,factura,fecha_factura,dcto_almacen,nit,autorizacion,codigo_control,monto_factura) 
-    VALUES ($cod_ingresoalmacen,'$IDPROVEEDOR_nuevo','$DOCUM','$FECHA1','$DCTO','$RUC','$REFE1','$REFE',$total_venta)";
+    VALUES ($cod_ingresoalmacen,'$IDPROVEEDOR_nuevo','$nro_factura_proveedor','$f_factura_proveedor','$cod_ingreso_almacen','$nit_factura_proveedor','$aut_factura_proveedor','$con_factura_proveedor',$monto_factura_proveedor_desc)";
     //echo $sqlInsertDet;
     $stmtInsertDet = $dbh_detalle->prepare($sqlInsertDet);
     $flagSuccess=$stmtInsertDet->execute();
@@ -107,7 +84,7 @@ if($flagSuccess){
    <script >$(document).ready(function() {
     swal({
         title: 'CORRECTO',
-        text: 'Se procesó correctamente.!!! :D',
+        text: 'Se procesó correctamente!!! :D',
         type: 'success',
         confirmButtonClass: 'btn btn-success',
         confirmButtonText: 'Aceptar',

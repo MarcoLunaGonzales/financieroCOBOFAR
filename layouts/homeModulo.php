@@ -59,16 +59,9 @@ if($codModulo!=3){?>
     /*margin-top:-185px;*/
     margin:0px;
     height:100%;
-    background-image: url("assets/img/login_farmacias.jpg");
+    background-image: url("assets/img/contabilidad_fondo.jpg");
     background-repeat: repeat-y !important;
     background-size: cover;
-  }
-  .fondo_comu
-  {
-    background-image: url("imagenes/sf.jpg");
-    background-size:     cover;
-      background-repeat:   no-repeat;
-      background-position: center center;              /* optional, center the image */
   }
   #alpha {
   background-color: rgba(0, 0, 0, 0.6);
@@ -110,7 +103,6 @@ $comunicado="";?>
       <div class="col-sm-12">
         <!-- <center><h4><b>IMPORTANTE</b></h4></center>    -->     
         <center><h4><b> ¡Comprobantes Salvados Temporalmente!</b></h4></center>
-        
         <div class="table-responsive">
           <table class="table table-condensed" style='overflow-y: scroll;display: block;height:300px;'>
             <thead>
@@ -131,7 +123,6 @@ $comunicado="";?>
                 }else{
                   $estilo_fecha=" ";
                 }
-                
                 $comunicado="Comprobante: <span style='color:yellow;'><b>".$tipo_comprobante.$mes."-".$numero."</span></b><br>Creado Por: <span style='color:#fad972;'>".$personal."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> En Fecha: <span style='color:#fad972;' ".$estilo_fecha." >".$created_at."</span><br> Glosa: <span style='color: yellow;'>".$glosa."</span><br>";
                 ?>
                 <tr>

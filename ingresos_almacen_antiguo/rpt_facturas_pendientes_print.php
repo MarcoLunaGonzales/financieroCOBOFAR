@@ -10,7 +10,7 @@ if (isset($_GET["check_rs_cierres"])) {
     $sw_excel=0;
     header("Pragma: public");
     header("Expires: 0");
-    $filename = "facturas_almacen_pendientes.xls";
+    $filename = "facturas_almacen_pendientes_antiguo.xls";
     header("Content-type: application/x-msdownload");
     header("Content-Disposition: attachment; filename=$filename");
     header("Pragma: no-cache");
@@ -46,7 +46,7 @@ $fechaTitulo="De ".$desde." a ".$hasta;
 <table class="table table-bordered table-condensed" style="width:100%">
   <thead>                              
     <tr>
-      <th colspan="9"><small><b>FACTURAS ALMACEN PENDIENTES</b></small></th>
+      <th colspan="9"><small><b>FACTURAS PENDIENTES DE INGRESO ANTIGUO SISTEMA</b></small></th>
     </tr>                                  
     <tr>
       <th><small><b>-</b></small></th>

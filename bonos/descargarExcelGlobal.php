@@ -22,9 +22,7 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
 	FROM personal p
 	where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1
 	order by p.paterno";
-
 ?>
-
 <table class="table table-condensed table-bordered">
   <thead>
     <tr>
@@ -32,24 +30,24 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
       <th ><small><b>Area</b></small></th>
       <th ><small><b>CI</b></small></th>
       <th ><small><b>Apellidos y Nombres</b></small></th>
-      <?php
-      	$stmt = $dbh->prepare("SELECT codigo,nombre from bonos where cod_estadoreferencial=1 order by codigo");
-		$stmt->execute();
-		$stmt->bindColumn('codigo', $codigo_bono);
-		$stmt->bindColumn('nombre', $nombre_bono);
-		$contador=0;
-		while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
-			<th ><small><b><?=$nombre_bono?></b></small></th><?php   
-			$contador++;
-		}
+    <?php
+      $stmt = $dbh->prepare("SELECT codigo,nombre from descuentos  where cod_tipo=1 and  cod_estadoreferencial=1 order by codigo");
+  		$stmt->execute();
+  		$stmt->bindColumn('codigo', $codigo_descuento);
+  		$stmt->bindColumn('nombre', $nombre_descuento);
+  		$contador=0;
+  		while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
+  			<th><small><b><?=$nombre_descuento?></b></small></th><?php   
+  			$contador++;
+  		}
       ?>
     </tr>
     <tr>    
   </thead>
-  <tbody >
+  <tbody>
     <?php
     $resp=mysqli_query($dbh,$sql);
-      while($row=mysqli_fetch_array($resp)){ 
+    while($row=mysqli_fetch_array($resp)){ 
         $codigo=$row['codigo'];
         $areas=$row['areas'];
         $identificacion=$row['identificacion'];

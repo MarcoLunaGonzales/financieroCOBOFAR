@@ -453,7 +453,6 @@ if($menuModulo==0){
             </a>
             <div class="collapse" id="utilitarios">
               <ul class="nav">
-
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=cambiarResponsableAF">
                     <span class="sidebar-mini"> CRAF </span>

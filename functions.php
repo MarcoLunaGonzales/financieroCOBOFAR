@@ -3257,17 +3257,11 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   //================ ========== PARA  planilla sueldos
 
   function obtenerBonoAntiguedad($minino_salarial,$ing_contr,$fecha_planilla){  
-    // $anio_actual= date('Y');
-    // $anio_actual=2019;
-    // $fechaComoEntero = strtotime($ing_contr);
-    // $anio_inicio = date("Y", $fechaComoEntero);
-    // $diferencia_anios=$anio_actual-$anio_inicio;
-    // $anio_actual=date('Y-m-d');
     $date1 = new DateTime($ing_contr);
     $date2 = new DateTime($fecha_planilla);
     $diff = $date1->diff($date2);    
     $diferencia_anios=$diff->y;
-    // echo $dias;
+    // echo $diferencia_anios;
     $total_bono_antiguedad = 0;
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT * from escalas_antiguedad where cod_estadoreferencial=1");
@@ -3278,8 +3272,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
-          $total_bono_antiguedad = $minino_salarial*$porcentaje/100;          
-          break;
+         $total_bono_antiguedad = $minino_salarial*3*$porcentaje/100;          
+         break;
       }else $total_bono_antiguedad = 0;
     }    
     $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');    
@@ -3288,40 +3282,22 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto,$cod_gestion,$mes)
   {  
-    // $mes=date('m');
-    // $gestion=date('Y');
-
-    // $mes=11;
-    // $gestion=2019;
-
     $dbh = new Conexion();
-    // $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
-    // $stmtGestion = $dbh->prepare($sqlGestion);
-    // $stmtGestion->execute();
-    // $resultGestion=$stmtGestion->fetch();
-    // $cod_gestion = $resultGestion['codigo'];
-
-
-    // $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
-    // where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes and cod_estadoreferencial=1";
-    // $stmtBonos = $dbh->prepare($sqlBonos);
-    // $stmtBonos->execute();
-    // $resultBonos=$stmtBonos->fetch();
-    // $total_bonos = $resultBonos['total_bonos'];
     $total_bonos1=0;
     $total_bonos2=0;
 
-    $sqlBonos1 = "SELECT bpm.monto
-    from bonos_personal_mes bpm,bonos b
-    where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
-    $stmtBonos1 = $dbh->prepare($sqlBonos1);
-    $stmtBonos1->execute();
-    $stmtBonos1->bindColumn('monto',$monto1);
-    while ($row = $stmtBonos1->fetch()) 
-    {
+   $sqlBonos1 = "SELECT bpm.monto
+   from bonos_personal_mes bpm,bonos b
+   where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
+   // echo $sqlBonos1."<br>";
+   $stmtBonos1 = $dbh->prepare($sqlBonos1);
+   $stmtBonos1->execute();
+   $stmtBonos1->bindColumn('monto',$monto1);
+   while ($row = $stmtBonos1->fetch()) 
+   {
       $total_bonos1=$total_bonos1+$monto1;
-    }
-      $sqlBonos2 = "SELECT bpm.monto
+   }
+   $sqlBonos2 = "SELECT bpm.monto
     from bonos_personal_mes bpm,bonos b
     where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=2";
     $stmtBonos2 = $dbh->prepare($sqlBonos2);
@@ -12130,7 +12106,7 @@ function obtenerIngresoPendienteDatos($codIngreso){
 
    function listaDetalleIngresosAlmacen($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_proveedor,factura,fecha_factura,nit,autorizacion,codigo_control,monto_factura  from ingresos_almacen_detalle where cod_ingresoalmacen=$codigo");
+     $stmt = $dbh->prepare("SELECT cod_proveedor,factura,fecha_factura,nit,autorizacion,codigo_control,monto_factura,desc_total  from ingresos_almacen_detalle where cod_ingresoalmacen=$codigo");
      $stmt->execute();
      return $stmt;
   }

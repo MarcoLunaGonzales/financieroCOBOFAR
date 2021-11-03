@@ -48,7 +48,7 @@ if($cod_ingresoalmacen>0){
   }
 
   $string_dctos=trim($string_dctos,",");
-  $sql="SELECT ia.cod_ingreso_almacen,ia.nro_correlativo,ia.cod_proveedor,ia.observaciones,ia.nro_factura_proveedor,ia.created_by,ia.created_date,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.aut_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor
+  $sql="SELECT ia.cod_ingreso_almacen,ia.nro_correlativo,ia.cod_proveedor,ia.observaciones,ia.nro_factura_proveedor,ia.created_by,ia.created_date,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.aut_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor,ia.monto_factura_proveedor
                     from ingreso_almacenes ia
                     where ia.cod_tipoingreso=1004 and ia.cod_ingreso_almacen in ($string_dctos) ORDER BY nro_factura_proveedor";
   // echo $sql; 
@@ -63,7 +63,8 @@ if($cod_ingresoalmacen>0){
     $aut_factura_proveedor=$row['aut_factura_proveedor'];
     $nit_factura_proveedor=$row['nit_factura_proveedor'];
     $monto_factura_proveedor_desc=$row['monto_factura_proveedor_desc'];
-
+    $monto_factura_proveedor=$row['monto_factura_proveedor'];
+    $monto_desc=$monto_factura_proveedor-$monto_factura_proveedor_desc;
     // // $total_venta=$MFACTURA-$DESCTO1-$DESCTO2-$DESCTO3-$DESCTO4;
     // $total_venta=$MFACTURA-number_format($DESCTO1,2,'.','')-$DESCTO2-$DESCTO3-$DESCTO4;
     // $total_venta=number_format($total_venta,2,'.','');
@@ -72,8 +73,8 @@ if($cod_ingresoalmacen>0){
     // $FECHA1=$FECHA1_array[0];
     
     $IDPROVEEDOR_nuevo=codigoProveedorNuevo($cod_proveedor);
-    $sqlInsertDet="INSERT INTO ingresos_almacen_detalle(cod_ingresoalmacen, cod_proveedor,factura,fecha_factura,dcto_almacen,nit,autorizacion,codigo_control,monto_factura) 
-    VALUES ($cod_ingresoalmacen,'$IDPROVEEDOR_nuevo','$nro_factura_proveedor','$f_factura_proveedor','$cod_ingreso_almacen','$nit_factura_proveedor','$aut_factura_proveedor','$con_factura_proveedor',$monto_factura_proveedor_desc)";
+    $sqlInsertDet="INSERT INTO ingresos_almacen_detalle(cod_ingresoalmacen, cod_proveedor,factura,fecha_factura,dcto_almacen,nit,autorizacion,codigo_control,monto_factura,desc_total) 
+    VALUES ($cod_ingresoalmacen,'$IDPROVEEDOR_nuevo','$nro_factura_proveedor','$f_factura_proveedor','$cod_ingreso_almacen','$nit_factura_proveedor','$aut_factura_proveedor','$con_factura_proveedor',$monto_factura_proveedor_desc,$monto_desc)";
     //echo $sqlInsertDet;
     $stmtInsertDet = $dbh_detalle->prepare($sqlInsertDet);
     $flagSuccess=$stmtInsertDet->execute();

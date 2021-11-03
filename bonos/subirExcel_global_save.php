@@ -23,22 +23,22 @@ foreach ($_FILES as $key){
         $alert=true;
 
     }else{
-
         $alert=false;
         showAlertSuccessError($alert,$urlList);
     }
 }
 $flagSuccess=false;
-$stmt = $dbh->prepare("SELECT codigo,nombre from bonos where cod_estadoreferencial=1 order by codigo");
+$stmt = $dbh->prepare("SELECT codigo,nombre from descuentos where cod_estadoreferencial=1 and tipo_descuento=1 order by codigo");
 $stmt->execute();
-$stmt->bindColumn('codigo', $codigo_bono);
-$stmt->bindColumn('nombre', $nombre_bono);
-$bonos_array=array();
+$stmt->bindColumn('codigo', $codigo_descuento);
+$stmt->bindColumn('nombre', $nombre_descuento);
+$descuentos_array=array();
 $i=0;
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-    $bonos_array[$i]=$codigo_bono;
+    $descuentos_array[$i]=$codigo_descuento;
     $i++;
 }
+$cod_descuento_as=100; //aporte al sindicato
 
 if($alert==true){
     $delimitador = "|";
@@ -46,108 +46,70 @@ if($alert==true){
     $x=0;
     $datos=array();
     $fichero=fopen($destino,'r');
-    
-    //sobreescribir existentes e insertar nuevos
-    if($opcionCargar==1){
-        while((($datos=fgetcsv($fichero,$longitudDeLinea,$delimitador))!=FALSE)){
-            $x++;
-            if($x>1){
-                $cod_personal=$datos[0];
-                // $area=$datos[1];
-                // $ci=$datos[2];
-                // $nombre=$datos[3];
-                $contador_excel=4;
-                for ($j=0; $j <count($bonos_array) ; $j++) { 
-                    $codBono=$bonos_array[$j];
-                    if(isset($datos[$contador_excel])){
-                        $monto=formatearNumerosExcel($datos[$contador_excel]);
-                    }else{
-                        $monto=0;
-                    }
-                    //inserta nuevos
-                    if((verificarBonoPersonaMes($cod_personal, $codMes, $codBono)==0) and (verificarExistenciaPersona($cod_personal)==true)){
-                        $stmt = $dbh->prepare("INSERT INTO bonos_personal_mes (cod_bono, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-                        VALUES ($codBono,$cod_personal,$codGestion,$codMes,$monto,$codEstado)");
-                        $flagSuccess=$stmt->execute();    
-                    }else{//actualiza los existentes
-                        $stmt = $dbh->prepare("UPDATE bonos_personal_mes SET monto=$monto 
-                        WHERE cod_bono=$codBono and cod_gestion=$codGestion and cod_personal=$cod_personal and cod_mes=$codMes and cod_estadoreferencial=1");
-                        $flagSuccess=$stmt->execute();  
-                    }  
-                    $contador_excel++;
-                }
-            }
-        }
-        showAlertSuccessError($flagSuccess,$urlList);
-    }
-
-
-    //mantener existentes e insertar nuevos
-    if($opcionCargar==2){
-        while((($datos=fgetcsv($fichero,$longitudDeLinea,$delimitador))!=FALSE)){
-            $x++;
-            if($x>1){
-                $cod_personal=$datos[0];
-                // $area=$datos[1];
-                // $ci=$datos[2];
-                // $nombre=$datos[3];
-                $contador_excel=4;
-                for ($j=0; $j <count($bonos_array) ; $j++) { 
-                    $codBono=$bonos_array[$j];
-                    if(isset($datos[$contador_excel])){
-                        $monto=formatearNumerosExcel($datos[$contador_excel]);
-                    }else{
-                        $monto=0;
-                    }
-                    //inserta nuevos
-                    if((verificarBonoPersonaMes($cod_personal, $codMes, $codBono)==0) and (verificarExistenciaPersona($cod_personal)==true)){
-                        $stmt = $dbh->prepare("INSERT INTO bonos_personal_mes (cod_bono, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-                        VALUES ($codBono,$cod_personal,$codGestion,$codMes,$monto,$codEstado)");
-                        $flagSuccess=$stmt->execute();    
-                    }  
-                    $contador_excel++;
-                }
-            }
-        }
-        showAlertSuccessError($flagSuccess,$urlList);
-    }
     //borrar todo y cargar de nuevo
     if($opcionCargar==3){
-
+        //borramos logicamente
+        $stmte = $dbh->prepare("UPDATE descuentos_personal_mes SET cod_estadoreferencial=2 
+            WHERE  cod_gestion=$codGestion and cod_mes=$codMes");
+        $flagSuccess=$stmte->execute(); 
         while((($datos=fgetcsv($fichero,$longitudDeLinea,$delimitador))!=FALSE)){
             $x++;
-            //borramos logicamente
-            $stmte = $dbh->prepare("UPDATE bonos_personal_mes SET cod_estadoreferencial=2 
-            WHERE  cod_gestion=$codGestion and cod_mes=$codMes");
-            $flagSuccess=$stmte->execute(); 
             if($x>1){
                 $cod_personal=$datos[0];
-                //eliminar lógicamente los existentes
-                if(verificarExistenciaPersona($cod_personal)){
-                    // $area=$datos[1];
-                    // $ci=$datos[2];
-                    // $nombre=$datos[3];
-                    $contador_excel=4;
-                    for ($j=0; $j <count($bonos_array); $j++) { 
-                        $codBono=$bonos_array[$j];
-                        if(isset($datos[$contador_excel])){
-                            $monto=formatearNumerosExcel($datos[$contador_excel]);
-                        }else{
-                            $monto=0;
-                        }
-                        //inserta nuevos
-                        $stmt = $dbh->prepare("INSERT INTO bonos_personal_mes (cod_bono, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-                        VALUES ('$codBono','$cod_personal','$codGestion','$codMes','$monto','$codEstado')");
-                        $flagSuccess=$stmt->execute();
-                        $contador_excel++;
-                    }    
+                // $ci=$datos[1];
+                // $nombre=$datos[2];
+                // $area=$datos[3];
+                $faltas=$datos[4];
+                $faltas_sin_descuento=$datos[5];
+                $dias_vacacion=$datos[6];
+                $dias_trabajados_l_s=$datos[7];
+                $domingos_normal=$datos[8];
+                $feriado_normal=$datos[9];
+                $noche_normal=$datos[10];
+                $domingo_reemplazo=$datos[11];
+                $feriado_reemplazo=$datos[12];
+                $ordinario_reemplazo=$datos[13];
+                $hxdomingo_extras=$datos[14];
+                $hxferiado_extras=$datos[15];
+                $hxdnnormal_extras=$datos[16];
+                $reintegro=$datos[17];
+                $comision_ventas=$datos[18];
+                $obs_reintegro=$datos[19];  
+                $anticipos=$datos[20];
+                // $prestamos=$datos[21];
+                // $inventario=$datos[22];
+                // $vencidos=$datos[23];
+                // $atrasos=$datos[24];
+                // $faltante_caja=$datos[25];
+                // $otros_descuentos=$datos[26];
+
+                $contador_excel=21;
+                for ($j=0; $j <count($descuentos_array) ; $j++) { 
+                    $codDescuento=$descuentos_array[$j];
+                    if(isset($datos[$contador_excel])){
+                        $monto=formatearNumerosExcel($datos[$contador_excel]);
+                    }else{
+                        $monto=0;
+                    }
+                    //inserta nuevos
+                    if((verificarBonoPersonaMes($cod_personal, $codMes, $codDescuento)==0) and (verificarExistenciaPersona($cod_personal)==true)){
+                        $stmt = $dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
+                        VALUES ($codDescuento,$cod_personal,$codGestion,$codMes,$monto,$codEstado)");
+                        $flagSuccess=$stmt->execute();    
+                    }  
+                    $contador_excel++;
                 }
+                //****aporte al sindicato
+                $aporte_sindicato=$datos[27];
+                $stmt = $dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
+                    VALUES ($cod_descuento_as,$cod_personal,$codGestion,$codMes,$aporte_sindicato,$codEstado)");
+                $flagSuccess=$stmt->execute();
             }
         }
         showAlertSuccessError($flagSuccess,$urlList);
     }
     fclose($fichero); 
-   unlink($destino); 
+    unlink($destino); 
 
 
 }

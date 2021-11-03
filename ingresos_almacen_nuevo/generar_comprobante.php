@@ -123,6 +123,7 @@ if($sw==0){
         $autorizacion=$row['autorizacion'];  
         $codigo_control=$row['codigo_control'];  
         $monto_factura=$row['monto_factura'];  
+        $monto_descuento=$row['desc_total'];  
         $razon_social=nameProveedor($cod_proveedor);
         $cod_plancuenta_proveedores=obtenerValorConfiguracion(36);//proveedores
         $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedor,$cod_plancuenta_proveedores);
@@ -147,7 +148,7 @@ if($sw==0){
         $stmtDet = $dbh_detalle->prepare($sqlDet);
         $stmtDet->execute();
         //INGRESAMOS FACTURAS RELACIONADAS
-        $sqlDetalleCompra="INSERT INTO facturas_compra(cod_comprobantedetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero,tipo_compra) VALUES ($codComprobanteDetalle_iva,$nit,$factura,'$fecha_factura','$razon_social',$monto_factura,0,'$autorizacion','$codigo_control',0,0,1)";
+        $sqlDetalleCompra="INSERT INTO facturas_compra(cod_comprobantedetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero,tipo_compra,desc_total) VALUES ($codComprobanteDetalle_iva,$nit,$factura,'$fecha_factura','$razon_social',$monto_factura,0,'$autorizacion','$codigo_control',0,0,1,$monto_descuento)";
         //echo "<br>".$sqlDetalleCompra."ECECEC";
         $stmtDetalleFacturas = $dbh_detalle->prepare($sqlDetalleCompra);
         $stmtDetalleFacturas->execute();

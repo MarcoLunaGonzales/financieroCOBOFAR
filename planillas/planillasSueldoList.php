@@ -398,7 +398,21 @@ if($globalAdmin==1){//para personal admin
     });
   </script>
   <?php 
-}else
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+else
 { //para personal no admin
   $stmt = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,
   (select m.nombre from meses m where m.codigo=cod_mes)as mes,

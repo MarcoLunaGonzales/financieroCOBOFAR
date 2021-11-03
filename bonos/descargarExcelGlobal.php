@@ -16,7 +16,6 @@ require_once '../styles.php';
 require_once '../functions.php';
 require("../conexion.php");
 
-
 $dbh = new Conexion();
 $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal
 	FROM personal p
@@ -26,12 +25,12 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
 <table class="table table-condensed table-bordered">
   <thead>
     <tr>
-      <th ><small><b>Codigo Personal</b></small></th>
-      <th ><small><b>Area</b></small></th>
-      <th ><small><b>CI</b></small></th>
-      <th ><small><b>Apellidos y Nombres</b></small></th>
+      <th><small><b>Codigo Personal</b></small></th>
+      <th><small><b>Area</b></small></th>
+      <th><small><b>CI</b></small></th>
+      <th><small><b>Apellidos y Nombres</b></small></th>
     <?php
-      $stmt = $dbh->prepare("SELECT codigo,nombre from descuentos  where cod_tipo=1 and  cod_estadoreferencial=1 order by codigo");
+      $stmt = $dbh->prepare("SELECT codigo,nombre from descuentos where cod_estadoreferencial=1 and tipo_descuento=1 order by codigo");
   		$stmt->execute();
   		$stmt->bindColumn('codigo', $codigo_descuento);
   		$stmt->bindColumn('nombre', $nombre_descuento);
@@ -42,7 +41,7 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
   		}
       ?>
     </tr>
-    <tr>    
+    <tr>
   </thead>
   <tbody>
     <?php

@@ -8,10 +8,7 @@ require_once '../functionsGeneral.php';
 
 
 $result_x=0;
-
-
 // $dbhU = new Conexion();
-
 $dbh = new Conexion();
 $dbhI = new Conexion();
 $dbhIPD = new Conexion();
@@ -24,12 +21,11 @@ $cod_planilla=$_POST['cod_planilla'];
 $cod_estadoplanilla=$_POST['sw'];
 $sw=$_POST['sw'];
 
-
-if($sw==2){
-	$nombre_gestion_x=$_SESSION['globalNombreGestion'];
-	$cod_mes_x=$_SESSION['globalMes'];
-	$cod_gestion_x = $_SESSION['globalGestion'];
-}else{
+// if($sw==2){
+// 	$nombre_gestion_x=$_SESSION['globalNombreGestion'];
+// 	$cod_mes_x=$_SESSION['globalMes'];
+// 	$cod_gestion_x = $_SESSION['globalGestion'];
+// }else{
 	$stmtDatosPlanilla = $dbh->prepare("SELECT cod_gestion,cod_mes from planillas where codigo=$cod_planilla");
 	$stmtDatosPlanilla->execute();
 	$resultDatosPlanilla =  $stmtDatosPlanilla->fetch();
@@ -41,7 +37,8 @@ if($sw==2){
 	$stmtGestion->execute();
 	$resultGestion=$stmtGestion->fetch();
 	$nombre_gestion_x = $resultGestion['nombre'];
-}
+// }
+
 $date1 = $nombre_gestion_x.'-'.$cod_mes_x; 
 $d = date_create_from_format('Y-m',$date1); 
 $ultimo_dia = date_format($d, 't');
@@ -67,7 +64,6 @@ if($sw==2 || $sw==1){//procesar planilla
 		$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
 		$flagSuccess=$stmtU->execute();	
 	}
-	
 	//=========================creando la planilla previa con valores ininciales
 	$dias_trabajados_por_defecto = 30; //por defecto
 	$dias_trabajados_asistencia = 30; //por asistencia
@@ -132,7 +128,7 @@ if($sw==2 || $sw==1){//procesar planilla
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
 		$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$fecha_planilla);//ok	
-		//echo $minimo_salarial."--".$ing_contr."--".$nombre_gestion_x;
+		//echo $bono_antiguedad."--".$ing_contr."--".$fecha_planilla."<br>";
 
 		//$otros_b = 0 ;//buscar datos
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
@@ -273,7 +269,7 @@ if($sw==2 || $sw==1){//procesar planilla
 	//=========================creando la planilla previa
 	$flagSuccessIPMD=0;
 	$dias_trabajados_por_defecto = 30; //por defecto
-	$dias_trabajados_asistencia = 28; //por asistencia
+	$dias_trabajados_asistencia = 30; //por asistencia
 	$horas_pagadas = 0; //buscar datos
 	$minimo_salarial=0;
 	$valor_conf_x65_90=0;
@@ -413,7 +409,6 @@ if($sw==2 || $sw==1){//procesar planilla
 
 		// echo "codigo".$codigo_personal.", total ganado ". $total_ganado."<br>";
 		// echo "liquido_pagable ".$liquido_pagable;
-
 
 		// $sqlpersonalVerificacion = "SELECT cod_personalcargo from planillas_personal_mes where cod_planilla=$cod_planilla and cod_personalcargo=$codigo_personal";
 		// $stmtPersonalVerificacion = $dbh->prepare($sqlpersonalVerificacion);

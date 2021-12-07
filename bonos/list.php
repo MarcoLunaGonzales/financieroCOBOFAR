@@ -85,7 +85,6 @@ $stmt->bindColumn('observaciones', $observaciones);
               ?>
       				<div class="card-footer fixed-bottom">
                     <button class="btn btn-rose" onClick="location.href='<?=$urlRegister;?>'">Registrar Bono</button>
-                    <button class="btn btn-success" onClick="location.href='<?=$urlSubirExcelGlobal;?>'">Subir Excel Global</button>
               </div>
               <?php
               }

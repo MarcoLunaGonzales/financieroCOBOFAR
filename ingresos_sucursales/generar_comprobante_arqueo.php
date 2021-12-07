@@ -18,8 +18,6 @@ require_once '../conexion2.php';
 
 $dbh_cabecera = new Conexion();
 $dbh_detalle = new Conexion2();
-
-
 session_start();
 set_time_limit(0);
 $globalUser=$_SESSION["globalUser"];
@@ -29,7 +27,6 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalMes=$_SESSION['globalMes'];
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
-
 //creacion del comprobante de pago
 $codComprobante=obtenerCodigoComprobante();
 $anioActual=date("Y");
@@ -66,7 +63,7 @@ $sucursalgString=$_GET['cod_sucursal'];
 $cod_tiposalida_efectivo=1001;
 
 
-$string_configuracion=obtenerValorConfiguracion_array('49,50,51,56,110,111,112,113,114,115');
+$string_configuracion=obtenerValorConfiguracion_array('49,50,51,56,110,111,112,113,114,115,117,118');
 $array_configuracion=explode(",",$string_configuracion);
 
 // $cod_plancuenta_it=5031;//49 //gasto
@@ -84,13 +81,15 @@ $cod_plancuenta_it=$array_configuracion[0];
 $cod_plancuenta_iva=$array_configuracion[1];
 $cod_plancuenta_it_haber=$array_configuracion[2];
 $cod_plancuenta_atc=$array_configuracion[3];
+
 $cod_plancuenta_ventas=$array_configuracion[4];
 $cod_plancuenta_costos=$array_configuracion[5];
 $cod_plancuenta_costos_contra=$array_configuracion[6];
 $cod_plancuenta_dolar=$array_configuracion[7];
 $cod_plancuenta_dolar_contra=$array_configuracion[8];
 $tc=$array_configuracion[9];
-
+$cod_plancuenta_qr=$array_configuracion[10];
+$cod_plancuenta_transfer=$array_configuracion[11];
 
 $sql="SELECT s.cod_almacen,(select a.nombre_almacen from almacenes a where a.cod_almacen=s.cod_almacen)as nombre_almacen,s.fecha 
   from salida_almacenes s 
@@ -116,6 +115,11 @@ while($row=mysqli_fetch_array($resp)){
     </tr>
   <?php }else{
     $tipoComprobante=1;//ingreso
+    $array_fechaIngreso=explode('-', $fechaVenta);
+
+    $globalGestion=$array_fechaIngreso[0];
+    $globalMes=$array_fechaIngreso[1];
+
     $globalMes=str_pad($globalMes, 2, "0", STR_PAD_LEFT);
     $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,$tipoComprobante,$globalMes);
     $glosa="VENTAS SUC. ".$nombre_almacen." DE FECHA ".$fechaVenta;
@@ -151,6 +155,10 @@ while($row=mysqli_fetch_array($resp)){
       $HBB=0;
       $suma_total_efectivo=0;
       $suma_total_tarjetas=0;
+
+      $suma_total_transferencias=0;
+      $suma_total_qr=0;
+
       $suma_total_dolares=0;
       $suma_total_dolares_convertido=0;
       $suma_total_costo=0;
@@ -162,24 +170,39 @@ while($row=mysqli_fetch_array($resp)){
       while($row_DETALLE1=mysqli_fetch_array($resp_detalle)){
         $cod_personal=$row_DETALLE1['cod_chofer'];
         $cod_plancuenta=$row_DETALLE1['cod_plancuenta'];
-        $montoefectivo=obtenerMonto_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
-        $montoAnulada=obtenerMontoAnuladas_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
-        $montoTarjeta=obtenerMontoTarjeta_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
-        $montodolarstring=obtenerMontodolares_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
-        $montodolarArray=explode("###",$montodolarstring);
-        $monto_dolar=$montodolarArray[0];
-        $monto_dolar_bs=$montodolarArray[1];
+
+        // $montoefectivo=obtenerMonto_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
+        // $montoTarjeta=obtenerMontoTarjeta_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
+        // $montodolarstring=obtenerMontodolares_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
+        // $montodolarArray=explode("###",$montodolarstring);
+        // $monto_dolar=$montodolarArray[0];
+        // $monto_dolar_bs=$montodolarArray[1];
+
+        $srting_montos=obtenerMonto_ventas_nuevosis_neto($fechaVenta,$cod_ciudad,$cod_personal);
+        $montosArray=explode("###",$srting_montos);
+        $montoefectivo=$montosArray[0];
+        $montoTarjeta=$montosArray[1];
+        $montoTrasferencia=$montosArray[2];
+        $montoQr=$montosArray[5];
         //dolar
         $analitico_dolar_array[$index]=obtener_cuenta_moneda_extranjera_dolar_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
+        
+        $monto_dolar=$montosArray[3];
+        $monto_dolar_bs=$montosArray[4];
         $monto_dolar_array[$index]=$monto_dolar;
         $monto_dolarbs_array[$index]=$monto_dolar_bs;
-
-        //costeo
-        $costo_venta=obtenerCostoVenta_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
+        $montoAnulada=obtenerMontoAnuladas_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);        
         $DBB=$montoefectivo-$montoAnulada-$monto_dolar_bs;
+
         $HBB=0;
         $suma_total_tarjetas+=$montoTarjeta;
+        
+        $suma_total_transferencias+=$montoTrasferencia;
+        $suma_total_qr+=$montoQr;
+
         $suma_total_efectivo+=$DBB;
+        //costeo
+        $costo_venta=obtenerCostoVenta_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
         $suma_total_costo+=$costo_venta;
         $ordenDetalle++;
         $descripcion=$glosa." - ".nameCuenta($cod_plancuenta);
@@ -230,17 +253,34 @@ while($row=mysqli_fetch_array($resp)){
         $ordenDetalle++;
         $flagSuccessDet=insertarDetalleComprobante($codigo_comprobante,$cod_plancuenta_dolar,0,$cod_uo_cc,$cod_area_cc,$DBB,$HBB,$descripcion,$ordenDetalle);
       }
-
-      //suma total de tarjetas
-      $DBB=$suma_total_tarjetas;
-      $HBB=0;
-      // $cod_plancuenta_atc=1023;//por defecto
-      $descripcion=$glosa." - ".nameCuenta($cod_plancuenta_atc);
-      $ordenDetalle++;
-      $flagSuccessDet=insertarDetalleComprobante($codigo_comprobante,$cod_plancuenta_atc,0,$cod_uo_cc,$cod_area_cc,$DBB,$HBB,$descripcion,$ordenDetalle);
+      //total de tarjetas
+      if($suma_total_tarjetas>0){
+        $DBB=$suma_total_tarjetas;
+        $HBB=0;
+        // $cod_plancuenta_atc=1023;//por defecto
+        $descripcion=$glosa." - ".nameCuenta($cod_plancuenta_atc);
+        $ordenDetalle++;
+        $flagSuccessDet=insertarDetalleComprobante($codigo_comprobante,$cod_plancuenta_atc,0,$cod_uo_cc,$cod_area_cc,$DBB,$HBB,$descripcion,$ordenDetalle);
+      }
+      //total QR
+      if($suma_total_qr>0){
+        $DBB=$suma_total_qr;
+        $HBB=0;
+        $descripcion=$glosa." - ".nameCuenta($cod_plancuenta_qr);
+        $ordenDetalle++;
+        $flagSuccessDet=insertarDetalleComprobante($codigo_comprobante,$cod_plancuenta_qr,0,$cod_uo_cc,$cod_area_cc,$DBB,$HBB,$descripcion,$ordenDetalle);
+      }
+       //total transferencia
+      if($suma_total_transferencias>0){
+        $DBB=$suma_total_transferencias;
+        $HBB=0;
+        $descripcion=$glosa." - ".nameCuenta($cod_plancuenta_transfer);
+        $ordenDetalle++;
+        $flagSuccessDet=insertarDetalleComprobante($codigo_comprobante,$cod_plancuenta_transfer,0,$cod_uo_cc,$cod_area_cc,$DBB,$HBB,$descripcion,$ordenDetalle);
+      }
       
       //impuesto a las transacciones 3% debito
-      $total_ventas=$suma_total_tarjetas+$suma_total_efectivo+$suma_total_dolares;
+      $total_ventas=$suma_total_efectivo+$suma_total_dolares+$suma_total_tarjetas+$suma_total_qr+$suma_total_transferencias;
       $impuesto_it=$total_ventas*3/100;
       $DBB=$impuesto_it;
       // $cod_plancuenta_it=5031;
@@ -268,7 +308,6 @@ while($row=mysqli_fetch_array($resp)){
       $flagSuccessDet=insertarDetalleComprobante($codigo_comprobante,$cod_plancuenta_iva,0,$cod_uo_cc,$cod_area_cc,$DBB,$HBB,$descripcion,$ordenDetalle);
 
       //IT 3%
-      // $total_ventas=$suma_total_tarjetas+$suma_total_efectivo;
       $debito=$total_ventas*3/100;
       $DBB=0;
       $HBB=$debito;
@@ -303,7 +342,6 @@ while($row=mysqli_fetch_array($resp)){
       }
     }
   }
-
 
   $contador_comprobante++;
 } 

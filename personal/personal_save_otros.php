@@ -12,8 +12,11 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar err
 
 try {
     $codigo_item = $_POST["codigo_item"];
-    $created_by=1;
-    $modified_by=1;
+     
+
+      $globalUser=$_SESSION['globalUser'];
+    $created_by=$globalUser;
+    $modified_by=$globalUser;
 
     if($codigo_item==1){//uo_area
         $codigo_personal = $_POST["codigo_personal"];
@@ -30,8 +33,7 @@ try {
         $resultarea=$stmtarea->fetch();
         $nombre_area=$resultarea['nombre'];
     
-        $descripcion=$nombre_uo."/".$nombre_area;
-        
+        $descripcion=$nombre_uo."/".$nombre_area;        
         $tipo=1;
 
         $stmt = $dbh->prepare("UPDATE personal set cod_unidadorganizacional=:cod_uo,cod_area=:cod_area where codigo=:codigo");
@@ -39,6 +41,18 @@ try {
         $stmt->bindParam(':cod_uo', $cod_uo);
         $stmt->bindParam(':cod_area', $cod_area);    
         $flagSuccess=$stmt->execute();
+
+
+        $stmtDistribucion = $dbh->prepare("UPDATE personal_area_distribucion set cod_estadoreferencial=2 where cod_personal=$codigo_personal");
+        $stmtDistribucion->execute();
+        $sql="INSERT INTO personal_area_distribucion(cod_personal,cod_uo,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 
+        values ('$codigo_personal','$cod_uo','$cod_area','100','1','$created_by','$modified_by')";
+        //echo $sql; 
+        $stmtDistribucionInsert = $dbh->prepare($sql);
+        $stmtDistribucionInsert->execute();
+
+
+
         //para el historico
         $sql="INSERT into historico_cambios_personal(cod_personal,tipo,descripcion,fecha_cambio,created_by,modified_by)
         values(:cod_personal,:tipo,:descripcion,:fecha_cambio,:created_by,:modified_by)";

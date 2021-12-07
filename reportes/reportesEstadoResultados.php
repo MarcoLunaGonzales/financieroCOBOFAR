@@ -93,6 +93,34 @@ $fechaHasta=$y."-12-31";
               </div>
             </div><!--fin campo gestion -->
 
+            <div class="row">
+              
+              <div class="col-sm-6">
+                <div class="row">
+               <label class="col-sm-4 col-form-label">Centro de Costos - Area</label>
+               <div class="col-sm-8">
+                <div class="form-group">
+                        <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
+                       <?php
+                       $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+                     $stmt->execute();
+                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                      $codigoX=$row['codigo'];
+                      $nombreX=$row['nombre'];
+                      $abrevX=$row['abreviatura'];
+                     ?>
+                     <option value="<?=$codigoX;?>" selected><?=$abrevX;?></option> 
+                       <?php
+                         }
+                         ?>
+                     </select>
+                    </div>
+                </div>
+                </div>
+              </div>
+            </div>
+
+
 
             <div class="row">
                 <label class="col-sm-2 col-form-label">Del:</label>

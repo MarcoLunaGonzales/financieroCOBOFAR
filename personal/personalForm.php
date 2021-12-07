@@ -80,6 +80,43 @@ if($codigo>0){
     $cod_tipo_persona_discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
     $nro_carnet_discapacidad = $resultDiscapacitado['nro_carnet_discapacidad'];
     $fecha_nac_persona_dis = $resultDiscapacitado['fecha_nac_persona_dis'];
+
+
+    
+    $stmtMontosPactados = $dbh->query("SELECT cod_bono,monto from bonos_personal_pactados where cod_estadoreferencial=1 and cod_personal =$codigo");
+    while ($row = $stmtMontosPactados->fetch()){
+        switch ($row['cod_bono']) {
+            case 11:
+                $noche_pactado=$row['monto'];
+            break;
+            case 12:
+                $domingo_pactado=$row['monto'];
+            break;
+            case 13:
+                $feriado_pactado=$row['monto'];
+            break;
+            case 14:
+                $movilidad_pactado=$row['monto'];
+            break;
+            case 15:
+                $refrigerio_pactado=$row['monto'];
+            break;
+            case 16:
+                $refrigerio_pactado2=$row['monto'];
+            break;
+            case 18:
+                $comision_ventas=$row['monto'];
+            break;
+            case 19:
+                $fallo_caja=$row['monto'];
+            break;
+            case 100:
+                $aporte_sindicato=$row['monto'];
+            break;
+   
+        }
+    }
+
     //IMAGEN
     $stmtIMG = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");
     $stmtIMG->bindParam(':codigo',$codigo);
@@ -156,6 +193,17 @@ if($codigo>0){
     //$archivo = "";
     $archivo = "";
 
+
+    //montos pactados
+    $noche_pactado=0;
+    $domingo_pactado=0;
+    $feriado_pactado=0;
+    $movilidad_pactado=0;
+    $refrigerio_pactado=0;
+    $refrigerio_pactado2=0;
+    $comision_ventas=0;
+    $fallo_caja=0;
+    $aporte_sindicato=0;
 }
 
 
@@ -547,7 +595,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <label class="col-sm-2 col-form-label">Haber Basico (Bs)</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" required/>
+                                            <input class="form-control" type="number" step="any" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" required/>
                                         </div>
                                     </div>
                                     <label class="col-sm-2 col-form-label">Email Empresarial</label>
@@ -715,6 +763,81 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     </div>
                                 </div>    
                             </div>
+
+
+                            <h3 align="center">MONTOS PACTADOS</h3>                        
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Noche Pactado</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" step="any" name="noche_pactado" id="noche_pactado" required="true" value="<?=$noche_pactado;?>" />                               
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Domingo Pactado</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" step="any" name="domingo_pactado" id="domingo_pactado" required="true" value="<?=$domingo_pactado;?>" />                               
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Feriado Pactado</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" step="any" name="feriado_pactado" id="feriado_pactado" required="true" value="<?=$feriado_pactado;?>" />                               
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Movilidad Pactado</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" step="any" name="movilidad_pactado" id="movilidad_pactado" required="true" value="<?=$movilidad_pactado;?>" />                               
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Refrigerio Pactado (LS)</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" step="any" name="refrigerio_pactado" id="refrigerio_pactado" required="true" value="<?=$refrigerio_pactado;?>" />                               
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Refrigerio Pactado (D)</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" step="any" name="refrigerio_pactado2" id="refrigerio_pactado2" required="true" value="<?=$refrigerio_pactado2;?>" />                               
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Comisión Ventas</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" step="any" name="comision_ventas" id="comision_ventas" required="true" value="<?=$comision_ventas;?>" />                               
+                                    </div>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Fallo de Caja</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" step="any" name="fallo_caja" id="fallo_caja" required="true" value="<?=$fallo_caja;?>" />                               
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Aporte Sindicato</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" step="any" name="aporte_sindicato" id="aporte_sindicato" required="true" value="<?=$aporte_sindicato;?>" />                               
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+
+
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Imagen</label>
                                 <div class="col-md-7">

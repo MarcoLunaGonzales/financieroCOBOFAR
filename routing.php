@@ -524,7 +524,6 @@
 		if ($_GET['opcion']=='listSolicitudIngresosAlmacen_nuevo_filtro') {
 			require_once('ingresos_almacen_nuevo/filtro.php');
 		}
-
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
 			require_once('estados_cuenta/list.php');
@@ -1553,7 +1552,9 @@
 	    if ($_GET['opcion']=='ayudaArchivoCsv') {
 		   require_once('anticipos_personal/helpCsv.php');
 	    }
-
+	    if ($_GET['opcion']=='plantilla_sueldos_list') {
+		   require_once('bonos/plantilla_sueldos_list.php');
+	    }
 	    if ($_GET['opcion']=='descargarExcelGlobal') {
 		   require_once('bonos/descargarExcelGlobal.php');
 	    }

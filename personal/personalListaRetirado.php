@@ -9,15 +9,22 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 
-$stmt = $dbh->prepare(" SELECT pr.codigo,p.codigo as cod_personal,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) as personal,p.identificacion,p.cod_lugar_emision,
+$stmt = $dbh->prepare("sELECT p.codigo as cod_personal,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) as personal,p.identificacion,(select le.abreviatura from personal_departamentos le where le.codigo=p.cod_lugar_emision) as cod_lugar_emision,
  (select r.nombre from tipos_retiro_personal r where r.codigo=pr.cod_tiporetiro) as cod_tiporetiro,p.ing_contr,pr.fecha_retiro,pr.observaciones
  from personal_retiros pr,personal p
  where pr.cod_personal=p.codigo and pr.cod_estadoreferencial=1
- order by personal");
+
+  
+  UNION
+ 
+ select codigo as cod_personal,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.identificacion,(select le.abreviatura from personal_departamentos le where le.codigo=p.cod_lugar_emision) as cod_lugar_emision,'SIN REGISTRO' as cod_tiporetiro,p.ing_contr,'' as fecha_retiro, 'SE RETIRO DESDE EL KARDEX DEL PERSONAL' as observaciones
+ from personal p where p.cod_estadopersonal=3 and p.cod_estadoreferencial=1
+ 
+  order by personal");
 //ejecutamos
 $stmt->execute();
 //bindColumn
-$stmt->bindColumn('codigo', $codigo_retiro);
+// $stmt->bindColumn('codigo', $codigo_retiro);
 $stmt->bindColumn('cod_personal', $cod_personal);
 $stmt->bindColumn('identificacion', $ci);
 $stmt->bindColumn('cod_lugar_emision', $ci_lugar_emision);
@@ -45,7 +52,6 @@ $stmt->bindColumn('observaciones', $observaciones);
                 <table class="table" id="tablePaginator">
                   <thead>
                       <tr>
-                        
                         <th>Cod Personal</th>
                         <th>Nombre</th>      
                         <th>Ci</cIte></th>
@@ -97,7 +103,7 @@ $stmt->bindColumn('observaciones', $observaciones);
                 </table>
               </div>
             </div>
-            <div class="card-footer ml-auto mr-auto">
+            <div class="card-footer ml-left mr-auto">
               <a href="<?=$urlListPersonal;?>" class="<?=$buttonCancel;?>">Volver</a>
             </div>
           </div>          

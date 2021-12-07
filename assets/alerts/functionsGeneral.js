@@ -12299,6 +12299,7 @@ function filtrarCuentaComprobanteDetalle(){
   var codigos=[];
   var indice=0;
   var items = document.getElementsByName('lista_check');
+
   var cantidadCuentas=0;
   var cantidadCuentasSeleccionadas=0;
   var cantidadesSeleccionadas=0;
@@ -12333,19 +12334,38 @@ function filtrarCuentaComprobanteDetalle(){
               }else{
                 var urlEditar="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos)+"&codigos_seleccionados="+$("#codigos_seleccionados").val();
               }
-               window.open(urlEditar, '_blank');           
+              
+              window.open(urlEditar, '_blank');
+              window.close();
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
           }
         });
   }else{
-    if(cantidadCuentas==cantidadCuentasSeleccionadas){
-      var urlEditar="edit_prueba.php?codigo="+cod_comprobante;
+    if(cantidadesSeleccionadas>0){
+      if(cantidadCuentas==cantidadCuentasSeleccionadas){
+        var urlEditar="edit_prueba.php?codigo="+cod_comprobante;
+      }else{
+        var urlEditar="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos)+"&codigos_seleccionados="+$("#codigos_seleccionados").val();
+      }
+      window.open(urlEditar, '_blank');
+      window.close();
     }else{
-      var urlEditar="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos)+"&codigos_seleccionados="+$("#codigos_seleccionados").val();
+      Swal.fire({
+        title: 'Informativo',
+        text: "Seleccione al menos un item.",
+         type: 'warning',
+        confirmButtonClass: 'btn btn-default',
+        confirmButtonText: 'Aceptar',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            return(false);
+          }
+        });
     }
-     window.open(urlEditar, '_blank');    
+        
   }
 }
 
@@ -19404,7 +19424,7 @@ function salvarComprobanteProceso(tipo){
            {
              window.location.href="../index.php?opcion=listComprobantes";
              swal.fire({
-               title: "El comprobante de guardó",
+               title: "El comprobante se guardó",
                text: "Guardado Temporal.",
                timer: 2000,
                showConfirmButton: false
@@ -19727,20 +19747,94 @@ function abrir_detalle_modal(codigo,cod_sucursal){
 }
 
 function redireccionarIngresosAlmacenAnt(cod_personal){
-  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
+  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
   //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php?p='+cod_personal, '_blank'); 
 }
 
 function pendientes_ingreso_almacen_ant(){
-  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
+  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php', '_blank'); 
   //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
 }
 function redireccionarIngresosAlmacen_nuevo(cod_personal){ 
-  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_nuevo/filtro.php', '_blank'); 
-  //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_nuevo/filtro.php', '_blank'); 
+  window.open('ingresos_almacen_nuevo/filtro.php', '_blank'); 
 }
 
 function pendientes_ingreso_almacen_nuevo(){
-  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_nuevo/rpt_facturas_pendientes_from.php?', '_blank'); 
-  //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_nuevo/rpt_facturas_pendientes_from.php?', '_blank'); 
+  window.open('ingresos_almacen_nuevo/rpt_facturas_pendientes_from.php', '_blank'); 
+}
+
+function historico_ingresos_almacen_nuevo(fi,ff,idprov){
+  window.open('rpt_facturas_ingresadas.php?fi='+fi+'&ff='+ff+'&idprov='+idprov, '_blank'); 
+}
+
+
+function procesar_bonos_descuentos_planilla(nombre_mes,cod_mes,estado_planilla){
+  
+  if(estado_planilla==0){
+     Swal.fire({
+        title: 'Informativo',
+        text: "Por favor, Registrar la PLANILLA del mes de "+nombre_mes+", Gracias. :)",
+        type: 'warning',
+        
+        confirmButtonClass: 'btn btn-warning',
+        confirmButtonText: 'Aceptar',
+        buttonsStyling: false
+        }).then((result) => {
+          if (result.value) {
+            return(false);
+          } 
+        });
+  }else{
+    if(estado_planilla==1 || estado_planilla==2){//estado registrado o aprobado
+      Swal.fire({
+        title: '¿Estás Segur@?',
+        text: "Se procesará o reprocesará la PLANTILLA del mes de "+nombre_mes,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+        }).then((result) => {
+          if (result.value) {
+            iniciarCargaAjax();
+            $.ajax({
+              type:"POST",
+              data:"cod_mes="+cod_mes,
+              url:"bonos/plantilla_sueldos_procesar.php", 
+              success:function(r){
+                detectarCargaAjax();
+                if(r==1){              
+                    alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+                }else{
+                  Swal.fire("Ocurrió un error! :(", "Contáctese con el administrador.", "warning");
+                }
+              }
+            });
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+    }else{
+      if(estado_planilla==3){//cerrado
+         Swal.fire({
+          title: 'LO SIENTO :(',
+          text: "La PLANILLA del Mes de "+nombre_mes+", No se encuentra disponible.",
+          type: 'error',
+          
+          confirmButtonClass: 'btn btn-danger',
+          confirmButtonText: 'Aceptar',
+          buttonsStyling: false
+          }).then((result) => {
+            if (result.value) {
+              return(false);
+            } 
+          });
+      }
+    }  
+  }
+  
+  
 }

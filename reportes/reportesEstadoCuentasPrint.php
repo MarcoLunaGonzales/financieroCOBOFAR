@@ -21,7 +21,6 @@ $tipo_cp=$_POST["tipo_cp"];
 $ver_saldo=$_POST["ver_saldo"];
 
 if($ver_saldo==3){//saldos Generales
-   
    include "reportesEstadoCuentasPrint_saldos.php";
 }else{
 $proveedoresString=implode(",", $proveedores);
@@ -249,7 +248,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                     <td class="text-right text-muted font-weight-bold small">'.formatNumberDec($montoEstado).'</td>
                                                     <td class="text-right small">'.formatNumberDec($montoX).'</td>
                                                     <td class="text-right small font-weight-bold" '.$estiloFilasEstadoSaldo.'>'.formatNumberDec($montoX-$montoEstado).'</td>
-                                                </tr>'; 
+                                                </tr>';
                                             }else{ //cliente
                                                 // $nombreProveedorX=namecliente($codProveedor);
                                                 if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""&&$estiloEstados==""){

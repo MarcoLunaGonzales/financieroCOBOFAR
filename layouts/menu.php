@@ -228,7 +228,7 @@ if($menuModulo==0){
                     </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=planillasSueldoPersonal">
+                  <a class="nav-link" href="?opcion=planillasSueldoPersonal" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
                     <span class="sidebar-mini"> PS </span>
                     <span class="sidebar-normal"> Planilla De Sueldos </span>
                   </a>
@@ -239,6 +239,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Planilla De Aguinaldos </span>
                   </a>
                 </li>
+                <<!-- li class="nav-item ">
+                  <a class="nav-link" href="?opcion=plantilla_sueldos_list" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
+                    <span class="sidebar-mini"> PTS </span>
+                    <span class="sidebar-normal"> Plantilla Sueldos</span>
+                  </a>
+                </li> -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=finiquitos_list">
                     <span class="sidebar-mini"> F </span>

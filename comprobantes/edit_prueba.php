@@ -275,7 +275,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	<input type="hidden" name="cod_sis_configuracion" id="cod_sis_configuracion" value="<?=$cod_sis_configuracion;?>">
 	<?php 
  if(isset($_GET['cuentas'])){
- 	?><input type="hidden" name="incompleto" id="incompleto" value="1"><?php
+ 		$cuenta_get=json_decode($_GET['cuentas']);
+ 		$string_cuentas=implode(",", $cuenta_get);
+ 	?><input type="hidden" name="incompleto" id="incompleto" value="1">
+ 		<input type="hidden" name="cuentas_selecionadas" id="cuentas_selecionadas" value="<?=$string_cuentas?>">
+ 	<?php
  }
 	?>
 <div class="content">

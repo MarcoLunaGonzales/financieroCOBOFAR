@@ -126,6 +126,8 @@ $p=$_GET['p'];
           </div>
           <div class="card-footer fixed-bottom">
               <button type="submit" class="btn btn-rose">Guardar seleccionados</button>
+              <!-- <button type="button" class="btn btn-info" >Histórico</button> -->
+              <a class="btn btn-info" target="blank" onClick="historico_ingresos_almacen_nuevo('<?=$fechaDesde?>','<?=$fechahasta?>','<?=$id_proveedor?>')">Histórico</a>
           </div>
           </form>
 

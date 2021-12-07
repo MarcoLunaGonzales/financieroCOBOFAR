@@ -44,7 +44,6 @@ if ($codigo > 0){
 			  </div>
 			  <div class="card-body ">
 				
-
                     <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
 
                     <div class="row">

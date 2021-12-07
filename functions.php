@@ -906,10 +906,10 @@
   //funcion nueva obtener detalle de comprobante
   function obtenerComprobantesDet($codigo){
      $dbh = new Conexion();
-     $sql="";
-     $sql="SELECT d.cod_cuentaauxiliar,d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by cod_det";
+     $sql="SELECT d.cod_cuentaauxiliar,d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante='$codigo' order by cod_det";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
+      // echo $sql;
      // bindColumn
      //$stmt->bindColumn('cod_comprobante', $codigoC);
      return $stmt;
@@ -3506,7 +3506,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $dbh = new Conexion();
     $stmtAnticipos = $dbh->prepare("SELECT sum(monto)as total_anticipos
     FROM anticipos_personal
-    WHERE cod_personal=$id_personal and cod_gestion = $cod_gestion and cod_mes=$mes");
+    WHERE cod_personal=$id_personal and cod_gestion = $cod_gestion and cod_mes=$mes and cod_estadoreferencial=1");
     $stmtAnticipos->execute();
     $resultAnticipos=$stmtAnticipos->fetch();
     $anticipo=$resultAnticipos['total_anticipos'];
@@ -3799,27 +3799,31 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
 
   //FUNCIONES DE REPORTE
-  function obtenerPlanillaSueldosRevision($codigo,$cod_area_x,$cod_uo_x){
-    $dbh = new Conexion();
-    $sql="SELECT p.codigo,p.cod_area,a.nombre as area, CONCAT(p.primer_nombre,' ', p.otros_nombres) as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,
-    p.identificacion as ci,p.ing_planilla,c.nombre as cargo,pm.haber_basico,
-    pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje
+  function obtenerPlanillaSueldosRevision($codigo){
+      require_once 'conexion3.php';
+    $dbh = new Conexion3();
+    $sql="SELECT p.codigo,p.cod_area,a.nombre as area, p.primer_nombre as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,
+    p.identificacion as ci,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,
+    pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje,pp.a_solidario_13000,pp.a_solidario_25000,pp.rc_iva,pp.atrasos,pp.anticipo,p.fecha_nacimiento,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,(select tg.abreviatura from tipos_genero tg where tg.codigo=p.cod_genero)as genero,(select pp2.abreviatura from personal_pais pp2 where pp2.codigo=p.cod_nacionalidad) as nacionalidad,p.turno
     FROM personal p
-    join cargos c on p.cod_cargo=c.codigo
     join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
+      join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
     join areas a on p.cod_area=a.codigo
-    join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal
-    
-    where pm.cod_planilla=$codigo and pad.cod_uo=$cod_uo_x and pad.cod_area=$cod_area_x order by a.nombre";
+    join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
+
+    where pm.cod_planilla=$codigo  and p.cod_unidadorganizacional=1 
+    order by p.cod_unidadorganizacional,a.nombre,p.paterno";
+    // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
   }
   function obtenerPlanillaSueldoRevisionBonos($cod_personalcargo,$cod_gestion,$cod_mes,$dias_trabajados_asistencia,$dias_trabajados){
+    require_once 'conexion3.php';
     $total_bonos1=0;
     $total_bonos2=0;
-    $dbh = new Conexion();
-    set_time_limit(300);
+    $dbh = new Conexion3();
+    
     $sqlBonos1 = "SELECT bpm.monto
     from bonos_personal_mes bpm,bonos b
     where bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
@@ -3866,12 +3870,13 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     // Cargamos DOMPDF
     require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
     $mydompdf = new DOMPDF();
-    $mydompdf->set_paper('legal', 'landscape');
+    // $mydompdf->set_paper('legal', 'landscape');
+    $mydompdf->set_paper(array(0,0,612,938), 'landscape');
     ob_clean();
     $mydompdf->load_html($html);
     $mydompdf->render();
     $canvas = $mydompdf->get_canvas();
-    $canvas->page_text(730, 25, "Página:    {PAGE_NUM}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+    $canvas->page_text(730, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
     $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
@@ -4192,7 +4197,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerValorConfiguracionPlanillas($cod){
     $dbh = new Conexion();
-    $stmt = $dbh->prepare("SELECT * from configuraciones_planillas where id_configuracion=$cod");
+    $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=$cod");
     $stmt->execute();
     $result= $stmt->fetch();
     $valor=$result['valor_configuracion'];
@@ -5569,6 +5574,37 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
               join plan_cuentas p on p.codigo=d.cod_cuenta
               where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+          on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
+      //echo $sql;
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      return $stmt;
+  }
+   function listaSumaMontosDebeHaberComprobantesDetalle_areas($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion,$fechaInicio){
+      $dbh = new Conexion();
+      $sql="";
+      $sqlAreas="";
+      $sqlUnidades="";
+      $fechaFinalMod=explode("/", $fechaFinal);
+
+      $arrayUnidades=implode(",",$arrayUnidades);
+      $arrayAreas=implode(",",$arrayAreas);
+      //formateando fecha
+      if($fechaInicio=="none"){
+        $fi=$fechaFinalMod[2]."-01-01";
+      }else{
+        $fechaFinalModIni=explode("/", $fechaInicio);
+        $fi=$fechaFinalModIni[2]."-".$fechaFinalModIni[1]."-".$fechaFinalModIni[0];
+      }
+    
+      $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
+      $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
+             (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
+              from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+              join areas a on a.codigo=d.cod_area
+              join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
+              join plan_cuentas p on p.codigo=d.cod_cuenta
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and d.cod_area in ($arrayAreas) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
       //echo $sql;
       $stmt = $dbh->prepare($sql);
@@ -11774,18 +11810,17 @@ function obtenerIngresoPendienteDatos($codIngreso){
       if($cod_personal==-1000){//para reporte general
        $sql="SELECT s.`monto_final` as monto from `salida_almacenes` s 
        where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
-       where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago=2";
+       where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago in (2)";
       }else{
        $sql="SELECT s.`monto_final` as monto from `salida_almacenes` s 
        where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
-       where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago=2 and s.cod_chofer=$cod_personal";  
+       where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago in (2) and s.cod_chofer=$cod_personal";  
       }
       //echo $sql;
       $valor=0;
       require("conexion_comercial.php");
       $resp=mysqli_query($dbh,$sql);
       while($row=mysqli_fetch_array($resp)){ 
-          
           $monto=number_format($row['monto'],1,'.','');
           // $monto =ceiling($row['monto'], 0.1);
           $valor+=$monto;
@@ -11794,71 +11829,94 @@ function obtenerIngresoPendienteDatos($codIngreso){
       return $valor;
    }
    function obtenerMonto_ventas_nuevosis_neto($fecha_iniconsultahora,$rpt_territorio,$cod_personal){ 
-
       if($cod_personal==-1000){//para reporte general
-         $sql="SELECT s.`monto_final` as monto,s.cod_tipopago from `salida_almacenes` s 
+         $sql="SELECT s.`monto_final` as monto,s.cod_tipopago,s.salida_anulada,s.monto_cancelado_usd,s.tipo_cambio from `salida_almacenes` s 
          where s.`cod_tiposalida`=1001  and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
-         where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago=1 ";
+         where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago in (1,2,3) ";
       }else{//para reporte x sucursal
-         $sql="SELECT s.`monto_final` as monto,s.cod_tipopago from `salida_almacenes` s 
+         $sql="SELECT s.`monto_final` as monto,s.cod_tipopago,s.salida_anulada,s.monto_cancelado_usd,s.tipo_cambio from `salida_almacenes` s 
          where s.`cod_tiposalida`=1001  and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
          where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago in (1,2,3) and s.cod_chofer=$cod_personal";
       }
+      //echo $sql;
+      $valor_efectivo=0;
+      $valor_tarjeta=0;
+      $valor_transfer=0;
 
-     //echo $sql;
-     $valor_efectivo=0;
-     $valor_tarjeta=0;
-     $valor_transfer=0;
-     require("conexion_comercial.php");
-     $resp=mysqli_query($dbh,$sql);
-     while($row=mysqli_fetch_array($resp)){ 
+      $valor_usd=0;//dolar
+      $valor_usd_bs=0;//bolivianos
+      // $valor_efectivo_anulado=0;
+      require("conexion_comercial.php");
+      $resp=mysqli_query($dbh,$sql);
+      while($row=mysqli_fetch_array($resp)){ 
          $monto=number_format($row['monto'],1,'.','');
          $tipopago=$row['cod_tipopago'];
+         $salida_anulada=$row['salida_anulada'];
+         $monto_cancelado_usd=$row['monto_cancelado_usd'];
+         $tipo_cambio=$row['tipo_cambio'];
+
          switch ($tipopago) {
             case 1: //efectivo
                $valor_efectivo+=$monto;
+               if($monto_cancelado_usd>0){
+                  $monto=number_format($monto,1,'.','');
+                  $monto_cancelado_usd=number_format($monto_cancelado_usd,1,'.','');
+                  $tipo_cambio=$tipo_cambio;
+                  $valor_usd+=$monto_cancelado_usd;
+                  $valor_usd_bs+=$monto_cancelado_usd*$tipo_cambio;
+               }
+
             break;
             case 2: //tarjeta
-               $valor_tarjeta+=$monto;
+               if($salida_anulada==0){
+                  $valor_tarjeta+=$monto;
+               }
             break;
-            case 3://traferencia
-               $valor_transfer+=$monto;
+            case 3://pago QR 
+               if($salida_anulada==0){
+                  $valor_qr+=$monto;
+               }
+            break;
+            case 4://traferencia
+               if($salida_anulada==0){
+                  $valor_transfer+=$monto;
+               }
             break;
             default://otros
                $valor_efectivo+=$monto;
             break;
          }
          // $valor+=$monto;
-     } 
-     mysqli_close($dbh);
-     return $valor_efectivo."###".$valor_tarjeta."###".$valor_transfer;
+      } 
+      mysqli_close($dbh);
+      return $valor_efectivo."###".$valor_tarjeta."###".$valor_transfer."###".$valor_usd."###".$valor_usd_bs."###".$valor_qr;
    }
    function obtenerMontodolares_ventas_nuevosis($fecha_iniconsultahora,$rpt_territorio,$cod_personal){
-     // $dbh = new Conexion_mysql(); 
-     if($cod_personal==-1000){//para reporte general
+      // $dbh = new Conexion_mysql(); 
+      if($cod_personal==-1000){//para reporte general
        $sql="SELECT s.`monto_final` as monto,s.monto_cancelado_usd,s.tipo_cambio from `salida_almacenes` s 
        where s.`cod_tiposalida`=1001  and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
        where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago=1  and monto_cancelado_usd>0";
-     }else{//para reporte x sucursal
+      }else{//para reporte x sucursal
        $sql="SELECT s.`monto_final` as monto,s.monto_cancelado_usd,s.tipo_cambio from `salida_almacenes` s 
        where s.`cod_tiposalida`=1001  and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
        where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago=1 and s.cod_chofer=$cod_personal  and monto_cancelado_usd>0";
-     }
-     //echo $sql."<br><br>";
-     $valor=0;//dolar
-     $valor2=0;//bolivianos
-     require("conexion_comercial.php");
-     $resp=mysqli_query($dbh,$sql);
-     while($row=mysqli_fetch_array($resp)){ 
+      }
+      //echo $sql."<br><br>";
+      $valor=0;//dolar
+      $valor2=0;//bolivianos
+      require("conexion_comercial.php");
+      $resp=mysqli_query($dbh,$sql);
+      while($row=mysqli_fetch_array($resp)){ 
         $monto=number_format($row['monto'],1,'.','');
         $monto_cancelado_usd=number_format($row['monto_cancelado_usd'],1,'.','');
         $tipo_cambio=$row['tipo_cambio'];
         //$monto =ceiling($row['monto'], 0.1);
         $valor+=$monto_cancelado_usd;
         $valor2+=$monto_cancelado_usd*$tipo_cambio;
-     } 
-     mysqli_close($dbh);
-     return $valor."###".$valor2;
+      } 
+      mysqli_close($dbh);
+      return $valor."###".$valor2;
    }
    function obtenerMontoAnuladas_ventas_nuevosis($fecha_iniconsultahora,$rpt_territorio,$cod_personal){
      if($cod_personal==-1000){//para reporte general
@@ -11918,7 +11976,6 @@ function obtenerIngresoPendienteDatos($codIngreso){
      return $valor;
    }
    function obtenerMontodepositado_nuevosis($fecha,$cod_personal){
-
      $sql="SELECT monto_registrado as monto from registro_depositos where fecha='$fecha' and cod_funcionario=$cod_personal and cod_estadoreferencial=1";
      //echo $sql;  
      $valor=0;
@@ -11947,20 +12004,39 @@ function obtenerIngresoPendienteDatos($codIngreso){
      return $valor;
    }
    function obtenerNrodepositado_nuevosis($fecha,$cod_personal){
-
      $sql="SELECT nro_recibo from registro_depositos where fecha='$fecha' and cod_funcionario=$cod_personal and cod_estadoreferencial=1";
      //echo $sql;  
      $valor=0;
        require("conexion_comercial.php");
      $resp=mysqli_query($dbh,$sql);
      while($row=mysqli_fetch_array($resp)){ 
-       $valor=$row['nro_recibo'];  
+       $valor=$row['nro_recibo'];
      } 
      mysqli_close($dbh);
      return $valor;
    }
+
+   function obtenerMontodepositado_nuevosis_bajas($fecha,$cod_personal){
+      $sql="SELECT monto_registrado ,monto_registradousd,nro_recibo from registro_depositos where fecha='$fecha' and cod_funcionario=$cod_personal and cod_estadoreferencial=1";
+      //echo $sql;  
+      $valor_bs=0;
+      $valor_us=0;
+      $valor_recibo="";
+      require("conexion_comercial.php");
+      $resp=mysqli_query($dbh,$sql);
+      while($row=mysqli_fetch_array($resp)){ 
+         $valor_bs+=number_format($row['monto_registrado'],1,'.','');
+         $valor_us+=number_format($row['monto_registradousd'],1,'.','');
+         $valor_recibo=$row['nro_recibo'];
+      }
+     mysqli_close($dbh);
+     return $valor_bs."###".$valor_us."###".$valor_recibo;
+   }
+
+
+
+
    function obtener_codciudad_nuevosis($age){
-     
      $sql="SELECT cod_ciudad FROM ciudades where codalma= '$age'";
       // echo $sql;  
      $value=0;
@@ -12224,4 +12300,141 @@ function reprocesar_costoventas_sucursales($fecha,$rpt_territorio){
    return $valor;
 }
 
+
+function domingosMes($fechai,$fechaf){
+   $contador=0;
+   $starDate = new DateTime($fechai);
+   $endDate = new DateTime($fechaf);
+   while($starDate <= $endDate){
+      if($starDate->format('l')== 'Sunday'){
+         // echo $starDate->format('y-m-d (D)')."<br/>";
+         $contador++;
+      }
+      $starDate->modify("+1 days");
+   }
+   return $contador;
+}
+
+function obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,$tipo_bonodescuento){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT monto from bonos_personal_pactados where cod_personal='$cod_personal' and cod_bono='$cod_descuento_as' and tipo_bono_desc='$tipo_bonodescuento'");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['monto'];
+   }
+   return($valor);
+}
+
+function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$dias_trabajados_por_defecto){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT dias_trabajados from personal_kardex_mes where cod_mes=$cod_mes_x and cod_gestion=$cod_gestion_x and cod_personal=$codigo_personal and cod_estadoreferencial=1");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['dias_trabajados']*30/$dias_trabajados_por_defecto;
+   }
+   return(round($valor));
+}
+
+
+
+ //libro compras QR
+   function verificar_autorizacion_fac($auto,$factura){
+      $sql="SELECT ia.cod_ingreso_almacen,p.nombre_proveedor,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor,ia.monto_factura_proveedor_desc
+   from ingreso_almacenes ia join proveedores p on ia.cod_proveedor=p.cod_proveedor
+   where ia.cod_tipoingreso=1004 and ia.cod_tipo_doc=1 and ia.estado_guardado>0 and ia.ingreso_anulado=0 and ia.nro_factura_proveedor=$factura and ia.aut_factura_proveedor=$auto";
+      //echo $sql;
+      $valor="NO ENCONTRADO";
+      require("conexion_comercial_oficial.php");
+      $resp=mysqli_query($dbh,$sql);
+      while($row=mysqli_fetch_array($resp)){ 
+      $IDPROVEEDOR=$row['nombre_proveedor'];
+      // $FECHA=$row['FECHA'];
+      $FECHA1=$row['f_factura_proveedor'];
+      $MFACTURA=$row['monto_factura_proveedor_desc'];
+      // $REFE1=$row['aut_factura_proveedor'];
+      $REFE=$row['con_factura_proveedor'];
+      $NIT=$row['nit_factura_proveedor'];
+      // $nfac=$row['nro_factura_proveedor'];
+      $dcto=$row['cod_ingreso_almacen'];
+      // $FECHA1=date("d/m/Y", strtotime($FECHA1));
+      
+      $valor=$IDPROVEEDOR."#####".$NIT."#####".$REFE."#####".$factura."#####".$auto."#####".$FECHA1."#####".$MFACTURA."#####".$dcto;
+      }
+      //$valor="NO ENCONTRADO";
+       mysqli_close($dbh);
+      return($valor);
+  }
+   function verificar_nit_control($nit,$codigo){
+   
+      $sql="SELECT ia.cod_ingreso_almacen,p.nombre_proveedor,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nro_factura_proveedor,ia.aut_factura_proveedor
+   from ingreso_almacenes ia join proveedores p on ia.cod_proveedor=p.cod_proveedor
+   where ia.cod_tipoingreso=1004 and ia.cod_tipo_doc=1 and ia.estado_guardado>0 and ia.ingreso_anulado=0 and ia.nit_factura_proveedor=$nit and ia.con_factura_proveedor=$codigo";
+      $valor="NO ENCONTRADO";
+      require("conexion_comercial_oficial.php");
+      $resp=mysqli_query($dbh,$sql);
+      while($row=mysqli_fetch_array($resp)){
+      $IDPROVEEDOR=$row['nombre_proveedor'];
+      // $FECHA=$row['FECHA'];
+      $FECHA1=$row['f_factura_proveedor'];
+      // $MFACTURA=$row['MFACTURA'];
+      $REFE1=$row['aut_factura_proveedor'];
+      $REFE=$row['con_factura_proveedor'];
+      $NIT=$row['nit_factura_proveedor'];
+      $nfac=$row['nro_factura_proveedor'];
+      $dcto=$row['cod_ingreso_almacen'];
+
+
+      $MFACTURA=$row['monto_factura_proveedor_desc'];
+      
+
+      // $FECHA1=date("d/m/Y", strtotime($FECHA1));
+      // $FECHA=date("d/m/Y", strtotime($FECHA));
+      $valor=$IDPROVEEDOR."#####".$NIT."#####".$REFE."#####".$nfac."#####".$REFE1."#####".$FECHA1."#####".$MFACTURA."#####".$dcto;
+      }
+       mysqli_close($dbh);
+      return($valor);
+   }
+  function verificar_nit_fac($nit,$factura){
+      $sql="SELECT ia.cod_ingreso_almacen,p.nombre_proveedor,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nro_factura_proveedor,ia.aut_factura_proveedor
+   from ingreso_almacenes ia join proveedores p on ia.cod_proveedor=p.cod_proveedor
+   where ia.cod_tipoingreso=1004 and ia.cod_tipo_doc=1 and ia.estado_guardado>0 and ia.ingreso_anulado=0 and ia.nit_factura_proveedor=$nit and ia.nro_factura_proveedor=$factura";
+      $valor="NO ENCONTRADO";
+      require("conexion_comercial_oficial.php");
+      $resp=mysqli_query($dbh,$sql);
+      while($row=mysqli_fetch_array($resp)){
+   
+      $IDPROVEEDOR=$row['nombre_proveedor'];
+      // $FECHA=$row['FECHA'];
+      $FECHA1=$row['f_factura_proveedor'];
+
+      $REFE1=$row['aut_factura_proveedor'];
+      $REFE=$row['con_factura_proveedor'];
+      $NIT=$row['nit_factura_proveedor'];
+      $nfac=$row['nro_factura_proveedor'];
+      $dcto=$row['cod_ingreso_almacen'];
+
+      $MFACTURA=$row['monto_factura_proveedor_desc'];
+      
+
+      // $FECHA1=date("d/m/Y", strtotime($FECHA1));
+      // $FECHA=date("d/m/Y", strtotime($FECHA));
+      $valor=$IDPROVEEDOR."#####".$NIT."#####".$REFE."#####".$nfac."#####".$REFE1."#####".$FECHA1."#####".$MFACTURA."#####".$dcto;
+      }
+       mysqli_close($dbh);
+      return($valor);
+  }
+  function obtenerFechaActualizacionComercial(){//COEMRCIAL BK
+   $sql="SELECT  fecha from salida_almacenes 
+      where cod_tiposalida=1001 and salida_anulada=0 order by fecha desc limit 1";
+      require("conexion_comercial.php");
+      $resp=mysqli_query($dbh,$sql);
+      $valor="";
+      while($row=mysqli_fetch_array($resp)){
+         $valor=$row['fecha'];
+      }
+      mysqli_close($dbh);
+      return($valor);
+  }
 ?>

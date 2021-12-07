@@ -52,7 +52,7 @@ $sucursalgString=trim($sucursalgString,",");
 if($tipo==2 || $tipo==3){
   include "auditoria_sucursales_print_tiempo.php";
 }elseif($tipo==1){
-$sql="SELECT s.cod_salida_almacenes, s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito,(select al.nombre_almacen from almacenes al where al.cod_almacen=s.almacen_destino)as nombre_almacen_des
+$sql="SELECT s.cod_salida_almacenes,s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito,(select al.nombre_almacen from almacenes al where al.cod_almacen=s.almacen_destino)as nombre_almacen_des,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer)as nombre_responsable
   FROM salida_almacenes s, tipos_salida ts, almacenes a 
   where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino in (select a.cod_almacen 
 from almacenes a, ciudades c
@@ -90,6 +90,7 @@ if($sw_excel==1){?>
               <thead>
                 <tr>
                   <th><b>SUC. Origen</b></th>
+                  <th><b>Responsable</b></th>
                   <th><b>Tipo de Salida(Origen)</b></th>
                   <th><b>Fecha Despacho</b></th>
                   <th><b>Nota de Remision(Origen)</b></th>
@@ -114,7 +115,8 @@ if($sw_excel==1){?>
                     $nombre_almacen_dest=$dat[9];
                     $obs_salida=$dat[5];
                     $nro_correlativo=$dat[6];
-                    $salida_anulada=$dat[7];                    
+                    $salida_anulada=$dat[7];   
+                    $nombre_responsable=$dat[10];                 
                     $color_fondo = "";
                     if($fecha_salida<$fecha_limite){
                       $color_fondo = "style='background:#ff8080'";
@@ -126,6 +128,7 @@ if($sw_excel==1){?>
                     }?>
                     <tr <?=$color_fondo?>>
                       <td><?=$nombre_almacen_origen?></td>
+                      <td><?=$nombre_responsable?></td>
                       <td><?=$nombre_tiposalida?></td>
                       <td align='center'><?=$fecha_salida_mostrar?></td>
                       <td align='center'><?=$nro_correlativo?></td>

@@ -45,4 +45,5 @@ $urlSaveEditGrupo="bonos/saveEditGrupo.php";
 
 $calculaBonoProfesion="index.php?opcion=calculaBonoProfesion";
 
+$urlList_plantilla="?opcion=plantilla_sueldos_list";
 ?>

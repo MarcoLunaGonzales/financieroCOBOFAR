@@ -20,9 +20,7 @@ if (isset($_POST["check_rs_cierres"])) {
 }else{
   $sw_excel=1;
 }
-
 require_once '../styles.php';
-
 if($sw_excel==1){
   require_once '../layouts/bodylogin2.php';
 }
@@ -38,14 +36,12 @@ foreach ($sucursal as $sucursali) {
 }
 $sucursalgString=trim($sucursalgString,",");
 
-
-
 $cod_tiposalida_efectivo=1001;
-$sql="SELECT s.cod_almacen,a.nombre_almacen,s.fecha,s.cod_chofer,(select CONCAT_WS(' ',f.nombres,f.paterno,f.materno) from funcionarios f where f.codigo_funcionario=s.cod_chofer) as personal 
+$sql="SELECT s.cod_almacen,a.cod_ciudad,a.nombre_almacen,s.fecha,s.cod_chofer,(select CONCAT_WS(' ',f.nombres,f.paterno,f.materno) from funcionarios f where f.codigo_funcionario=s.cod_chofer) as personal 
 from salida_almacenes s join almacenes a on s.cod_almacen=a.cod_almacen 
-where s.`cod_tiposalida`= $cod_tiposalida_efectivo and a.cod_ciudad in (select c.cod_ciudad from  ciudades c where  c.cod_area in ($sucursalgString)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_tipopago=1 GROUP BY s.cod_chofer,s.cod_tipopago,s.fecha 
+where s.`cod_tiposalida`= $cod_tiposalida_efectivo and a.cod_ciudad in ($sucursalgString) and s.fecha between '$fechai' and '$fechaf' and s.cod_tipopago=1 GROUP BY s.cod_chofer,s.cod_tipopago,s.fecha 
 order by s.fecha,s.cod_almacen,s.cod_chofer";
- // echo "<br><br><br>".$sql;
+// echo "<br><br><br>".$sql;
 $index=1;
 $totalEfectivo=0;
 $totalTarjetas=0;
@@ -55,9 +51,7 @@ $total_ventas=0;
 $totaldepositar=0;
 $totaldepositado=0;
 //echo $sql;
-
 if($sw_excel==1){?>
-
 <div class="content">
   <div class="container-fluid">
     <div class="row">
@@ -73,7 +67,6 @@ if($sw_excel==1){?>
         <div class="card-body ">
           <div class="table-responsive">
           <?php } ?>
-
             <table class="table table-condensed table-bordered">
               <thead>
                 <tr>
@@ -82,7 +75,7 @@ if($sw_excel==1){?>
                   <th ><small><b>Personal</b></small></th>
                   <th ><small><b>Efectivo[bs]</b></small></th>
                   <th ><small><b>Tarjetas[bs]</b></small></th>
-                  <th ><small><b>Transfer[bs]</b></small></th>
+                  <th ><small><b>QR/Transfer[bs]</b></small></th>
                   <th ><small><b>Dolar[bs]</b></small></th>
                   <th ><small><b>Anuladas[bs]</b></small></th>
                   <th style="background:#3f51b5;color:white;"><small>Depositar[Bs]</small></th>
@@ -91,6 +84,7 @@ if($sw_excel==1){?>
                   <th style="background:#3f51b5;color:white;"><small>Depositado[USD]</small></th>
                   <th style="background:#d98880;"><small>Nro. Dep.</small></th>
                   <th ><small><b>Total Ventas</b></small></th>
+                  <th ><small><b></b></small></th>
                 </tr>
                 <tr>    
               </thead>
@@ -103,36 +97,37 @@ if($sw_excel==1){?>
                     $cod_almacen_x=$row['cod_almacen'];
                     $nombre_almacen_x=$row['nombre_almacen'];
                     $personal_x=$row['personal'];
-                    $cod_ciudad=obtener_codciudad_almacen_nuevosis($cod_almacen_x,1);
-
-
-
+                    $cod_ciudad=$row['cod_ciudad'];
+                    //$cod_ciudad=obtener_codciudad_almacen_nuevosis($cod_almacen_x,1);
                     $srting_montos=obtenerMonto_ventas_nuevosis_neto($fechaVenta,$cod_ciudad,$cod_personal);
                     $montosArray=explode("###",$srting_montos);
                     $montoefectivo=$montosArray[0];
                     $montoTarjeta=$montosArray[1];
                     $montoTrasferencia=$montosArray[2];
-
-
-
+                    $montoQr=$montosArray[5];
+                    $montoTrasferencia=$montoTrasferencia+$montoQr;
                     // $montoefectivo=obtenerMonto_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
                     // $montoTarjeta=obtenerMontoTarjeta_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
                     // $montoTrasferencia=obtenerMonto_ventas_nuevosis_neto($fechaVenta,$cod_ciudad,$cod_personal);//transferencia
+                    // $montodolarstring=obtenerMontodolares_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
+                    // $montodolarArray=explode("###",$montodolarstring);
+                    // $monto_dolar=$montodolarArray[0];
+                    // $monto_dolar_bs=$montodolarArray[1];
+                    $monto_dolar=$montosArray[3];
+                    $monto_dolar_bs=$montosArray[4];
 
+                    $montoAnulada=obtenerMontoAnuladas_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);//anulada efectivo
+                    
+                    // $monto_depositado=obtenerMontodepositado_nuevosis($fechaVenta,$cod_personal);
+                    // $monto_depositado_dolar=obtenerMontodepositado_dolar_nuevosis($fechaVenta,$cod_personal);
+                    // $nro_deposito=obtenerNrodepositado_nuevosis($fechaVenta,$cod_personal);
+                    $monto_depositado_string=obtenerMontodepositado_nuevosis_bajas($fechaVenta,$cod_personal);
+                    // echo $monto_depositado_string."<br>";
+                    $depositadoArray=explode("###",$monto_depositado_string);
+                    $monto_depositado=$depositadoArray[0];
+                    $monto_depositado_dolar=$depositadoArray[1];
+                    $nro_deposito=$depositadoArray[2];
 
-
-                    $montodolarstring=obtenerMontodolares_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
-                    $montodolarArray=explode("###",$montodolarstring);
-                    $monto_dolar=$montodolarArray[0];
-                    $monto_dolar_bs=$montodolarArray[1];
-
-
-
-                    $montoAnulada=obtenerMontoAnuladas_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
-
-                    $monto_depositado=obtenerMontodepositado_nuevosis($fechaVenta,$cod_personal);
-                    $monto_depositado_dolar=obtenerMontodepositado_dolar_nuevosis($fechaVenta,$cod_personal);
-                    $nro_deposito=obtenerNrodepositado_nuevosis($fechaVenta,$cod_personal);
                     $monto_venta=$montoefectivo+$montoTarjeta+$montoTrasferencia-$montoAnulada-$monto_dolar_bs;
                     $monto_depositar=$montoefectivo-$montoAnulada-$monto_dolar_bs;
                     $totalEfectivo+=$montoefectivo; 
@@ -143,7 +138,6 @@ if($sw_excel==1){?>
                     $totaldepositado+=$monto_depositado;
                     $total_ventas+=$monto_venta;
                     //$personalCliente=nombrePersonal_nuevosis($cod_personal);
-
                     if(number_format($monto_depositar,2,".",",") == number_format($monto_depositado,2,".",",")){//bolivianos
                       $label_style_bs='style="background:#c5cae9"';
                     }else{
@@ -173,7 +167,7 @@ if($sw_excel==1){?>
                       <td style="background:#f1948a;" class="text text-right"><small><?=$nro_deposito?></small></td>
                       <td align='right'><small><?=number_format($monto_venta,2,".",",");?></small></td>
                       <td  class="td-actions text-right"><?php if($sw_excel==1){?>
-                        <a  target='_blank' href='http://10.10.1.10/cobofar_comercial/rptArqueoDiarioPDF.php?rpt_territorio=<?=$cod_ciudad?>&fecha_ini=<?=$fechaVenta?>&fecha_fin=<?=$fechaVenta?>&hora_ini=00:00&hora_fin=23:59&variableAdmin=1&rpt_funcionario=<?=$cod_personal?>'  class="btn btn-dark"  >
+                        <a  target='_blank' href='http://10.10.1.10/cobofar_comercialplus/rptArqueoDiarioPDF.php?rpt_territorio=<?=$cod_ciudad?>&fecha_ini=<?=$fechaVenta?>&fecha_fin=<?=$fechaVenta?>&hora_ini=00:00&hora_fin=23:59&variableAdmin=1&rpt_funcionario=<?=$cod_personal?>'  class="btn btn-dark"  >
                           <i class="material-icons" title="Ver Detalle">list</i>
                         </a>
                         <?php } ?>
@@ -201,7 +195,6 @@ if($sw_excel==1){?>
 
           </div>
         </div>
-        
       </div>
     </div>
   </div>

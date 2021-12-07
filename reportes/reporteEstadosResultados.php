@@ -25,18 +25,24 @@ $moneda=1; //$_POST["moneda"];
 $unidades=$_POST['unidad'];
 $entidades=$_POST['entidad'];
 // $StringEntidad=implode(",", $entidad);
-
 $stringEntidades="";
 foreach ($entidades as $valor ) {    
     $stringEntidades.=nameEntidad($valor).",";
-}    
+}
+
+
+$area_costo=$_POST['area_costo'];
+
+
+
+
 
 
 $tituloOficinas="";
 for ($i=0; $i < count($unidades); $i++) { 
   $tituloOficinas.=abrevUnidad_solo($unidades[$i]).",";
 }
-$areas=array("prueba","prueba");//$_POST['area_costo'];
+// $areas=array("prueba","prueba");//$_POST['area_costo'];
 $html = '';
 $html.='<html>'.
          '<head>'.
@@ -122,7 +128,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             while ($row = $stmt4->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
               //listar los montos
-              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateadaHasta,1,$unidades,$areas,$codigo_4,$gestion,$fechaFormateada);
+              //$detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateadaHasta,1,$unidades,$areas,$codigo_4,$gestion,$fechaFormateada);
+              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle_areas($fechaFormateadaHasta,1,$unidades,$area_costo,$codigo_4,$gestion,$fechaFormateada);
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);

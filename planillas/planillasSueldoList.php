@@ -9,9 +9,22 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalCodUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
 
-$dbh = new Conexion();
+$cod_mes=$_SESSION['globalMes'];
+$nombre_mes=nombreMes($cod_mes);
+//$nombreGestion=$_SESSION['globalNombreGestion'];
+$codGestionActiva=$_SESSION['globalGestion'];
 
-if($globalAdmin==1){//para personal admin
+$sql="SELECT cod_estadoplanilla from planillas where cod_mes=$cod_mes and cod_gestion=$codGestionActiva";
+//echo "<br><br><br><br>".$sql;
+$stmtVerifPlani=$dbh->prepare($sql);
+$stmtVerifPlani->execute();
+$estado_planilla=0;
+while ($rowVerifPlani = $stmtVerifPlani->fetch(PDO::FETCH_ASSOC)) {
+  $estado_planilla=$rowVerifPlani['cod_estadoplanilla'];
+}
+
+
+$dbh = new Conexion();
   $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,
   (select m.nombre from meses m where m.codigo=cod_mes)as mes,
   (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
@@ -75,6 +88,7 @@ if($globalAdmin==1){//para personal admin
                     $stmtAdmninUO->execute();
                     $stmtAdmninUO->bindColumn('cod_uo', $cod_uo_x);
                     $stmtAdmninUO->bindColumn('nombre_uo', $nombre_uo_x);
+
                     $stmtAdmninUOPDF = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
                     GROUP BY cod_uo");
                     $stmtAdmninUOPDF->execute();
@@ -163,10 +177,8 @@ if($globalAdmin==1){//para personal admin
                         ?>
                         <?php }?>
 
-                        <?php if($cod_estadoplanilla==3){    ?>  
-                        <!-- <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
-                            <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
-                        </a> -->
+                        <?php if($cod_estadoplanilla==3){ ?>  
+                        
                         <a href='<?=$urlPlanillaTribPersonalReport;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
                             <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
                           </a>
@@ -198,20 +210,18 @@ if($globalAdmin==1){//para personal admin
                         </div>
                         <div class="dropdown">
                           <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla sueldos PDF">remove_red_eye</i>
+                            <i class="material-icons" title="Imprimir Planilla de sueldos">remove_red_eye</i>
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
-                            <?php
-                            while ($row = $stmtAdmninUOPDF->fetch(PDO::FETCH_BOUND)) {
-                              if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a>
-                                  </li>
-                                <?php 
-                              }
-                            }
-                          ?>                              
+                            <li role="presentation" ><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>PLANILLA GENERAL</small></a></li>
+                            <li role="presentation"><a role="item" href="boletas/boletas_print.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>BOLETAS</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_depositoBanco.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=1" target="_blank"><small>CON CUENTA</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_depositoBanco.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=2" target="_blank"><small>SIN CUENTA</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_OBT.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>PLANILLA OVT</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>AFP FUTURO</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>AFP PREVISION</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>PLANILLA CPS</small></a></li>
                           </ul>
                         </div>
 
@@ -231,24 +241,26 @@ if($globalAdmin==1){//para personal admin
                                 <?php 
                               }
                             }
-                          ?>                          
+                          ?>
+                          <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>TODOS</small></a></li>
+                          </ul>                          
                         </ul>
                         <div class="dropdown">
                           <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla sueldos PDF">remove_red_eye</i>
+                            <i class="material-icons" title="Imprimir Planilla de sueldos">remove_red_eye</i>
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
-                            <?php
-                            while ($row = $stmtAdmninUOPDF->fetch(PDO::FETCH_BOUND)) {
-                              if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a>
-                                  </li>
-                                <?php 
-                              }
-                            }
-                          ?>                              
+                            <li role="presentation" ><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>PLANILLA GENERAL</small></a></li>
+                            <li role="presentation"><a role="item" href="boletas/boletas_print.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>BOLETAS</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_depositoBanco.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=1" target="_blank"><small>CON CUENTA</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_depositoBanco.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=2" target="_blank"><small>SIN CUENTA</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_OBT.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>PLANILLA OVT</small></a></li>
+                            
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>AFP FUTURO</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>AFP PREVISION</small></a></li>
+
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>PLANILLA CPS</small></a></li>                     
                           </ul>
                         </div>
                       </div>                                                                 
@@ -270,9 +282,17 @@ if($globalAdmin==1){//para personal admin
               </table>
           </div>
           <div class="card-footer fixed-bottom">
-            <a href='<?=$urlGenerarPlanillaSueldoPrevia;?>' rel="tooltip" class="btn btn-success">
-              Registrar Planilla Del Mes Actual
-            </a>                                            
+            <?php
+              if($globalAdmin==1){
+              ?>
+                <a href='<?=$urlGenerarPlanillaSueldoPrevia;?>' rel="tooltip" class="btn btn-info">Registrar Planilla Actual (1)</a>
+                <a href="bonos/descargarExcelGlobal.php" target="_blank" class="btn btn-warning"><span class="material-icons">download</span>Descargar Plantilla (2)</a>
+                <button class="btn btn-success" onClick="location.href='index.php?opcion=subirBonoExcel_global_from'"><span class="material-icons">file_upload</span>Cargar Plantilla (3)</button>
+                <button class="btn btn-rose" onClick="procesar_bonos_descuentos_planilla('<?=$nombre_mes?>','<?=$cod_mes?>','<?=$estado_planilla?>')"><span class="material-icons">sync</span>Procesar o reprocesar PLANTILLA (4)</button>
+              <?php
+              }
+              ?>
+                                                      
           </div>  
         </div>
       </div>
@@ -380,6 +400,14 @@ if($globalAdmin==1){//para personal admin
       </div>
     </div>
   </div>
+  <div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguarde un momento por favor</p>  
+  </div>
+</div>
+
+
   <script type="text/javascript">
     $(document).ready(function(){
       $('#AceptarProceso').click(function(){      
@@ -398,317 +426,6 @@ if($globalAdmin==1){//para personal admin
     });
   </script>
   <?php 
-}
 
 
-
-
-
-
-
-
-
-
-
-
-
-else
-{ //para personal no admin
-  $stmt = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,
-  (select m.nombre from meses m where m.codigo=cod_mes)as mes,
-  (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
-  (select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla
-  from planillas order by cod_gestion desc,cod_mes desc");
-  //ejecutamos
-  $stmt->execute();
-  //bindColumn
-  $stmt->bindColumn('codigo', $codigo_planilla);
-  $stmt->bindColumn('gestion', $gestion);
-  $stmt->bindColumn('cod_gestion', $cod_gestion);
-  $stmt->bindColumn('cod_mes', $cod_mes);
-  $stmt->bindColumn('mes', $mes);
-  $stmt->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
-  $stmt->bindColumn('estadoplanilla', $estadoplanilla);
-
-
-  ?>
-  <div class="content">
-    <div class="container-fluid">
-      <div class="col-md-12">     
-        <div class="card">
-          <div class="card-header <?=$colorCard;?> card-header-text">
-            <div class="card-icon">
-              <i class="material-icons"><?=$iconCard;?></i>
-            </div>
-            <h4 class="card-title">Planilla De Sueldos</h4>
-            <h4 class="card-title"><center>OFICINA: <?=$globalNombreUnidad;?></center></h4>            
-          </div>
-          <div class="card-body ">
-              <table class="table" id="tablePaginator">
-                <thead>
-                    <tr>                    
-                      <th>Gestión</th>
-                      <th>Mes</th>      
-                      <th>Estado</th>                      
-                      <th></th>                   
-                      <th></th> 
-                      
-                    </tr>
-                </thead>
-                <tbody>
-                  <?php $index=1;
-                  // $datos="";
-                  // $cont= array();
-                  $datosX="";
-                  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                    //para los dropdows de planillas
-                      $stmtAdmninUO = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
-                      GROUP BY cod_uo");
-                      $stmtAdmninUO->execute();
-                      $stmtAdmninUO->bindColumn('cod_uo', $cod_uo_x);
-                      $stmtAdmninUO->bindColumn('nombre_uo', $nombre_uo_x);
-                      
-                      $stmtAdmninUOPDF = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
-                      GROUP BY cod_uo");
-                      $stmtAdmninUOPDF->execute();
-                      $stmtAdmninUOPDF->bindColumn('cod_uo', $cod_uo_x);
-                      $stmtAdmninUOPDF->bindColumn('nombre_uo', $nombre_uo_x);
-
-                    $datosX =$codigo_planilla."-".$globalCodUnidad;
-                    $sw_aux=false;
-                    $label_uo_aux='';
-                    if($cod_estadoplanilla==1){
-                      $label='<span class="badge badge-danger">';
-
-                    }
-                    if($cod_estadoplanilla==2){                      
-                        $stmtAdmninUOAux2 = $dbh->prepare("SELECT cod_uo
-                           from planillas_uo_cerrados where cod_planilla=$codigo_planilla and cod_uo=$globalCodUnidad");
-                        $stmtAdmninUOAux2->execute();
-                        $resultAdmninUOAux2=$stmtAdmninUOAux2->fetch();
-                        $cod_uo_aux2=$resultAdmninUOAux2['cod_uo'];                    
-                        if($globalCodUnidad==$cod_uo_aux2){
-                          $label_uo_aux.='<span class="badge badge-success">CERRADO</span>';
-                          $estadoplanilla='';
-                          $sw_aux=true;
-                          $label='';
-                        }else{
-                          $label_uo_aux.='<span class="badge badge-warning">ABIERTO</span>';
-                          $label='<span class="badge badge-warning">';
-                          $estadoplanilla='';
-                        }
-                      
-                    }
-                    if($cod_estadoplanilla==3){
-                      $label='<span class="badge badge-success">';
-                    }                  
-                    ?>
-                    <tr>                    
-                      <td><?=$gestion?></td>
-                      <td><?=$mes;?></td>                  
-                      <td><?=$label.$estadoplanilla."</span>";?><?=$label_uo_aux;?></td>                    
-                      
-                      <td class="td-actions text-right">
-                        <?php
-
-                        
-                                                                                                 
-                        if($cod_estadoplanilla==2){ if($sw_aux==false){    ?>
-                        <a href='<?=$urlDetallePlanillaPrerequisitos;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-warning">
-                          <i class="material-icons" title="Prerequisitos Suedos">chrome_reader_mode</i>
-                        </a>
-                                            
-                        <button type="button" class="btn" style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalreProcesarNA" onclick="agregaformRPNA('<?=$datosX;?>')">
-                          <i class="material-icons" title="Reprocesar Planilla Sueldos">autorenew</i>                        
-                        </button>                                                                              
-                      
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCerrarNA" onclick="agregaformCPNA('<?=$datosX;?>')">
-                          <i class="material-icons" title="Cerrar Planilla Sueldos">assignment_returned</i>
-                        </button>                        
-                        
-                        <?php }
-                        }
-                        ?>
-                                                                                        
-                      </td>
-
-                      <td class="td-actions text-right">
-                        <?php                      
-                        if($cod_estadoplanilla==2){    ?>                                                                                                                                 
-                        <div class="dropdown">
-                          <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla sueldos">remove_red_eye</i>   
-                            <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
-                            <?php
-                            while ($row = $stmtAdmninUO->fetch(PDO::FETCH_BOUND)) {
-                              if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a></li>
-                                <?php 
-                              }
-                            }
-                          ?>                              
-                          </ul>
-                        </div>
-                        <div class="dropdown">
-                          <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla sueldos PDF">remove_red_eye</i>
-                            <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
-                            <?php
-                            while ($row = $stmtAdmninUOPDF->fetch(PDO::FETCH_BOUND)) {
-                              if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a>
-                                  </li>
-                                <?php 
-                              }
-                            }
-                          ?>                              
-                          </ul>
-                        </div>
-
-                        <?php }?>
-                        <?php if($cod_estadoplanilla==3){    ?>      
-                        <div class="dropdown">
-                          <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla por OF">remove_red_eye</i>
-                            <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
-                            <?php
-                            while ($row = $stmtAdmninUO->fetch(PDO::FETCH_BOUND)) {
-                              if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a></li>
-                                <?php 
-                              }
-                            }
-                          ?>      
-                          </ul>
-                        </div>
-                        <div class="dropdown">
-                          <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla sueldos PDF">remove_red_eye</i>
-                            <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
-                            <?php
-                            while ($row = $stmtAdmninUOPDF->fetch(PDO::FETCH_BOUND)) {
-                              if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a>
-                                  </li>
-                                <?php 
-                              }
-                            }
-                          ?>                              
-                          </ul>
-                        </div>                                                                 
-                        <?php }?>                          
-                      </td>
-              
-
-                    </tr>
-                  <?php $index++; } ?>
-                </tbody>                                      
-              </table>
-          </div>
-           
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--modal procesar-->
-  <!-- <div class="modal fade" id="modalProcesarNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="codigo_planillaNA" id="codigo_planillaNA" value="0">
-          <input type="hidden" name="codigo_uoNA" id="codigo_uoNA" value="0"> 
-          Esta acción Procesará La planilla Del Mes En Curso. ¿Deseas Continuar?
-          <div id="cargaPNA" style="display:none">
-            <h3><b>Por favor espere...</b></h3>
-          </div>
-        </div>       
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="AceptarProcesoNA">Aceptar</button>
-          <button type="button" class="btn btn-danger" id="CancelarProcesoNA" data-dismiss="modal" > <-- Volver </button>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <!--modal Reprocesar-->
-  <div class="modal fade" id="modalreProcesarNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="codigo_planillaRPNA" id="codigo_planillaRPNA" value="0">        
-          <input type="hidden" name="codigo_uoRPNA" id="codigo_uoRPNA" value="0">        
-          Esta acción ReProcesará La planilla Del Mes En Curso. ¿Deseas Continuar?
-          <div id="cargaRNA" style="display:none">
-            <h3><b>Por favor espere...</b></h3>
-          </div>
-        </div>    
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="AceptarReProcesoNA" >Aceptar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal" id="CancelarReProcesoNA"> <-- Volver </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--modal Cerrra-->
-  <div class="modal fade" id="modalCerrarNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="codigo_planillaCPNA" id="codigo_planillaCPNA" value="0">        
-          <input type="hidden" name="codigo_uoCPNA" id="codigo_uoCPNA" value="0">        
-          Esta acción Cerrará La planilla Del Mes En Curso. ¿Deseas Continuar?
-        </div>       
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="AceptarCerrarNA" data-dismiss="modal">Aceptar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script type="text/javascript">
-    $(document).ready(function(){
-      $('#AceptarProcesoNA').click(function(){      
-        var cod_planilla=document.getElementById("codigo_planillaNA").value;
-        var cod_uo=document.getElementById("codigo_uoNA").value;            
-        ProcesarPlanillaNA(cod_planilla,cod_uo);
-      });
-      $('#AceptarReProcesoNA').click(function(){      
-        cod_planilla=document.getElementById("codigo_planillaRPNA").value; 
-        cod_uo=document.getElementById("codigo_uoRPNA").value;      
-        ReprocesarPlanillaNA(cod_planilla,cod_uo);
-      });
-      $('#AceptarCerrarNA').click(function(){      
-        cod_planilla=document.getElementById("codigo_planillaCPNA").value;
-        cod_uo=document.getElementById("codigo_uoCPNA").value;      
-
-        CerrarPlanillaNA(cod_planilla,cod_uo);
-      });
-      
-    });
-  </script>
-  <?php 
-}
 ?>

@@ -67,6 +67,21 @@ try {
 
 
 
+
+    $noche_pactado=$_POST['noche_pactado'];
+    $domingo_pactado=$_POST['domingo_pactado'];
+    $feriado_pactado=$_POST['feriado_pactado'];
+    $movilidad_pactado=$_POST['movilidad_pactado'];
+    $refrigerio_pactado=$_POST['refrigerio_pactado'];
+    $refrigerio_pactado2=$_POST['refrigerio_pactado2'];
+    $comision_ventas=$_POST['comision_ventas'];
+    $fallo_caja=$_POST['fallo_caja'];
+    $aporte_sindicato=$_POST['aporte_sindicato'];//descuento
+
+
+
+
+
     $created_by = $globalUser;
     $modified_by = $globalUser;
     $cod_estadoreferencial=1;
@@ -89,6 +104,37 @@ try {
         $stmtDiscapacitado = $dbh->prepare("INSERT INTO personal_discapacitado(codigo,tipo_persona_discapacitado,nro_carnet_discapacidad,fecha_nac_persona_dis,cod_estadoreferencial)
                                             values($codigo,$tipo_persona_discapacitado,'$nro_carnet_discapacidad','$fecha_nac_persona_dis',$cod_estadoreferencial)");
         $flagSuccess=$stmtDiscapacitado->execute();
+
+        //montos Pactados
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (11,$codigo,'$noche_pactado',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (12,$codigo,'$domingo_pactado',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (13,$codigo,'$feriado_pactado',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (14,$codigo,'$movilidad_pactado',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (15,$codigo,'$refrigerio_pactado1',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (16,$codigo,'$refrigerio_pactado2',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (18,$codigo,'$comision_ventas',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (19,$codigo,'$fallo_caja',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (100,$codigo,'$aporte_sindicato',1,2)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        // ****FIn BONOS  DESC PACTADOS
+
         //parte de imagen
         // $imagenANT = $resultANT['imagen'];
         if (strlen($_FILES['image']['name']) > 1){//solo si es diferente actualizar
@@ -139,6 +185,39 @@ try {
         $stmtDiscapacitado->bindParam(':fecha_nac_persona_dis', $fecha_nac_persona_dis);
         $stmtDiscapacitado->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
         $flagSuccess=$stmtDiscapacitado->execute();
+
+
+        // MONTOS PACTADOS
+         $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$noche_pactado' where cod_personal=$codigo and cod_bono=11 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$domingo_pactado' where cod_personal=$codigo and cod_bono=12 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$feriado_pactado' where cod_personal=$codigo and cod_bono=13 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$movilidad_pactado' where cod_personal=$codigo and cod_bono=14 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$refrigerio_pactado1' where cod_personal=$codigo and cod_bono=15 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$refrigerio_pactado2' where cod_personal=$codigo and cod_bono=16 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$comision_ventas' where cod_personal=$codigo and cod_bono=18 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$fallo_caja' where cod_personal=$codigo and cod_bono=19 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$aporte_sindicato' where cod_personal=$codigo and cod_bono=100 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+
+        //FIN MOMTOS PACTADOS
+
         //parte de imagen
         //imagen anterior
         $stmtANT = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");

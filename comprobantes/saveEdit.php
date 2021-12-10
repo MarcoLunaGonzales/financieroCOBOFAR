@@ -179,8 +179,6 @@ array_push($SQLDATOSINSTERT,$flagsuccess);
     //   array_push($SQLDATOSINSTERT,$flagsuccess);
     // }
     if(!isset($_POST['incompleto'])){
-      
-      
       $stmt1 = obtenerComprobantesDet($codComprobante);
       // var_dump($row1);
       while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {

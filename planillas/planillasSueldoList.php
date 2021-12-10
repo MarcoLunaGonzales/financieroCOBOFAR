@@ -9,12 +9,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalCodUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
 
-$cod_mes=$_SESSION['globalMes'];
-$nombre_mes=nombreMes($cod_mes);
+$cod_mes_global=$_SESSION['globalMes'];
+$nombre_mes=nombreMes($cod_mes_global);
 //$nombreGestion=$_SESSION['globalNombreGestion'];
 $codGestionActiva=$_SESSION['globalGestion'];
 
-$sql="SELECT cod_estadoplanilla from planillas where cod_mes=$cod_mes and cod_gestion=$codGestionActiva";
+$sql="SELECT cod_estadoplanilla from planillas where cod_mes=$cod_mes_global and cod_gestion=$codGestionActiva";
 //echo "<br><br><br><br>".$sql;
 $stmtVerifPlani=$dbh->prepare($sql);
 $stmtVerifPlani->execute();
@@ -288,7 +288,7 @@ $dbh = new Conexion();
                 <a href='<?=$urlGenerarPlanillaSueldoPrevia;?>' rel="tooltip" class="btn btn-info">Registrar Planilla Actual (1)</a>
                 <a href="bonos/descargarExcelGlobal.php" target="_blank" class="btn btn-warning"><span class="material-icons">download</span>Descargar Plantilla (2)</a>
                 <button class="btn btn-success" onClick="location.href='index.php?opcion=subirBonoExcel_global_from'"><span class="material-icons">file_upload</span>Cargar Plantilla (3)</button>
-                <button class="btn btn-rose" onClick="procesar_bonos_descuentos_planilla('<?=$nombre_mes?>','<?=$cod_mes?>','<?=$estado_planilla?>')"><span class="material-icons">sync</span>Procesar o reprocesar PLANTILLA (4)</button>
+                <button class="btn btn-rose" onClick="procesar_bonos_descuentos_planilla('<?=$nombre_mes?>','<?=$cod_mes_global?>','<?=$estado_planilla?>')"><span class="material-icons">sync</span>Procesar o reprocesar PLANTILLA (4)</button>
               <?php
               }
               ?>

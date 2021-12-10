@@ -22,7 +22,7 @@
 
 $proveedoresString=implode(",", $proveedores);
 
-$proveedoresStringAux="and e.cod_cuentaaux in ($proveedoresString)";
+$proveedoresStringAux="and d.cod_cuentaauxiliar in ($proveedoresString)";
 
 if(count($proveedores)==(int)$_POST["numero_proveedores"]){
   $proveedoresStringAux="";
@@ -118,10 +118,10 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                       $sqlFechaEstadoCuenta="and e.fecha<='$hasta 23:59:59'";  
                                     }
 
-                                    $sql="SELECT e.cod_cuentaaux,sum(e.monto)as monto_ec,sum(d.haber)as haber,sum(d.debe) as debe, ca.nombre,(SELECT c.tipo from configuracion_estadocuentas c where c.cod_plancuenta=d.cod_cuenta)as tipoDebeHaber
-
-                                        FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) GROUP BY e.cod_cuentaaux  order by e.fecha"; //ca.nombre, 
-                                    // echo $sql;
+                                    $sql="SELECT d.cod_cuentaauxiliar as cod_cuentaaux,sum(e.monto)as monto_ec,sum(d.haber)as haber,sum(d.debe) as debe, (select ca.nombre from cuentas_auxiliares ca where ca.codigo=d.cod_cuentaauxiliar) as nombre,(SELECT c.tipo from configuracion_estadocuentas c where c.cod_plancuenta=d.cod_cuenta)as tipoDebeHaber
+                                        FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc
+                                          where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) GROUP BY d.cod_cuentaauxiliar  order by e.fecha"; //ca.nombre, 
+                                     //echo $sql;
                                     $stmtUO = $dbh->prepare($sql);
                                     $stmtUO->execute();
                                     $index=1;
@@ -135,9 +135,9 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                         //PAGADO
                                         $sql="SELECT sum(e.monto)as monto_ec,sum(d.haber)as haber,sum(d.debe) as debe
 
-                                        FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen>0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) and e.cod_cuentaaux in ($cod_cuentaauxX) and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) GROUP BY e.cod_cuentaaux  order by e.fecha";      
+                                        FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen>0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) and d.cod_cuentaauxiliar in ($cod_cuentaauxX) and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) GROUP BY d.cod_cuentaauxiliar  order by e.fecha";      
 
-                                        //echo $sql;
+                                        // echo $sql;
                                         $stmt_d = $dbh->prepare($sql);
                                         $stmt_d->execute();
                                         $monto_ecD=0;
@@ -145,8 +145,6 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                         $haberD=0;
                                         while ($row_d = $stmt_d->fetch()) {
                                             $monto_ecD=$row_d['monto_ec'];
-                                            $debeD=$row_d['debe'];
-                                            $haberD=$row_d['haber'];
                                             // $tipoDebeHaberD=$row_d['tipoDebeHaber'];
                                         }
                                         

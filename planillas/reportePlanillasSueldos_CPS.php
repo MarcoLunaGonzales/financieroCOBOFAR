@@ -1,10 +1,10 @@
 <?php
-require_once '../conexion3.php';
+require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 
 require_once '../layouts/bodylogin2.php';
-  $dbh = new Conexion3();
+  $dbh = new Conexion();
 
   $cod_planilla = $_GET["codigo_planilla"];//
   $cod_gestion = $_GET["cod_gestion"];//

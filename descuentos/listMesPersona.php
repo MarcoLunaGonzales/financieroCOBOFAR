@@ -19,7 +19,7 @@ $dbh = new Conexion();
 $stmt = $dbh->prepare("select dpm.cod_personal as cod_persona, dpm.codigo as codigo ,dpm.observaciones,
 (select u.abreviatura from personal p, unidades_organizacionales u where p.codigo=dpm.cod_personal and u.codigo=p.cod_unidadorganizacional)as unidad,
 (select c.nombre from personal p, cargos c where p.codigo=dpm.cod_personal and c.codigo=p.cod_cargo)as cargo,
-(select concat(p.paterno,' ', p.materno,' ', p.primer_nombre) from personal p where p.codigo=dpm.cod_personal)as nombrepersonal,
+(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=dpm.cod_personal)as nombrepersonal,
 dpm.monto as detalle from descuentos_personal_mes dpm where dpm.cod_descuento=$codDescuento and dpm.cod_mes=$codMes and dpm.cod_gestion=$codGestionActiva and dpm.cod_estadoreferencial=1 ORDER BY nombrepersonal");
 // Ejecutamos
 $stmt->execute();

@@ -1,10 +1,10 @@
 <?php
-require_once '../conexion3.php';
+require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 
 require_once '../layouts/bodylogin2.php';
-  $dbh = new Conexion3();
+  $dbh = new Conexion();
 
   $cod_planilla = $_GET["codigo_planilla"];//
   $cod_gestion = $_GET["cod_gestion"];//
@@ -148,9 +148,6 @@ require_once '../layouts/bodylogin2.php';
         $stmtPersonal->bindColumn('a_solidario_35000', $a_solidario_35000);
         $stmtPersonal->bindColumn('descuentos_otros', $descuentos_otros);
         $stmtPersonal->bindColumn('seguro_de_salud', $seguro_de_salud);
-
-        
-        
         while ($row = $stmtPersonal->fetch()) 
         {  
           switch ($tipo_personal_discapacidad) {
@@ -242,5 +239,8 @@ require_once '../layouts/bodylogin2.php';
   </div>
 </div>
 
+<?php
+  $dbh=null;
+  $stmtPersonal=null;
 ?>
 

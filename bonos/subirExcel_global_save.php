@@ -39,7 +39,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 $cod_descuento_as=100; //aporte al sindicato
 $cod_estadoreferencial=1;
 if($alert==true){
-    $delimitador = "|";
+    $delimitador = ";";
     $longitudDeLinea = 1000;
     $x=0;
     $datos=array();

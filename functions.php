@@ -3592,20 +3592,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $stmt->execute();
     $result=$stmt->fetch();
     $codigo=$result['codigo'];
-    $dbh = '';
-    $stmt = '';
+    $dbh = null;
+    $stmt = null;
     return ($codigo);
   }
   function obtenerSueldomes($cod_personal,$cod_planilla){
     $dbh = new Conexion();
-    set_time_limit(300);
+    set_time_limit(0);
     $stmt = $dbh->prepare("SELECT liquido_pagable from planillas_personal_mes
     where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal");
     $stmt->execute();
     $result=$stmt->fetch();
     $liquido_pagable=$result['liquido_pagable'];
-    $dbh = '';
-    $stmt = '';
+    if($liquido_pagable=='' || $liquido_pagable==null){
+      $liquido_pagable=0;
+    }
+    $dbh = null;
+    $stmt = null;
     return ($liquido_pagable);
   }
 
@@ -3812,10 +3815,12 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
 
     where pm.cod_planilla=$codigo  and p.cod_unidadorganizacional=1 
-    order by p.cod_unidadorganizacional,a.nombre,p.paterno";
+    order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
+    $dbh = null;
+    $stmt = null;
     return $stmt;
   }
   function obtenerPlanillaSueldoRevisionBonos($cod_personalcargo,$cod_gestion,$cod_mes,$dias_trabajados_asistencia,$dias_trabajados){
@@ -3847,6 +3852,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $total_bonos2+=$monto2_aux;
     }
     $sumaBono_otros=$total_bonos1+$total_bonos2;
+    $dbh = null;
+    $stmtBonos2 = null;
+    $stmtBonos1=null;
     return $sumaBono_otros;
   }
   //FUNCIONES DE REPORTE
@@ -11672,7 +11680,6 @@ function obtenerCodigoReferencialActivo($cod_tiposactivos,$cod_depreciaciones,$c
       }
    }
    return $codigoActivoFijo;
-
 }
 
 function obtenerComprobantePago($codigo){
@@ -12384,11 +12391,7 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
       $NIT=$row['nit_factura_proveedor'];
       $nfac=$row['nro_factura_proveedor'];
       $dcto=$row['cod_ingreso_almacen'];
-
-
       $MFACTURA=$row['monto_factura_proveedor_desc'];
-      
-
       // $FECHA1=date("d/m/Y", strtotime($FECHA1));
       // $FECHA=date("d/m/Y", strtotime($FECHA));
       $valor=$IDPROVEEDOR."#####".$NIT."#####".$REFE."#####".$nfac."#####".$REFE1."#####".$FECHA1."#####".$MFACTURA."#####".$dcto;
@@ -12416,8 +12419,6 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
       $dcto=$row['cod_ingreso_almacen'];
 
       $MFACTURA=$row['monto_factura_proveedor_desc'];
-      
-
       // $FECHA1=date("d/m/Y", strtotime($FECHA1));
       // $FECHA=date("d/m/Y", strtotime($FECHA));
       $valor=$IDPROVEEDOR."#####".$NIT."#####".$REFE."#####".$nfac."#####".$REFE1."#####".$FECHA1."#####".$MFACTURA."#####".$dcto;

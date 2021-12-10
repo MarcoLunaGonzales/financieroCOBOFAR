@@ -84,7 +84,7 @@ $html.='<body>'.
 $html.='<header class="header">'.            
     '<table width="100%">
       <tr>
-      <td width="25%"><p>CORPORACION BOLIVIANA DE FARMACIAS<br>Av.Landaeta Nro 836<br>La Paz - Bolivia<br>NIT:1022039027</p></td>
+      <td width="28%"><small><p>CORPORACION BOLIVIANA DE FARMACIAS<br>Av.Landaeta Nro 836<br>La Paz - Bolivia<br>NIT:1022039027</p></small></td>
       <td><center><span style="font-size: 13px"><b>'.$string_titulo.'</b></span><BR>Correspondientes al mes de '.$mes.' de '.$gestion.'<br><b>EXPRESADA EN BOLIVIANOS</b></center></td>
       <td width="25%"><center></center></td>
       </tr>
@@ -98,7 +98,7 @@ $html.='<table class="table">
         <td width="15%">SUCURSAL</td>
         <td >PATERNO</td>
         <td >MATERNO</td>
-        <td >NOMBRES</td>
+        <td width="15%">NOMBRES</td>
         <td width="15%">CARGO</td>
         <td >CUENTA</td>
         <td >IMPORTE</td>
@@ -123,12 +123,11 @@ $html.='<table class="table">
 			//$dias_trabajados_asistencia=30;//ver datos
 				// $dias_trabajados_por_defecto = obtenerValorConfiguracionPlanillas(22); //por defecto
 			$dias_trabajados_por_defecto=30;
-			// while ($row = $stmtArea->fetch(PDO::FETCH_BOUND)) 
-			// {
+			
 				$sql = "SELECT ppm.cod_personalcargo,ppm.liquido_pagable,pad.primer_nombre,pad.paterno,pad.materno,
 				(select c.nombre from cargos c where c.codigo=pad.cod_cargo)as cargo,pad.cuenta_bancaria,(select a.nombre from areas a where a.codigo=pad.cod_area) as areas
 					from planillas_personal_mes ppm,personal pad
-					where ppm.cod_personalcargo=pad.codigo and cod_planilla=$cod_planilla and pad.cod_estadoreferencial=1 and pad.cod_estadopersonal=1 $sql_add order by pad.cod_unidadorganizacional,pad.cod_area,pad.paterno";
+					where ppm.cod_personalcargo=pad.codigo and cod_planilla=$cod_planilla and pad.cod_estadoreferencial=1 and pad.cod_estadopersonal=1  $sql_add order by pad.cod_unidadorganizacional,pad.cod_area,pad.paterno";
 					// echo $sql."<br><br>";
 				$stmtPersonal = $dbh->prepare($sql);
 				$stmtPersonal->execute();	
@@ -157,14 +156,10 @@ $html.='<table class="table">
 		          	</tr>';
 		            $index+=1;
 		      	}
-			// }                     
+		                   
     $html.='</tbody>
     <tfoot>
-    	<tr >                  
-	        <th colspan="7" class="text-right">.</th>
-	        <th colspan="2" class="text-right"></th>
-    	</tr>
-    	<tr >                  
+    	<tr>                  
 	        <th colspan="7" class="text-right">'.$string_foot.'</th>
 	        <th colspan="2" class="text-right">'.formatNumberDec($sum_total_l_pagable).'</th>
     	</tr>
@@ -175,7 +170,12 @@ $html.='<table class="table">
  	<tr><td><center><p>______________________________<br>'.obtenerValorConfiguracionPlanillas(23).'<br>JEFE DE SISTEMAS</p></center></td></tr>
  	</table>';
 $html.='</body>'.
-      '</html>';           
+      '</html>';
+
+      $dbh=null;
+      $stmtBonos=null;
+      $stmtDescuento=null;
+      $stmtPersonal=null;
 // echo $html;
 descargarPDFBoleta("Planilla_".$mes."_".$gestion,$html);
 ?>

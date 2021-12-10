@@ -646,7 +646,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <label class="col-sm-2 col-form-label">Haber Basico (Bs)</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=formatNumberDec($haber_basico);?>" readonly="readonly"/>
+                                             <input class="form-control" type="number" step="any" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" readonly="readonly"/>
                                         </div>
                                     </div> 
                                     <label class="col-sm-2 col-form-label">Email Empresarial</label>

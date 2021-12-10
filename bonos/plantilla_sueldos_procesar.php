@@ -15,6 +15,9 @@ if (isset($_POST["cod_mes"])) {
     // $L = new DateTime($fechai); 
     // $fechaf= $L->format('Y-m-t');
     $codEstado=1;
+
+    $dias_trabajados_mes = obtenerValorConfiguracionPlanillas(22); //por defecto
+    
     //borramos logicamente
     $stmte = $dbh->prepare("UPDATE bonos_personal_mes SET cod_estadoreferencial=2 
         WHERE  cod_gestion=$codGestionActiva and cod_mes=$codMes");
@@ -60,13 +63,16 @@ if (isset($_POST["cod_mes"])) {
                     $monto_bono=$noche_normal*$montopactado;
                 break;
                 case 12://DOMINGOS PACTADOS
-                    $monto_bono=($montopactado*($domingos_trabajados_normal+$domingo_reemplazo))+(($montopactado/8)*$hxdomingo_extras);
+                    $monto_bono=($montopactado*($domingos_trabajados_normal+$domingo_reemplazo))+(($montopactado/12)*$hxdomingo_extras);
                 break;
                 case 13://FERIADOS PACTADOS
-                    $monto_bono=($montopactado*($feriado_normal+$feriado_reemplazo))+(($montopactado/8)*$hxferiado_extras);
+                    $monto_bono=($montopactado*($feriado_normal+$feriado_reemplazo))+(($montopactado/12)*$hxferiado_extras);
+                break;
+                case 14://movilidad
+                    $monto_bono=$montopactado*($dias_trabajados-$faltas-$faltas_sin_descuento-$dias_vacacion)/$dias_trabajados_mes;//bono movilidad
                 break;
                 case 15://REFRIGERIO DE LUNES A SABADO PACTADOS
-                    $monto_bono=$montopactado*($dias_trabajados-$faltas-$dias_vacacion+$ordianrio_reemplazo);//REFRIGERIO DE LUNES A SABADO PACTADOS
+                    $monto_bono=$montopactado*($dias_trabajados-$faltas-$faltas_sin_descuento-$dias_vacacion+$ordianrio_reemplazo);//REFRIGERIO DE LUNES A SABADO PACTADOS
                 break;
                 case 16://REFRIGERIO DOMINGOS Y FERIADOS PACTADOS 
                     $monto_bono=$montopactado*($domingos_trabajados_normal+$feriado_normal+$domingo_reemplazo+$feriado_reemplazo);

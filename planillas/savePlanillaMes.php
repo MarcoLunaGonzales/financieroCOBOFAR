@@ -107,13 +107,12 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	$dias_trabajados_mes = obtenerValorConfiguracionPlanillas(22); //por defecto
 	$dias_del_mes=30;
 	
-
 	// fin de valores de configruacion
 
 	//============select del personal
 	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
-	cod_tipoafp,ing_contr
+	cod_tipoafp,ing_planilla
 	from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
@@ -122,18 +121,23 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	$stmtPersonal->bindColumn('cod_grado_academico', $cod_gradoacademico);  
 	$stmtPersonal->bindColumn('p_grado_academico', $p_grado_academico);  
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
-	$stmtPersonal->bindColumn('ing_contr', $ing_contr);
+	$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
 		$dias_trabajados_asistencia = obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$dias_trabajados_mes); //por asistencia
-
+		if($codigo_personal==1072){
+			$dias_trabajados_asistencia=11;
+		}
+		if($codigo_personal==2001){
+			$dias_trabajados_asistencia=4;
+		}
 		
 		$otros_b = obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_del_mes,$cod_gestion_x,$cod_mes_x);//ee
 		//calculado otros bonos		
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
-		$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$fecha_planilla);//ok	
-		//echo $bono_antiguedad."--".$ing_contr."--".$fecha_planilla."<br>";
+		$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_planilla,$fecha_planilla);//ok	
+		//echo $bono_antiguedad."--".$ing_planilla."--".$fecha_planilla."<br>";
 
 		//$otros_b = 0 ;//buscar datos
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	

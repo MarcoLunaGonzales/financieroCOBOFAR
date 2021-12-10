@@ -67,7 +67,6 @@ $html.='<body>'.
     '</script>';
     $index_planilla=1;
 while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
 	$haber_basico_dias=$result['haber_basico2'];
 	$bono_antiguedad=$result['bono_antiguedad'];
 	$com_ventas=$result['bventas'];
@@ -112,10 +111,11 @@ while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	}
 	$index_planilla++;
 }
-
-
 $html.='</body>'.
 '</html>';
+
+$stmt=null;
+$dbh=null;
 
 //echo $html;
 descargarPDFBoleta("COBOFAR - ",$html);

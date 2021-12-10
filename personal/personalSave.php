@@ -72,7 +72,7 @@ try {
     $domingo_pactado=$_POST['domingo_pactado'];
     $feriado_pactado=$_POST['feriado_pactado'];
     $movilidad_pactado=$_POST['movilidad_pactado'];
-    $refrigerio_pactado=$_POST['refrigerio_pactado'];
+    $refrigerio_pactado1=$_POST['refrigerio_pactado'];
     $refrigerio_pactado2=$_POST['refrigerio_pactado2'];
     $comision_ventas=$_POST['comision_ventas'];
     $fallo_caja=$_POST['fallo_caja'];

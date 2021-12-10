@@ -24,6 +24,9 @@ if($_POST["fecha_desde"]==""){
   $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
   $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
 }
+
+$tipo=$_POST["tipo"];
+
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
 
 $cuenta_creditoFiscal=obtenerValorConfiguracion(3);
@@ -73,7 +76,8 @@ $stmt->execute();
               $totalimportefactura=0;
               $totalimportediferencia=0;
               $index=0;
-                while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $sw_ver=false;
                   $index++;
                   $cod_comprobante=$rowComp['cod_comprobante'];
                   $nombreCbte=nombreComprobante($cod_comprobante);
@@ -93,7 +97,7 @@ $stmt->execute();
                   $personal=$rowComp['personal'];
                   $created_at=$rowComp['created_at'];
                   $cuenta=nameCuenta($cuenta_creditoFiscal);
-                  $sql="SELECT sum(importe) as importe,count(*) as cantidad from facturas_compra where cod_comprobantedetalle=$codigo";
+                  $sql="SELECT sum(importe)-sum(exento)-sum(ice)as importe, count(*) as cantidad from facturas_compra where cod_comprobantedetalle=$codigo";
                   $stmt5 = $dbh->prepare($sql);
                   $stmt5->execute();                      
                   $stmt5->bindColumn('importe', $importeX);
@@ -104,10 +108,8 @@ $stmt->execute();
                     $monto_factura=$importeX;
                     $cantidad_factura=$cantidadX;
                   }
-
-                  $monto_diferencia=$haber+$debe-$monto_factura*0.13;
+                  $monto_diferencia=$haber+$debe-($monto_factura*0.13);
                   $monto_diferencia=round($monto_diferencia,2);
-
                   $totalimportehaber+=$haber;
                   $totalimportefactura+=$monto_factura;
                   $totalimportediferencia+=$monto_diferencia;
@@ -125,9 +127,15 @@ $stmt->execute();
                     break;
                   }
                   if($monto_diferencia!=0){
+                    $sw_ver=true;
                     $label_row="style='background:#CD5C5C;'";
+                  }else{
+                    if($tipo==2){
+                      $sw_ver=true;
+                    }
                   }
-                  $html.='<tr '.$label_row.' >'.
+                  if($sw_ver){
+                    $html.='<tr '.$label_row.' >'.
                     '<td class="text-center font-weight-bold">'.$index.'</td>'.
                     '<td title="Elaborado Por: '.$personal.' El '.$created_at.'" class="text-left font-weight-bold">'.$nombreCbte.'</td>'.
                     '<td class="text-left font-weight-bold">'.$fecha.'</td>'.
@@ -138,7 +146,9 @@ $stmt->execute();
                     '<td class="text-right font-weight-bold">'.formatNumberDec($monto_factura).'</td>'.
                     '<td class="text-right font-weight-bold">'.formatNumberDec($monto_factura*0.13).'</td>'.
                     '<td class="text-right font-weight-bold">'.formatNumberDec($monto_diferencia).'</td>'.
-                    '</tr>';                  
+                    '</tr>';  
+                  }
+                                  
                 }                    
                 // $totalFactura=obtener_saldo_total_facturas();
                 // $html.='<tr>'.

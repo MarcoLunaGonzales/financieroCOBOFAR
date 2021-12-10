@@ -76,6 +76,7 @@ $html.=  '<header class="header">'.
               // '<td width="2%">Nac ión</small></small></td>'.
               // '<td width="4%">Fech Nac</small></small></td>'.
               '<td><small><small>Cargo</small></small></td>'.
+              '<td><small><small>Turn</small></small></td>'.
               '<td><small><small>Fech Ing</small></small></td>'.
               '<td><small><small>Hrs Trab</small></small></td>'.
               '<td><small><small>Días Trab</small></small></td>'.
@@ -163,7 +164,22 @@ $html.=  '<header class="header">'.
               $emision=$row['emision'];
               $sexo=$row['genero'];
               $nacion=$row['nacionalidad'];
-              
+
+              $cod_turno=$row['turno'];
+
+              $turno_nombre="";
+              switch ($cod_turno) {
+                case 1:
+                  $turno_nombre="TM";
+                  break;
+                case 2:
+                  $turno_nombre="TT";
+                  break;
+                case 10:
+                  $turno_nombre="";
+                  break;
+              }
+             
               // $sqlTotalOtroDescuentos = "SELECT SUM(monto) as suma_descuentos from descuentos_personal_mes 
               //   where  cod_personal=$cod_personal_cargo and cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1";
               // $stmtDescuentosOtros = $dbh->prepare($sqlTotalOtroDescuentos);
@@ -217,6 +233,7 @@ $html.=  '<header class="header">'.
                 // '<td><small><small>'.$nacion.'</small></small></td>'.
                 // '<td><small><small>'.strftime('%d/%m/%Y',strtotime($fechaNac)).'</small></small></td>'.
                 '<td class="text-left"><small><small><small>'.$row['cargo'].'</small></small></small></td>'.
+                '<td class="text-left"><small><small><small>'.$turno_nombre.'</small></small></small></td>'.
                 '<td class="text-left"><small><small><small>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</small></small></small></td>'.
                 '<td class="text-right"><small><small><small>'.$hrsTrabajadas.'</small></small></small></td>'.
                 '<td class="text-right"><small><small><small>'.$dias_trabajados_planilla.'</small></small></small></td>'.
@@ -387,6 +404,14 @@ $html.='<table width="100%">
 
 $html.='</body>'.
       '</html>';           
+
+$dbh=null;
+$stmtBonos=null;
+$stmtDescuento=null;
+$stmtBonosOtrs=null;
+$stmtDescuentos=null;
+
  // echo $html;
+
 descargarPDFHorizontal("Planilla_".$mes."_".$gestion,$html);
 ?>

@@ -1,13 +1,13 @@
 <?php
 session_start();
 require_once '../layouts/bodylogin2.php';
-require_once '../conexion3.php';
+require_once '../conexion.php';
 require_once '../styles.php';
 require_once '../functions.php';
 require_once 'configModule.php';
 
 set_time_limit(0);
-$dbh = new Conexion3();
+$dbh = new Conexion();
 $sql="SELECT fecha,nit,nombre,factura,autoriza,codigo,imp_base from libro_compras_qr order by fecha ";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -146,6 +146,11 @@ $stmt->bindColumn('imp_base', $importe);
         </a>                        
       </td>
     </tr>
-  <?php $index++; } ?>
+  <?php $index++; } 
+
+  $stmt = null;
+  $dbh = null;
+
+  ?>
 </tbody>
 </table>

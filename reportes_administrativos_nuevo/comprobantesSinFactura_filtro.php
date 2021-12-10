@@ -34,15 +34,12 @@ $fechaHasta2=$y."-12-31";
                 <div class="card-body">
                
 	                  <div class="row">
-	                  	
 				                <label class="col-sm-2 col-form-label">Desde</label>
 				                <div class="col-sm-4">
 				                	<div class="form-group">
 				                			<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde"  value="<?=$fechaDesde?>">
 				                  </div>
 				                </div>
-				            
-
 				                <label class="col-sm-1 col-form-label">Hasta</label>
 				                <div class="col-sm-4">
 				                	<div class="form-group">
@@ -50,8 +47,21 @@ $fechaHasta2=$y."-12-31";
 				                			<input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta"  value="<?=$fechaHasta?>">
 				                		</div>
 				                  </div>
-				                
+				            	</div>
 				            </div>
+				              <div class="row">
+            <label class="col-sm-2 col-form-label">TIPO</label>
+            <div class="col-sm-7">
+              <div class="form-group">
+                
+                    <select class="selectpicker form-control form-control-sm" name="tipo" id="tipo"  data-actions-box="true" required data-live-search="true">
+                      <option value="1">SOLO OBSERVADOS</option>
+                      <option value="2">TODO</option>
+                    </select>
+              
+              </div>
+            </div>
+         </div>
 					         
 
 

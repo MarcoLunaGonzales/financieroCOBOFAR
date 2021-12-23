@@ -69,7 +69,10 @@ if($codigo>0){
     $personal_confianza = $result['personal_confianza'];
     $cuenta_bancaria = $result['cuenta_bancaria'];
     $cod_turno=$result['turno'];
-    $cod_tipotrabajo=$result['$cod_tipotrabajo'];
+    $cod_tipotrabajo=$result['cod_tipotrabajo'];
+    $cod_cajasalud=$result['cod_cajasalud'];
+    
+    
 
 
     //personal discapacitado
@@ -80,7 +83,6 @@ if($codigo>0){
     $cod_tipo_persona_discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
     $nro_carnet_discapacidad = $resultDiscapacitado['nro_carnet_discapacidad'];
     $fecha_nac_persona_dis = $resultDiscapacitado['fecha_nac_persona_dis'];
-
 
     
     $stmtMontosPactados = $dbh->query("SELECT cod_bono,monto from bonos_personal_pactados where cod_estadoreferencial=1 and cod_personal =$codigo");
@@ -181,7 +183,7 @@ if($codigo>0){
 
     $cod_turno="";
     $cod_tipotrabajo="";
-
+    $cod_cajasalud="";
     //personal discapacitado
     $cod_tipo_persona_discapacitado = "";
     $nro_carnet_discapacidad = "";
@@ -192,7 +194,6 @@ if($codigo>0){
     $imagen = "";
     //$archivo = "";
     $archivo = "";
-
 
     //montos pactados
     $noche_pactado=0;
@@ -220,6 +221,11 @@ $statementtipos_aporteafp = $dbh->query($querytipos_aporteafp);
 
 $queryestados_personal = "SELECT codigo,nombre from estados_personal where cod_estadoreferencial=1";
 $statementestados_personal = $dbh->query($queryestados_personal);
+
+
+$querycajasalud = "SELECT codigo,nombre from tipos_caja_salud where cod_estadoreferencial=1";
+$stmt_cajasalud = $dbh->query($querycajasalud);
+
 ?>
 
 <div class="content">
@@ -701,10 +707,20 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                             </div><!--fin campo cod_tipoaporteafp-->
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Nro. Seguro</label>
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                 <div class="form-group">
                                     <input class="form-control" type="number" name="nro_seguro" id="nro_seguro" required value="<?=$nro_seguro;?>"/>
                                 </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <select name="cod_cajasalud"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
+                                            <option value=""></option>
+                                        <?php while ($row = $stmt_cajasalud->fetch()) { ?>
+                                            <option <?php if($cod_cajasalud == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <?php } ?>
+                                        </select>                  
+                                    </div>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Cuenta Bancaria</label>
                                 <div class="col-sm-4">

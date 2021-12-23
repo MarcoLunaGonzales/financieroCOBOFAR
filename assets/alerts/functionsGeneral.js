@@ -764,7 +764,7 @@ function saveFactura(){
       contadorError++;
       errorCampoAjaxMensaje($('#imp_fac'),'Monto > 0');
     }
-    if($('#aut_fac').val()=='' || $('#aut_fac').val()==0 || $('#aut_fac').val()<1){
+    if($('#aut_fac').val()=='' || $('#aut_fac').val()==0 ){
       contadorError++;
       errorCampoAjaxMensaje($('#aut_fac'),'campo requerido');
     }              
@@ -13916,7 +13916,7 @@ function saveFacturaEdit(){
       contadorError++;
       errorCampoAjaxMensaje($('#imp_fac'),'Monto > 0');
     }
-    if($('#aut_fac_edit').val()=='' || $('#aut_fac_edit').val()<1){
+    if($('#aut_fac_edit').val()==''){
       contadorError++;
       errorCampoAjaxMensaje($('#aut_fac'),'campo requerido');
     }              

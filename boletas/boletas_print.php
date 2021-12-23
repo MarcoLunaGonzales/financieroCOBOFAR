@@ -42,7 +42,7 @@ if(isset($_GET["codigo_planilla"])){
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-default"  data-show-subtext="true" data-live-search="true" required="true">
-                                            <option value=""></option>
+                                            <option value="-1000">TODO</option>
                                             <?php 
                                             $query = "SELECT uo.codigo,uo.nombre 
                                                 from personal p join unidades_organizacionales uo on p.cod_unidadorganizacional=uo.codigo 

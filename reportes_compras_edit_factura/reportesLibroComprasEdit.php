@@ -91,6 +91,29 @@ $dbh = new Conexion();
 		                     </div>
 		                  </div>
 		            </div>
+
+
+		            <div class="row">
+		            	<label class="col-sm-2 col-form-label">Razón Social</label>
+		                <div class="col-sm-1">
+		                	<div class="form-group">
+								<div class="togglebutton">
+								    <label>
+										<input type="checkbox" name="check_rs_librocompras" id="check_rs_librocompras" onChange="ajax_razon_social_filtro_compras()">
+										<span class="toggle"></span>
+								    </label>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-8" >
+		                	<div class="form-group" id="contenedor_razos_social_librocompras">
+								
+							</div>
+						</div>
+		            </div>
+
+		            
+
 		            <div class="row d-none">
 		            	<label class="col-sm-2 col-form-label">Sin Solicitud</label>
 		                <div class="col-sm-1">

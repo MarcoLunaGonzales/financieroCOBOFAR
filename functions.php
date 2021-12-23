@@ -3535,55 +3535,77 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     return($aporte_p_seguro_medico_X);
   }
   //planillas aguinaldos
-  // function Verificar_si_corresponde_Aguinaldo($ing_contr){
-  //   $anio_actual= date('Y');
-  //   // $anio_actual=2019;
-  //   $fechaComoEntero = strtotime($ing_contr);
-  //   $anio_ingreso = date("Y", $fechaComoEntero);
-  //   $mes_ingreso = date("m", $fechaComoEntero);
-  //   $diferencia_anios=$anio_actual-$anio_ingreso;
-  //   $diferencia_meses=12-$mes_ingreso;
-  //   if($diferencia_anios>0){
-  //     $sw=1;
-  //   }elseif($diferencia_meses>2){
-  //     $sw=1;
-  //   }else $sw=0;
-  //   return $sw;
-  // }
+
   function obtener_anios_trabajados($ing_contr){
     $anio_actual= date('Y');
-    // $anio_actual=2019;
     $fechaComoEntero = strtotime($ing_contr);
     $anio_ingreso = date("Y", $fechaComoEntero);
     $diferencia_anios=$anio_actual-$anio_ingreso;
     return $diferencia_anios;
   }
   function obtener_meses_trabajados($ing_contr){
-    $fechaComoEntero = strtotime($ing_contr);  
-    $mes_ingreso = date("m", $fechaComoEntero);
-    $diferencia_meses=12-$mes_ingreso;
-    // if($diferencia_anios>0){
-    //   $sw=1;
-    // }elseif($diferencia_meses>2){
-    //   $sw=1;
-    // }else $sw=0;
-    return $diferencia_meses;
-  }
-  function obtener_dias_trabajados($ing_contr){
-    $fechaComoEntero = strtotime($ing_contr);
-    $dia_ingreso = date("d", $fechaComoEntero);  
-    $diferencia_dias=30-$dia_ingreso;
-    if($diferencia_dias<0){
-      $diferencia_dias=0;
-    }
+      $fechaComoEntero = strtotime($ing_contr);  
+      $mes_ingreso = date("m", $fechaComoEntero);
+      $diferencia_meses=12-$mes_ingreso;
+      return $diferencia_meses;
+   }
+   function obtener_dias_trabajados($ing_contr){
+         $fechaComoEntero = strtotime($ing_contr);
+         $dia_ingreso = date("d", $fechaComoEntero);  
+         $diferencia_dias=30-$dia_ingreso;
+         if($diferencia_dias<0){
+            $diferencia_dias=0;
+         }
+       return $diferencia_dias;
+   }
 
-    // if($diferencia_anios>0){
-    //   $sw=1;
-    // }elseif($diferencia_meses>2){
-    //   $sw=1;
-    // }else $sw=0;
-    return $diferencia_dias;
-  }
+   function days_360($fecha1,$fecha2,$europeo=true) {
+      //try switch dates: min to max
+      if( $fecha1 > $fecha2 ) {
+       $temf = $fecha1;
+       $fecha1 = $fecha2;
+       $fecha2 = $temf;
+      }
+      list($yy1, $mm1, $dd1) = explode('-', $fecha1);
+      list($yy2, $mm2, $dd2) = explode('-', $fecha2);
+      if( $dd1==31) { $dd1 = 30; }
+      if(!$europeo) {
+         if( ($dd1==30) and ($dd2==31) ) {
+         $dd2=30;
+         } else {
+         if( $dd2==31 ) {
+           $dd2=30;
+         }
+         }
+      }
+      if( ($dd1<1) or ($dd2<1) or ($dd1>30) or ($dd2>31) or
+         ($mm1<1) or ($mm2<1) or ($mm1>12) or ($mm2>12) or
+         ($yy1>$yy2) ) {
+       return(-1);
+      }
+      if( ($yy1==$yy2) and ($mm1>$mm2) ) { return(-1); }
+      if( ($yy1==$yy2) and ($mm1==$mm2) and ($dd1>$dd2) ) { return(-1); }
+      //Calc
+      $yy = $yy2-$yy1;
+      $mm = $mm2-$mm1;
+      $dd = $dd2-$dd1;
+      return( ($yy*360)+($mm*30)+$dd );
+   }
+   function obtener_fecha_fin_contrato_personal($cod_personal){
+      $sql="SELECT fecha_fincontrato from personal_contratos where cod_personal=$cod_personal and cod_estadoreferencial=1 order by codigo desc limit 1";
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      $result=$stmt->fetch();
+      $fecha_fincontrato=$result['fecha_fincontrato'];
+      if($fecha_fincontrato=='' || $fecha_fincontrato==null){
+         $fecha_fincontrato='INDEFINIDO';
+      }
+      $dbh = null;
+      $stmt = null;
+      return ($fecha_fincontrato);
+
+   }
 
   function obtener_id_planilla($cod_gestion,$cod_mes){
     $dbh = new Conexion();
@@ -3599,11 +3621,11 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   function obtenerSueldomes($cod_personal,$cod_planilla){
     $dbh = new Conexion();
     set_time_limit(0);
-    $stmt = $dbh->prepare("SELECT liquido_pagable from planillas_personal_mes
+    $stmt = $dbh->prepare("SELECT total_ganado from planillas_personal_mes
     where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal");
     $stmt->execute();
     $result=$stmt->fetch();
-    $liquido_pagable=$result['liquido_pagable'];
+    $liquido_pagable=$result['total_ganado'];
     if($liquido_pagable=='' || $liquido_pagable==null){
       $liquido_pagable=0;
     }
@@ -3611,6 +3633,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $stmt = null;
     return ($liquido_pagable);
   }
+
+   function obtenerdatos_planilla($cod_personal,$cod_planilla){
+    $dbh = new Conexion();
+    set_time_limit(0);
+    $stmt = $dbh->prepare("SELECT haber_basico,bono_antiguedad,bonos_otros,total_ganado from planillas_personal_mes
+    where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal");
+   $stmt->execute();
+   $result=$stmt->fetch();
+   $haber_basico=$result['haber_basico'];
+   $bono_antiguedad=$result['bono_antiguedad'];
+   $bonos_otros=$result['bonos_otros'];
+   $total_ganado=$result['total_ganado'];
+    $dbh = null;
+    $stmt = null;
+    return ($haber_basico."@@@".$bono_antiguedad."@@@".$bonos_otros."@@@".$total_ganado);
+  }
+    
 
   //=======
   function obtenerMontoPlantillaDetalle($codigoPar,$codigo,$ib){
@@ -5614,7 +5653,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               join plan_cuentas p on p.codigo=d.cod_cuenta
               where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and d.cod_area in ($arrayAreas) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
-      //echo $sql;
+      // echo $sql."<BR>";
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       return $stmt;

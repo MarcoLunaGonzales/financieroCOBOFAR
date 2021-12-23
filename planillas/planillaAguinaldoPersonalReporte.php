@@ -31,11 +31,10 @@
 	$resultGestion=$stmtGestion->fetch();
 	$nombre_gestion=$resultGestion['nombre'];
 	
-
 	$stmtArea = $dbh->prepare("SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
 	 from personal_area_distribucion
   where cod_estadoreferencial=1 and cod_uo in ($cod_uo)
-  GROUP BY cod_area order by nombre_area");
+  GROUP BY cod_area order by cod_uo,nombre_area");
   $stmtArea->execute();
   $stmtArea->bindColumn('cod_area', $cod_area_x);
   $stmtArea->bindColumn('nombre_area', $nombre_area_x);
@@ -62,37 +61,39 @@
 				<table class="table table-bordered table-condensed table-hover" id="200">
                 	<thead>
 		                <tr class="bg-dark text-white">                  
-		                    <th><small>#</small></th> 
-		                    <th><small>Area</small></th>                   
-		                    <th><small>Paterno</small></th>
-		                    <th><small>Materno</small></th>
-		                    <th><small>Nombres</small></th>                    
-		                    <th><small>Doc. Id</small></th>                    
-		                    <th><small>Cargo</small></th>
-		                    <th><small>Porcentaje</small></th>
-		                    <th><small>Fecha Ingreso</small></th>		                    
-		                    <th class="bg-success text-white"><button id="botonAportes" style="border:none;" class="bg-success text-white small">Promedio Sueldos</button></th>
-		                    <td class="aportesDet bg-success text-white" style="display:none"><small>Mes Sep,</small></td>
-		                    <td class="aportesDet bg-success text-white" style="display:none"><small>Mes Oct.</small></td>
-		                    <td class="aportesDet bg-success text-white" style="display:none"><small>MEs Nov,</small></td>
-		                    <th><small>Meses Trabajados</small></th>
-		                    <th><small>Dias Trabajados</small></th>
-		                    <th class="bg-primary text-white"><small>Total Aguinaldo</small></th>                    
+	                    <th><small>#</small></th> 
+	                    <th><small>Area</small></th>                   
+	                    <th><small>CI</small></th>
+	                    <th><small>Ex.</small></th>
+	                    <th><small>Fecha Nac.</small></th>
+	                    <th><small>Paterno</small></th>
+	                    <th><small>Materno</small></th>
+	                    <th><small>Nombres</small></th>                    
+	                    <th><small>Fecha Ingreso</small></th>	
+	                    <th><small>Cargo</small></th>
+	                    <th class="bg-success text-white"><small>Septiembre</small></th>
+	                    <th class="bg-success text-white"><small>Octubre</small></th>
+	                    <th class="bg-success text-white"><small>Noviembre</small></th>
+	                    <th class="bg-success text-white"><small>Sumatoria</small></th>
+	                    <th class="bg-success text-white"><small>Promedio Tot Gan</small></th>
+	                    <th><small>Meses Trabajados</small></th>
+	                    <th class="bg-primary text-white"><small>Total ganado</small></th>                    
 		                </tr>                                  
 	                </thead>
 	                <tbody>
 						<?php 
 						$index=1;
 						$sum_total_sueldo1=0;
-	                    $sum_total_sueldo2=0;
-	                    $sum_total_sueldo3=0;
-	                    $sum_total_promedio_tp=0;
-	                    $sum_total_aguinaldo_tp=0;
+            $sum_total_sueldo2=0;
+            $sum_total_sueldo3=0;
+            $sum_total_promedio_tp=0;
+            $sum_total_aguinaldo_tp=0;
+            $sum_ssumatoria_ganado=0;
 
 						while ($row = $stmtArea->fetch(PDO::FETCH_BOUND)) 
 						{
-							$sql = "SELECT ppm.cod_personal,ppm.sueldo_1,ppm.sueldo_2,ppm.sueldo_3,ppm.meses_trabajados,ppm.dias_trabajados,pad.porcentaje, ppm.total_aguinaldo, p.primer_nombre as personal, p.paterno,p.materno, p.identificacion as doc_id, (select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as lug_emision,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo
-							from planillas_aguinaldos_detalle ppm join personal_area_distribucion pad on ppm.cod_personal=pad.cod_personal join personal p on ppm.cod_personal=p.codigo
+							$sql = "SELECT ppm.cod_personal,ppm.sueldo_1,ppm.sueldo_2,ppm.sueldo_3,ppm.meses_trabajados,ppm.dias_trabajados,pad.porcentaje, ppm.total_aguinaldo, p.primer_nombre as personal, p.paterno,p.materno, p.identificacion as doc_id, (select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as lug_emision,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,ppm.dias_360,p.fecha_nacimiento,ppm.sumatoria_ganado,ppm.promedio_ganado
+							from planillas_aguinaldos_detalle ppm join personal_area_distribucion pad on ppm.cod_personal=pad.cod_personal and pad.cod_estadoreferencial=1 join personal p on ppm.cod_personal=p.codigo
 							where cod_planilla=$cod_planilla and pad.cod_uo in ($cod_uo) and pad.cod_area=$cod_area_x order by p.turno,p.paterno";
 								// echo $sql;
 							$stmtPersonal 	= $dbh->prepare($sql);
@@ -113,58 +114,50 @@
 							$stmtPersonal->bindColumn('lug_emision', $lug_emision);
 							$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);
 							$stmtPersonal->bindColumn('cargo', $cargo);
+							$stmtPersonal->bindColumn('dias_360', $dias_360);
+							$stmtPersonal->bindColumn('fecha_nacimiento', $fecha_nacimiento);
+							$stmtPersonal->bindColumn('sumatoria_ganado', $sumatoria_ganado);
+							$stmtPersonal->bindColumn('promedio_ganado', $promedio_ganado);
 							while ($row = $stmtPersonal->fetch()) 
 							{  
-		                          //dividiendo montos a su porcentaje respectivo
-		                          $sueldo_1_tp=$sueldo_1*$porcentaje/100;
-		                          $sueldo_2_tp=$sueldo_2*$porcentaje/100;
-		                          $sueldo_3_tp=$sueldo_3*$porcentaje/100;
-		                          $promedio_sueldos=($sueldo_1_tp+$sueldo_2_tp+$sueldo_3_tp)/3;
-
-		                          $dias_sueldo=$promedio_sueldos/360*$dias_trabajados;
-															$meses_sueldo=$promedio_sueldos/12*$meses_trabajados;
-
-		                          $total_aguinaldo_tp=$total_aguinaldo*$porcentaje/100;
-
-		                          $sum_total_sueldo1+=$sueldo_1_tp;
-		                          $sum_total_sueldo2+=$sueldo_2_tp;
-		                          $sum_total_sueldo3+=$sueldo_3_tp;
-		                          $sum_total_promedio_tp+=$promedio_sueldos;
-
-		                          $sum_total_aguinaldo_tp+=$total_aguinaldo_tp;
-
-		                        ?>
-			                	<tr>                                                        
-				                    <td class="text-center small"><?=$index;?></td>
-				                    <td class="text-left small"><?=$nombre_area_x;?></td>                    
-				                    <td class="text-left small"><?=$paterno;?></td>
-				                    <td class="text-left small"><?=$materno;?></td>
-				                    <td class="text-left small"><?=$personal;?></td>
-				                    <td class="text-center small"><?=$doc_id;?>-<?=$lug_emision?></td>
-				                    <td class="text-left small"><?=$cargo?></td>
-				                    <?php if($porcentaje!=100){ ?>
-				                    <td class="text-center small"><span class="badge badge-danger"><?=$porcentaje;?></span></td>
-				                    <?php }else{?>
-				                    <td class="text-center small"><?=$porcentaje;?></td>
-				                    <?php }
-				                    ?>
-
-				                    
-				                    <td class="small"><?=strftime('%d/%m/%Y',strtotime($ing_planilla))?></td>
-				                    
-				                    <td class="small"><?=formatNumberDec($promedio_sueldos);?></td> 
-				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($sueldo_1_tp);?></td>
-				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($sueldo_2_tp);?></td>
-				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($sueldo_3_tp);?></td>
-				                    <td  class="text-right small"><?=formatNumberDec($meses_sueldo)?>   (<?=$meses_trabajados?>)</td>
-				                    <td  class="text-right small"><?=formatNumberDec($dias_sueldo)?>   (<?=$dias_trabajados?>)</td>
-				                    
-				                    <td class="bg-primary text-white small"><?=formatNumberDec($total_aguinaldo_tp);?></td>
-				                </tr> 
-			                  	<?php 
-			                    $index+=1;
-		                	}
-
+                //dividiendo montos a su porcentaje respectivo
+                $sueldo_1_tp=$sueldo_1*$porcentaje/100;
+                $sueldo_2_tp=$sueldo_2*$porcentaje/100;
+                $sueldo_3_tp=$sueldo_3*$porcentaje/100;
+                //$sumatoria_ganado=$sueldo_1_tp+$sueldo_2_tp+$sueldo_3_tp;
+                //$promedio_ganado=$sumatoria_ganado/3;
+        //         $dias_sueldo=$promedio_ganado/360*$dias_trabajados;
+								// $meses_sueldo=$promedio_ganado/12*$meses_trabajados;
+                $total_aguinaldo_tp=$total_aguinaldo*$porcentaje/100;
+                $sum_total_sueldo1+=$sueldo_1_tp;
+                $sum_total_sueldo2+=$sueldo_2_tp;
+                $sum_total_sueldo3+=$sueldo_3_tp;
+                $sum_ssumatoria_ganado+=$sumatoria_ganado;
+                $sum_total_promedio_tp+=$promedio_ganado;
+                $sum_total_aguinaldo_tp+=$total_aguinaldo_tp;
+                ?>
+              	<tr>                                                        
+                  <td class="text-center small"><?=$index;?></td>
+                  <td class="text-left small"><?=$nombre_area_x;?></td>                    
+                  <td class="text-center small"><?=$doc_id;?></td>
+                  <td class="text-center small"><?=$lug_emision?></td>
+                  <td class="small"><?=strftime('%d/%m/%Y',strtotime($fecha_nacimiento))?></td>
+                  <td class="text-left small"><?=$paterno;?></td>
+                  <td class="text-left small"><?=$materno;?></td>
+                  <td class="text-left small"><?=$personal;?></td>
+                  <td class="small"><?=strftime('%d/%m/%Y',strtotime($ing_planilla))?></td>
+                  <td class="text-left small"><?=$cargo?></td>
+                  <td class="small" ><?=formatNumberDec($sueldo_1_tp);?></td>
+                  <td class="small" ><?=formatNumberDec($sueldo_2_tp);?></td>
+                  <td class="small" ><?=formatNumberDec($sueldo_3_tp);?></td>
+									<td class="small"><?=formatNumberDec($sumatoria_ganado);?></td> 
+                  <td class="small"><?=formatNumberDec($promedio_ganado);?></td> 
+                  <td  class="text-right small"><?=formatNumberDec($dias_360)?></td>
+                  <td class="bg-primary text-white small"><?=formatNumberDec($total_aguinaldo_tp);?></td>
+                </tr> 
+              	<?php 
+                $index+=1;
+          		}
 						}
 
 						$dbh=null;
@@ -176,17 +169,13 @@
 	                </tbody>
 	                <tfoot>
 	                    <tr class="bg-dark text-white">                  
-	                    <th colspan="9" class="text-center small">Total</th>
-
+	                    <th colspan="10" class="text-center small">Total</th>
+	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_sueldo1);?></th>
+	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_sueldo2);?></th>
+	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_sueldo3);?></th>
+	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_ssumatoria_ganado);?></th>
 	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_promedio_tp);?></th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($sum_total_sueldo1);?></th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($sum_total_sueldo2);?></th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($sum_total_sueldo3);?></th>
-	                   
 	                    <th class="text-center small">-</th>
-	                    <th class="text-center small">-</th>
-	                    
-	                                                          
 	                    <th class="bg-primary text-white small"><?=formatNumberDec($sum_total_aguinaldo_tp);?></th>
 	                  </tr>
 	                </tfoot>               
@@ -199,9 +188,3 @@
   </div>
 </div>
 
-<script type="text/javascript">
-  
-  $("#botonAportes").on("click", function(){
-    $(".aportesDet").toggle();
-  });
-</script>

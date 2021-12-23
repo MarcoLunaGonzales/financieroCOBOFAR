@@ -118,7 +118,30 @@ $fechaHasta=$y."-12-31";
                 </div>
                 </div>
               </div>
+
+              <div class="col-sm-6">
+                            <div class="row">
+                           <label class="col-sm-4 col-form-label">Incluir areas</label>
+                                 <div class="col-sm-8">
+                              <div class="form-group">
+                                      <div class="form-check">
+                                          <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="costos_areas" name="costos_areas[]" value="1">
+                                            <span class="form-check-sign">
+                                              <span class="check"></span>
+                                            </span>
+                                          </label>
+                                        </div>
+                                      </div>  
+                                   </div>     
+                              </div>  
+                           </div>
+                        
+
+
+
             </div>
+
 
 
 

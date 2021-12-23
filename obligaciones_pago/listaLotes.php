@@ -51,8 +51,17 @@ for ($i=0; $i <count($array_personal_autorizado) ; $i++) {
                   <div class="card-icon">
                     <i class="material-icons">attach_money</i>
                   </div>
-                  <h4 class="card-title"><b>Pagos Proveedores</b></h4>
+                  <h4 class="card-title"><b>Pago Proveedores</b></h4>
                 </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group" align="right">
+                        <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador_solicitudes">
+                          <i class="material-icons" title="Buscador Avanzado">search</i>
+                        </button>                               
+                      </div>
+                    </div>
+                  </div>
                 <div class="card-body">
                     <table class="table table-condesed small" id="tablePaginator">
                       <thead>
@@ -176,3 +185,43 @@ for ($i=0; $i <count($array_personal_autorizado) ; $i++) {
     </div>
 
 
+<div class="modal fade" id="modalBuscador_solicitudes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Buscador Pago Proveedores</h4>
+      </div>
+      <div class="modal-body ">
+        <div class="row">
+          
+          <label class="col-sm-2 col-form-label text-center">Nro. Pago</label>
+          <label class="col-sm-6 col-form-label text-center">Fechas</label>
+          <label class="col-sm-4 col-form-label text-center">Glosa</label> 
+          
+        </div> 
+        <div class="row">
+          <div class="form-group col-sm-2">
+            <input class="form-control input-sm" type="text" name="nro_solicitud_b" id="nro_solicitud_b" placeholder="1,2,..." >
+          </div>  
+          <div class="form-group col-sm-3">
+            <input class="form-control input-sm" type="date" name="fechaBusquedaInicio" id="fechaBusquedaInicio">
+          </div>
+          <div class="form-group col-sm-3">
+            <input class="form-control input-sm" type="date" name="fechaBusquedaFin" id="fechaBusquedaFin">
+          </div>
+          <div class="form-group col-sm-4">
+            <input class="form-control input-sm" type="text" name="razon_social_b" id="razon_social_b"  >
+          </div>      
+        </div> 
+        
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="botonBuscarComprobante" name="botonBuscarComprobante" onclick="botonBuscarSolicitudes_gral()">Buscar</button>
+        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
+      </div>
+    </div>
+  </div>
+</div>

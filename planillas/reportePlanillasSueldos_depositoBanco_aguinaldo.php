@@ -6,7 +6,7 @@ require_once '../functionsGeneral.php';
 
 	$cod_planilla = $_GET["codigo_planilla"];//
 	$cod_gestion = $_GET["cod_gestion"];//
-	$cod_mes = $_GET["cod_mes"];//
+	// $cod_mes = $_GET["cod_mes"];//
 	$tipo = $_GET["tipo"];//
 	
 	if($tipo==1){
@@ -19,7 +19,7 @@ require_once '../functionsGeneral.php';
 		$string_titulo="PERSONAL SIN CUENTA EN EL BANCO";
 	}
 
-	$mes=strtoupper(nombreMes($cod_mes));
+	// $mes=strtoupper(nombreMes($cod_mes));
 	$gestion=nameGestion($cod_gestion);
 
 	// $sqlArea="SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
@@ -85,7 +85,7 @@ $html.='<header class="header">'.
     '<table width="100%">
       <tr>
       <td width="28%"><small><p>CORPORACION BOLIVIANA DE FARMACIAS<br>Av.Landaeta Nro 836<br>La Paz - Bolivia<br>NIT:1022039027</p></small></td>
-      <td><center><span style="font-size: 13px"><b>'.$string_titulo.'</b></span><BR>Correspondientes al mes de '.$mes.' de '.$gestion.'<br><b>EXPRESADA EN BOLIVIANOS</b></center></td>
+      <td><center><span style="font-size: 13px"><b>'.$string_titulo.'</b></span><BR>Correspondientes a '.$gestion.'<br><b>EXPRESADA EN BOLIVIANOS</b></center></td>
       <td width="25%"><center></center></td>
       </tr>
     </table>'.
@@ -124,10 +124,10 @@ $html.='<table class="table">
 				// $dias_trabajados_por_defecto = obtenerValorConfiguracionPlanillas(22); //por defecto
 			$dias_trabajados_por_defecto=30;
 			
-				$sql = "SELECT ppm.cod_personalcargo,ppm.liquido_pagable,pad.primer_nombre,pad.paterno,pad.materno,
+				$sql = "SELECT ppm.cod_personal,ppm.total_aguinaldo,pad.primer_nombre,pad.paterno,pad.materno,
 				(select c.nombre from cargos c where c.codigo=pad.cod_cargo)as cargo,pad.cuenta_bancaria,(select a.nombre from areas a where a.codigo=pad.cod_area) as areas
-					from planillas_personal_mes ppm,personal pad
-					where ppm.cod_personalcargo=pad.codigo and cod_planilla=$cod_planilla and pad.cod_estadoreferencial=1 and pad.cod_estadopersonal=1  $sql_add order by pad.cod_unidadorganizacional,areas,pad.paterno";
+					from planillas_aguinaldos_detalle ppm,personal pad
+					where ppm.cod_personal=pad.codigo and cod_planilla=$cod_planilla and pad.cod_estadoreferencial=1 and pad.cod_estadopersonal=1  $sql_add order by pad.cod_unidadorganizacional,areas,pad.paterno";
 					// echo $sql."<br><br>";
 				$stmtPersonal = $dbh->prepare($sql);
 				$stmtPersonal->execute();	
@@ -135,13 +135,13 @@ $html.='<table class="table">
 				$stmtPersonal->bindColumn('primer_nombre', $nombrePersonal);
 				$stmtPersonal->bindColumn('paterno', $paterno);
 				$stmtPersonal->bindColumn('materno', $materno);
-				$stmtPersonal->bindColumn('liquido_pagable', $liquido_pagable);
+				$stmtPersonal->bindColumn('total_aguinaldo', $total_aguinaldo);
 				$stmtPersonal->bindColumn('cuenta_bancaria', $cuenta_bancaria);
 				$stmtPersonal->bindColumn('areas', $areas);
 				$stmtPersonal->bindColumn('cargo', $cargo);
 				while ($row = $stmtPersonal->fetch()) 
-				{  
-		            $liquido_pagable_tp=$liquido_pagable;
+				{
+		            $liquido_pagable_tp=$total_aguinaldo;
 		            $sum_total_l_pagable+=$liquido_pagable_tp;
 		        	$html.='<tr>
 		              <td class="text-center small"><small>'.$index.'</small></td>

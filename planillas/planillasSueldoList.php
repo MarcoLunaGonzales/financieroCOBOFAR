@@ -221,7 +221,8 @@ $dbh = new Conexion();
                             <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_OBT.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>PLANILLA OVT</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>AFP FUTURO</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>AFP PREVISION</small></a></li>
-                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>PLANILLA CPS</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=2" target="_blank"><small>PLANILLA CPS</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CNS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=1" target="_blank"><small>PLANILLA CNS</small></a></li>
                           </ul>
                         </div>
 
@@ -259,8 +260,8 @@ $dbh = new Conexion();
                             
                             <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>AFP FUTURO</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>AFP PREVISION</small></a></li>
-
-                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><small>PLANILLA CPS</small></a></li>                     
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=2" target="_blank"><small>PLANILLA CPS</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CNS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=1" target="_blank"><small>PLANILLA CNS</small></a></li>
                           </ul>
                         </div>
                       </div>                                                                 

@@ -100,22 +100,12 @@ $dbh = new Conexion();
                       
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCerrar" onclick="agregaformCP('<?=$datosX;?>')">
                           <i class="material-icons" title="Cerrar Planilla Aguinaldos">assignment_returned</i>
-                        </button>                        
-                        <!-- <a href='<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>' target="_blank" rel="tooltip" class="btn btn-danger">            
-                          <i class="material-icons" title="Ver Planilla Aguinaldos PDF">remove_red_eye</i>
-                        </a> -->                      
-                        
+                        </button>
                         <?php }?>
-                        <?php if($cod_estadoplanilla==3){    ?>  
-                                             
-                        <!-- <a href='<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>' target="_blank" rel="tooltip" class="btn btn-danger">            
-                          <i class="material-icons" title="Ver Planilla Aguinaldos PDF">remove_red_eye</i>                        
-                        </a> -->
-                        <?php }?>                                                                
                       </td>
                       <td class="td-actions text-right">
                         <?php                      
-                        if($cod_estadoplanilla==2){    ?>                                                                                                                                 
+                        if($cod_estadoplanilla==2 || $cod_estadoplanilla==3){    ?>                                                                                                                                 
                         <div class="dropdown">
                           <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
                             <i class="material-icons" title="Ver Planilla Aguinaldos">remove_red_eye</i>                        
@@ -134,26 +124,21 @@ $dbh = new Conexion();
                           </ul>
                         </div>
 
-                        <?php }?>
-                        <?php if($cod_estadoplanilla==3){    ?>      
                         <div class="dropdown">
-                          <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                          <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
                             <i class="material-icons" title="Ver Planilla Aguinaldos">remove_red_eye</i>                        
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
-                            <?php
-                            while ($row = $stmtAdmninUO->fetch(PDO::FETCH_BOUND)) {
-                              if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaAguinaldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a></li>
-                                <?php 
-                              }
-                            }
-                          ?>                          
-                        </ul>
-                        </div>                                                                 
-                        <?php }?>                          
+                            <li role="presentation" class="dropdown-header"><small>Reportes</small></li>
+                            <li role="presentation"><a role="item" href='planillas/planillasAguinaldosPDF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>' target="_blank"><small>Planilla General</small></a></li>
+                            <li role="presentation"><a role="item" href='boletas/boletas_aguinaldos_from.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>' target="_blank"><small>Boletas</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_depositoBanco_aguinaldo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1" target="_blank"><small>CON CUENTA</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_depositoBanco_aguinaldo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=2" target="_blank"><small>SIN CUENTA</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/planillasAguinaldos_OVT.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>" target="_blank"><small>Planilla OVT</small></a></li>
+                          </ul>
+                        </div>
+                        <?php }?>
                       </td>
             
                     </tr>

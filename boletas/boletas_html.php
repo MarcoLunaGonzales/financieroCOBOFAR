@@ -20,8 +20,13 @@ $cod_gestion = $codigo_array[2];
 
 if($cod_personal==-1000){
 	$cod_uo = $_GET["cod_uo"];
-	// $sql_add=" and p.cod_unidadorganizacional in ($cod_uo) ";
-	$sql_add="  ";
+	if($cod_uo==-1000){
+		$sql_add="  ";
+	}else{
+		$sql_add=" and p.cod_unidadorganizacional in ($cod_uo) ";	
+	}
+
+
 }else{
 	$sql_add=" and p.codigo=$cod_personal ";
 }
@@ -39,7 +44,7 @@ set_time_limit(0);
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
     join areas a on p.cod_area=a.codigo
 
-    where pm.cod_planilla=$cod_planilla $sql_add
+    where pm.cod_planilla=$cod_planilla $sql_add 
     order by p.cod_unidadorganizacional,a.nombre,p.paterno";
     //echo $sql;
     $stmt = $dbh->prepare($sql);

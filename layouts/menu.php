@@ -706,12 +706,20 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Libretas Bancarias</span>
                   </a>
                 </li>
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="reportes_ventas/index.php" target="_blank">
                     <span class="sidebar-mini"> RV </span>
                     <span class="sidebar-normal"> Reportes Ventas</span>
                   </a>
+                </li> -->
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="http://10.10.1.16/cobofar_almacen_central/rpt_op_inv_pedidos.php" target="_blank">
+                    <span class="sidebar-mini"> RV </span>
+                    <span class="sidebar-normal"> Reportes Pedidos ALM</span>
+                  </a>
                 </li>
+
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportesFlujoEfectivo" target="_blank">
                     <span class="sidebar-mini"> FE </span>

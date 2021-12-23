@@ -109,12 +109,12 @@ require_once '../layouts/bodylogin2.php';
       $RCIVA=0;
 
       $sql = "SELECT (select tip.abreviatura from tipos_identificacion_personal tip where tip.codigo=pad.cod_tipo_identificacion) as tipo_identificacion,pad.identificacion,( select pd.abreviatura from personal_departamentos pd where pd.codigo=pad.cod_lugar_emision)as lugar_emision,pad.fecha_nacimiento,pad.paterno,pad.materno,pad.primer_nombre,(select n.nombre from personal_pais n where n.codigo=pad.cod_nacionalidad)as nacionalidad,(select g.abreviatura from tipos_genero g where g.codigo=pad.cod_genero) as genero,pad.jubilado,
-      (select c.nombre from cargos c where c.codigo=pad.cod_cargo)as cargo,(select pd.tipo_persona_discapacitado from personal_discapacitado pd where pd.codigo=pad.codigo)as tipo_personal_discapacidad,pad.ing_planilla,pad.cod_cajasalud,pad.cod_tipoafp,pad.nua_cua_asignado,ppm.dias_trabajados,ppm.haber_basico_pactado,ppm.bono_antiguedad,ppm.bonos_otros,ppm.afp_1,ppm.afp_2,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,ppm.descuentos_otros,pad.cod_unidadorganizacional,pp.seguro_de_salud
+      (select c.nombre from cargos c where c.codigo=pad.cod_cargo)as cargo,(select pd.tipo_persona_discapacitado from personal_discapacitado pd where pd.codigo=pad.codigo)as tipo_personal_discapacidad,pad.ing_planilla,pad.cod_cajasalud,pad.cod_tipoafp,pad.nua_cua_asignado,ppm.dias_trabajados,ppm.haber_basico,ppm.bono_antiguedad,ppm.bonos_otros,ppm.afp_1,ppm.afp_2,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,ppm.descuentos_otros,pad.cod_unidadorganizacional,pp.seguro_de_salud,pp.anticipo
       from personal pad
     join planillas_personal_mes ppm on ppm.cod_personalcargo=pad.codigo
       join planillas_personal_mes_patronal pp on pp.cod_planilla=ppm.cod_planilla and pp.cod_personal_cargo=ppm.cod_personalcargo
       join areas a on pad.cod_area=a.codigo
-      where  ppm.cod_planilla=$cod_planilla and pad.cod_estadoreferencial=1 and pad.cod_estadopersonal=1
+      where  ppm.cod_planilla=$cod_planilla 
       order by pad.cod_unidadorganizacional,a.nombre,pad.paterno";
           // echo $sql."<br><br>";
         $stmtPersonal = $dbh->prepare($sql);
@@ -138,7 +138,7 @@ require_once '../layouts/bodylogin2.php';
         $stmtPersonal->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
         $stmtPersonal->bindColumn('cargo', $cargo);
         $stmtPersonal->bindColumn('dias_trabajados', $dias_trabajados);
-        $stmtPersonal->bindColumn('haber_basico_pactado', $haber_basico_pactado);
+        $stmtPersonal->bindColumn('haber_basico', $haber_basico);
         $stmtPersonal->bindColumn('bono_antiguedad', $bono_antiguedad);
         $stmtPersonal->bindColumn('bonos_otros', $bonos_otros);
         $stmtPersonal->bindColumn('afp_1', $afp_1);
@@ -148,8 +148,13 @@ require_once '../layouts/bodylogin2.php';
         $stmtPersonal->bindColumn('a_solidario_35000', $a_solidario_35000);
         $stmtPersonal->bindColumn('descuentos_otros', $descuentos_otros);
         $stmtPersonal->bindColumn('seguro_de_salud', $seguro_de_salud);
+        $stmtPersonal->bindColumn('anticipo', $anticipo);
         while ($row = $stmtPersonal->fetch()) 
-        {  
+        {
+          $descuentos_otros=$descuentos_otros+$anticipo; 
+
+
+
           switch ($tipo_personal_discapacidad) {
             case 1:
               $Persona_discapacidad=1;
@@ -205,7 +210,7 @@ require_once '../layouts/bodylogin2.php';
                     <td><?=$Tipo_contrato?></td>
                     <td><?=$dias_trabajados?></td>
                     <td><?=$Horas_pagadas?></td>
-                    <td><?=$haber_basico_pactado?></td>
+                    <td><?=$haber_basico?></td>
                     <td><?=$bono_antiguedad?></td>
                     <td><?=$Horas_extra?></td>
                     <td><?=$Monto_extra?></td>

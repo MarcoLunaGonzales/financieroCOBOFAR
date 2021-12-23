@@ -9,7 +9,13 @@ require_once '../layouts/bodylogin2.php';
   $cod_planilla = $_GET["codigo_planilla"];//
   $cod_gestion = $_GET["cod_gestion"];//
   $cod_mes = $_GET["cod_mes"];//
+  $tipo = $_GET["tipo"];//
 
+  if($tipo==1){//CNS
+    $sqlTipo=" and p.cod_cajasalud=1";
+  }elseif($tipo==2){//CPS
+    $sqlTipo=" and p.cod_cajasalud=2";
+  }
 
   $mes=strtoupper(nombreMes($cod_mes));
   $gestion=nameGestion($cod_gestion);
@@ -93,7 +99,7 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
       join planillas_personal_mes ppm on ppm.cod_personalcargo=p.codigo
       join planillas_personal_mes_patronal pp on pp.cod_planilla=ppm.cod_planilla and pp.cod_personal_cargo=ppm.cod_personalcargo
       join areas a on p.cod_area=a.codigo
-      where  ppm.cod_planilla=$cod_planilla and p.cod_estadoreferencial=1 and p.cod_estadopersonal=1
+      where  ppm.cod_planilla=$cod_planilla  $sqlTipo
       order by p.cod_unidadorganizacional,a.nombre,p.paterno";
 
            // echo $sql."<br><br>";
@@ -123,9 +129,6 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
         $stmtPersonal->bindColumn('riesgo_profesional', $riesgo_profesional);
 
         $stmtPersonal->bindColumn('rc_iva', $rc_iva);
-
-
-
         $stmtPersonal->bindColumn('bventas', $bventas);
         $stmtPersonal->bindColumn('bfallo', $bfallo);
         $stmtPersonal->bindColumn('bnoches', $bnoches);

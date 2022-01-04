@@ -1137,6 +1137,16 @@
 		if ($_GET['opcion']=='generarPlanillaAguinaldosPrevia') {
 			require_once('planillas/generarPlanillaAguinaldos.php'); //ok
 		}
+
+		//planillas indemnizaciones
+		if ($_GET['opcion']=='planillasIndemnizacionesPersonal') {
+			require_once('planillas/planillasIndemnizacionesList.php'); //ok
+		}
+		if ($_GET['opcion']=='planillasIndemnizacionesPersonal_save') {
+			require_once('planillas/generarPlanillaIndemnizaciones.php'); //ok
+		}
+
+		
 		//finiquitos
 		if ($_GET['opcion']=='finiquitos_list') {
 			require_once('planillas/finiquitosList.php'); //ok
@@ -1945,6 +1955,11 @@
 		}
 		if ($_GET['opcion']=='auditoria_sucursales_from') {			
 			require_once('auditorias_traspasos/auditoria_sucursales_from.php');
+		}
+
+		//*****pago proveedores
+		if ($_GET['opcion']=='reportePagoProveedores') {
+			require_once('reportes_solicitud_recursos/reportePagoProveedores_from.php');
 		}
 	}else{
 		//require("paginaprincipal.php");

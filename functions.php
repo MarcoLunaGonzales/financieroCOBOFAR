@@ -3853,7 +3853,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     join areas a on p.cod_area=a.codigo
     join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
 
-    where pm.cod_planilla=$codigo  and p.cod_unidadorganizacional=1 
+    where pm.cod_planilla=$codigo   
     order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
@@ -5570,7 +5570,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
    function obtenerCodigoCuentaAuxiliarProveedorCliente($tipo,$codigo){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo");
+     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_estadoreferencial=1");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5586,7 +5586,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     // if($codigo==36272){
     //   $sqlReferencia="and c.referencia1=".$codigo;
     // }
-     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta $sqlReferencia");
+     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta and c.cod_estadoreferencial=1 $sqlReferencia");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -12477,4 +12477,23 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
       mysqli_close($dbh);
       return($valor);
   }
+
+//quiniquenios pagados
+function obtenerQuinquenioPagadoPersonal($cod_personal){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT sum(anios_pagados) as total_pagado from quinquenios_personal where cod_personal=$cod_personal and cod_estadoreferencial=1");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['total_pagado'];
+   }
+   if($valor==" " || $valor=="" || $valor==null){
+      $valor=0;
+   }
+   $dbh=null;
+   $stmt=null;
+   return($valor);
+}
+
+ 
 ?>

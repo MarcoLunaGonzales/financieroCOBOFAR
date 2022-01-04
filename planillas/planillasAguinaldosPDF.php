@@ -1,5 +1,5 @@
 <?php
-require_once '../conexion3.php';
+require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 session_start();
@@ -9,7 +9,7 @@ set_time_limit(0);
 $cod_gestion=$_GET['cod_gestion'];
 $codPlanilla=$_GET['codigo_planilla'];
 //nombre de unidad
-$dbh = new Conexion3();
+$dbh = new Conexion();
 // $mes=strtoupper(nombreMes($cod_mes));
 $gestion=nameGestion($cod_gestion);
   $stmtArea = $dbh->prepare("SELECT cod_area,cod_uo,(SELECT a.nombre from areas a where a.codigo=cod_area) as nombre_area

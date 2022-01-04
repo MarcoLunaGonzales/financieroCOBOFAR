@@ -1,14 +1,14 @@
 <?php
 session_start();
-require_once '../conexion.php';
+require_once '../conexion3.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 
 setlocale(LC_TIME, "Spanish");
 
-$dbh = new Conexion();
-set_time_limit(300);
+$dbh = new Conexion3();
+set_time_limit(0);
 $fechaActual=date("Y-m-d");
 $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha_desde'];
@@ -25,18 +25,26 @@ $moneda=1; //$_POST["moneda"];
 $unidades=$_POST['unidad'];
 $entidades=$_POST['entidad'];
 // $StringEntidad=implode(",", $entidad);
-
 $stringEntidades="";
 foreach ($entidades as $valor ) {    
     $stringEntidades.=nameEntidad($valor).",";
-}    
+}
+
+$area_costo=$_POST['area_costo'];
+if(isset($_POST['costos_areas'])){
+  $centro_costo_sw=1;
+}else{
+  $centro_costo_sw=0;
+}
+
+
 
 
 $tituloOficinas="";
 for ($i=0; $i < count($unidades); $i++) { 
   $tituloOficinas.=abrevUnidad_solo($unidades[$i]).",";
 }
-$areas=array("prueba","prueba");//$_POST['area_costo'];
+// $areas=array("prueba","prueba");//$_POST['area_costo'];
 $html = '';
 $html.='<html>'.
          '<head>'.
@@ -122,8 +130,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             while ($row = $stmt4->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
               //listar los montos
-              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateadaHasta,1,$unidades,$areas,$codigo_4,$gestion,$fechaFormateada);
+              //$detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateadaHasta,1,$unidades,$areas,$codigo_4,$gestion,$fechaFormateada);
+              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle_areas($fechaFormateadaHasta,1,$unidades,$area_costo,$codigo_4,$gestion,$fechaFormateada);
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
+                   $cod_cuentaX=$rowComp['cod_cuenta'];
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);
                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
@@ -172,7 +182,56 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                      $html4.='</tr>';      
                     }
                             
-               $index++;          
+               $index++;  
+
+               //para el  nivel 6 centro costos
+                if($centro_costo_sw==1 && $montoX<>0){
+                  $arrayUnidades=implode(",",$unidades);
+                  $arrayAreas=implode(",",$area_costo);
+                  $sql="SELECT a.nombre as nombre_area,d.cod_area,d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber
+                    from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante join areas a on a.codigo=d.cod_area join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional join plan_cuentas p on p.codigo=d.cod_cuenta 
+                    where c.fecha between '$fecha 00:00:00' and '$fechaHasta 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and d.cod_area in ($arrayAreas) and c.cod_estadocomprobante<>2 
+                    and  p.cod_padre=$codigo_4 and p.codigo=$cod_cuentaX
+                    group by (d.cod_area) 
+                    order by a.nombre";
+                             // echo $sql."<br>";
+                  $stmt6 = $dbh->prepare($sql);
+                  $stmt6->execute();                      
+                  $stmt6->bindColumn('cod_area', $cod_area_6);
+                  $stmt6->bindColumn('total_debe', $total_debe_6);
+                  $stmt6->bindColumn('total_haber', $total_haber_6);
+                  $stmt6->bindColumn('nombre_area', $nombre_6);
+                  $index_6=1;
+                  while ($row = $stmt6->fetch(PDO::FETCH_BOUND)) {
+                    $nombre_6=formateaPlanCuenta($nombre_6,6);
+                    $montoX_aux=(float)($total_debe_6-$total_haber_6);
+                    if($tipoCuentaIngresoGasto==4){
+                     $montoX_aux=$montoX_aux*-1;
+                   }
+                    // if($codigo<>1000){
+                    //   $montoX_aux=$montoX_aux*(-1);
+                    // }
+                    if(number_format($montoX_aux, 2, '.', '')>0){
+                      $html4.='<tr  style="color:#9b59b6;font-size:9px">'.
+                           '<td class="td-border-none text-left"></td>'.
+                           '<td class="td-border-none text-left">'.$nombre_6.'</td>'.
+                           '<td class="td-border-none text-right">'.number_format($montoX_aux, 2, '.', ',').'</td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>';   
+                      $html4.='</tr>';      
+                    }elseif(number_format($montoX_aux, 2, '.', '')<0){
+                      $html4.='<tr  style="color:#9b59b6;font-size:9px">'.
+                           '<td class="td-border-none text-left" ></td>'.
+                           '<td class="td-border-none text-left">'.$nombre_6.'</td>'.
+                           '<td class="td-border-none text-right">('.number_format(abs($montoX_aux), 2, '.', ',').')</td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>';   
+                      $html4.='</tr>';      
+                    }
+                  }
+                 }//centro costos
                }/* Fin del primer while*/
               if($sumaNivel4>0){
                 $sumaNivel3+=$sumaNivel4;  
@@ -334,7 +393,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
  $html.=    '</tbody></table>';
      
-      
+   
       $totalResultado=$tBolPasivo-$tBolActivo;
       if($totalResultado>=0){
         $html.='<br><table class="table">'.
@@ -358,6 +417,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
 $html.='</body>'.
       '</html>';
-                    
+
+//echo $html;
 descargarPDF("COBOFAR - Estado de Resultados (".$tituloOficinas.")",$html);
 ?>

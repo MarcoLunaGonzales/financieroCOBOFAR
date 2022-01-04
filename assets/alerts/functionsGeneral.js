@@ -5732,6 +5732,65 @@ function CerrarPlanillaAguinaldosNA(cod_planilla){
   });
 }
 
+//funciones planilla indemnizaciones
+function ProcesarPlanillaIndemnizaciones(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=2",
+    url:"planillas/savePlanillaIndemnizaciones.php",
+    beforeSend:function(objeto){ 
+      $('#cargaP').css({display:'block'});
+      $('#AceptarProceso').css({display:'none'});
+      $('#CancelarProceso').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        $('#cargaP').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasIndemnizacionesPersonal');
+      }else{
+        $('#cargaP').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasIndemnizacionesPersonal');
+      }
+    }
+  });
+}
+function ReprocesarPlanillaIndemnizaciones(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=1",
+    url:"planillas/savePlanillaIndemnizaciones.php",
+    beforeSend:function(objeto){ 
+      $('#cargaR').css({display:'block'});
+      $('#AceptarReProceso').css({display:'none'});
+      $('#CancelarReProceso').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        $('#cargaR').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasIndemnizacionesPersonal');
+      }else{
+        $('#cargaR').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasIndemnizacionesPersonal');
+      }
+    }
+  });
+}
+function CerrarPlanillaIndemnizaciones(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=3",
+    url:"planillas/savePlanillaIndemnizaciones.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasIndemnizacionesPersonal');
+      }
+    }
+  });
+}
+
 function activarInputMonto(fila){
   if(!($("#monto_mod"+fila).is("[readonly]"))){
     $("#monto_mod"+fila).attr("readonly",true);
@@ -19835,6 +19894,26 @@ function procesar_bonos_descuentos_planilla(nombre_mes,cod_mes,estado_planilla){
       }
     }  
   }
-  
-  
+}
+
+
+function botonBuscar_pagoproveedores(){
+  iniciarCargaAjax();
+  var nro_pagoproveedor=$("#nro_pagoproveedor").val();
+  var valor_fi=$("#fechaBusquedaInicio").val();
+  var valor_ff=$("#fechaBusquedaFin").val();
+  var razon_social_b=$("#razon_social_b").val();
+  var personal_busqueda=$("#personal_busqueda").val();
+  ajax=nuevoAjax();
+  ajax.open('GET', 'obligaciones_pago/ajax_buscardor_avanzado_pagoproveedores.php?nro_pagoproveedor='+nro_pagoproveedor+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&razon_social_b='+razon_social_b+'&personal_busqueda='+personal_busqueda,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_pago_proveedores");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscador_pagoproveedores").modal("hide");
+      detectarCargaAjax();
+      // cargar_dataTable_ajax_listas('tablePaginator50NoFinder'); 
+    }
+  }
+  ajax.send(null)
 }

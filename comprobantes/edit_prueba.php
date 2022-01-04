@@ -311,7 +311,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 		    <?php
 			 }
 		    
-			$stmt = $dbh->prepare("SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje");
+			$stmt = $dbh->prepare("SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje_detalle");
 			$stmt->execute();
 			$i=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

@@ -100,7 +100,7 @@ $fechaHasta=$y."-12-31";
                <label class="col-sm-4 col-form-label">Centro de Costos - Area</label>
                <div class="col-sm-8">
                 <div class="form-group">
-                        <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
+                        <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true"  data-show-subtext="true" data-live-search="true" required>
                        <?php
                        $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
                      $stmt->execute();

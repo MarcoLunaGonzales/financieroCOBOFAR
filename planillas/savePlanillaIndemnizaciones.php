@@ -7,7 +7,7 @@ require_once '../functionsGeneral.php';
 $result_x=0;
 $dbh = new Conexion();
 session_start();
-$globalUser=$_SESSION["globalUser"];
+// $globalUser=$_SESSION["globalUser"];
 //RECIBIMOS LAS VARIABLES
 $cod_planilla=$_POST['cod_planilla'];
 $cod_estadoplanilla=$_POST['sw'];
@@ -69,6 +69,17 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$liquido_mes1=$datos_planilla1[3];
 		$liquido_mes2=$datos_planilla2[3];
 		$liquido_mes3=$datos_planilla3[3];
+
+		if($liquido_mes1==null || $liquido_mes1==""){
+			$liquido_mes1=0;
+		}
+		if($liquido_mes2==null || $liquido_mes2==""){
+			$liquido_mes2=0;
+		}
+		if($liquido_mes3==null || $liquido_mes3==""){
+			$liquido_mes3=0;
+		}
+
 		$promedio_ganado=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 		$date1 = new DateTime($ing_planilla);
 		$date2 = new DateTime($fecha_planilla_indemnizacion);

@@ -289,7 +289,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
             // echo "tasa:".$tazaFac."<br>";
             // echo "nit:".$nit."<br>";
 
-		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tazaFac','$tipoFac')";
+		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra,tasas) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','0','$tipoFac','$tazaFac')";
 		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
 		      $flagSuccessDetalle2=$stmtDetalle2->execute();
          }

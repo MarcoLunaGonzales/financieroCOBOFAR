@@ -55,7 +55,6 @@ $fechaHasta=$y."-12-31";
                       </select>
                   </div>
               </div>  
-
             </div>
             <div class="row">
               <label class="col-sm-2 col-form-label">Gestion</label>
@@ -94,10 +93,9 @@ $fechaHasta=$y."-12-31";
             </div><!--fin campo gestion -->
 
             <div class="row">
-              
               <div class="col-sm-6">
                 <div class="row">
-               <label class="col-sm-4 col-form-label">Centro de Costos - Area</label>
+               <label class="col-sm-4 col-form-label">Area</label>
                <div class="col-sm-8">
                 <div class="form-group">
                         <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true"  data-show-subtext="true" data-live-search="true" required>
@@ -118,33 +116,24 @@ $fechaHasta=$y."-12-31";
                 </div>
                 </div>
               </div>
-
               <div class="col-sm-6">
-                            <div class="row">
-                           <label class="col-sm-4 col-form-label">Incluir areas</label>
-                                 <div class="col-sm-8">
-                              <div class="form-group">
-                                      <div class="form-check">
-                                          <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" id="costos_areas" name="costos_areas[]" value="1">
-                                            <span class="form-check-sign">
-                                              <span class="check"></span>
-                                            </span>
-                                          </label>
-                                        </div>
-                                      </div>  
-                                   </div>     
-                              </div>  
-                           </div>
-                        
-
-
-
+                <div class="row">
+               <label class="col-sm-4 col-form-label">Incluir areas</label>
+                     <div class="col-sm-8">
+                  <div class="form-group">
+                          <div class="form-check">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="costos_areas" name="costos_areas[]" value="1">
+                                <span class="form-check-sign">
+                                  <span class="check"></span>
+                                </span>
+                              </label>
+                            </div>
+                          </div>  
+                       </div>     
+                  </div>  
+               </div>
             </div>
-
-
-
-
             <div class="row">
                 <label class="col-sm-2 col-form-label">Del:</label>
                 <div class="col-sm-3">
@@ -163,6 +152,20 @@ $fechaHasta=$y."-12-31";
                 </div>
             </div><!--fin campo RUBRO -->
 
+            
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Formato</label>
+              <div class="col-sm-7">
+                <div class="form-group">
+                  <select name="formato" id="formato" class="selectpicker form-control form-control-sm " data-style="btn btn-rose"
+                      required>
+                      <option value="1">PDF</option>
+                      <option value="2">EXCEL</option>
+                  </select>
+                </div>
+              </div>
+            </div><!--fin campo gestion -->
+            
           </div>
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>

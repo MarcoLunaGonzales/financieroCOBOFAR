@@ -536,7 +536,7 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                   <label class="col-sm-2 col-form-label">Oficina</label>
                                   <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);" data-show-subtext="true" data-live-search="true">
+                                        <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  data-show-subtext="true" data-live-search="true">
                                             <option value=""></option>
                                             <?php 
                                             $queryUO = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";

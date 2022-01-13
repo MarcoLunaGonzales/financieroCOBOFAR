@@ -26,7 +26,7 @@ $nombre_gestion=nameGestion($gestion);
 $nombre_mes=nombreMes($cod_mes_x);
 
 
-$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra,f.desc_total
+$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra,f.desc_total,f.tasa_cero,f.tasas
  from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo  and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($unidad) and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion ORDER BY f.fecha asc, f.nit, f.nro_factura";
 
 //echo $sql;
@@ -47,6 +47,8 @@ $stmt2->bindColumn('ice', $ice);
 $stmt2->bindColumn('exento', $exento);          
 $stmt2->bindColumn('tipo_compra', $tipo_compra);  
 $stmt2->bindColumn('desc_total', $desc_total);  
+$stmt2->bindColumn('tasas', $tasas);
+$stmt2->bindColumn('tasa_cero', $tasa_cero);
 
 try {
 	$index=1;           
@@ -54,7 +56,7 @@ try {
 	
 		
 		$importe=$importe+$desc_total;
-		$importe_no_iva=$ice+$exento;
+		$importe_no_iva=$ice+$exento+$tasa_cero+$tasas;
 		$subtotal=$importe-$importe_no_iva;
 		$rebajas_sujetos_iva=$desc_total;
 		$importe_credito_fiscal=$subtotal-$rebajas_sujetos_iva;

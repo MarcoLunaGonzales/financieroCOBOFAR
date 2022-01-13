@@ -31,7 +31,7 @@ if (isset($_POST["check_rs_librocompras"])) {
 }
 
 // echo $areaString;
-$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra,cc.codigo as cod_comprobante,f.desc_total
+$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra,cc.codigo as cod_comprobante,f.desc_total,f.tasa_cero,f.tasas
   FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
   WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($stringUnidadesX) and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion $sql_rs ORDER BY f.fecha asc, f.nit, f.nro_factura";
 
@@ -54,6 +54,9 @@ $stmt2->bindColumn('ice', $ice);
 $stmt2->bindColumn('exento', $exento);          
 $stmt2->bindColumn('tipo_compra', $tipo_compra);
 $stmt2->bindColumn('desc_total', $desc_total);
+
+$stmt2->bindColumn('tasas', $tasas);
+$stmt2->bindColumn('tasa_cero', $tasa_cero);
 
 $cant_unidad=sizeof($unidad);
 
@@ -133,7 +136,7 @@ $razon_social=$result['razon_social'];
                               while ($row = $stmt2->fetch()) { 
                                 $index++;
                                 $importe=$importe+$desc_total;
-                                $descuento_no_iva=$ice+$exento;
+                                $descuento_no_iva=$ice+$exento+$tasa_cero+$tasas;
                                 $subTotal=$importe-$descuento_no_iva;
                                 $importe_sujeto_iva=$subTotal-$desc_total;
                                 $iva_obtenido=$importe_sujeto_iva*13/100;

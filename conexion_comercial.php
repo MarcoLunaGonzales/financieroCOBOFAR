@@ -1,7 +1,8 @@
 <?php
 set_time_limit(0);
 error_reporting(0);
-$dbh=mysqli_connect("p:10.10.1.232","isullcamani","B0l1v14.@1202**","farmaciasventas");
+// $dbh=mysqli_connect("p:10.10.1.232","isullcamani","B0l1v14.@1202**","farmaciasventas");
+$dbh=mysqli_connect("p:10.10.1.11","isullcamani","B0l1v14.@1202**","farmaciasventas");
 if (mysqli_connect_errno())
 {
   echo "Error en la conexión: " . mysqli_connect_error();

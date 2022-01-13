@@ -129,13 +129,10 @@ if($codigo_item==2){?> <!--cargo-->
                                     <div class="form-group">
                                         <select name="cod_cargo" data-style="btn btn-info" required class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
                                             <?php 
-                                            $queryCargos = "SELECT ca.cod_cargo,
-                                            (select c.nombre from cargos c where c.codigo=ca.cod_cargo) as nombre_cargo
-                                            from cargos_areasorganizacion ca,areas_organizacion ao
-                                            where ca.cod_estadoreferencial=1 and ca.cod_areaorganizacion=ao.codigo and ao.cod_unidad=$cod_unidadorganizacional and ao.cod_area=$cod_area";
+                                            $queryCargos = "SELECT codigo,nombre,abreviatura from cargos where cod_estadoreferencial=1";
                                             $statementCargos = $dbh->query($queryCargos);
                                             while ($row = $statementCargos->fetch()) { ?>
-                                                <option <?php if($cod_cargo == $row["cod_cargo"]) echo "selected"; ?> value="<?=$row["cod_cargo"];?>"><?=$row["nombre_cargo"];?></option>
+                                                <option <?php if($cod_cargo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                             <?php } ?>
                                         </select>
                                     </div>                    

@@ -149,7 +149,6 @@ $html.=  '<header class="header">'.
             $subtotal_daposind=0;
             $subtotal_totdesc=0;
             $subtotal_liqpag=0;
-
             $subtotal_aporSol=0;
 
             while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
@@ -228,7 +227,7 @@ $html.=  '<header class="header">'.
               $html.='<tr>'.
                 '<td class="text-center"><small><small><small>'.$index.'</small></small></small></td>'.
                 '<td class="text-left"><small><small><small>'.$row['ci'].' '.$emision.'</small></small></small></td>'.
-                '<td class="text-left"><small><small><small>'.$row['apellidos']." ".$row['nombres'].'</small></small></small></td>'.
+                '<td class="text-left"><small><small><small>'.$row['paterno']." ".$row['materno']." ".$row['nombres'].'</small></small></small></td>'.
                 '<td class="text-left"><small><small><small>'.$sexo.'</small></small></small></td>'.
                 // '<td><small><small>'.$nacion.'</small></small></td>'.
                 // '<td><small><small>'.strftime('%d/%m/%Y',strtotime($fechaNac)).'</small></small></td>'.

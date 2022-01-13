@@ -125,12 +125,7 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
 		$dias_trabajados_asistencia = obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$dias_trabajados_mes); //por asistencia
-		if($codigo_personal==1072){
-			$dias_trabajados_asistencia=11;
-		}
-		if($codigo_personal==2001){
-			$dias_trabajados_asistencia=4;
-		}
+
 		
 		$otros_b = obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_del_mes,$cod_gestion_x,$cod_mes_x);//ee
 		//calculado otros bonos		

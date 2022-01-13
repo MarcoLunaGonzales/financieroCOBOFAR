@@ -1389,7 +1389,7 @@ function cargarComprobanteExcel() {
       var coli=0;
       var itemsFila=[];
     for(var x in cells) {
-        if(!(coli==1||coli==3||coli==7||coli==8)){
+        if(!(coli==7||coli==8)){
           itemsFila.push(cells[x]);
           row.append('<td>'+cells[x]+'</td>');   
         }
@@ -2013,7 +2013,6 @@ function readSingleFile(evt) {
                   var fecha =lines[i][2];
                   let arr = fecha.split('/');
                   var fecha_conv=arr[2]+"-"+arr[1]+"-"+arr[0];
-
                   $('#fecha_fac').val(fecha_conv);
                   $('#nit_fac').val(lines[i][3]);
                   $('#razon_fac').val(lines[i][4]);
@@ -2021,6 +2020,7 @@ function readSingleFile(evt) {
                   $('#aut_fac').val(lines[i][7]);
                   $('#imp_fac').val(lines[i][8]);
                   $('#ice_fac').val(lines[i][9]);
+                  $('#taza_fac').val(lines[i][11]);
                   $('#con_fac').val(lines[i][14]);
                   saveFactura();
                  } 
@@ -16642,6 +16642,32 @@ function descargar_txt_libro_ventas(){
       }
     }
 }
+function descargar_txt_libro_ventas_excel(){
+    var cod_gestion=$("#gestiones").val();
+    //var cod_mes=$("#cod_mes_x").val();
+    var cod_mes=12;
+    var fecha_desde=$("#fecha_desde").val();
+    var fecha_hasta=$("#fecha_hasta").val();
+    var unidad=$("#unidad").val();
+    if(cod_gestion==null || cod_gestion==''){
+      Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
+    }else{
+      if(cod_mes==null || cod_mes==''){
+        Swal.fire("Informativo!", "Por favor Seleccione el mes!", "warning");
+      }else{
+        if(unidad==null || unidad==''){
+          Swal.fire("Informativo!", "Por favor seleccione la unidad!", "warning");
+        }else{   
+          // alert("llegue");
+
+          var urlEditar="reportes/reportePrintLibroVentasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta;    
+          window.open(urlEditar, '_blank');
+
+           
+        }         
+      }
+    }
+}
 function descargar_txt_libro_compras(){
     var cod_gestion=$("#gestiones").val();
     var cod_mes=$("#cod_mes_x").val();
@@ -16683,6 +16709,28 @@ function descargar_txt_libro_compras(){
             }
           }
           }); 
+        }      
+      }
+    }
+}
+function descargar_txt_libro_compras_excel(){
+    var cod_gestion=$("#gestiones").val();
+    var cod_mes=$("#cod_mes_x").val();
+    var unidad=$("#unidad").val();
+    if(cod_gestion==null || cod_gestion==''){
+      Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
+    }else{
+      if(cod_mes==null || cod_mes==''){
+        Swal.fire("Informativo!", "Por favor Seleccione el mes!", "warning");
+      }else{
+        if(unidad==null || unidad==''){
+          Swal.fire("Informativo!", "Por favor seleccione la unidad!", "warning");
+        }else{
+
+          var urlEditar="reportes/reportePrintLibroComprasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad;    
+          window.open(urlEditar, '_blank');
+
+         
         }      
       }
     }

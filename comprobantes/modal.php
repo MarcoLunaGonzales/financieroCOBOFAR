@@ -67,11 +67,20 @@
                 <table class="table table-condensed table-bordered table-sm">
                    <tr class="bg-primary text-white">
                      <td><small>REGIONAL</small></td>
-                     <td><small>CÓDIGO</small></td>
+                     <td><small>AREA</small></td>
                      <td><small>CUENTA</small></td>
                      <td><small>AUXILIAR</small></td>
                      <td><small>DEBE</small></td>
                      <td><small>HABER</small></td>
+                     <td><small>GLOSA</small></td>
+                   </tr>
+                   <tr class="bg-warning">
+                     <td><small>OFICINA CENTRAL</small></td>
+                     <td><small>ADMINISTRACION</small></td>
+                     <td><small>110202001</small></td>
+                     <td><small>2869</small></td>
+                     <td><small>100</small></td>
+                     <td><small>0</small></td>
                      <td><small>GLOSA</small></td>
                    </tr>
                  </table>  
@@ -240,7 +249,7 @@
                           </div>                                                                  
                           <!--No tiene funcion este campo-->
                           <div class="row">                                            
-                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasa Cero</label>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasas</label>
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
@@ -694,7 +703,7 @@
                           </div>                                                                  
                           <!--No tiene funcion este campo-->
                           <div class="row">                                            
-                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasa Cero</label>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasas</label>
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
@@ -760,7 +769,6 @@
                            <span class="fileinput-exists">Subir archivo .txt</span>
                            <input type="file" name="qrquincho" id="qrquincho" accept=".txt"/>
                          </span>
-                
                         </div>
                        </div>
                        <p>Los archivos cargados se adjuntaran a la lista de facturas existente</p>
@@ -768,7 +776,6 @@
                   </div>
                 </div>
               </div>
-        
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque ullam autem illum, minima doloribus doloremque adipisci dolorem, repellendus debitis animi laboriosam commodi dolores et sint, quod. Pariatur, repudiandae sequi assumenda.</p>-->
       </div>
       <div class="modal-footer justify-content-center">
@@ -821,8 +828,7 @@
                         while ($row = $stmtRetencion->fetch(PDO::FETCH_ASSOC)) {
                            $nombreX=$row['nombre'];
                            $abrevX=$row['abreviatura'];
-                           $codigoX=$row['codigo'];
-?>
+                           $codigoX=$row['codigo'];?>
                         <tr>
                           <td align="center" width="20%">
                           <div class="form-check">

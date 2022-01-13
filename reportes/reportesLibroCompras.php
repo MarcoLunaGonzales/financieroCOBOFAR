@@ -119,7 +119,8 @@ $dbh = new Conexion();
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte Oficial</button>
-                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT</a>
+                	<a  href="#" class="btn btn-info" onclick="descargar_txt_libro_compras_excel()">Generar Excel (SIAT)</a>
+                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT (Facilito)</a>
                 	<!-- <a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-success text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		 -->
                 	
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->

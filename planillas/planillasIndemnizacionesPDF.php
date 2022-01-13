@@ -31,31 +31,7 @@ $dbh = new Conexion();
 
 //html del reporte
 $html = '';
-// $html.='<html>'.
-//          '<head>'.
-//              '<!-- CSS Files -->'.
-//              '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
-//              '<link href="../assets/libraries/plantillaPDF.css" rel="stylesheet" />'.
-//            '</head>';
-// $html.='<body>'.
-//         '<script type="text/php">'.
-//       'if ( isset($pdf) ) {'. 
-//         '$font = Font_Metrics::get_font("helvetica", "normal");'.
-//         '$size = 9;'.
-//         '$y = $pdf->get_height() - 24;'.
-//         '$x = $pdf->get_width() - 15 - Font_Metrics::get_text_width("1/1", $font, $size);'.
-//         '$pdf->page_text($x, $y, "{PAGE_NUM}/{PAGE_COUNT}", $font, $size);'.
-//       '}'.
-//     '</script>';
-// $html.=  '<header class="header">'.            
-//             '<table width="100%">
-//               <tr>
-//               <td width="25%"><p>CORPORACION BOLIVIANA DE FARMACIAS S.A.<br>Av.Landaeta Nro. 836<br>La Paz - Bolivia<br>NIT:1022039027<br>N° PAT. 651-1-956</p></td>
-//               <td><center><span style="font-size: 13px"><b>PREVISION INDEMNIZACIONES</b></span><BR>  CORRESPONDIENTE AL '.$dia_planilla_indemnizacion." de ".$mes." del ".$gestion.'<br><b>(Expresado En Bolivianos)</b></center></td>
-//               <td width="25%"><center></center></td>
-//               </tr>
-//             </table>'.
-//          '</header>';
+
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -193,21 +169,11 @@ $html = '';
 $html.='</table><br><br><br>';
 
 echo $html;
-// $html.='<table width="100%">
-//    <tr >
-//   <td width="25%"><center><p>______________________________<br>'.obtenerValorConfiguracionPlanillas(26).'<BR>JEFE DE RECURSOS HUMANOS COBOFAR S.A.</p></center></td>
-//   <td><center><p>______________________________<BR>'.obtenerValorConfiguracionPlanillas(24).'<BR>GERENTE GENERAL COBOFAR S.A.</p></center></td>
-//   <td width="25%"><center><p>______________________________<BR>'.obtenerValorConfiguracionPlanillas(25).'<BR>REPRESENTANTE LEGAL COBOFAR S.A.</p></center></td>
-//   </tr>
-// </table>';
-// $html.='</body>'.
-//       '</html>';
+
+
 $dbh=null;
 $stmtPersonal=null;
 
-  // echo $html;
-
-//descargarPDFHorizontal("Planilla_aguinaldos_".$gestion,$html);
 ?>
 
             </div>

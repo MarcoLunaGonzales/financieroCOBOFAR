@@ -621,12 +621,28 @@
      $stmt = $dbh->prepare("SELECT codigo FROM unidades_organizacionales where lower(nombre) like '%$nombre%'");
      $stmt->execute();
 
-     $codigo=5;
+     $codigo=1;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $codigo=$row['codigo'];
      }
      return($codigo);
   }
+
+   function codigoAreaNombre($nombre){
+    $nombre=strtolower($nombre);
+     $dbh = new Conexion();
+     $sql="SELECT codigo FROM areas where lower(nombre) like '$nombre'";
+     $stmt = $dbh->prepare($sql);
+     // echo $sql;
+     $stmt->execute();
+
+     $codigo=522;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+     }
+     return($codigo);
+  }
+
 
   function namePersonalCompleto($codigo){
      $dbh = new Conexion();
@@ -3844,7 +3860,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   function obtenerPlanillaSueldosRevision($codigo){
       require_once 'conexion3.php';
     $dbh = new Conexion3();
-    $sql="SELECT p.codigo,p.cod_area,a.nombre as area, p.primer_nombre as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,
+    $sql="SELECT p.codigo,p.cod_area,a.nombre as area, p.primer_nombre as nombres,p.paterno,p.materno,
     p.identificacion as ci,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,
     pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje,pp.a_solidario_13000,pp.a_solidario_25000,pp.rc_iva,pp.atrasos,pp.anticipo,p.fecha_nacimiento,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,(select tg.abreviatura from tipos_genero tg where tg.codigo=p.cod_genero)as genero,(select pp2.abreviatura from personal_pais pp2 where pp2.codigo=p.cod_nacionalidad) as nacionalidad,p.turno
     FROM personal p
@@ -12493,6 +12509,139 @@ function obtenerQuinquenioPagadoPersonal($cod_personal){
    $dbh=null;
    $stmt=null;
    return($valor);
+}
+
+ function obtenerIdLineas_nuevo($id_proveedor){
+    $valor="";
+    $sql="SELECT cod_linea_proveedor from proveedores_lineas where   cod_proveedor=$id_proveedor order by nombre_linea_proveedor";
+    require("conexion_comercial.php");
+    $resp=mysqli_query($dbh,$sql);
+    while($row=mysqli_fetch_array($resp)){ 
+      $valor.=$row['cod_linea_proveedor'].",";
+    }
+    $valor=trim($valor,",");
+    return($valor);
+  }
+  function obtenerNombreProveedor_nuevo($codigo){
+  $sql="SELECT nombre_proveedor from proveedores where estado_activo=1 and cod_proveedor=$codigo";
+  $valor="";
+  require("conexion_comercial.php");
+  $resp=mysqli_query($dbh,$sql);
+  while($row=mysqli_fetch_array($resp)){ 
+    $valor=$row['nombre_proveedor'];  
+  } 
+  mysqli_close($dbh);
+  return $valor;
+}
+  function obtenerProductosAlmacen_nuevo($strin_slinea){
+    // $valor="";
+    
+    // $nombre=[];
+    // $codigo=[];
+    // $divisibilidad=[];
+    // $i=0;
+    $sql="SELECT codigo_material,descripcion_material,cantidad_presentacion from material_apoyo where cod_linea_proveedor in ($strin_slinea) order by descripcion_material";
+    require("conexion_comercial.php");
+    $resp=mysqli_query($dbh,$sql);
+    while($row=mysqli_fetch_array($resp)){ 
+       $valor.=$row['codigo_material'].",";
+      // $codigo[$i]=$row['codigo_material'];
+      // $nombre[$i]=$row['descripcion_material'];
+      // $divisibilidad[$i]=$row['cantidad_presentacion'];
+      // $i++;
+    }
+
+     $valor=trim($valor,",");
+    //return array($codigo,$nombre,$divisibilidad);
+     return $valor;
+  }
+
+  function obtenerProductosnombre_presentacionAlmacen_nuevo($strin_slinea){
+    // $valor="";
+    $nombre=[];
+    $divisibilidad=[];
+    $sql="SELECT codigo_material,descripcion_material,cantidad_presentacion from material_apoyo where cod_linea_proveedor in ($strin_slinea) order by descripcion_material";
+    require("conexion_comercial.php");
+    $resp=mysqli_query($dbh,$sql);
+    while($row=mysqli_fetch_array($resp)){ 
+      $nombre[$row['codigo_material']]=$row['descripcion_material'];
+      $divisibilidad[$row['codigo_material']]=$row['cantidad_presentacion'];
+    }
+      // $valor=trim($valor,",");
+    return array($nombre,$divisibilidad);
+     // return $valor;
+  }
+
+function cargarValoresVentasYSaldosProductosArray_nuevosis($almacen,$fecha_venta,$fecha_venta_al,$fecha_saldo,$productos){
+  set_time_limit(0);
+  $estilosVenta=1;
+  require("conexion_comercial.php");     
+  $ingresos=[];
+  $ingresos_unidad=[];
+  $ingresos_costo=[];
+
+  $salida=[];
+  $salida_unidad=[];
+  $salida_costo=[];
+
+  $ventas=[];
+  $ventas_unidad=[];
+  $ventas_costo=[];
+
+  $lineas=[];
+  $salida_ajuste=[];
+  $salida_ajuste_unidad=[];
+  $salida_ajuste_costo=[];
+ 
+    //ingresos
+    $sql="select id.cod_material,IFNULL(ROUND(sum(id.cantidad_envase),0),0)INGRESO,IFNULL(ROUND(sum(id.cantidad_unitaria),0),0)INGRESO_UNIDAD,costo_almacen from ingreso_almacenes i, ingreso_detalle_almacenes id
+      where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$almacen'
+      and id.cod_material in ($productos) and i.ingreso_anulado=0 and i.`fecha` BETWEEN '$fecha_venta' and '$fecha_venta_al'
+      GROUP BY id.cod_material";
+      // echo $sql; 
+   $resp=mysqli_query($dbh,$sql);
+   while($row=mysqli_fetch_array($resp)){
+      // echo "aqiu";
+       $ingresos[$row['cod_material']]=$row['INGRESO']; 
+       $ingresos_unidad[$row['cod_material']]=$row['INGRESO_UNIDAD'];
+       $ingresos_costo[$row['cod_material']]=$row['costo_almacen'];
+   } 
+   //salidas traspasos
+   $sql="select sd.cod_material,IFNULL(ROUND(sum(sd.cantidad_envase),0),0)SALIDA,IFNULL(ROUND(sum(sd.cantidad_unitaria),0),0)SALIDA_UNIDAD,costo_almacen from salida_almacenes s, salida_detalle_almacenes sd
+      where s.cod_salida_almacenes=sd.cod_salida_almacen and s.cod_almacen='$almacen'
+      and sd.cod_material in ($productos) and s.salida_anulada=0 and s.`fecha` BETWEEN '$fecha_venta' and '$fecha_venta_al' and s.`cod_tiposalida`=1000
+      GROUP BY sd.cod_material";
+  $resp=mysqli_query($dbh,$sql);
+   while($row=mysqli_fetch_array($resp)){  
+       $salida[$row['cod_material']]=$row['SALIDA'];   
+       $salida_unidad[$row['cod_material']]=$row['SALIDA_UNIDAD'];
+
+       $salida_costo[$row['cod_material']]=$row['costo_almacen'];
+   }
+    //VENTAS
+    
+    $sql="select sd.cod_material,IFNULL(ROUND(sum(sd.cantidad_envase),0),0)VENTAS,IFNULL(ROUND(sum(sd.cantidad_unitaria),0),0)VENTAS_UNIDAD,costo_almacen FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($productos) and s.`cod_tiposalida`=1001 and s.`cod_almacen` in ($almacen) and s.salida_anulada=0  and s.`fecha` BETWEEN '$fecha_venta' and '$fecha_venta_al' GROUP BY sd.cod_material";
+  $resp=mysqli_query($dbh,$sql);
+    while($row=mysqli_fetch_array($resp)){    
+       $ventas[$row['cod_material']]=$row['VENTAS'];
+       $ventas_unidad[$row['cod_material']]=$row['VENTAS_UNIDAD'];    
+       $ventas_costo[$row['cod_material']]=$row['costo_almacen'];    
+    } 
+
+    //ajustes
+    $sql="select sd.cod_material,IFNULL(ROUND(sum(sd.cantidad_envase),0),0)SALIDA,IFNULL(ROUND(sum(sd.cantidad_unitaria),0),0)SALIDA_UNIDAD,costo_almacen from salida_almacenes s, salida_detalle_almacenes sd
+      where s.cod_salida_almacenes=sd.cod_salida_almacen and s.cod_almacen='$almacen'
+      and sd.cod_material in ($productos) and s.salida_anulada=0 and s.`fecha` BETWEEN '$fecha_venta' and '$fecha_venta_al' and s.`cod_tiposalida`=1007
+      GROUP BY sd.cod_material";
+  $resp=mysqli_query($dbh,$sql);
+    while($row=mysqli_fetch_array($resp)){    
+       $salida_ajuste[$row['cod_material']]=$row['SALIDA'];
+       $salida_ajuste_unidad[$row['cod_material']]=$row['SALIDA_UNIDAD'];    
+       $salida_ajuste_costo[$row['cod_material']]=$row['costo_almacen']; 
+    } 
+
+  mysqli_close($dbh);
+  return array($ingresos,$ingresos_unidad,$salida,$salida_unidad,$ventas,$ventas_unidad,$salida_ajuste,$salida_ajuste_unidad,$ingresos_costo,$salida_costo,$ventas_costo,$salida_ajuste_costo,0); //error 0
 }
 
  

@@ -15,7 +15,7 @@ $stmt = $db->prepare($sqlUO);
 $stmt->bindParam(':cod_UO', $codigo_UO);
 $stmt->execute();
 ?>
-<select name="cod_area" id="cod_area" data-style="btn btn-primary" onchange="ajaxAreaCargos(<?=$codigo_UO;?>,this);" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
+<select name="cod_area" id="cod_area" data-style="btn btn-primary"  class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
 	<option ></option>
     <?php 
     	while ($row = $stmt->fetch()){ 

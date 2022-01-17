@@ -2016,9 +2016,9 @@
     return array($totalImporte,$totalModulo,$totalLocal,$totalExterno);
      }
      
-     function obtenerTotalesPlantillaServicio($codigo,$tipo,$mes,$anio=date("Y")){
+function obtenerTotalesPlantillaServicio($codigo,$tipo,$mes){
 
-      //$anio=date("Y");
+      $anio=date("Y");
 
       $dbh = new Conexion();
       $query2="select pgd.cod_plantillagruposervicio,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tiposervicio,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado,pgd.tipo_calculo from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo

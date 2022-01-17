@@ -15,13 +15,14 @@
             include("cabecera_home.php");
             include("home.php");
           }else{//primer home
-
-            if($tipoLogin==1){
-              include("menu.php");
-            }else{
-              include("menuService.php");
+            if(!isset($_GET['q'])){                
+              if($tipoLogin==1){
+                include("menu.php");
+              }else{
+                include("menuService.php");
+              }
+              include("cabecera.php");
             }
-            include("cabecera.php");
             require_once('routing.php');
           }       
       ?>  

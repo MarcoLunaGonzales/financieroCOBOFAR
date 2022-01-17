@@ -52,11 +52,9 @@ $sucursalgString=trim($sucursalgString,",");
 if($tipo==2 || $tipo==3){
   include "auditoria_sucursales_print_tiempo.php";
 }elseif($tipo==1){
-$sql="SELECT s.cod_salida_almacenes,s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito,(select al.nombre_almacen from almacenes al where al.cod_almacen=s.almacen_destino)as nombre_almacen_des,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer)as nombre_responsable
+$sql="SELECT s.cod_salida_almacenes,s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito,(select al.nombre_almacen from almacenes al where al.cod_almacen=s.almacen_destino)as nombre_almacen_des,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer)as nombre_responsable,s.hora_salida
   FROM salida_almacenes s, tipos_salida ts, almacenes a 
-  where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino in (select a.cod_almacen 
-from almacenes a, ciudades c
-where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null) ORDER BY s.fecha desc, s.nro_correlativo desc ";
+  where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null) ORDER BY s.fecha desc, s.nro_correlativo desc ";
 
 // echo "<br><br><br>".$sql;
 
@@ -116,7 +114,8 @@ if($sw_excel==1){?>
                     $obs_salida=$dat[5];
                     $nro_correlativo=$dat[6];
                     $salida_anulada=$dat[7];   
-                    $nombre_responsable=$dat[10];                 
+                    $nombre_responsable=$dat[10];
+                    $hora_salida=$dat[11];
                     $color_fondo = "";
                     if($fecha_salida<$fecha_limite){
                       $color_fondo = "style='background:#ff8080'";
@@ -130,7 +129,7 @@ if($sw_excel==1){?>
                       <td><?=$nombre_almacen_origen?></td>
                       <td><?=$nombre_responsable?></td>
                       <td><?=$nombre_tiposalida?></td>
-                      <td align='center'><?=$fecha_salida_mostrar?></td>
+                      <td align='center'><?=$fecha_salida_mostrar?> <?=$hora_salida?></td>
                       <td align='center'><?=$nro_correlativo?></td>
                       <td>&nbsp;<?=$obs_salida?></td>
                       <td>&nbsp;<?=$nombre_almacen_dest?></td>

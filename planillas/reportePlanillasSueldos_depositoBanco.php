@@ -10,11 +10,11 @@ require_once '../functionsGeneral.php';
 	$tipo = $_GET["tipo"];//
 	
 	if($tipo==1){
-		$sql_add="and pad.cuenta_bancaria>0";
+		$sql_add="and ppm.cuenta_habilitada=1";
 		$string_foot="TOTAL PERSONAL CON CUENTA EN EL BANCO";
 		$string_titulo="DEPÓSITO AL BANCO";
 	}else{
-		$sql_add="and pad.cuenta_bancaria=0";
+		$sql_add="and ppm.cuenta_habilitada=0";
 		$string_foot="TOTAL PERSONAL SIN CUENTA";
 		$string_titulo="PERSONAL SIN CUENTA EN EL BANCO";
 	}
@@ -33,35 +33,35 @@ require_once '../functionsGeneral.php';
 	// $stmtArea->bindColumn('nombre_area', $nombre_area_x);
 
 
-	$swBonosOtro=false;
-	$sqlBonos = "SELECT cod_bono,(select b.abreviatura from bonos b where b.codigo=cod_bono) as nombre_bono
-        from bonos_personal_mes 
-        where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)
-        order by cod_bono ASC";
-  // echo $sqlBonos;
-	$stmtBonos = $dbh->prepare($sqlBonos);
-	$stmtBonos->execute();                      
-	$stmtBonos->bindColumn('cod_bono',$cod_bono);
-	$stmtBonos->bindColumn('nombre_bono',$nombre_bono);
-	while ($row = $stmtBonos->fetch()) 
-	{ 
-		$arrayBonos[] = $cod_bono;
-		$swBonosOtro=true;
-	}
+	// $swBonosOtro=false;
+	// $sqlBonos = "SELECT cod_bono,(select b.abreviatura from bonos b where b.codigo=cod_bono) as nombre_bono
+ //        from bonos_personal_mes 
+ //        where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)
+ //        order by cod_bono ASC";
+ //  // echo $sqlBonos;
+	// $stmtBonos = $dbh->prepare($sqlBonos);
+	// $stmtBonos->execute();                      
+	// $stmtBonos->bindColumn('cod_bono',$cod_bono);
+	// $stmtBonos->bindColumn('nombre_bono',$nombre_bono);
+	// while ($row = $stmtBonos->fetch()) 
+	// { 
+	// 	$arrayBonos[] = $cod_bono;
+	// 	$swBonosOtro=true;
+	// }
 
-	$sqlDescuento = "SELECT cod_descuento,(select d.abreviatura from descuentos d where d.codigo=cod_descuento) as nombre_descuentos
-          from descuentos_personal_mes 
-          where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_descuento)
-          order by cod_descuento ASC";
-  $stmtDescuento = $dbh->prepare($sqlDescuento);
-  $stmtDescuento->execute();                      
-  $stmtDescuento->bindColumn('cod_descuento',$cod_descuento);
-  $stmtDescuento->bindColumn('nombre_descuentos',$nombre_descuentos);
-  while ($row = $stmtDescuento->fetch()) 
-  { 
-    $arrayDescuentos[] = $cod_descuento;
-    $swDescuentoOtro=true;
-  }
+	// $sqlDescuento = "SELECT cod_descuento,(select d.abreviatura from descuentos d where d.codigo=cod_descuento) as nombre_descuentos
+ //          from descuentos_personal_mes 
+ //          where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_descuento)
+ //          order by cod_descuento ASC";
+ //  $stmtDescuento = $dbh->prepare($sqlDescuento);
+ //  $stmtDescuento->execute();                      
+ //  $stmtDescuento->bindColumn('cod_descuento',$cod_descuento);
+ //  $stmtDescuento->bindColumn('nombre_descuentos',$nombre_descuentos);
+ //  while ($row = $stmtDescuento->fetch()) 
+ //  { 
+ //    $arrayDescuentos[] = $cod_descuento;
+ //    $swDescuentoOtro=true;
+ //  }
 
 //html del reporte
 $html = '';
@@ -127,7 +127,7 @@ $html.='<table class="table">
 				$sql = "SELECT ppm.cod_personalcargo,ppm.liquido_pagable,pad.primer_nombre,pad.paterno,pad.materno,
 				(select c.nombre from cargos c where c.codigo=pad.cod_cargo)as cargo,pad.cuenta_bancaria,(select a.nombre from areas a where a.codigo=pad.cod_area) as areas
 					from planillas_personal_mes ppm,personal pad
-					where ppm.cod_personalcargo=pad.codigo and cod_planilla=$cod_planilla and pad.cod_estadoreferencial=1 and pad.cod_estadopersonal=1  $sql_add order by pad.cod_unidadorganizacional,areas,pad.paterno";
+					where ppm.cod_personalcargo=pad.codigo and cod_planilla=$cod_planilla $sql_add order by pad.cod_unidadorganizacional,areas,pad.paterno";
 					// echo $sql."<br><br>";
 				$stmtPersonal = $dbh->prepare($sql);
 				$stmtPersonal->execute();	

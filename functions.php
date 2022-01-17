@@ -3868,14 +3868,13 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
     join areas a on p.cod_area=a.codigo
     join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
-
-    where pm.cod_planilla=$codigo   
+    where pm.cod_planilla=$codigo 
     order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $dbh = null;
-    $stmt = null;
+    
     return $stmt;
   }
   function obtenerPlanillaSueldoRevisionBonos($cod_personalcargo,$cod_gestion,$cod_mes,$dias_trabajados_asistencia,$dias_trabajados){
@@ -3940,7 +3939,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->render();
     $canvas = $mydompdf->get_canvas();
     $canvas->page_text(730, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
-    $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+    $mydompdf->set_base_path('assets/libraries/plantillaPDF_planillas.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
   function descargarPDFHorizontal_boletas($nom,$html){
@@ -3955,7 +3954,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->render();
     $canvas = $mydompdf->get_canvas();
     $canvas->page_text(500, 25, "", Font_Metrics::get_font("Arial"), 14, array(0,0,0)); 
-    $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+    $mydompdf->set_base_path('assets/libraries/plantillaPDF_planillas.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   } 
 
@@ -3981,7 +3980,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
                   $canvas->page_text($x, $y, "pie de pagina en la ultima hoja".$numero.$numeroF, $font, $size);
               }
           }*/
-    $canvas->page_text(500, 25, "Página:            {PAGE_NUM}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
     $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
@@ -4107,7 +4106,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->render();
     $canvas = $mydompdf->get_canvas();
     $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
-    $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+    $mydompdf->set_base_path('assets/libraries/plantillaPDF_planillas.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
 
@@ -12345,6 +12344,24 @@ function verificarComporbanteCojo($codigo){
 
 function reprocesar_costoventas_sucursales($fecha,$rpt_territorio){
    $sql="SELECT sum(sad.costo_almacen*sad.cantidad_unitaria) as costo_venta
+      from salida_almacenes sa INNER JOIN salida_detalle_almacenes sad on sad.cod_salida_almacen=sa.cod_salida_almacenes
+      where sa.fecha = '$fecha' and sa.cod_tiposalida=1001 and sa.salida_anulada=0 and sa.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
+    where a.`cod_ciudad`='$rpt_territorio' and a.cod_tipoalmacen=1)";  
+
+    //echo $sql;
+   $valor=0;
+   require("conexion_comercial.php");
+   $resp=mysqli_query($dbh,$sql);
+   while($row=mysqli_fetch_array($resp)){ 
+      $monto=number_format($row['costo_venta'],1,'.','');
+      
+      $valor+=$monto;
+   } 
+   mysqli_close($dbh);
+   return $valor;
+}
+function reprocesar_costoventas_sucursales_2($fecha,$rpt_territorio){
+   $sql="SELECT sum((select ct.costo from costo_temp ct where ct.cod_material=sad.cod_material)*sad.cantidad_unitaria) as costo_venta
       from salida_almacenes sa INNER JOIN salida_detalle_almacenes sad on sad.cod_salida_almacen=sa.cod_salida_almacenes
       where sa.fecha = '$fecha' and sa.cod_tiposalida=1001 and sa.salida_anulada=0 and sa.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
     where a.`cod_ciudad`='$rpt_territorio' and a.cod_tipoalmacen=1)";  

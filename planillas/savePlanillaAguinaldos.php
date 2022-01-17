@@ -51,15 +51,22 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	$modified_by=$globalUser;
 		
 	//============select del personal
-	$sql = "SELECT codigo,ing_planilla from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
+	$sql = "SELECT codigo,ing_planilla,cuenta_bancaria from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
 
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
 	$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);	
+	$stmtPersonal->bindColumn('cuenta_bancaria', $cuenta_bancaria);	
 
 	while ($rowC = $stmtPersonal->fetch()) 
 	{	
+
+		if($cuenta_bancaria>0){
+			$cuenta_habilitada=1;
+		}else{
+			$cuenta_habilitada=0;
+		}
 		$anio_actual= date('Y');
 		$fecha_fin=obtener_fecha_fin_contrato_personal($codigo_personal);
 		if($fecha_fin=='INDEFINIDO'){
@@ -115,8 +122,8 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		// echo $dias_360."<br>";
 		$total_pago_aguinaldo=$promedio_sueldos*$dias_360/12;
 		//==== insert de panillas de personal mes
-		$sqlInsertPlanillas="INSERT into planillas_aguinaldos_detalle(cod_planilla,cod_personal,sueldo_1,sueldo_2,sueldo_3,total_aguinaldo,created_by,modified_by,dias_360,sumatoria_ganado,promedio_ganado,promedio_basico,promedio_antiguedad,promedio_obonos)
-		 values(:cod_planilla,:codigo_personal,:sueldo1,:sueldo2,:sueldo3,:total_aguinaldo,:created_by,:modified_by,:dias_360,:sumatoria_ganado,:promedio_ganado,:promedio_basico,:promedio_antiguedad,:promedio_obonos)";
+		$sqlInsertPlanillas="INSERT into planillas_aguinaldos_detalle(cod_planilla,cod_personal,sueldo_1,sueldo_2,sueldo_3,total_aguinaldo,created_by,modified_by,dias_360,sumatoria_ganado,promedio_ganado,promedio_basico,promedio_antiguedad,promedio_obonos,cuenta_habilitada)
+		 values(:cod_planilla,:codigo_personal,:sueldo1,:sueldo2,:sueldo3,:total_aguinaldo,:created_by,:modified_by,:dias_360,:sumatoria_ganado,:promedio_ganado,:promedio_basico,:promedio_antiguedad,:promedio_obonos,:cuenta_habilitada)";
 		$stmtInsertPlanillas = $dbh->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 		$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
@@ -135,6 +142,8 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$stmtInsertPlanillas->bindParam(':promedio_basico',$promedio_basico);
 		$stmtInsertPlanillas->bindParam(':promedio_antiguedad',$promedio_antiguedad);
 		$stmtInsertPlanillas->bindParam(':promedio_obonos',$promedio_obonos);
+
+		$stmtInsertPlanillas->bindParam(':cuenta_habilitada',$cuenta_habilitada);
 
 		$flagSuccessIP=$stmtInsertPlanillas->execute();	
 	}

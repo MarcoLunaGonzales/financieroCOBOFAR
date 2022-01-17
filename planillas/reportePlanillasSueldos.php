@@ -44,7 +44,7 @@ $html.='<html>'.
          '<head>'.
              '<!-- CSS Files -->'.
              '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
-             '<link href="../assets/libraries/plantillaPDF.css" rel="stylesheet" />'.
+             '<link href="../assets/libraries/plantillaPDF_planillas.css" rel="stylesheet" />'.
            '</head>';
 $html.='<body>'.
         '<script type="text/php">'.

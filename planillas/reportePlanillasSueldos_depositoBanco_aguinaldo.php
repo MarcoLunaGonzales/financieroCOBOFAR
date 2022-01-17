@@ -10,11 +10,11 @@ require_once '../functionsGeneral.php';
 	$tipo = $_GET["tipo"];//
 	
 	if($tipo==1){
-		$sql_add="and pad.cuenta_bancaria>0";
+		$sql_add="and ppm.cuenta_habilitada=1";
 		$string_foot="TOTAL PERSONAL CON CUENTA EN EL BANCO";
 		$string_titulo="DEPÓSITO AL BANCO";
 	}else{
-		$sql_add="and pad.cuenta_bancaria=0";
+		$sql_add="and ppm.cuenta_habilitada=0";
 		$string_foot="TOTAL PERSONAL SIN CUENTA";
 		$string_titulo="PERSONAL SIN CUENTA EN EL BANCO";
 	}

@@ -1,27 +1,22 @@
 <?php //ESTADO FINALIZADO
 
-require_once 'conexion.php';
-require_once 'functions.php';
-require_once 'functionsGeneral.php';
-require_once 'rrhh/configModule.php';
+require_once '../conexion.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
 
-$globalCodUnidad=$_SESSION["globalUnidad"];
 
+session_start();
 $dbh = new Conexion();
-$dbhI = new Conexion();
-$dbhIPD = new Conexion();
-
-// $anio_actual=date('Y');//generar del anio y mes actual
-// $mes_actual=date('m');//generar del anio y mes actual
 $mes_actual=$_SESSION['globalMes'];
 $anio_actual=$_SESSION['globalNombreGestion'];
 
-
+$cod_gestion=$_SESSION['globalGestion'];
+$dias_trabajado=$_POST['dias_trabajado'];
 //obteniendo codigo de gestion para el registro de planilla
-$stmt = $dbh->prepare("SELECT * from gestiones where nombre=$anio_actual");
-$stmt->execute();
-$result= $stmt->fetch();
-$cod_gestion=$result['codigo'];
+// $stmt = $dbh->prepare("SELECT * from gestiones where nombre=$anio_actual");
+// $stmt->execute();
+// $result= $stmt->fetch();
+// $cod_gestion=$result['codigo'];
 
 $cod_mes=(integer)$mes_actual;
 $cod_estadoplanilla=1;
@@ -40,19 +35,35 @@ while ($row = $stmtPlanillas->fetch())
   $cont+=1; 
 }
 if($cont==0){//insert - cuando no existe planilla
-  $sqlInsert="INSERT into planillas(cod_gestion,cod_mes,cod_estadoplanilla,created_by,modified_by,comprobante) values(:cod_gestion,:cod_mes,:cod_estadoplanilla,:created_by,:modified_by,:comprobante)";
-  $stmtInsert = $dbhI->prepare($sqlInsert);
+  $sqlInsert="INSERT into planillas(cod_gestion,cod_mes,cod_estadoplanilla,created_by,modified_by,comprobante,dias_trabajo) values(:cod_gestion,:cod_mes,:cod_estadoplanilla,:created_by,:modified_by,:comprobante,:dias_trabajo)";
+  $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->bindParam(':cod_gestion', $cod_gestion);
   $stmtInsert->bindParam(':cod_mes',$cod_mes);
   $stmtInsert->bindParam(':cod_estadoplanilla',$cod_estadoplanilla);
   $stmtInsert->bindParam(':created_by',$created_by);
   $stmtInsert->bindParam(':modified_by',$modified_by);
   $stmtInsert->bindParam(':comprobante',$comprobante);
+  $stmtInsert->bindParam(':dias_trabajo',$dias_trabajado);
   $flagSuccess=$stmtInsert->execute();
+  $estado=2;
+  if($flagSuccess){
+    $sql="update configuraciones_planillas set valor_configuracion=$dias_trabajado where id_configuracion=22";
+    $stmtUpdate = $dbh->prepare($sql);
+    $flagSuccess=$stmtUpdate->execute();    
+    if($flagSuccess){
+      $estado=1;//correcto
+    }else{
+      $estado=2;//error
+    }
+  }else{
+    $estado=2;//error
+  }
+  echo $estado;
 }else{
-  $flagSuccess=0;//alerta indicando que ya existe planilla del mes
+  echo 0;//alerta indicando que ya existe planilla del mes
 }
-showAlertSuccessError3($flagSuccess,$urlPlanillasSueldoList);
+
+
 
 
 

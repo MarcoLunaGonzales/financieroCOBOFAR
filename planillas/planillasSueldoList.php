@@ -11,8 +11,8 @@ $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
 
 $cod_mes_global=$_SESSION['globalMes'];
 $nombre_mes=nombreMes($cod_mes_global);
-//$nombreGestion=$_SESSION['globalNombreGestion'];
 $codGestionActiva=$_SESSION['globalGestion'];
+$globalNombreGestion=$_SESSION['globalNombreGestion'];
 
 $sql="SELECT cod_estadoplanilla from planillas where cod_mes=$cod_mes_global and cod_gestion=$codGestionActiva";
 //echo "<br><br><br><br>".$sql;
@@ -23,22 +23,22 @@ while ($rowVerifPlani = $stmtVerifPlani->fetch(PDO::FETCH_ASSOC)) {
   $estado_planilla=$rowVerifPlani['cod_estadoplanilla'];
 }
 
-
 $dbh = new Conexion();
-  $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,
-  (select m.nombre from meses m where m.codigo=cod_mes)as mes,
-  (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
-  (select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla
-  from planillas order by cod_gestion desc,cod_mes desc");
-  $stmtAdmnin->execute();
-  $stmtAdmnin->bindColumn('codigo', $codigo_planilla);
-  $stmtAdmnin->bindColumn('gestion', $gestion);
-  $stmtAdmnin->bindColumn('cod_gestion', $cod_gestion);
-  $stmtAdmnin->bindColumn('cod_mes', $cod_mes);
-  $stmtAdmnin->bindColumn('mes', $mes);
-  $stmtAdmnin->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
-  $stmtAdmnin->bindColumn('estadoplanilla', $estadoplanilla);
-  $stmtAdmnin->bindColumn('comprobante', $comprobante_x);
+$stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,dias_trabajo,
+(select m.nombre from meses m where m.codigo=cod_mes)as mes,
+(select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
+(select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla
+from planillas where cod_gestion=$codGestionActiva order by cod_gestion desc,cod_mes desc");
+$stmtAdmnin->execute();
+$stmtAdmnin->bindColumn('codigo', $codigo_planilla);
+$stmtAdmnin->bindColumn('gestion', $gestion);
+$stmtAdmnin->bindColumn('cod_gestion', $cod_gestion);
+$stmtAdmnin->bindColumn('cod_mes', $cod_mes);
+$stmtAdmnin->bindColumn('mes', $mes);
+$stmtAdmnin->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
+$stmtAdmnin->bindColumn('estadoplanilla', $estadoplanilla);
+$stmtAdmnin->bindColumn('comprobante', $comprobante_x);
+$stmtAdmnin->bindColumn('dias_trabajo', $dias_trabajados);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -55,7 +55,8 @@ $dbh = new Conexion();
                 <thead>
                     <tr>                    
                       <th>Gestión</th>
-                      <th>Mes</th>   
+                      <th>Mes</th>
+                      <th>Dias Trabajados L-S</th>
                       <th>Estado</th>
                       <th></th> 
                       <th></th>
@@ -88,14 +89,12 @@ $dbh = new Conexion();
                     $stmtAdmninUO->execute();
                     $stmtAdmninUO->bindColumn('cod_uo', $cod_uo_x);
                     $stmtAdmninUO->bindColumn('nombre_uo', $nombre_uo_x);
-
                     $stmtAdmninUOPDF = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
                     GROUP BY cod_uo");
                     $stmtAdmninUOPDF->execute();
                     $stmtAdmninUOPDF->bindColumn('cod_uo', $cod_uo_x);
                     $stmtAdmninUOPDF->bindColumn('nombre_uo', $nombre_uo_x);
                     //termina las consultas de dropdows
-
                     $label_uo_aux='';
                     $datosX =$codigo_planilla."-";
                     if($cod_estadoplanilla==1){
@@ -129,6 +128,7 @@ $dbh = new Conexion();
                     <tr>                    
                       <td><?=$gestion?></td>
                       <td><?=$mes;?></td>
+                      <td><?=$dias_trabajados;?></td>
                       <td><?=$label.$estadoplanilla."</span>";?><?=$label_uo_aux?></td>
                       <td class="td-actions text-right">
                         <?php
@@ -286,7 +286,7 @@ $dbh = new Conexion();
             <?php
               if($globalAdmin==1){
               ?>
-                <a href='<?=$urlGenerarPlanillaSueldoPrevia;?>' rel="tooltip" class="btn btn-info">Registrar Planilla Actual (1)</a>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalGenerarPlanilla">Registrar Planilla Actual (1)</button> 
                 <a href="bonos/descargarExcelGlobal.php" target="_blank" class="btn btn-warning"><span class="material-icons">download</span>Descargar Plantilla (2)</a>
                 <button class="btn btn-success" onClick="location.href='index.php?opcion=subirBonoExcel_global_from'"><span class="material-icons">file_upload</span>Cargar Plantilla (3)</button>
                 <button class="btn btn-rose" onClick="procesar_bonos_descuentos_planilla('<?=$nombre_mes?>','<?=$cod_mes_global?>','<?=$estado_planilla?>')"><span class="material-icons">sync</span>Procesar o reprocesar PLANTILLA (4)</button>
@@ -299,6 +299,34 @@ $dbh = new Conexion();
       </div>
     </div>
   </div>
+
+  <!--Generar Planilla-->
+  <div class="modal fade" id="modalGenerarPlanilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Registrar Planilla<br> <?=$nombre_mes?>/<?=$globalNombreGestion?></h4>
+          
+        </div>
+        <div class="modal-body">
+            <div class="row">
+              <label class="form-group col-sm-12 text-center"><b>Introduzca Días trabajados L-S</b></label>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-12">
+                <input class="form-control input-sm" type="text" name="dias_trabajado" id="dias_trabajado">
+              </div>
+            </div>
+        </div>       
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" id="AceptarRegistro" onClick="registrar_planilla_sueldos()">Guardar</button>
+          <button type="button" class="btn btn-danger" id="CancelarResgistro" data-dismiss="modal"> Cancelar </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!--modal procesar-->
   <div class="modal fade" id="modalProcesar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-sm" role="document">

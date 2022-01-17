@@ -7,7 +7,7 @@ require_once '../functionsGeneral.php';
 $result_x=0;
 $dbh = new Conexion();
 session_start();
-// $globalUser=$_SESSION["globalUser"];
+ $globalUser=$_SESSION["globalUser"];
 //RECIBIMOS LAS VARIABLES
 $cod_planilla=$_POST['cod_planilla'];
 $cod_estadoplanilla=$_POST['sw'];

@@ -31,8 +31,8 @@ $dbhDet = new Conexion();
 
 echo "<h6>Hora Inicio Proceso ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
 
-$fecha_inicio='2021-08-01';
-$fecha_fin='2021-09-30';
+$fecha_inicio='2021-12-01';
+$fecha_fin='2021-12-31';
 
 $sql="SELECT ccd.cod_ciudad,ccd.fecha,ccd.cod_comprobante 
   from ingresos_sucursales_comprobantes ccd where ccd.fecha BETWEEN '$fecha_inicio' and '$fecha_fin' ";//and ccd.cod_comprobante=23
@@ -44,7 +44,8 @@ while ($row = $statementUO1->fetch()){
   // $nombre_ciudad=$row['nombre_ciudad'];
   $cod_ciudad=$row['cod_ciudad'];
   $cod_comprobante=$row['cod_comprobante'];
-  $monto_costoventas=reprocesar_costoventas_sucursales($fecha,$cod_ciudad);
+  // $monto_costoventas=reprocesar_costoventas_sucursales($fecha,$cod_ciudad);
+  $monto_costoventas=reprocesar_costoventas_sucursales_2($fecha,$cod_ciudad);
   
   //echo "SUC: $cod_ciudad $fecha ***CBT: $cod_comprobante*** Monto: $monto_costoventas<br>";
 

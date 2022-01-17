@@ -106,13 +106,13 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	$minimo_salarial=obtenerValorConfiguracionPlanillas(1);
 	$dias_trabajados_mes = obtenerValorConfiguracionPlanillas(22); //por defecto
 	$dias_del_mes=30;
-	
+	 
 	// fin de valores de configruacion
 
 	//============select del personal
 	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
-	cod_tipoafp,ing_planilla
+	cod_tipoafp,ing_planilla,cuenta_bancaria
 	from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
@@ -122,8 +122,16 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	$stmtPersonal->bindColumn('p_grado_academico', $p_grado_academico);  
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
 	$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);
+	$stmtPersonal->bindColumn('cuenta_bancaria', $cuenta_bancaria);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
+
+
+		if($cuenta_bancaria>0){
+			$cuenta_habilitada=1;
+		}else{
+			$cuenta_habilitada=0;
+		}
 		$dias_trabajados_asistencia = obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$dias_trabajados_mes); //por asistencia
 
 		
@@ -186,10 +194,10 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
 		  haber_basico,haber_basico_pactado,bono_academico,bono_antiguedad,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,dotaciones,
-		  liquido_pagable,cod_estadoreferencial,created_by,modified_by,procesado_reprocesado,bonos_otros,descuentos_otros)
+		  liquido_pagable,cod_estadoreferencial,created_by,modified_by,procesado_reprocesado,bonos_otros,descuentos_otros,cuenta_habilitada)
 		 values(:cod_planilla,:codigo_personal,:cod_gradoacademico,:dias_trabajados,:horas_pagadas,:haber_basico,:haber_basico_pactado,:bono_academico,
 		 	:bono_antiguedad,:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,:dotaciones,
-		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by,:procesado_reprocesado,:bonos_otros,:descuentos_otros)";
+		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by,:procesado_reprocesado,:bonos_otros,:descuentos_otros,:cuenta_habilitada)";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 		$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
@@ -213,6 +221,7 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 		$stmtInsertPlanillas->bindParam(':procesado_reprocesado',$procesado_reprocesado);
 		$stmtInsertPlanillas->bindParam(':bonos_otros',$otros_b);
 		$stmtInsertPlanillas->bindParam(':descuentos_otros',$otros_descuentos);
+		$stmtInsertPlanillas->bindParam(':cuenta_habilitada',$cuenta_habilitada);
 		
 		$flagSuccessIP=$stmtInsertPlanillas->execute();
 		

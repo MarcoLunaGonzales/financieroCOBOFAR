@@ -97,7 +97,7 @@ $stmt->execute();
                   $personal=$rowComp['personal'];
                   $created_at=$rowComp['created_at'];
                   $cuenta=nameCuenta($cuenta_creditoFiscal);
-                  $sql="SELECT sum(importe)-sum(exento)-sum(ice)as importe, count(*) as cantidad from facturas_compra where cod_comprobantedetalle=$codigo";
+                  $sql="SELECT sum(importe)-sum(exento)-sum(ice)-sum(tasas)-sum(desc_total) as importe, count(*) as cantidad from facturas_compra where cod_comprobantedetalle=$codigo";
                   $stmt5 = $dbh->prepare($sql);
                   $stmt5->execute();                      
                   $stmt5->bindColumn('importe', $importeX);

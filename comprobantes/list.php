@@ -24,7 +24,7 @@ from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.c
   $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
 //}
 
-$sql.=" and c.cod_gestion='$globalGestion' order by c.numero desc limit 200";
+$sql.=" and c.cod_gestion='$globalGestion' order by c.numero desc limit 10";
 
 //echo $sql;
 
@@ -106,6 +106,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       <tbody>
                       <?php
 						            $index=1;
+                        $tamanioGlosa=obtenerValorConfiguracion(72);
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $nombreComprobante=nombreComprobante($codigo);
                           $existeCuenta=0;
@@ -124,7 +125,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                               $btnEstado="btn-warning";$estadoIcon="thumb_up";
                             break;
                           }
-                          $tamanioGlosa=obtenerValorConfiguracion(72); 
+                          
                           if($glosaComprobante>$tamanioGlosa){
                             $glosaComprobante=substr($glosaComprobante, 0, $tamanioGlosa);
                           }
@@ -134,10 +135,10 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                             $cambiosDatos="\n".$cambiosDatos;
                           }
                           if($salvadoC==1){
-        $btnEstado="btn btn-danger font-weight-bold";
-        $estadoComprobante="Salvado Temporal";
-        $estadoIcon="save";
-       } 
+                            $btnEstado="btn btn-danger font-weight-bold";
+                            $estadoComprobante="Salvado Temporal";
+                            $estadoIcon="save";
+                           } 
                         ?>
                         <tr>
                           
@@ -145,8 +146,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           <td class="text-center small"><?=$nombreUnidad;?></td>
                           <td class="text-center small"><?=$nombreComprobante;?></td>
                           <td class="text-center small"><?=strftime('%d/%m/%Y',strtotime($fechaComprobante));?></td>
-                          
-                          <!--td><?=$nombreMoneda;?></td-->
+                        
                           <td class="text-left small"><?=$glosaComprobante;?></td>
                           <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
                           <td class="td-actions text-right">

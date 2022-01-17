@@ -199,17 +199,7 @@ $i=0;
              <div id="combo_tipodocumento" class="d-none">
                 <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="<?=$comboColor;?>" onChange="asignarTipoDocumento()">
                     <option disabled selected value="">TIPO DOCUMENTO</option>
-                  <?php
-                  $stmt = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
-                $stmt->execute();
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoX=$row['idClaDocumento'];
-                  $nombreX=$row['Documento'];
-                ?>
-                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
-                <?php
-                  }
-                  ?>
+                 
                   <option value="-100">OTROS DOCUMENTOS</option>
                </select>
               </div>
@@ -279,8 +269,6 @@ $i=0;
             <div class="col-sm-2">
               <div class="form-group">
                   <select class="selectpicker form-control form-control-sm" onchange="listarTipoSolicitud(this.value,'none')" name="tipo_solicitud" id="tipo_solicitud" data-style="btn btn-info" title="-- Tipo de Solicitud --" required>
-                      <option value="1">POR PROPUESTA SEC</option>
-                      <option value="-1">POR PROPUESTA TCP/TCS</option>  
                       <option value="2">POR PROVEEDOR</option>
                       <option value="3">MANUAL</option>  
                   </select>
@@ -465,7 +453,7 @@ $i=0;
                     </div>
                     <div id="array_distribucion"></div>
                 <!--FIN DISTRIBUCION-->    
-               <a href="#" onclick="mostrarActividadesDeSolicitud()" title="Actividades Proyecto SIS" class="btn btn-primary float-right"><i class="material-icons">assignment</i><span id="nproyectos" class="count bg-danger">0</span> ACTIVIDADES</a>
+               <!-- <a href="#" onclick="mostrarActividadesDeSolicitud()" title="Actividades Proyecto SIS" class="btn btn-primary float-right"><i class="material-icons">assignment</i><span id="nproyectos" class="count bg-danger">0</span> ACTIVIDADES</a> -->
                    
                <div class="row col-sm-12">
                     <div class="col-sm-1">

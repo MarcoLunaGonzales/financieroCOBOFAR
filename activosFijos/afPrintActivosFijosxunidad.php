@@ -38,7 +38,7 @@ $stringAreas="";
 foreach ($areas as $valor ) {    
     $stringAreas.=" ".abrevArea($valor)." ";
 }
-$sqlActivos="SELECT codigoactivo, activo, cod_unidadorganizacional,cod_area,cod_depreciaciones,cod_responsables_responsable,estadobien
+$sqlActivos="SELECT codigoactivo, otrodato as activo, cod_unidadorganizacional,cod_area,cod_depreciaciones,cod_responsables_responsable,cod_responsables_responsable2,estadobien
 from activosfijos 
 where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_responsables_responsable in ($personalString)";  
 
@@ -54,6 +54,7 @@ $stmtActivos->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 $stmtActivos->bindColumn('cod_area', $cod_area);
 $stmtActivos->bindColumn('cod_depreciaciones', $cod_depreciaciones);
 $stmtActivos->bindColumn('cod_responsables_responsable', $cod_responsables_responsable);
+$stmtActivos->bindColumn('cod_responsables_responsable2', $cod_responsables_responsable2);
 $stmtActivos->bindColumn('estadobien', $estadobienX);
 
 ?>
@@ -81,13 +82,13 @@ $stmtActivos->bindColumn('estadobien', $estadobienX);
                 '<thead class="bg-secondary text-white">'.
                   '<tr >'.
                     '<th class="font-weight-bold">-</th>'.
-                    '<th class="font-weight-bold"><small>Cod.Activo</small></th>'.
-                    '<th class="font-weight-bold"><small>Oficina</small></th>'.
-                    '<th class="font-weight-bold"><small>Area</small></th>'.
+                    '<th class="font-weight-bold"><small>Codigo</small></th>'.
+                    '<th class="font-weight-bold"><small>Of/Area</small></th>'.
                     '<th class="font-weight-bold" width="10%"><small>Rubro</small></th>'.
                     '<th class="font-weight-bold"><small>Activo</small></th>'.
-                    '<th class="font-weight-bold"><small>STA.Bien</small></th>'.
-                    '<th class="font-weight-bold"><small>Responsable</small></th>'.
+                    '<th class="font-weight-bold"><small>Estado</small></th>'.
+                    '<th class="font-weight-bold"><small>Respo1</small></th>'.
+                    '<th class="font-weight-bold"><small>Respo2</small></th>'.
                   '</tr>'.
                 '</thead>'.
                 '<tbody>';
@@ -98,16 +99,17 @@ $stmtActivos->bindColumn('estadobien', $estadobienX);
                       $uo=abrevUnidad($cod_unidadorganizacional);
                       $area=abrevArea($cod_area);
                       $personal=nombrePersona($cod_responsables_responsable);
+                      $personal2=nombrePersona($cod_responsables_responsable2);
                     $contador++;   
                   $html.='<tr>'.
                     '<td class="text-center small"><small>'.$contador.'</small></td>'.
                     '<td class="text-center small"><small>'.$codigoActivoX.'</small></td>'.
-                    '<td class="text-center small"><small>'.$uo.'</small></td>'.
-                    '<td class="text-center small"><small>'.$area.'</small></td>'.
+                    '<td class="text-center small"><small>'.$uo.'/'.$area.'</small></td>'.
                     '<td class="text-left small"><small>'.$rubro.'</small></td>'.
                     '<td class="text-left small"><small>'.$activoX.'</small></td>'.
                     '<td class="text-left small"><small>'.$estadobienX.'</small></td>'.
                     '<td class="text-left small"><small>'.$personal.'</small></td>'.
+                    '<td class="text-left small"><small>'.$personal2.'</small></td>'.
                   '</tr>';
                     } 
                 $html.='</tbody>'.

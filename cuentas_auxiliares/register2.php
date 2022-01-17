@@ -42,13 +42,25 @@ $nombreCuentaPadre=nameCuenta($codigoCuentaPadre);
 				</div>
 
 				<div class="row">
-				  <label class="col-sm-2 col-form-label">Tipo</label>
+				  	<label class="col-sm-2 col-form-label">Tipo</label>
 						<div class="col-sm-4">
 				        	<div class="form-group">
 					        <select class="selectpicker form-control form-control-sm" name="tipo" id="tipo" data-style="<?=$comboColor;?>" required="true" onChange="ajaxTipoProveedorCliente(this);">
 							  	<option disabled selected value="">Seleccionar una opcion</option>
-								<option value="1">Proveedor</option>	
-								<option value="2">Cliente</option>	
+								<?php
+							  	$stmt = $dbh->prepare("SELECT * from tipos_estado_cuenta order by nombre");
+								$stmt->execute();
+								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									$codigoX=$row['codigo'];
+									$nombreX=$row['nombre'];
+									$abrevX=$row['abreviatura'];
+								?>
+								<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
+								<?php
+							  	}
+							  	?>
+
+
 							</select>
 							</div>
 				      	</div>

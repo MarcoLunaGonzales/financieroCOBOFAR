@@ -6,6 +6,11 @@ $moduleNamePlural="Bonos";
 
 $urlList="?opcion=listBonos";
 $urlRegister="index.php?opcion=registerBono";
+
+$urlDescargarPlantillaGlobal="";
+$urlSubirExcelGlobal="index.php?opcion=subirBonoExcel_global_from";
+
+
 $urlEdit="index.php?opcion=editBono";
 $urlDelete="index.php?opcion=deleteBono";
 $urlSave="bonos/save.php";
@@ -14,6 +19,9 @@ $urlSaveDelete="";
 
 $urlList2="../index.php?opcion=listBonos";
 $urlAyudaCSV="index.php?opcion=ayudaArchivoCsv";
+
+$urlDescargarExcelGlobal="index.php?opcion=descargarExcelGlobal";
+
 
 $moduleNameSingularDetalle="Bono Detalle por Mes";
 $moduleNamePluralDetalle="Bonos Detalle por Mes";
@@ -37,4 +45,5 @@ $urlSaveEditGrupo="bonos/saveEditGrupo.php";
 
 $calculaBonoProfesion="index.php?opcion=calculaBonoProfesion";
 
+$urlList_plantilla="?opcion=plantilla_sueldos_list";
 ?>

@@ -70,7 +70,7 @@ $stmt->bindColumn('porcentaje', $porcentaje);
                       <td class="text-center"><?= $unidad_abreviatura; ?></td>
                       <td class="text-center">
                       <input type="hidden" name="codigo_distribucion[]"  value="<?=$cod_distribucionDetalle;?>"/>
-                      <input class="form-control sm" type="number" onchange="sumarPorcentaje()" id="porcentaje<?= $index; ?>" name="porcentaje[]"  required="true" value="<?= $porcentaje; ?>" onkeyup="sumarPorcentaje(); javascript:this.value=this.value.toUpperCase();"/>  
+                      <input class="form-control sm" type="number" step="0.01" onchange="sumarPorcentaje()" id="porcentaje<?= $index; ?>" name="porcentaje[]"  required="true" value="<?= $porcentaje; ?>" onkeyup="sumarPorcentaje(); javascript:this.value=this.value.toUpperCase();"/>  
 
                       </td>
                       <!--td class="td-actions text-right">

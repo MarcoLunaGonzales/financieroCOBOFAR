@@ -34,7 +34,7 @@ $contadorRegistros=0;
 $nombreCompletoUnidad=nameUnidad($globalUnidad);
 
 $desdeSR=0;
-if(isset($_GET['cod'])&&isset($_GET['deven'])&&isset($_GET['personal_encargado'])){
+if(isset($_GET['cod']) && isset($_GET['deven']) && isset($_GET['personal_encargado'])){
 	$desdeSR=1;
 	$codigoSR=$_GET['cod'];
 	$codigoSRPER=$_GET['personal_encargado'];
@@ -86,7 +86,7 @@ if(isset($_GET['cod'])&&isset($_GET['deven'])&&isset($_GET['personal_encargado']
 				$valorX=$row['valor_configuracion'];
 				$descripcionX=$row['descripcion_configuracion'];
 			 ?>
-			 <script>configuraciones.push({codigo:<?=$codigoX?>,valor:<?=$valorX?>,descripcion:'<?=$descripcionX?>'});</script>
+			 <script>configuraciones.push({codigo:<?=$codigoX?>,valor:'<?=$valorX?>',descripcion:'<?=$descripcionX?>'});</script>
 		    <?php
 			 }
 
@@ -196,6 +196,10 @@ if((int)$globalNombreGestion<(int)$anioActual){
 }
 
 
+
+$fecha_ini_factura=$globalNombreGestion."-".str_pad($codMesActiva, 2, "0", STR_PAD_LEFT)."-01";
+$fecha_fin_factura=date('Y-m-t',strtotime($fecha_ini_factura));
+
 $dbh = new Conexion();
 
 // Preparamos
@@ -221,6 +225,8 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 		<div class="container-fluid">
 			<input type="hidden" name="validacion_libretas" id="validacion_libretas" value="<?=$validacionLibretas;?>">
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
+			<input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="0">
+			
 			<input type="hidden" name="codigo_iva_direfido" id="codigo_iva_direfido" value="<?=obtenerValorConfiguracion(67)?>">
 			<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">
 			<input type="hidden" name="cod_sis_configuracion" id="cod_sis_configuracion" value="<?=$cod_sis_configuracion;?>">
@@ -452,7 +458,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 
 					  	<div class="card-footer fixed-bottom">
 							<button id="boton_enviar_formulario" type="submit" class="<?php if($desdeSR==1){ echo "btn btn-warning";}else{ echo "btn btn-primary";}?>">Guardar</button>	
-							<?php if($desdeSR==1){$urlList=$urlListAdminSol;}?>					
+							<?php if($desdeSR==1){$urlList=$urlListAdminSol;}?>
 							<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
 							<div class="row col-sm-12">
 								<div class="col-sm-5">
@@ -480,9 +486,12 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
                                    if($desdeSR==0){
                                    	?>
 						      		 <div class="form-group">
-						      		 	<a href="#" class="btn btn-round btn-default btn-fab btn-sm" onclick="salvarComprobante(0);return false;" title="Salvar Comprobante">
-			                        	   <i class="material-icons text-dark">save</i> 
-			                            </a>
+						      		 	<!-- <input type='button'  id='btnsalvarcompro' name='btnsalvarcompro' class='btn btn-round btn-default btn-fab btn-sm' value='S' title="Salvar Comprobante" onClick='salvarComprobante(0);return false;'></center> -->
+						      		 	
+						      		 	<button class="btn btn-round btn-default btn-fab btn-sm" id='btnsalvarcompro' name='btnsalvarcompro' onclick="salvarComprobante(0);return false;" title="Salvar Comprobante">
+                    	  	<i class="material-icons text-dark">save</i> 
+                        </button>
+
 									</div>						      		
                                    	<?php
                                    } 
@@ -523,35 +532,11 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
                 </thead>
                 <tbody id="tabla_archivos">
                   <?php
-                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=$codPadreArchivos"); //$codPadreArchivos //$codPadreArchivos localhost
-                  $stmtArchivo->execute();
                   $filaA=0;
-                  while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
-                     $filaA++;
-                     $codigoX=$rowArchivo['idClaDocumento'];
-                     $nombreX=$rowArchivo['Documento'];
-                     $ObligatorioX=$rowArchivo['Obligatorio'];
-                     $Obli='<i class="material-icons text-danger">clear</i> NO';
-                     if($ObligatorioX==1){
-                      $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
-                     }
+
+                  
                   ?>
-                  <tr>
-                    <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
-                    <td class="text-center"><?=$Obli?></td>
-                    <td class="text-right">
-                      <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
-                      <span class="input-archivo">
-                        <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
-                      </span>
-                      <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo
-                      </label>
-                    </td>    
-                    <td><?=$nombreX;?></td>
-                  </tr> 
-                  <?php
-                   }
-                  ?>       
+                     
                 </tbody>
               </table>
               <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
@@ -565,122 +550,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
     </div>
   </div>
 </div>
-<!--    end small modal -->
-		<!-- small modal -->
-		<!--<div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		  <div class="modal-dialog modal-lg">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		      	<i class="material-icons" data-notify="icon"><?=$iconFile?></i>
-		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
-		      </div>
-		      <div class="modal-body">
-		        <p>Cargar archivos de respaldo.</p> 
-		           <div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
-		           	<div class="row">
-		           		<div class="col-md-9">
-		           			<div class="border" id="lista_archivos">Ningun archivo seleccionado</div>
-		           		</div>
-		           		<div class="col-md-3">
-		           			<span class="btn btn-info btn-round btn-file">
-		                      <span class="fileinput-new">Buscar</span>
-		                      <span class="fileinput-exists">Cambiar</span>
-		                      <input type="file" name="archivos[]" id="archivos" multiple="multiple"/>
-		                   </span>
-		                <a href="#" class="btn btn-danger btn-round fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
-		           		</div>
-		           	</div>
-		           </div>
-		           <p class="text-danger">Los archivos se subir&aacute;n al servidor cuando se GUARDE el comprobante</p>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" onclick="" class="btn btn-link" data-dismiss="modal">Aceptar
-		          <div class="ripple-container"></div>
-		        </button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-	</div>-->
-	<!--    end small modal -->
+
 </form>
-
-<!-- <div class="cargar">
-  	<div class="div-loading text-center">
-     	<h4 class="text-warning font-weight-bold">Procesando Datos</h4>
-     	<p class="text-white">Aguard&aacute; un momento por favor</p>  
-  	</div>
-</div>
-<div class="cargar-ajax d-none">
-  	<div class="div-loading text-center">
-     	<h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
-     	<p class="text-white">Aguard&aacute; un momento por favor</p>  
-  	</div>
-</div> -->
-<!-- <div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  	<div class="modal-dialog modal-lg">
-    	<div class="modal-content card">
-            <div class="card-header card-header-warning card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons text-dark">ballot</i>
-                </div>
-                 <h4 class="card-title">Proveedor</h4>
-            </div>
-            <div class="card-body">
-                <div id="datosProveedorNuevo">
-                   
-                </div> 
-                <div class="form-group float-right">
-                        <button type="button" onclick="guardarDatosProveedorComprobante()" class="btn btn-info btn-round">Agregar</button>
-                </div>
-          	</div>
-      	</div>  
-    </div>
-</div> -->
-
-
-<?php 
-$dbh = new Conexion();
-
-$sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 ";
-$sqlBusqueda.=" order by p.numero";
-
-
-$stmt = $dbh->prepare($sqlBusqueda);
-$stmt->execute();
-$stmt->bindColumn('codigo', $codigoCuenta);
-$stmt->bindColumn('numero', $numeroCuenta);
-$stmt->bindColumn('nombre', $nombreCuenta);
-		$cont=0;$contAux=0;
-		while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-
-			$numeroCuenta=trim($numeroCuenta);
-			$nombreCuenta=trim($nombreCuenta);
-
-			$sqlCuentasAux="SELECT codigo, nombre, (select count(*) from estados_cuenta e, comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and c.cod_estadocomprobante<>2 and e.cod_cuentaaux=ca.codigo and e.cod_comprobantedetalleorigen=0)as contador FROM cuentas_auxiliares ca where ca.cod_cuenta='$codigoCuenta' order by 2";
-			$stmtAux = $dbh->prepare($sqlCuentasAux);
-			$stmtAux->execute();
-			$stmtAux->bindColumn('codigo', $codigoCuentaAux);
-			$stmtAux->bindColumn('nombre', $nombreCuentaAux);
-			$stmtAux->bindColumn('contador', $contadorRegistrosEC);
-			while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
-				$txtNumRegistros="";
-				if($contadorRegistrosEC>0){
-					$txtNumRegistros=" -- **".$contadorRegistrosEC."**";
-				}
-				$nombreCuentaAux=$nombreCuentaAux." ".$txtNumRegistros;
-		?>
-			<script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});
-			</script>
-		<?php
-				$contAux++;
-			}  	
-		 ?><script>
-		    itemCuentas.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
-		 </script><?php	
-		$cont++;
-		}?>
-
-<!-- <script>$('.selectpicker').selectpicker("refresh");</script> -->
 <?php require_once 'modal.php';?>
-<?php require_once '../simulaciones_servicios/modal_facturacion.php';?>
+

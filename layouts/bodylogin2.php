@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    iFinanciero - COBOFAR
+    Financiero - COBOFAR
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
@@ -104,6 +104,98 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+
+       var table_diario=$('#tablePaginatorReport_facturasgeneradas').DataTable({
+          "paging":   false,
+            "info":     false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "order": false,
+            "searching": false,
+            fixedHeader: {
+              header: true,
+              footer: true
+            },
+            dom: 'Bfrtip',
+            buttons:[
+
+            {
+                extend: 'copy',
+                text:      '<i class="material-icons">file_copy</i>',
+                titleAttr: 'Copiar',
+                title: 'Reporte Facturas Generadas X Persona',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'csv',
+                text:      '<i class="material-icons">list_alt</i>',
+                titleAttr: 'CSV',
+                title: 'Reporte Facturas Generadas X Persona',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'excel',
+                text:      '<i class="material-icons">assessment</i>',
+                titleAttr: 'Excel',
+                title: 'Reporte Facturas Generadas X Persona',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'pdf',
+                text:      '<i class="material-icons">picture_as_pdf</i>',
+                titleAttr: 'Pdf',
+                title: 'Reporte Facturas Generadas X Persona',
+                orientation: 'landscape',
+                //messageTop:'Reporte Facturas Generadas X Persona',
+                exportOptions: {
+                        columns: ':visible'
+                },
+              customize: function ( doc) {
+                   doc['footer']=(function(page, pages) { return {
+                         columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
+                              text: page.toString(), italics: true 
+                             },' de ',
+                             { text: pages.toString(), italics: true }]
+                          }],
+                         margin: [10, 5]
+                        }
+                   });
+                doc.content.splice( 1, 0, {
+                    margin: [ 0, -80, 0, 12 ],
+                    alignment: 'left',
+                    image: imageLogo,
+                    width:60,
+                    height:60, 
+                } );
+                doc.content.splice( 1, 0, {
+                    margin: [ 100, 0, 0, 12 ],
+                    text: [{
+                      text: 'COBOFAR - REPORTES',
+                      bold: true,
+                      fontSize: 9,
+                      alignment: 'right'
+                   }]        
+                } );
+              }
+            },
+            {
+                extend: 'print',
+                text:      '<i class="material-icons">print</i>',
+                titleAttr: 'Imprimir',
+                title: 'Reporte Facturas Generadas X Persona',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            }
+          ]
+        });
 
         // Setup - add a text input to each footer cell
         $('#libreta_bancaria_reporte_modal tfoot th').each( function () {
@@ -220,19 +312,7 @@
              $('#tableCuentasBuscar thead').append(r);
              $('#search_0').css('text-align', 'center');
 
-          /*$('#tableCuentasBuscar').DataTable({
-            "paging":   false,
-            "info":     false,
-            "order": false,
-            "searching": false,
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            fixedHeader: {
-              header: true,
-              footer: true
-            }
-          } );*/
+                 
         }
         
     } );
@@ -511,12 +591,12 @@
                         }                
                       }
                       var monto_debe_total_comprobante = $("#totaldeb").val();  
-                      /*if(sumaTotalFactura!=monto_debe_total_comprobante){
-                        mensaje+="<p>El Monto registrado en las facturas difiere del total!</p>";
-                        $('#msgError').html(mensaje);
-                        $('#modalAlert').modal('show');
-                        envio=1; 
-                      }*/
+                      // if(sumaTotalFactura!=monto_debe_total_comprobante){
+                      //   mensaje+="<p>El Monto registrado en las facturas difiere del total!</p>";
+                      //   $('#msgError').html(mensaje);
+                      //   $('#modalAlert').modal('show');
+                      //   envio=1; 
+                      // }
                       console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
                       if(contadorFacturas==cantiFacturas){
                         mensaje+="<p>No puede existir Facturas vacías!</p>";
@@ -1126,6 +1206,8 @@
                 text:'<i class="material-icons">picture_as_pdf</i>',
                 titleAttr: 'Pdf',
                 title:'Reporte Libro Mayor',
+
+                orientation: 'landscape',
                 exportOptions: {
                     columns: ':visible'
                 },
@@ -1162,6 +1244,7 @@
                 text:      '<i class="material-icons">print</i>',
                 titleAttr: 'Imprimir',
                 title:'Reporte Libro Mayor',
+                orientation: 'landscape',
                 exportOptions: {
                     columns: ':visible'
                 }
@@ -1592,7 +1675,7 @@
                   text:      '<i class="material-icons">picture_as_pdf</i>',
                   titleAttr: 'Pdf',
                   title: 'Reporte De Activos Fijos',
-                  //messageTop:'Reporte Libro Diario',
+                  orientation: 'landscape',
                   exportOptions: {
                           columns: ':visible'
                   },
@@ -1613,6 +1696,7 @@
                       width:60,
                       height:60 
                   } );
+                  doc.defaultStyle.fontSize = 7;
                 }
               },
               {
@@ -1620,6 +1704,88 @@
                   text:      '<i class="material-icons">print</i>',
                   titleAttr: 'Imprimir',
                   title: 'Reporte De Activos Fijos',
+                  exportOptions: {
+                      columns: ':visible'
+                  }
+              }
+            ]
+          });
+       var table_af=$('#tablePaginatorFixed_af_baja').DataTable({
+            "paging":   false,
+              "info":     false,
+              "language": {
+                  "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+              },
+              "order": false,
+              "searching": false,
+              fixedHeader: {
+                header: true,
+                footer: true
+              },
+              dom: 'Bfrtip',
+              buttons:[
+
+              {
+                  extend: 'copy',
+                  text:      '<i class="material-icons">file_copy</i>',
+                  titleAttr: 'Copiar',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
+                  exportOptions: {
+                      columns: ':visible'
+                  }
+              },
+              {
+                  extend: 'csv',
+                  text:      '<i class="material-icons">list_alt</i>',
+                  titleAttr: 'CSV',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
+                  exportOptions: {
+                      columns: ':visible'
+                  }
+              },
+              {
+                  extend: 'excel',
+                  text:      '<i class="material-icons">assessment</i>',
+                  titleAttr: 'Excel',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
+                  exportOptions: {
+                      columns: ':visible'
+                  }
+              },
+              {
+                  extend: 'pdf',
+                  text:      '<i class="material-icons">picture_as_pdf</i>',
+                  titleAttr: 'Pdf',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
+                  orientation: 'landscape',
+                  exportOptions: {
+                          columns: ':visible'
+                  },
+                customize: function ( doc) {
+                     doc['footer']=(function(page, pages) { return {
+                           columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
+                                text: page.toString(), italics: true 
+                               },' de ',
+                               { text: pages.toString(), italics: true }]
+                            }],
+                           margin: [10, 5]
+                          }
+                     });
+                  doc.content.splice( 1, 0, {
+                      margin: [ 0, -50, 0, 12 ],
+                      alignment: 'left',
+                      image: imageLogo,
+                      width:60,
+                      height:60 
+                  } );
+                  doc.defaultStyle.fontSize = 7;
+                }
+              },
+              {
+                  extend: 'print',
+                  text:      '<i class="material-icons">print</i>',
+                  titleAttr: 'Imprimir',
+                  title: 'Reporte De Activos Fijos y Fungibles Dados de Baja',
                   exportOptions: {
                       columns: ':visible'
                   }
@@ -1646,7 +1812,7 @@
                       extend: 'copy',
                       text:      '<i class="material-icons">file_copy</i>',
                       titleAttr: 'Copiar',
-                      title: 'Reporte De Activos Fijos Por Unidad',
+                      title: 'Reporte De Activos Fijos Por Oficina',
                       exportOptions: {
                           columns: ':visible'
                       }
@@ -1664,7 +1830,7 @@
                       extend: 'excel',
                       text:      '<i class="material-icons">assessment</i>',
                       titleAttr: 'Excel',
-                      title: 'Reporte De Activos Fijos Por Unidad',
+                      title: 'Reporte De Activos Fijos Por Oficina',
                       exportOptions: {
                           columns: ':visible'
                       }
@@ -1673,7 +1839,8 @@
                       extend: 'pdf',
                       text:      '<i class="material-icons">picture_as_pdf</i>',
                       titleAttr: 'Pdf',
-                      title: 'Reporte De Activos Fijos Por Unidad',
+                      orientation: 'landscape',
+                      title: 'Reporte De Activos Fijos Por Oficina',
                       //messageTop:'Reporte Libro Diario',
                       exportOptions: {
                               columns: ':visible'
@@ -1757,7 +1924,7 @@
                       text:      '<i class="material-icons">picture_as_pdf</i>',
                       titleAttr: 'Pdf',
                       title: 'Depreciación De Activos Fijos Por Mes Y Gestión',
-                      //messageTop:'Reporte Libro Diario',
+                      orientation: 'landscape',
                       exportOptions: {
                               columns: ':visible'
                       },
@@ -1778,6 +1945,7 @@
                           width:50,
                           height:50 
                       } );
+                      doc.defaultStyle.fontSize = 7;
                     }
                   },
                   {
@@ -1838,7 +2006,7 @@
                             text:      '<i class="material-icons">picture_as_pdf</i>',
                             titleAttr: 'Pdf',
                             title: 'Depreciación De Activos Fijos Por Rubro Por Mes',
-                            //messageTop:'Reporte Libro Diario',
+                            orientation: 'landscape',
                             exportOptions: {
                                     columns: ':visible'
                             },
@@ -1859,6 +2027,7 @@
                                 width: 50,
                                 height:50 
                             } );
+                            doc.defaultStyle.fontSize = 7;
                           }
                         },
                         {
@@ -1915,10 +2084,94 @@
               }
           },
           {
+            extend: 'pdf',
+            text:      '<i class="material-icons">picture_as_pdf</i>',
+            titleAttr: 'Pdf',
+            title: 'Reporte De Activos Fijos Asignados',
+            orientation: 'landscape',
+            exportOptions: {
+                    columns: ':visible'
+            },
+          customize: function ( doc) {
+            doc['footer']=(function(page, pages) { return {
+                     columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
+                          text: page.toString(), italics: true 
+                         },' de ',
+                         { text: pages.toString(), italics: true }]
+                      }],
+                     margin: [10, 5]
+                    }
+               });
+            doc.content.splice( 1, 0, {
+                margin: [ 0, -50, 0, 12 ],
+                alignment: 'left',
+                image: imageLogo,
+                width:50,
+                height:50 
+            } );
+            doc.defaultStyle.fontSize = 7;
+          }},
+
+          {
+              extend: 'print',
+              text:      '<i class="material-icons">print</i>',
+              titleAttr: 'Imprimir',
+              title: 'Reporte De Activos Fijos Asignados',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          }
+        ]
+      });
+      
+
+    var table_afxU=$('#tablePaginatorFixedPlanillaSueldo').DataTable({
+        "paging":   false,
+          "info":     false,
+          "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+          },
+          "order": false,
+          "searching": false,
+          fixedHeader: {
+            header: true,
+            footer: true
+          },
+          dom: 'Bfrtip',
+          buttons:[
+
+          {
+              extend: 'copy',
+              text:      '<i class="material-icons">file_copy</i>',
+              titleAttr: 'Copiar',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'csv',
+              text:      '<i class="material-icons">list_alt</i>',
+              titleAttr: 'CSV',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'excel',
+              text:      '<i class="material-icons">assessment</i>',
+              titleAttr: 'Excel',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
               extend: 'pdf',
               text:      '<i class="material-icons">picture_as_pdf</i>',
               titleAttr: 'Pdf',
-              title: 'Reporte De Activos Fijos Asignados',
+              title: 'Planilla Sueldos Personal',
               //messageTop:'Reporte Libro Diario',
               exportOptions: {
                       columns: ':visible'
@@ -1937,8 +2190,8 @@
                   margin: [ 0, -50, 0, 12 ],
                   alignment: 'left',
                   image: imageLogo,
-                  width:50,
-                  height:50 
+                  width: 50,
+                  height: 50 
               } );
             }
           },
@@ -1946,96 +2199,59 @@
               extend: 'print',
               text:      '<i class="material-icons">print</i>',
               titleAttr: 'Imprimir',
-              title: 'Reporte De Activos Fijos Asignados',
+              title: 'Planilla Sueldos Personal',
               exportOptions: {
                   columns: ':visible'
               }
           }
         ]
-      });
-      
+    });
+    var table_afx10=$('#tablePaginatorFixedPlanillaSueldo_otros').DataTable({
+        "paging":   false,
+          "info":     false,
+          "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+          },
+          "order": false,
+          "searching": false,
+          fixedHeader: {
+            header: true,
+            footer: true
+          },
+          dom: 'Bfrtip',
+          buttons:[
 
-      var table_afxU=$('#tablePaginatorFixedPlanillaSueldo').DataTable({
-                "paging":   false,
-                  "info":     false,
-                  "language": {
-                      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                  },
-                  "order": false,
-                  "searching": false,
-                  fixedHeader: {
-                    header: true,
-                    footer: true
-                  },
-                  dom: 'Bfrtip',
-                  buttons:[
-
-                  {
-                      extend: 'copy',
-                      text:      '<i class="material-icons">file_copy</i>',
-                      titleAttr: 'Copiar',
-                      title: 'Planilla Sueldos Personal',
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  },
-                  {
-                      extend: 'csv',
-                      text:      '<i class="material-icons">list_alt</i>',
-                      titleAttr: 'CSV',
-                      title: 'Planilla Sueldos Personal',
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  },
-                  {
-                      extend: 'excel',
-                      text:      '<i class="material-icons">assessment</i>',
-                      titleAttr: 'Excel',
-                      title: 'Planilla Sueldos Personal',
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  },
-                  {
-                      extend: 'pdf',
-                      text:      '<i class="material-icons">picture_as_pdf</i>',
-                      titleAttr: 'Pdf',
-                      title: 'Planilla Sueldos Personal',
-                      //messageTop:'Reporte Libro Diario',
-                      exportOptions: {
-                              columns: ':visible'
-                      },
-                    customize: function ( doc) {
-                         doc['footer']=(function(page, pages) { return {
-                               columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
-                                    text: page.toString(), italics: true 
-                                   },' de ',
-                                   { text: pages.toString(), italics: true }]
-                                }],
-                               margin: [10, 5]
-                              }
-                         });
-                      doc.content.splice( 1, 0, {
-                          margin: [ 0, -50, 0, 12 ],
-                          alignment: 'left',
-                          image: imageLogo,
-                          width: 50,
-                          height: 50 
-                      } );
-                    }
-                  },
-                  {
-                      extend: 'print',
-                      text:      '<i class="material-icons">print</i>',
-                      titleAttr: 'Imprimir',
-                      title: 'Planilla Sueldos Personal',
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  }
-                ]
-              });
+          {
+              extend: 'copy',
+              text:      '<i class="material-icons">file_copy</i>',
+              titleAttr: 'Copiar',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'csv',
+              text:      '<i class="material-icons">list_alt</i>',
+              titleAttr: 'CSV',
+              title: 'Planilla Sueldos Personal',
+              fieldBoundary: '',
+            fieldSeparator: ';',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'excel',
+              text:      '<i class="material-icons">assessment</i>',
+              titleAttr: 'Excel',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+        ]
+    });
 
     var table_afxU=$('#tablePaginatorFixedTributaria').DataTable({
                 "paging":   false,
@@ -2129,6 +2345,23 @@
                   fixedHeader: {
                     header: true,
                     footer: true
+                  },
+                  dom: 'Bfrtip',
+                  buttons:[                 
+                ]
+              });
+
+        var table_afxU=$('#tablePaginatorHeader').DataTable({
+                "paging":   false,
+                  "info":     false,
+                  "language": {
+                      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                  },
+                  "order": false,
+                  "searching": false,
+                  fixedHeader: {
+                    header: true,
+                    footer: false
                   },
                   dom: 'Bfrtip',
                   buttons:[                 

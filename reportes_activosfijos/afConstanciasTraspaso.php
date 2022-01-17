@@ -8,9 +8,9 @@ $query = "SELECT * from depreciaciones order by 3";
 $statement = $dbh->query($query);
 
 //asignaciones
-$query2 = "SELECT afs.*,af.activo,(select d.nombre from depreciaciones d where d.codigo=af.cod_depreciaciones) as nombreRubro,(select d.tipo_bien from tiposbienes d where d.codigo=af.cod_tiposbienes) as nombreBien,
-(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo  = ".$codigo_af;
-$statement2 = $dbh->query($query2);
+// $query2 = "SELECT afs.*,af.activo,(select d.nombre from depreciaciones d where d.codigo=af.cod_depreciaciones) as nombreRubro,(select d.tipo_bien from tiposbienes d where d.codigo=af.cod_tiposbienes) as nombreBien,
+// (select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo  = ".$codigo_af;
+// $statement2 = $dbh->query($query2);
 //unidad
 $queryUO = "SELECT * from unidades_organizacionales order by 2";
 $statementUO = $dbh->query($queryUO);
@@ -21,16 +21,16 @@ $fechaDesde=date("Y-m-d");
 ?>
 
 <div class="content">
-	<div class="container-fluid">
-		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="reportes_activosfijos/imp.php" method="post" target="_blank">
-			<div class="card">
-			  <div class="card-header <?=$colorCard;?> card-header-text">
-  				<div class="card-text">
-  				  <h4 class="card-title">Impresión de Constancia</h4>
-  				</div>
-			  </div>
-			  <div class="card-body ">
+  <div class="container-fluid">
+    <div class="col-md-12">
+      <form id="form1" class="form-horizontal" action="reportes_activosfijos/imp.php" method="post" target="_blank">
+      <div class="card">
+        <div class="card-header <?=$colorCard;?> card-header-text">
+          <div class="card-text">
+            <h4 class="card-title">Impresión de Constancia</h4>
+          </div>
+        </div>
+        <div class="card-body ">
           <center><h4 class='text-muted font-weight-bold'>DATOS ORIGEN</h4></center>
           <div class="row">
                       <label class="col-sm-2 col-form-label">Oficina Origen</label>
@@ -124,12 +124,12 @@ $fechaDesde=date("Y-m-d");
                       </div>
                       </div><!--fin campo cod_responsables_responsable -->
                    </div>
-			  </div>
-			  <div class="card-footer ml-auto mr-auto">
-				  <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
         </div>
-			</div>
-		  </form>
-		</div>
-	</div>
+        <div class="card-footer ml-auto mr-auto">
+          <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>

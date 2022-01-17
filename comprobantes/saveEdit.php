@@ -23,12 +23,19 @@ $glosa=$_POST["glosa"];
 $facturas= json_decode($_POST['facturas']);
 $estadosCuentas= json_decode($_POST['estados_cuentas']);
 session_start();
-
-$globalUser=$_SESSION["globalUser"];
-$globalGestion=$_SESSION["globalGestion"];
-$globalUnidad=$_SESSION["globalUnidad"];
-$globalArea=$_SESSION["globalArea"];
-$globalAdmin=$_SESSION["globalAdmin"];
+if(isset($_SESSION["globalUser"])){
+  $globalUser=$_SESSION["globalUser"];
+  $globalGestion=$_SESSION["globalGestion"];
+  $globalUnidad=$_SESSION["globalUnidad"];
+  $globalArea=$_SESSION["globalArea"];
+  $globalAdmin=$_SESSION["globalAdmin"];
+}else{
+  $globalUser=-100;
+  $globalGestion=-100;
+  $globalUnidad=-100;
+  $globalArea=-100;
+  $globalAdmin=-100;
+}
 
 $salvado_temporal=0;
 if(isset($_POST['salvado_temporal'])){
@@ -116,23 +123,23 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         $stmtInsert = $dbh->prepare($sqlInsert);
         $flagArchivo=$stmtInsert->execute();    
         //print_r($sqlInsert);
-        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
-          //sibir archivos al servidor de documentos
-          $parametros=array(
-            "idD" => 15,
-            "idR" => $codArchivoAdjunto,
-            "idusr" => 90,
-            "Tipodoc" => 3596,
-            "descripcion" => $descripcion,
-            "codigo" => "",
-            "observacion" => "-",
-            "r" => "http://www.google.com",
-            "v" => true
-            );
-           $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
-           //unlink($target_path);
-           //print_r($resultado);        
-        }
+        // if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+        //   //sibir archivos al servidor de documentos
+        //   // $parametros=array(
+        //   //   "idD" => 15,
+        //   //   "idR" => $codArchivoAdjunto,
+        //   //   "idusr" => 90,
+        //   //   "Tipodoc" => 3596,
+        //   //   "descripcion" => $descripcion,
+        //   //   "codigo" => "",
+        //   //   "observacion" => "-",
+        //   //   "r" => "http://www.google.com",
+        //   //   "v" => true
+        //   //   );
+        //    //$resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+        //    //unlink($target_path);
+        //    //print_r($resultado);        
+        // }
       } else {    
           echo "error";
       } 
@@ -157,30 +164,65 @@ $flagsuccess=$stmtDetalleUpdate->execute();
 array_push($SQLDATOSINSTERT,$flagsuccess);
 
 
-    $stmt1 = obtenerComprobantesDet($codComprobante);
-    while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-      $codigo=$row1['cod_det'];
-      $sqlDeleteEstado="";
-      $sqlDeleteEstado="DELETE from estados_cuenta where cod_comprobantedetalle='$codigo'";
-      $stmtDelEstado = $dbh->prepare($sqlDeleteEstado);
-      $flagsuccess=$stmtDelEstado->execute();
-      array_push($SQLDATOSINSTERT,$flagsuccess);
-      $sqlDeleteFactura="";
-      $sqlDeleteFactura="DELETE from facturas_compra where cod_comprobantedetalle='$codigo'";
-      $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
-      $flagsuccess=$stmtDelFactura->execute();
-      array_push($SQLDATOSINSTERT,$flagsuccess);
-    }
+    // $stmt1 = obtenerComprobantesDet($codComprobante);
+    // while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+    //   $codigo=$row1['cod_det'];
+    //   $sqlDeleteEstado="";
+    //   $sqlDeleteEstado="DELETE from estados_cuenta where cod_comprobantedetalle='$codigo'";
+    //   $stmtDelEstado = $dbh->prepare($sqlDeleteEstado);
+    //   $flagsuccess=$stmtDelEstado->execute();
+    //   array_push($SQLDATOSINSTERT,$flagsuccess);
+    //   $sqlDeleteFactura="";
+    //   $sqlDeleteFactura="DELETE from facturas_compra where cod_comprobantedetalle='$codigo'";
+    //   $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
+    //   $flagsuccess=$stmtDelFactura->execute();
+    //   array_push($SQLDATOSINSTERT,$flagsuccess);
+    // }
     if(!isset($_POST['incompleto'])){
+      $stmt1 = obtenerComprobantesDet($codComprobante);
+      // var_dump($row1);
+      while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+        //echo "incompleto2";
+        $codigo=$row1['cod_det'];
+        $sqlDeleteEstado="";
+        $sqlDeleteEstado="DELETE from estados_cuenta where cod_comprobantedetalle='$codigo'";
+        $stmtDelEstado = $dbh->prepare($sqlDeleteEstado);
+        $flagsuccess=$stmtDelEstado->execute();
+        array_push($SQLDATOSINSTERT,$flagsuccess);
+        $sqlDeleteFactura="";
+        $sqlDeleteFactura="DELETE from facturas_compra where cod_comprobantedetalle='$codigo'";
+        $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
+        $flagsuccess=$stmtDelFactura->execute();
+        array_push($SQLDATOSINSTERT,$flagsuccess);
+      }
+      //echo "incompleto";
       $sqlDelete="";
       $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
       $stmtDel = $dbh->prepare($sqlDelete);
       $flagSuccess=$stmtDel->execute();
       array_push($SQLDATOSINSTERT,$flagsuccess);
+
     }else{
       //BORRAMOS LOS REGISTROS ELIMINADOS EN EL COMPROBANTE DETALLE
      if(isset($_POST["codigos_seleccionados"])){
       if($_POST["codigos_seleccionados"]!=""){
+        // $codigo=$row1['cod_det'];
+        $stringCodigos=$_POST["codigos_seleccionados"];
+
+        $stringCuentas=$_POST["cuentas_selecionadas"];
+        
+
+        $sqlDeleteEstado="";
+        $sqlDeleteEstado="DELETE from estados_cuenta where cod_comprobantedetalle in (select codigo from comprobantes_detalle where cod_comprobante='$codComprobante' and cod_cuenta in ($stringCuentas))";
+        $stmtDelEstado = $dbh->prepare($sqlDeleteEstado);
+        $flagsuccess=$stmtDelEstado->execute();
+        array_push($SQLDATOSINSTERT,$flagsuccess);
+        $sqlDeleteFactura="";
+        $sqlDeleteFactura="DELETE from facturas_compra where cod_comprobantedetalle in (select codigo from comprobantes_detalle where cod_comprobante='$codComprobante' and cod_cuenta in ($stringCuentas))";
+        $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
+        $flagsuccess=$stmtDelFactura->execute();
+        array_push($SQLDATOSINSTERT,$flagsuccess);
+
         $arrayCodigosDetalle=explode(",",$_POST["codigos_seleccionados"]);        
         //echo implode(",", $arrayCodigosDetalle).":PRIMERO<br>";
         for ($filas=1; $filas<=$cantidadFilas ; $filas++) { 
@@ -217,7 +259,13 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
 		$unidadDetalle=$_POST["unidad".$i];
 		$area=$_POST["area".$i];
-		$debe=$_POST["debe".$i];
+    if($unidadDetalle==null){
+      $unidadDetalle=1;
+    }
+    if($area==null){
+      $area=522;
+    }
+    $debe=$_POST["debe".$i];
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
     $codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];
@@ -306,7 +354,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $iceFac=$facturas[$i-1][$j]->iceFac;
       
 
-      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tazaFac','$tipoFac')";
+      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra,tasas) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','0','$tipoFac','$tazaFac')";
       $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
       $flagSuccessDetalle2=$stmtDetalle2->execute();
       array_push($SQLDATOSINSTERT,$flagSuccessDetalle2); 
@@ -318,7 +366,11 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       for($j=0;$j<$nC;$j++){
           $fecha=date("Y-m-d H:i:s");
           $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
-          $codPlanCuentaAux=$estadosCuentas[$i-1][$j]->cod_plancuentaaux;
+          if(isset($estadosCuentas[$i-1][$j]->cod_plancuentaaux)){
+            $codPlanCuentaAux=$estadosCuentas[$i-1][$j]->cod_plancuentaaux;
+          }else{
+            $codPlanCuentaAux=$cuentaAuxiliar;
+          }
           $monto=$estadosCuentas[$i-1][$j]->monto;
           $codProveedor=obtenerCodigoProveedorCuentaAux($codPlanCuentaAux);
           $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
@@ -330,7 +382,6 @@ for ($i=1;$i<=$cantidadFilas;$i++){
             $flagSuccessDetalle3=$stmtDetalle3->execute();
             array_push($SQLDATOSINSTERT,$flagSuccessDetalle3); 
           }
-          
       }
     }//FIN DE ESTADOS DE CUENTA
 	}
@@ -351,6 +402,7 @@ if($errorInsertar!=0){
   $sqlRolBack="ROLLBACK;";
   $stmtRolBack = $dbh->prepare($sqlRolBack);
   $stmtRolBack->execute();
+  // $flagSuccessDetalle=false;
 }
 $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
 $stmtCommit = $dbh->prepare($sqlCommit);

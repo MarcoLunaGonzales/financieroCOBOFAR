@@ -61,13 +61,36 @@ try {
     $personal_confianza=$_POST['personal_confianza'];
     $cuenta_bancaria=$_POST['cuenta_bancaria'];
     $globalUser=$_SESSION['globalUser'];
+
+    $turno=$_POST['turno'];
+    $tipo_trabajo=$_POST['tipo_trabajo'];
+
+
+
+
+    $noche_pactado=$_POST['noche_pactado'];
+    $domingo_pactado=$_POST['domingo_pactado'];
+    $feriado_pactado=$_POST['feriado_pactado'];
+    $movilidad_pactado=$_POST['movilidad_pactado'];
+    $refrigerio_pactado1=$_POST['refrigerio_pactado'];
+    $refrigerio_pactado2=$_POST['refrigerio_pactado2'];
+    $comision_ventas=$_POST['comision_ventas'];
+    $fallo_caja=$_POST['fallo_caja'];
+    $aporte_sindicato=$_POST['aporte_sindicato'];//descuento
+
+    $cod_cajasalud=$_POST['cod_cajasalud'];
+
+
+
+
+
     $created_by = $globalUser;
     $modified_by = $globalUser;
     $cod_estadoreferencial=1;
     $porcentaje=100;
     if($codigo==0){
         $codigo=obtenerCodigoPersonal();
-        $sql="INSERT into personal(codigo,cod_tipo_identificacion,tipo_identificacion_otro,identificacion,cod_lugar_emision,lugar_emision_otro,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,direccion,cod_tipoafp,cod_tipoaporteafp,nro_seguro,cod_estadopersonal,telefono,celular,email,persona_contacto,created_by,modified_by,created_at,modified_at,cod_estadoreferencial,cod_nacionalidad,cod_estadocivil,cod_pais,cod_departamento,cod_ciudad,ciudad_otro,cod_grado_academico,ing_contr,ing_planilla,email_empresa,bandera,personal_confianza,cuenta_bancaria)  values ($codigo,'$cod_tipoIdentificacion','$tipo_identificacionOtro','$identificacion','$cod_lugar_emision','$lugar_emisionOtro','$fecha_nacimiento','$cod_cargo','$cod_unidadorganizacional','$cod_area','$jubilado','$cod_genero','$cod_tipopersonal','$haber_basico','$paterno','$materno','$apellido_casada','$primer_nombre','$otros_nombres','$nua_cua_asignado','$direccion','$cod_tipoafp','$cod_tipoaporteafp','$nro_seguro','$cod_estadopersonal','$telefono','$celular','$email','$persona_contacto','$created_by','$modified_by',NOW(),NOW(),'$cod_estadoreferencial','$cod_nacionalidad','$cod_estadocivil','$cod_pais','$cod_departamento','$cod_ciudad','$ciudadOtro','$grado_academico','$ing_contr','$ing_planilla','$email_empresa','$bandera','$personal_confianza','$cuenta_bancaria')";
+        $sql="INSERT into personal(codigo,cod_tipo_identificacion,tipo_identificacion_otro,identificacion,cod_lugar_emision,lugar_emision_otro,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,direccion,cod_tipoafp,cod_tipoaporteafp,nro_seguro,cod_estadopersonal,telefono,celular,email,persona_contacto,created_by,modified_by,created_at,modified_at,cod_estadoreferencial,cod_nacionalidad,cod_estadocivil,cod_pais,cod_departamento,cod_ciudad,ciudad_otro,cod_grado_academico,ing_contr,ing_planilla,email_empresa,bandera,personal_confianza,cuenta_bancaria,turno,tipo_trabajo,cod_cajasalud)  values ($codigo,'$cod_tipoIdentificacion','$tipo_identificacionOtro','$identificacion','$cod_lugar_emision','$lugar_emisionOtro','$fecha_nacimiento','$cod_cargo','$cod_unidadorganizacional','$cod_area','$jubilado','$cod_genero','$cod_tipopersonal','$haber_basico','$paterno','$materno','$apellido_casada','$primer_nombre','$otros_nombres','$nua_cua_asignado','$direccion','$cod_tipoafp','$cod_tipoaporteafp','$nro_seguro','$cod_estadopersonal','$telefono','$celular','$email','$persona_contacto','$created_by','$modified_by',NOW(),NOW(),'$cod_estadoreferencial','$cod_nacionalidad','$cod_estadocivil','$cod_pais','$cod_departamento','$cod_ciudad','$ciudadOtro','$grado_academico','$ing_contr','$ing_planilla','$email_empresa','$bandera','$personal_confianza','$cuenta_bancaria','$turno','$tipo_trabajo','$cod_cajasalud')";
         //echo $sql;
         $stmt = $dbh->prepare($sql);
         $flagSuccess=$stmt->execute();
@@ -83,6 +106,37 @@ try {
         $stmtDiscapacitado = $dbh->prepare("INSERT INTO personal_discapacitado(codigo,tipo_persona_discapacitado,nro_carnet_discapacidad,fecha_nac_persona_dis,cod_estadoreferencial)
                                             values($codigo,$tipo_persona_discapacitado,'$nro_carnet_discapacidad','$fecha_nac_persona_dis',$cod_estadoreferencial)");
         $flagSuccess=$stmtDiscapacitado->execute();
+
+        //montos Pactados
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (11,$codigo,'$noche_pactado',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (12,$codigo,'$domingo_pactado',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (13,$codigo,'$feriado_pactado',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (14,$codigo,'$movilidad_pactado',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (15,$codigo,'$refrigerio_pactado1',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (16,$codigo,'$refrigerio_pactado2',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (18,$codigo,'$comision_ventas',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (19,$codigo,'$fallo_caja',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (100,$codigo,'$aporte_sindicato',1,2)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        // ****FIn BONOS  DESC PACTADOS
+
         //parte de imagen
         // $imagenANT = $resultANT['imagen'];
         if (strlen($_FILES['image']['name']) > 1){//solo si es diferente actualizar
@@ -103,7 +157,7 @@ try {
         showAlertSuccessError($flagSuccess,$urlListPersonal);
 
     }else{
-        $sqlUpdate="UPDATE personal set cod_tipo_identificacion='$cod_tipoIdentificacion',tipo_identificacion_otro='$tipo_identificacionOtro',identificacion='$identificacion',cod_lugar_emision='$cod_lugar_emision',lugar_emision_otro='$lugar_emisionOtro',fecha_nacimiento='$fecha_nacimiento',cod_cargo='$cod_cargo',cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',jubilado='$jubilado',cod_genero='$cod_genero',cod_tipopersonal='$cod_tipopersonal',haber_basico='$haber_basico',paterno='$paterno',materno='$materno',apellido_casada='$apellido_casada',primer_nombre='$primer_nombre',otros_nombres='$otros_nombres',nua_cua_asignado='$nua_cua_asignado',direccion='$direccion',cod_tipoafp='$cod_tipoafp',cod_tipoaporteafp='$cod_tipoaporteafp',nro_seguro='$nro_seguro',cod_estadopersonal='$cod_estadopersonal',telefono='$telefono',celular='$celular',email='$email',persona_contacto='$persona_contacto',modified_by='$modified_by',modified_at=NOW(),cod_nacionalidad='$cod_nacionalidad',cod_estadocivil='$cod_estadocivil',cod_pais='$cod_pais',cod_departamento='$cod_departamento',cod_ciudad='$cod_ciudad',ciudad_otro='$ciudad_otro',cod_grado_academico='$grado_academico',ing_contr='$ing_contr',ing_planilla='$ing_planilla',email_empresa='$email_empresa',bandera='$bandera',personal_confianza='$personal_confianza',cuenta_bancaria='$cuenta_bancaria' where codigo=$codigo";
+        $sqlUpdate="UPDATE personal set cod_tipo_identificacion='$cod_tipoIdentificacion',tipo_identificacion_otro='$tipo_identificacionOtro',identificacion='$identificacion',cod_lugar_emision='$cod_lugar_emision',lugar_emision_otro='$lugar_emisionOtro',fecha_nacimiento='$fecha_nacimiento',cod_cargo='$cod_cargo',cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',jubilado='$jubilado',cod_genero='$cod_genero',cod_tipopersonal='$cod_tipopersonal',haber_basico='$haber_basico',paterno='$paterno',materno='$materno',apellido_casada='$apellido_casada',primer_nombre='$primer_nombre',otros_nombres='$otros_nombres',nua_cua_asignado='$nua_cua_asignado',direccion='$direccion',cod_tipoafp='$cod_tipoafp',cod_tipoaporteafp='$cod_tipoaporteafp',nro_seguro='$nro_seguro',cod_estadopersonal='$cod_estadopersonal',telefono='$telefono',celular='$celular',email='$email',persona_contacto='$persona_contacto',modified_by='$modified_by',modified_at=NOW(),cod_nacionalidad='$cod_nacionalidad',cod_estadocivil='$cod_estadocivil',cod_pais='$cod_pais',cod_departamento='$cod_departamento',cod_ciudad='$cod_ciudad',ciudad_otro='$ciudadOtro',cod_grado_academico='$grado_academico',ing_contr='$ing_contr',ing_planilla='$ing_planilla',email_empresa='$email_empresa',bandera='$bandera',personal_confianza='$personal_confianza',cuenta_bancaria='$cuenta_bancaria',turno='$turno',tipo_trabajo='$tipo_trabajo',cod_cajasalud='$cod_cajasalud' where codigo=$codigo";
         $stmt = $dbh->prepare($sqlUpdate);
         $flagSuccess=$stmt->execute();
         //sacamos el id de area distribucion area distribucion
@@ -133,6 +187,39 @@ try {
         $stmtDiscapacitado->bindParam(':fecha_nac_persona_dis', $fecha_nac_persona_dis);
         $stmtDiscapacitado->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
         $flagSuccess=$stmtDiscapacitado->execute();
+
+
+        // MONTOS PACTADOS
+         $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$noche_pactado' where cod_personal=$codigo and cod_bono=11 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$domingo_pactado' where cod_personal=$codigo and cod_bono=12 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$feriado_pactado' where cod_personal=$codigo and cod_bono=13 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$movilidad_pactado' where cod_personal=$codigo and cod_bono=14 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$refrigerio_pactado1' where cod_personal=$codigo and cod_bono=15 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$refrigerio_pactado2' where cod_personal=$codigo and cod_bono=16 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$comision_ventas' where cod_personal=$codigo and cod_bono=18 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$fallo_caja' where cod_personal=$codigo and cod_bono=19 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$aporte_sindicato' where cod_personal=$codigo and cod_bono=100 and cod_estadoreferencial=1";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+
+        //FIN MOMTOS PACTADOS
+
         //parte de imagen
         //imagen anterior
         $stmtANT = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");

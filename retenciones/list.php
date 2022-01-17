@@ -54,7 +54,7 @@ $stmt->bindColumn('cod_estadoreferencial', $estado);
                           <td align="center"><?=$index;?></td>
                           <td><?=$nombre;?></td>
                           <td>
-                                 <img src="assets/img/logoibnorca.png" width="20" height="20"/> <?=$estadoDes;?>
+                                 <img src="assets/img/favicon.png" width="20" height="20"/> <?=$estadoDes;?>
                           </td>
                           <td><?=$porcentaje;?> %</td>
                           <td class="td-actions text-right">

@@ -72,6 +72,20 @@ if(count($cod_mes_x)>1){
   $nombre_mes=nombreMes($cod_mes_x[0])."-".nombreMes($cod_mes_x[count($cod_mes_x)-1]);
 }
 
+if (isset($_POST["check_rs_librocompras"])) {
+  $check_rs_librocompras=$_POST["check_rs_librocompras"]; 
+  if($check_rs_librocompras){
+    $razon_social=$_POST["razon_social"]; 
+    $sql_rs=" and f.razon_social like '%$razon_social%'";
+  }else{
+    $sql_rs="";
+  }
+}else{
+  $sql_rs="";
+}
+
+
+
 //datos Reporte
 $gestionPost=$gestion;
 $cod_mes_xPost=$stringMesX;
@@ -84,12 +98,12 @@ from facturas_compra f
 join solicitud_recursosdetalle sd on sd.codigo=f.cod_solicitudrecursodetalle
 join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso
 join estados_solicitudrecursos e on e.codigo =s.cod_estadosolicitudrecurso
-where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and (sd.cod_area=1235 or sd.cod_unidadorganizacional=3000) and MONTH(f.fecha) in ($stringMesX) and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha,f.nit,f.nro_factura asc
+where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and (sd.cod_area=1235 or sd.cod_unidadorganizacional=3000) and MONTH(f.fecha) in ($stringMesX) and YEAR(f.fecha)=$nombre_gestion $sql_rs ORDER BY f.fecha,f.nit,f.nro_factura asc
 )
 UNION (SELECT ll.* from (
   SELECT 1 as proyecto_si, (SELECT codigo from solicitud_recursos where cod_comprobante=cc.codigo) as codigo_solicitud,cc.codigo as cod_comprobante,f.codigo as cod_factura,-1 as cod_estado_sol, '' as numero_sol,' ' as estado_sol,f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tasa_cero,f.tipo_compra 
   FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
-  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and MONTH(cc.fecha) in ($stringMesX) and YEAR(cc.fecha)=$nombre_gestion 
+  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and MONTH(cc.fecha) in ($stringMesX) and YEAR(cc.fecha)=$nombre_gestion $sql_rs
   ORDER BY f.fecha,f.nit,f.nro_factura asc) ll
 )";
 //(SELECT codigo from solicitud_recursos where cod_comprobante=cc.codigo) as
@@ -120,7 +134,7 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
 $stmt2->bindColumn('codigo_solicitud', $codSolicitud); 
 $stmt2->bindColumn('proyecto_si', $proyecto_si); 
 //datos de la factura
-$stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (5)");
+$stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (1)");
 $stmtPersonal->execute();
 $result=$stmtPersonal->fetch();
 $sucursal=$result['sucursal'];
@@ -142,7 +156,7 @@ $razon_social=$result['razon_social'];
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
                   <div class="card-icon bg-blanco">
-                    <img class="" width="60" height="60" src="../assets/img/logo_ibnorca_origen.png">
+                    <img class="" width="60" height="50" src="../assets/img/favicon.png">
                   </div>                  
                   <h3 class="card-title text-center" ><b>Libro de Compras - Edición</b>
                     <span><br><h6>
@@ -408,19 +422,19 @@ $fechaActual=date("Y-m-d");
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Importe</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input class="form-control" type="number" readonly step="0.01" name="imp_fac" id="imp_fac"/>
+                                <input class="form-control" type="number"  step="0.01" name="imp_fac" id="imp_fac"/>
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Exento</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input class="form-control" type="number" readonly step="0.01" name="exe_fac" id="exe_fac"value="0" />
+                                <input class="form-control" type="number"  step="0.01" name="exe_fac" id="exe_fac"value="0" />
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">ICE</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input class="form-control" type="number" readonly step="0.01" name="ice_fac" id="ice_fac" value="0" />
+                                <input class="form-control" type="number" step="0.01" name="ice_fac" id="ice_fac" value="0" />
                               </div>
                              </div>
                           </div>                                                                  

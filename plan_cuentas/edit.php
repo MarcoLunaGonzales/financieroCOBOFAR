@@ -36,7 +36,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 <script type="text/javascript">
-    $("#numero").mask("0.00.00.00.000");
+    $("#numero").mask("0.0.00.00.000");
 </script>
 
 

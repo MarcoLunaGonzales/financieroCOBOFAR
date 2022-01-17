@@ -68,7 +68,7 @@ $stmtArea->bindColumn('cod_area_padre', $codAreaPadre);
                   <div class="table-responsive">
                     <form id="lñp" method="post" action="<?=$urlSaveAreas_organizacion;?>">
                       <input type="hidden" name="codUnidad" value="<?=$codUnidad?>">
-                      <table class="table" id="data_cuentas" >
+                      <table class="table" id="data_cuentas_100" >
                         <thead>
                           <tr>
                             <th class="text-center">-</th>

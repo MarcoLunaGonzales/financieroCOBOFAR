@@ -11,6 +11,15 @@ $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 try {
+
+echo "<br><br><br>";
+    
+    $globalUser=$_SESSION["globalUser"];
+    $created_at=date('Y-m-d h:m:s');
+    $created_by=$globalUser;
+
+
+
     $codigoactivo=$_POST["codigoactivo"];
     //echo $codigoactivo;
     $cod_unidadorganizacional=$_POST["cod_uo"];
@@ -26,12 +35,13 @@ try {
     $cod_ubicaciones = $resultPREVIO['cod_ubicaciones'];
     $estadobien_asig = $resultPREVIO['estadobien_asig'];
     //fecha actual
+
     $fechaasignacion=date("Y-m-d H:i:s");
     $cod_estadoasignacionaf = 1;
         $stmt = $dbh->prepare("INSERT INTO activofijos_asignaciones(cod_activosfijos,fechaasignacion,
-            cod_ubicaciones,cod_unidadorganizacional,cod_area,cod_personal, estadobien_asig,cod_estadoasignacionaf,cod_personal2)
+            cod_ubicaciones,cod_unidadorganizacional,cod_area,cod_personal, estadobien_asig,cod_estadoasignacionaf,cod_personal2,created_at,created_by)
             values (:codigoactivo, :fechaasignacion,
-            :cod_ubicaciones, :cod_unidadorganizacional,:cod_area,:cod_personal, :estadobien_asig,:cod_estadoasignacionaf,:cod_personal2)");
+            :cod_ubicaciones, :cod_unidadorganizacional,:cod_area,:cod_personal, :estadobien_asig,:cod_estadoasignacionaf,:cod_personal2,:created_at,:created_by)");
         $stmt->bindParam(':codigoactivo', $codigoactivo);
         $stmt->bindParam(':fechaasignacion', $fechaasignacion);
         $stmt->bindParam(':cod_ubicaciones', $cod_ubicaciones);
@@ -41,6 +51,9 @@ try {
         $stmt->bindParam(':estadobien_asig', $estadobien_asig);
         $stmt->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
         $stmt->bindParam(':cod_personal2', $cod_responsable2);
+
+        $stmt->bindParam(':created_by', $created_by);
+        $stmt->bindParam(':created_at', $created_at);
         //$stmt->bindParam(':created_at', $fechaasignacion);
         $flagSuccess=$stmt->execute();
         showAlertSuccessError($flagSuccess,$urlList6);

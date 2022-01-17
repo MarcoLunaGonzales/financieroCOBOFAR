@@ -35,7 +35,7 @@ $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codi
 
   $sql.=" and c.cod_tipocomprobante in ($codigo_tipo)";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
-$sql.=" and c.cod_gestion='$globalGestion' order by c.numero desc";
+$sql.=" and c.cod_gestion='$globalGestion' order by c.numero desc limit 10";
 
 // echo $sql;
 
@@ -156,25 +156,23 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
           }
         if($codigoSol[1]==0){
           if($existeCuenta==0){
-                    $codCajaChica=existeCajaChicaRelacionado($codigo);
+              $codCajaChica=existeCajaChicaRelacionado($codigo);
               if($codCajaChica>0){
-                $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
-                ?><a href='#' rel="tooltip" class="btn btn-primary" title="No Editable Caja Chica :<?=$nombreCaja?>">
+                $nombreCaja=obtenerObservacionCajaChica($codCajaChica);?>
+                <a href='#' rel="tooltip" class="btn btn-primary" title="No Editable Caja Chica :<?=$nombreCaja?>">
                       <i class="material-icons"><?=$iconEdit;?></i>
                     </a><?php
-               }else{
-                ?><a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
-                      <i class="material-icons"><?=$iconEdit;?></i>
-                    </a><?php
+              }else{?>
+                <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
+                  <i class="material-icons"><?=$iconEdit;?></i>
+                </a><?php
                }
-                  }else{
-                      ?>
-                      <a href='#' rel="tooltip" class="btn btn-danger" title="No Editable <?=obtenerNombresComprobanteCerrados($codigo)?>">
-                        <i class="material-icons text-dark"><?=$iconEdit;?></i>
-                       </a>
-                  <?php
-                    }  
-         }  
+          }else{ ?>
+              <a href='#' rel="tooltip" class="btn btn-danger" title="No Editable <?=obtenerNombresComprobanteCerrados($codigo)?>">
+                <i class="material-icons text-dark"><?=$iconEdit;?></i>
+               </a> <?php
+          }
+        }  
           ?>
         
         

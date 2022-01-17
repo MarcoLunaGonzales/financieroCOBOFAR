@@ -5,15 +5,27 @@ require_once 'functions.php';
 require_once 'functionsGeneral.php';
 require_once 'configModule.php';
 
-$dbh = new Conexion();
 
-//RECIBIMOS LAS VARIABLES
-$codigo=$codigo;
-// Prepare
-$stmt = $dbh->prepare("UPDATE $table set cod_estadocomprobante=2 where codigo=:codigo");
-// Bind
-$stmt->bindParam(':codigo', $codigo);
+session_start();
+if(isset($_SESSION["globalUser"])){
+	$fechaHoraSistema=date('Y-m-d');
+	$globalUser=$_SESSION["globalUser"];
+	$dbh = new Conexion();
+	$codigo=$codigo;
+	$flagSuccess=false;
+	$sql="SELECT codigo from comprobantes  where codigo=$codigo and created_by=$globalUser limit 1";
+	$stmtsel = $dbh->prepare($sql);
+	$stmtsel->execute();
+	while ($row = $stmtsel->fetch(PDO::FETCH_BOUND)) {
+		$stmt = $dbh->prepare("UPDATE $table set cod_estadocomprobante=2,deleted_at=:fechaHoraSistema,deleted_by=:globalUser where codigo=:codigo and created_by=:globalUser");
+		$stmt->bindParam(':codigo', $codigo);
+		$stmt->bindParam(':fechaHoraSistema', $fechaHoraSistema);
+		$stmt->bindParam(':globalUser', $globalUser);
+		$flagSuccess=$stmt->execute();
+	}
+}else{
+  $flagSuccess=false;
+}
 
-$flagSuccess=$stmt->execute();
 showAlertSuccessError($flagSuccess,$urlList);
 ?>

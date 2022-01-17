@@ -15,6 +15,7 @@ $stmt->execute();
 
 <select id="cod_responsables_responsabledesde" name="cod_responsables_responsabledesde" class="selectpicker form-control form-control-sm" 
 data-style="btn btn-info" data-size="5" data-show-subtext="true" data-live-search="true" required="true">
+	<OPTION value="-100">TRANSFERENCIA NUEVA</OPTION>
     <?php 
         while ($row = $stmt->fetch()){ 
        ?>

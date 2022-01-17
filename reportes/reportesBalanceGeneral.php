@@ -114,6 +114,20 @@ $fechaHasta=$y."-12-31";
                       <option value="3">3</option>
                       <option value="4">4</option>
                       <option value="5" selected>5</option>
+                      <option value="6">6</option>
+                  </select>
+                </div>
+              </div>
+            </div><!--fin campo gestion -->
+
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Formato</label>
+              <div class="col-sm-7">
+                <div class="form-group">
+                  <select name="formato" id="formato" class="selectpicker form-control form-control-sm " data-style="btn btn-rose"
+                      required>
+                      <option value="1">PDF</option>
+                      <option value="2">EXCEL</option>
                   </select>
                 </div>
               </div>

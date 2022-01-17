@@ -27,7 +27,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
 ?>
 
 <div class="content">
-	<div class="container-fluid">
+  <div class="container-fluid">
     <div style="overflow-y: scroll;">
       <div class="col-md-12">
       <form id="form1" class="form-horizontal" action="<?=$rptEstadoCuentasprocesar;?>" method="post" target="_blank">
@@ -176,9 +176,18 @@ $globalUnidad=$_SESSION["globalUnidad"];
               <div class="col-sm-7">
               <div class="form-group">
                   <select name="tipo_cp" id="tipo_cp" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required onChange="ajax_tipo_filtro_reporte_prove_cliente()">
-                        <option value=""></option>
-                        <option value="1">PROVEEDOR</option>
-                        <option value="2">CLIENTE</option>
+                       <?php
+                        $sql="SELECT codigo,nombre,abreviatura from tipos_estado_cuenta order by nombre";
+                        $stmtg = $dbh->prepare($sql);
+                        $stmtg->execute();
+                        while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
+                          $codigog=$rowg['codigo'];
+                          $nombreg=$rowg['nombre'];
+                        ?>
+                        <option value="<?=$codigog;?>"><?=$nombreg;?></option>
+                        <?php 
+                        }
+                      ?>
                         
                   </select>
               </div>
@@ -254,7 +263,8 @@ $globalUnidad=$_SESSION["globalUnidad"];
               <div class="col-sm-4">
               <div class="form-group">
                   <select name="ver_saldo" id="ver_saldo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
-                        <option value="1">SOLO SALDOS</option>
+                        <option value="1">SOLO SALDOS DETALLADO</option>
+                        <option value="3">SOLO SALDOS GLOBALES</option>
                         <option value="2">TODO</option>
                         
                   </select>
@@ -307,5 +317,5 @@ $globalUnidad=$_SESSION["globalUnidad"];
         </form>
       </div>  
     </div>
-	</div>
+  </div>
 </div>

@@ -178,7 +178,7 @@ input[type=number] {
   text-decoration:none
   }
 .after-loop .card-themes{
-  background-color:#00ae9b
+  background-color:#e74c3c 
   }
   .after-loop .card-snippets{
   background-color:#ffc107
@@ -193,7 +193,7 @@ input[type=number] {
 /* Colores del menu lateral*/
    /* CELESTE BEBE */
 .sidebar[data-background-color=celestebebe]{
-  background-color:#00ae9b
+  background-color:#e74c3c 
   }
 .sidebar[data-background-color=celestebebe] .nav .nav-item .nav-link{
     color:#fff
@@ -211,7 +211,7 @@ input[type=number] {
   color:#fff
   }
 .sidebar[data-background-color=celestebebe] .sidebar-background:after{
-  background:#00ae9b;opacity:.8
+  background:#e74c3c ;opacity:.8
   }
 .sidebar[data-background-color=celestebebe] .logo:after,.sidebar[data-background-color=celestebebe] .nav li.separator:after,.sidebar[data-background-color=celestebebe] .user:after{
   background-color:hsla(0,0%,100%,.3)

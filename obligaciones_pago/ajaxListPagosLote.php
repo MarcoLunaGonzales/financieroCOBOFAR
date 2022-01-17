@@ -1,3 +1,5 @@
+
+
 <?php
 session_start();
 require_once '../conexion.php';
@@ -5,161 +7,268 @@ require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once '../styles.php';
 
-$dbh = new Conexion();
+// $sqlX="SET NAMES 'utf8'";
+// $stmtX = $dbh->prepare($sqlX);
+// $stmtX->execute();
+$proveedoresString=$_GET['proveedor'];
+$proveedoresString=implode(",", $proveedoresString);
+$cuentas=$_GET['cuentas'];
+$cuentas=implode(",", $cuentas);
 
-$sqlX="SET NAMES 'utf8'";
-$stmtX = $dbh->prepare($sqlX);
-$stmtX->execute();
-$codigo=$_GET['proveedor'];
-$fila=$_GET['fila'];
+$fechainicio=$_GET['fechainicio'];
+$fechafin=$_GET['fechafin'];
 
-$lista=listaObligacionesPagoDetalleSolicitudRecursosProveedor($codigo);
-$totalPagadoX=0;
-
-						     $index=1;$cont=0;$totalImporte=0;
-
-                      	while ($row = $lista->fetch(PDO::FETCH_ASSOC)) {
-                          $codDetalle=$row['codigo'];
-                          $unidad=$row['unidad'];
-                          $area=$row['area'];
-                          $solicitante=namePersonal($row['cod_personal']);
-                          $fecha=$row['fecha'];
-                          $numero=$row['numero'];
-                          $detalle=$row['detalle'];
-                          $importe=$row['importe'];
-                          $proveedor=$row['proveedor'];
-                          $codProveedor=$row['cod_proveedor'];
-                          $codPlancuenta=$row['cod_plancuenta'];
-                          $codSol=$row['cod_solicitudrecurso'];
-                          $codSolDet=$codDetalle;
-
-                          $dias=obtenerCantidadDiasCredito($codProveedor);
-                          $pagadoFila=obtenerMontoPagadoDetalleSolicitud($codSol,$codDetalle);
-                          if($dias==0){
-                            $tituloDias="Sin Registro";
-                          }else{
-                            $tituloDias="".$dias;
-                          }
-                          $totalImporte+=$importe;
-                          $saldoImporte=abs($pagadoFila-$importe);
-                          $pagado=$importe-$saldoImporte;
-                          
-                          $numeroComprobante=nombreComprobante($row['cod_comprobante']);
-                          $codTipoPago=$row['cod_tipopagoproveedor'];
-                          $nomBen=$row['nombre_beneficiario'];
-                          $apellBen=$row['apellido_beneficiario'];
+$contador_items=0;
+$i=0;$saldo=0;
+$indice=0;
+$totalCredito=0;
+$totalDebito=0;
+$codPlanCuentaAuxiliarPivotX=-10000;
+$ver_saldo=1;
 ?>
-                        <tr class="fila_proveedor<?=$fila?>">
-                          <td class="text-left">
-                            <input type="hidden" value="<?=$codigo?>" id="codigo_proveedor_modal<?=$fila?>" name="codigo_proveedor_modal<?=$fila?>">
-                            <?php 
-                            if($index==1){
-                              ?><input type="hidden" value="" id="cantidad_filas<?=$fila?>" name="cantidad_filas<?=$fila?>"><?php
-                            }
-                            ?>
-                            <input type="hidden" value="<?=$detalle?>" id="glosa_detalle<?=$index?>PPPP<?=$fila?>" name="glosa_detalle<?=$index?>PPPP<?=$fila?>">
-                            <input type="hidden" value="<?=$codProveedor?>" id="codigo_proveedor<?=$index?>PPPP<?=$fila?>" name="codigo_proveedor<?=$index?>PPPP<?=$fila?>">
-                            <input type="hidden" value="<?=$codSol?>" id="codigo_solicitud<?=$index?>PPPP<?=$fila?>" name="codigo_solicitud<?=$index?>PPPP<?=$fila?>">
-                            <input type="hidden" value="<?=$codSolDet?>" id="codigo_solicitudDetalle<?=$index?>PPPP<?=$fila?>" name="codigo_solicitudDetalle<?=$index?>PPPP<?=$fila?>">
-                            <input type="hidden" value="<?=$codPlancuenta?>" id="codigo_plancuenta<?=$index?>PPPP<?=$fila?>" name="codigo_plancuenta<?=$index?>PPPP<?=$fila?>">
-                            <?=$proveedor;?></td>
-                          <td class="text-left"><?=$detalle;?></td>
-                          <td class="text-left"><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>  
-                          <td class=""><?=$numero;?></td>
-                          <td><?=$numeroComprobante?></td>
-                          <td><?=$unidad?></td>
-                          <td class="bg-warning text-dark text-right font-weight-bold"><?=number_format($importe,2,".","")?></td>
-                          <td class="text-right font-weight-bold" style="background:#07B46D; color:#F7FF5A;"><?=number_format($pagado,2,".","")?></td>
-                          <td id="saldo_pago<?=$index?>PPPP<?=$fila?>" class="text-right font-weight-bold"><?=number_format($importe-$pagado,2,".","")?></td>
-                          <td class="text-right">
-                            <?php 
-                            if(($importe-$pagado)>0){
-                              ?>
-                              <input type="number" step="any" required min="1000" class="form-control text-right text-success" value="0" id="monto_pago<?=$index?>PPPP<?=$fila?>" name="monto_pago<?=$index?>PPPP<?=$fila?>">
-                              
-                              <?php
-                            }else{
-                              ?>
-                              <input type="number" step="any" required min="1000" class="form-control text-right text-success" readonly value="0" id="monto_pago<?=$index?>PPPP<?=$fila?>" name="monto_pago<?=$index?>PPPP<?=$fila?>">
-                              <?php
-                            } 
-                            ?>
-                            
-                          </td>
-                          <td><input type="text" class="form-control datepicker" value="<?=date('d/m/Y')?>" id="fecha_pago<?=$index?>PPPP<?=$fila?>" name="fecha_pago<?=$index?>PPPP<?=$fila?>"></td>
-                          <td>
-                          	<div class="form-group">
-                               <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosChequeDetalle('<?=$index?>PPPP<?=$fila?>')" data-live-search="true" name="tipo_pago<?=$index?>PPPP<?=$fila?>" id="tipo_pago<?=$index?>PPPP<?=$fila?>" data-style="btn btn-danger" required>
-                                    <option disabled value="">--TIPO--</option>
-                                    <?php 
-                                     $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where codigo=2 and cod_estadoreferencial=1");
-                                     $stmt3->execute();
-                                     while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoSel=$rowSel['codigo'];
-                                      $nombreSelX=$rowSel['nombre'];
-                                      $abrevSelX=$rowSel['abreviatura'];
-                                      if($codTipoPago==$codigoSel){
-                                         ?><option selected value="<?=$codigoSel;?>"><?=$abrevSelX?></option><?php 
-                                      }else{
-                                         ?><option value="<?=$codigoSel;?>" selected="selected"><?=$abrevSelX?></option><?php 
-                                      } 
-                                     }
-                                    ?>
-                                  </select>
-                             </div>
-                          </td>
-                          <td>
-                          	<div class="d-none" id="div_cheques<?=$index?>PPPP<?=$fila?>">                    
-                                <div class="form-group">
-                                     <select class="selectpicker form-control form-control-sm" onchange="cargarChequesPagoDetalle('<?=$index?>PPPP<?=$fila?>')" data-live-search="true" name="banco_pago<?=$index?>PPPP<?=$fila?>" id="banco_pago<?=$index?>PPPP<?=$fila?>" data-style="btn btn-danger">
-                                    <option disabled selected="selected" value="">--BANCOS--</option>
-                                    <?php 
-                                     $stmt3 = $dbh->prepare("SELECT * from bancos where cod_estadoreferencial=1");
-                                     $stmt3->execute();
-                                     while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoSel=$rowSel['codigo'];
-                                      $nombreSelX=$rowSel['nombre'];
-                                      $abrevSelX=$rowSel['abreviatura'];
-                                      //if($codBanco==$codigoSel){
-                                       
-                                      //}else{
-                                       ?><option value="<?=$codigoSel;?>"><?=$abrevSelX?></option><?php 
-                                      //}
-                                     }
-                                    ?>
-                                      </select>
-                                  </div>
-                             </div>
-                          </td>
-                          <td>
-                          	<div id="div_chequesemitidos<?=$index?>PPPP<?=$fila?>">                    
-                             </div>
-                          </td>
-                          <td>
-                          	<input type="number" readonly class="form-control text-right" readonly value="0" id="numero_cheque<?=$index?>PPPP<?=$fila?>" name="numero_cheque<?=$index?>PPPP<?=$fila?>">
-                          </td>
-                          <td>
-                          	<input type="text" readonly class="form-control" readonly value="<?=$nomBen?> <?=$apellBen?>" id="beneficiario<?=$index?>PPPP<?=$fila?>" name="beneficiario<?=$index?>PPPP<?=$fila?>">
-                          </td>
-                        </tr>
-                        <script>mostrarDatosChequeDetalle('<?=$index?>PPPP<?=$fila?>');</script>
+
+<style>
+  tfoot input {
+    width: 100%;
+    padding: 3px;
+  }
+</style> 
+
+<table id="libreta_bancaria_reporte_modal" class="table table-condensed table-bordered table-sm" style="width:100% !important;">
+  <thead>
+    <tr style="background:#21618C; color:#fff;">  
+    <td></td>                         
+      
+      <td class="text-left">CC</td>
+      <td class="text-left">Tipo/#</td>
+      <td class="text-left">F Comp.</td>
+      <td class="text-left">F.EC</td>
+      <td class="text-left">Proveedor</td>
+      <td class="text-left">Glosa</td>
+      <td class="text-left">Debe</td>
+      <td class="text-left">Haber</td>
+      <td class="text-left">Saldo</td>
+      <td width="4%" class="text-right">Actions</td>
+    </tr> 
+  </thead>
+  <tbody>
+
+
 <?php
-							$index++;
-                      }
 
-                      if($index>1){
-                        $proveedor_nombre=$_GET['proveedor_nombre'];
-                        ?><script>var html='<tr id="f_proveedor<?=$fila?>"><td class="text-left"><?=$proveedor_nombre?></td><td><div class="btn-group"><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeListaPago(<?=$fila?>);"><i class="material-icons">delete</i></button></div></td></tr>';
-            $("#tabla_proveedor").append(html);$("#cantidad_filas<?=$fila?>").val(<?=$index-1?>);</script><?php
-                      }
+$dbh = new Conexion();
+$sql="SELECT e.codigo,e.fecha,e.monto,d.glosa,e.glosa_auxiliar,e.cod_cuentaaux,d.haber,d.debe,cc.fecha as fecha_com, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos,(select ca.nombre from cuentas_auxiliares ca where ca.codigo=e.cod_cuentaaux) as nombreCuentaAuxiliarX,(SELECT c.tipo from configuracion_estadocuentas c where c.cod_plancuenta=d.cod_cuenta)as tipoDebeHaber,(SELECT uo.abreviatura FROM unidades_organizacionales uo where uo.codigo = d.cod_unidadorganizacional) as nombreUnidadCosto,(SELECT a.abreviatura FROM areas a where a.codigo = d.cod_area) as nombreAreaCentroCosto
+
+  FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentas) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux in ($proveedoresString) and e.fecha BETWEEN '$fechainicio 00:00:00' and '$fechafin 23:59:59' order by e.fecha,d.glosa";
+$stmt = $dbh->prepare($sql);
+// echo $sql;
+$stmt->execute();
+while ($row = $stmt->fetch()) {
+  // echo "aqui..";
+  $codigoX=$row['codigo'];
+  $existeCuentas=0;
+  $stmtCantidad = $dbh->prepare("SELECT count(*) as cantidad
+    from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
+  $stmtCantidad->execute();
+  while ($rowCantidad = $stmtCantidad->fetch()) {
+    $existeCuentas=$rowCantidad['cantidad'];
+  }
+  $existeCuentas2=0;
+  $stmtCantidad = $dbh->prepare("SELECT count(*) as cantidad FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentas) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux in ($proveedoresString) and e.codigo=$codigoX order by ca.nombre, cc.fecha");
+  $stmtCantidad->execute();
+  while ($rowCantidad = $stmtCantidad->fetch()) {
+    $existeCuentas2=$rowCantidad['cantidad'];
+  }
+  $mostrarFilasEstado="";
+  $estiloFilasEstado="";
+  $estiloFilasEstadoSaldo="";
+  $sqlFechaEstadoCuenta="";
+  if($sqlFechaEstadoCuenta==""){
+      if($existeCuentas==0){
+        if($existeCuentas2==0){
+           $mostrarFilasEstado="d-none";
+        }
+      }else{
+        if($existeCuentas2==0){
+         $estiloFilasEstado="style='background:#F9F9FC !important;color:#D6D6DA  !important;'";
+         $estiloFilasEstadoSaldo="style='color:red !important;'";
+        }      
+      }   
+  }
+  // $codCompDetX=$row['cod_comprobantedetalle'];
+  // $codPlanCuentaX=$row['cod_cuenta'];
+  // $codProveedor=$row['cod_proveedor'];
+  $montoX=$row['monto'];
+  $fechaX=$row['fecha'];
+  $fechaX=strftime('%d/%m/%Y',strtotime($fechaX));
+  $glosaAuxiliar=$row['glosa_auxiliar'];
+  $glosaX=$row['glosa'];
+  $debeX=$row['debe'];
+  // $codigoExtra=$row['extra'];
+  $codPlanCuentaAuxiliarX=$row['cod_cuentaaux'];
+  $codigoComprobanteX=$row['codigocomprobante'];
+  $nombreUnidadCosto=$row['nombreUnidadCosto'];
+  $nombreAreaCentroCosto=$row['nombreAreaCentroCosto'];
+  // $nombreUnidadO=$row['nombreUnidadO'];
+  
+
+  $nombreComprobanteX=nombreComprobante($codigoComprobanteX);
+
+  $fechaComprobante=$row['fecha_com'];
+  $nombreCuentaAuxiliarX=$row['nombreCuentaAuxiliarX'];
+  $tipoDebeHaber=$row['tipoDebeHaber'];
+  //$nombreCuentaAuxiliarX=nameCuentaAuxiliar($codPlanCuentaAuxiliarX);//***
+  //$tipoDebeHaber=verificarTipoEstadoCuenta($codPlanCuentaX);//***
+
+  if($codPlanCuentaAuxiliarX!=$codPlanCuentaAuxiliarPivotX){
+    $saldo=0;
+    $codPlanCuentaAuxiliarPivotX=$codPlanCuentaAuxiliarX;
+  }
+  $glosaMostrar="";
+  if($glosaAuxiliar!=""){
+      $glosaMostrar=$glosaAuxiliar;
+  }else{
+      $glosaMostrar=$glosaX;
+  }
+  // list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
+  //$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
+
+  //$nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);//**
+  //$nombreUnidadCabecera=abrevUnidad_solo($codUnidadCabecera);//**
+  // $nombreAreaCentroCosto=abrevArea_solo($codAreaCentroCosto);//**
+
+  $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
+  //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
+  // $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen='$codigoX'";
+  // //echo $sqlContra;
+  // $stmtContra = $dbh->prepare($sqlContra);
+  // $stmtContra->execute();                                    
+  $saldo+=$montoX;                                            
+  $montoEstado=0;$estiloEstados="";
+  $sql="SELECT sum(e.monto) as monto
+          from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX";
+          //echo $sql;
+  $stmtSaldo = $dbh->prepare($sql);
+  $stmtSaldo->execute();
+  while ($rowSaldo = $stmtSaldo->fetch()) {
+    $montoEstado=$rowSaldo['monto'];
+  }
+  if(formatNumberDec($montoX)==formatNumberDec($montoEstado)&&$ver_saldo==1){
+       //validacion para saldos 0 si esta filtrado
+      $estiloEstados="d-none";
+  }   
+  if($tipoDebeHaber==2){//haber
+    if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""&&$estiloEstados==""){
+       $totalCredito=$totalCredito+$montoX;
+       $contador_items++;
+    }
+    //$nombreProveedorX=nameProveedor($codProveedor); ?>  
+    <tr class=" det-estados <?=$estiloEstados?> <?=$mostrarFilasEstado?>" <?=$estiloFilasEstado?> >
+      <td class="text-left"><?=$contador_items?></td>
         
-?>
-              <script>$("#cantidad_proveedores").val(parseInt($("#cantidad_proveedores").val())+<?=$index-1?>);</script>        
-                 <!-- <input type="hidden" value="<?=$index-1?>" id="cantidad_filas" name="cantidad_filas">-->
-   <script type="text/javascript">
-        $(document).ready(function(e) {
-           if(!($("body").hasClass("sidebar-mini"))){
-           	 $("#minimizeSidebar").click()
-           } 
-        });
-    </script>                
+        <td class="text-left small"><input type="hidden" id="codigo_auxiliar<?=$contador_items?>" name="codigo_auxiliar<?=$contador_items?>"  value="<?=$codigoX?>"><?=$nombreUnidadCosto?>-<?=$nombreAreaCentroCosto?></td>
+        <td class="text-center small"><?=$nombreComprobanteX?></td>
+        <td class="text-left small"><?=$fechaComprobante?></td>
+        <td class="text-left small"><?=$fechaX?></td>          
+        <td class="text-left small"><?=$nombreCuentaAuxiliarX?></td>
+        <td class="text-left small"><?=$glosaMostrar?></td>
+        <td class="text-right text-muted font-weight-bold small"><?=formatNumberDec($montoEstado)?></td>
+        <td class="text-right small"><?=formatNumberDec($montoX)?></td>
+        <td class="text-right small font-weight-bold" <?=$estiloFilasEstadoSaldo?>><input style="background: #ffffff" type="hidden" class="form-control" name="modal_estadocuenta_saldo<?=$contador_items?>" id="modal_estadocuenta_saldo<?=$contador_items?>" readonly value="<?=$montoX-$montoEstado;?>"><?=formatNumberDec($montoX-$montoEstado);?></td>
+        <td class="td-actions text-right ">
+          <div class="togglebutton">
+             <label>
+               <input type="checkbox"  id="pagos_seleccionados<?=$contador_items?>" name="pagos_seleccionados<?=$contador_items?> " onchange="calcularTotalFilaEstadoCuentaPagoProvedores()">
+               <span class="toggle"></span>
+             </label>
+         </div>
+        </td>
+    </tr>
+    <?php 
+  }else{//debe
+    if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""&&$estiloEstados==""){
+      $totalCredito=$totalCredito+$montoX;
+      $contador_items++;
+    }
+    //$nombreProveedorX=nameProveedor($codProveedor); ?>  
+    <tr class="bg-white det-estados <?=$estiloEstados?> <?=$mostrarFilasEstado?>" <?=$estiloFilasEstado?> >
+      <td class="text-left"><?=$contador_items?></td>
+        <td class="text-left small"><input type="hidden" id="codigo_auxiliar<?=$contador_items?>" name="codigo_auxiliar<?=$contador_items?>"  value="<?=$codigoX?>"><?=$nombreUnidadCosto?>-<?=$nombreAreaCentroCosto?></td>
+        <td class="text-center small"><?=$nombreComprobanteX?></td>
+        <td class="text-left small"><?=$fechaComprobante?></td>
+        <td class="text-left small"><?=$fechaX?></td>          
+        <td class="text-left small"><?=$nombreCuentaAuxiliarX?></td>
+        <td class="text-left small"><?=$glosaMostrar?></td>
+        <td class="text-right text-muted font-weight-bold small"><?=formatNumberDec($montoX)?></td>
+        <td class="text-right small"><?=formatNumberDec($montoEstado)?></td>
+        <td class="text-right small font-weight-bold" <?=$estiloFilasEstadoSaldo?>><input style="background: #ffffff" type="hidden" class="form-control" name="modal_estadocuenta_saldo<?=$contador_items?>" id="modal_estadocuenta_saldo<?=$contador_items?>" readonly value="<?=$montoX-$montoEstado;?>"><?=formatNumberDec($montoX-$montoEstado);?></td>
+        <td class="text-right">
+          <div class="togglebutton">
+             <label>
+               <input type="checkbox"  id="pagos_seleccionados<?=$contador_items?>" name="pagos_seleccionados<?=$contador_items?>"
+               onchange="calcularTotalFilaEstadoCuentaPagoProvedores()">
+               <span class="toggle"></span>
+             </label>
+         </div>
+        </td>
+    </tr>
+    <?php
+
+  }
+
+  //pagos parciales 
+  $sql="SELECT e.monto,e.fecha,e.glosa_auxiliar,d.glosa,d.haber,d.debe,c.fecha as fecha_com, c.codigo as codigocomprobante
+      from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX";      
+  $stmt_d = $dbh->prepare($sql);
+  $stmt_d->execute();
+  while ($row_d = $stmt_d->fetch()) {
+      $montoX_d=$row_d['monto'];
+      $fechaX_d=$row_d['fecha'];
+      $fechaX_d=strftime('%d/%m/%Y',strtotime($fechaX_d));
+      $glosaAuxiliar_d=$row_d['glosa_auxiliar'];
+      $glosaX_d=$row_d['glosa'];
+      $debeX_d=$row_d['debe'];
+      $fecha_com=$row_d['fecha_com'];
+      
+      $codigoComprobanteY=$row_d['codigocomprobante'];
+      $tituloMontoDebe=formatNumberDec($montoX_d);
+      if($montoX_d!=$debeX_d){
+        $tituloMontoDebe=formatNumberDec($montoX_d).' <b class="text-danger">(*'.formatNumberDec($debeX_d).'*)</b>';
+      }
+      $nombreComprobanteY=nombreComprobante($codigoComprobanteY);
+      $glosaMostrar_d="";
+      if($glosaAuxiliar_d!=""){
+          $glosaMostrar_d=$glosaAuxiliar_d;
+      }else{
+        $glosaMostrar_d=$glosaX_d;
+      }
+      $fechaComprobante_d=strftime('%d/%m/%Y',strtotime($fecha_com));
+      $saldo=$saldo-$montoX_d;
+      if($tipoDebeHaber==2){//proveedor
+          $nombreProveedorX_d=$nombreCuentaAuxiliarX;
+          if($mostrarFilasEstado!="d-none"&&$estiloEstados==""){
+            $totalDebito=$totalDebito+$montoX_d;
+          }?>
+          <tr style="background-color:#ECCEF5;" class="<?=$estiloEstados?> <?=$mostrarFilasEstado?> text-muted">
+            <td></td>
+            <!-- <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;</td> -->
+            <td class="text-left small"></td>
+            <td class="text-center small"><?=$nombreComprobanteY?></td>
+            <td class="text-left small"><?=$fechaComprobante_d?></td>
+            <td class="text-left small"><?=$fechaX_d?></td>
+            <td class="text-left small"><?=$nombreProveedorX_d?></td>  
+            <td class="text-left small"><?=$glosaMostrar_d?></td>
+            <td class="text-right small"><?=$tituloMontoDebe?></td>
+            <td class="text-right small"><?=formatNumberDec(0)?></td>
+            <td class="text-right small font-weight-bold"></td>
+            <td class="text-right">
+            </td>
+          </tr><?php 
+      }
+  }
+  $i++;
+  $indice++;
+}?>
+  </tbody>
+</table>
+<script>$("#cantidad_proveedores_modal").val(<?=$contador_items?>);</script> 

@@ -9,31 +9,24 @@ $dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-
 $codigo_af=$codigo;
 $globalAdmin=$_SESSION["globalAdmin"];
-
 //asignaciones
-$query2 = "SELECT afs.*,af.activo,(select d.nombre from depreciaciones d where d.codigo=af.cod_depreciaciones) as nombreRubro,(select d.tipo_bien from tiposbienes d where d.codigo=af.cod_tiposbienes) as nombreBien,
-(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo  = ".$codigo_af;
+$query2 = "SELECT af.codigo,af.codigoactivo,af.cod_depreciaciones,af.cod_tiposbienes,af.cod_responsables_responsable,af.cod_responsables_responsable2,af.cod_unidadorganizacional,af.cod_area,af.otrodato from activosfijos af where af.codigo=$codigo_af";
 //echo "<br><br><br>".$query2;
 $statement2 = $dbh->query($query2);
 //unidad
 $queryUO = "SELECT * from unidades_organizacionales order by 2";
 $statementUO = $dbh->query($queryUO);
-
 //unidad
 $queryAREA = "SELECT * from areas order by 2";
 $statementArea = $dbh->query($queryAREA);
-
-
 $responsable='';
 ?>
 
 <div class="content">
     <div class="container-fluid">
         <div class="row">
-            
             <div class="col-md-12">
               <form id="form1" class="form-horizontal" action="<?=$urlSaveTransfer;?>" method="post"  enctype="multipart/form-data">
                 <div class="card">
@@ -51,28 +44,37 @@ $responsable='';
                                 <th>CodAF</th>
                                 <th>Nombre</th>
                                 <th>QR</th>
-                                <th>Imagen</th>
                                 <th>Fecha Asignación</th>
                                 <th>Estado</th>
-                                <th>Responsable</th>
+                                <th>Responsable1</th>
+                                <th>Responsable2</th>
                                 <th>Oficina</th>
-                                 
                               </tr>
                           </thead>
                           <tbody>
                           <?php $index=1;
                               while ($row = $statement2->fetch()) { 
-                                  $codigo=$row["codigo"];
-                                  $cod_activosfijos=$row["cod_activosfijos"];
-                                  $CodigoAlterno=obtenerCodAleternoAF($cod_activosfijos);
-                                  $fechaasignacion=$row["fechaasignacion"];
-                                  $estadobien_asig=$row["estadobien_asig"];
-                                  $nombre_personal=$row["nombre_personal"];
-                                  $nombre_uo=$row["nombre_uo"];
-                                  $nombreActivo=$row["activo"];
-                                  $nombreRubro=$row["nombreRubro"];
-                                  $nombreBien=$row["nombreBien"];
-                                  // $nombreUO=$row["nombreUO"];
+                                $cod_activosfijos=$row["codigo"];
+                                $CodigoAlterno=$row["codigoactivo"];
+                                $datos_afs=obtenerdatos_af_asignacion($cod_activosfijos);
+
+                                if($datos_afs!=""){
+                                  $array_datosa=explode("###",$datos_afs);
+                                  $fechaasignacion=$array_datosa[0];
+                                  $estadobien_asig=$array_datosa[1];
+                                  
+                                }else{
+                                  $fechaasignacion="";
+                                  $estadobien_asig="<span style='padding:1;'' class='badge badge-danger'>Recepcion pendiente</span>";
+                                }
+
+                                $nombre_personal=namePersonal($row["cod_responsables_responsable"]);
+                                $nombre_personal2=namePersonal($row["cod_responsables_responsable2"]);
+                                $nombre_uo=abrevUnidad($row["cod_unidadorganizacional"]);
+                                $nombre_area=abrevArea($row["cod_area"]);
+                                $nombreActivo=$row["otrodato"];
+                                
+                                  
                                 }?>
                              <tr>
                                 <td><?=$CodigoAlterno;?></td>
@@ -83,13 +85,12 @@ $responsable='';
                                   echo '<img src="'.$fileName.'"/>';
                                   ?>
                                 </td>
-                                <td class="text-right small">
-                                  <img src="<?=$archivo;?>" alt="..." style="width:200px;">
-                                </td>
+                                
                                 <td><?=$fechaasignacion;?></td>
                                 <td><?=$estadobien_asig;?></td>
                                 <td><?=$nombre_personal;?></td>
-                                <td><?=$nombre_uo;?></td>
+                                <td><?=$nombre_personal2;?></td>
+                                <td><?=$nombre_uo;?>/<?=$nombre_area;?></td>
                               </tr>
                           </tbody>
                       </table>

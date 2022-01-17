@@ -55,29 +55,10 @@ $stmt->bindColumn('observaciones', $observaciones);
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td class="text-left"><?=$nombre;?></td>
-                          <td class="text-center"><?=$abreviatura;?></td>
+                          <td class="text-left"><?=$abreviatura;?></td>
                           <td class="text-left"><?=$calculo;?></td>
                           <td class="text-left"><?=$observaciones;?></td>
                           <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1){
-                            ?>
-                            <!--a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
-                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons"><?=$iconDelete;?></i>
-                            </button-->
-                            <?php
-                            }
-                            ?>
-
-                            <!--a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default">
-                              <i class="material-icons">attachment</i>
-                            </a-->
-
-                  
-
                             <a href='<?=$urlListMes;?>&codigo=<?=$codigo;?>' class="<?=$buttonDetailMin;?>">
                               <i class="material-icons" title="Detalle">playlist_add</i>
                             </a>
@@ -103,7 +84,7 @@ $stmt->bindColumn('observaciones', $observaciones);
               if($globalAdmin==1){
               ?>
       				<div class="card-footer fixed-bottom">
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>'">Registrar</button>
+                    <button class="btn btn-rose" onClick="location.href='<?=$urlRegister;?>'">Registrar Bono</button>
               </div>
               <?php
               }

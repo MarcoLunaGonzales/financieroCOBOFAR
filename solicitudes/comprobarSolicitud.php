@@ -704,7 +704,7 @@ if(isset($_GET['cod'])){
                     </div>
                     <div id="array_distribucion"></div>
                 <!--FIN DISTRIBUCION-->  
-               <a href="#" onclick="mostrarActividadesDeSolicitud()" title="Actividades Proyecto SIS" class="btn btn-primary float-right"><i class="material-icons">assignment</i><span id="nproyectos" class="count bg-danger">0</span> ACTIVIDADES</a>
+               <!-- <a href="#" onclick="mostrarActividadesDeSolicitud()" title="Actividades Proyecto SIS" class="btn btn-primary float-right"><i class="material-icons">assignment</i><span id="nproyectos" class="count bg-danger">0</span> ACTIVIDADES</a> -->
                <?php 
                $estiloBoton="";
               $datosEncargadoSolicitud=verificarPersonalEncargadoSolicitud($codigoSolicitud);

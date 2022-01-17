@@ -21,7 +21,7 @@ $dbh = new Conexion();
                   </div>
                   <h4 class="card-title"> 
                     <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">
-                      Detalle Cargado Inicial Gestión 2121
+                      Detalle Cargado Inicial Gestión 2021
                   </h4>
                   <h6 class="card-title">
                     Gestion: 2021 - Mes: 1 <br>
@@ -42,16 +42,16 @@ $dbh = new Conexion();
                                 <th class=" small bg-primary font-weight-bold">Valor Residual</th>
                             </tr>
                             <?php
-                                $sql="SELECT a.codigo, a.activo, 
+                                $sql="SELECT a.codigoactivo, a.activo, 
                                 (select d.nombre from depreciaciones d where d.codigo=a.cod_depreciaciones)as rubro, a.fechalta, a.fecha_reevaluo, 
-                                (select u.abreviatura from unidades_organizacionales u where u.codigo=a.cod_unidadorganizacional)as oficina, a.valorinicial, a.depreciacionacumulada, a.valorresidual from activosfijos a where a.cod_proy_financiacion=0 and a.fechalta<='2021-01-01' order by rubro, oficina, fechalta, activo";
+                                (select u.abreviatura from unidades_organizacionales u where u.codigo=a.cod_unidadorganizacional)as oficina, a.valorinicial, a.depreciacionacumulada, a.valorresidual from activosfijos a where a.cod_proy_financiacion=0 and a.tipo_af=1 and a.fechalta<='2021-01-01' order by rubro, oficina, fechalta, activo";
                                 $stmt_rubro = $dbh->prepare($sql);
                                 $stmt_rubro->execute();
                                 $totalValorInicial=0;
                                 $totalDepreciacionAcum=0;
                                 $totalResidual=0;
                                 while ($row = $stmt_rubro->fetch(PDO::FETCH_ASSOC)) {
-                                    $codigoActivo=$row['codigo'];
+                                    $codigoActivo=$row['codigoactivo'];
                                     $nombreActivo=$row['activo'];
                                     $nombreRubro=$row['rubro'];
                                     $fechaAlta=$row['fechalta'];

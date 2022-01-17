@@ -56,7 +56,7 @@ $sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizac
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante,c.salvado_temporal
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where  c.codigo=$cod_comprobante_x";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
-$sql.=" and c.cod_gestion='$globalGestion' order by unidad, tipo_comprobante, c.numero asc limit 1";
+$sql.=" and c.cod_gestion='$globalGestion' order by unidad, tipo_comprobante, c.numero asc limit 10";
 
 
 $stmt = $dbh->prepare($sql);

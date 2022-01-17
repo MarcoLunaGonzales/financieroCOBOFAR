@@ -14,6 +14,7 @@ $cuentaPadre="";
 $codcuentaPadre="";
 $nuevaCuenta="";
 $nivelCuenta=0;
+
 if($codigo>0){
 	$codcuentaPadre=$codigo;
 	$cuentaPadre=obtieneNumeroCuenta($codigo);
@@ -33,7 +34,7 @@ if($codigo>0){
 
 
 <script type="text/javascript">
-    $("#numero").mask("0.00.00.00.000");
+    $("#numero").mask("0.0.00.00.000");
 </script>
 
 

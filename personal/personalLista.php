@@ -6,7 +6,7 @@ require_once 'styles.php';
 // require 'notificaciones_sistema/PHPMailer/send.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
-// $globalUserX=$_SESSION['globalUser'];
+ $globalUserX=$_SESSION['globalUser'];
 
 $dbh = new Conexion();
 
@@ -16,9 +16,8 @@ $stmt = $dbh->prepare("SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.pa
  (select a.abreviatura from areas a where a.codigo=cod_area)as xarea,
  (select ep.nombre from estados_personal ep where ep.codigo=cod_estadopersonal)as xestado,
  (select tp.nombre from tipos_personal tp where tp.codigo=cod_tipopersonal)as xcod_tipopersonal
- 
  from personal p
- where p.cod_estadopersonal=1
+ where p.cod_estadoreferencial=1 and p.cod_estadopersonal<>3
  order by p.paterno, p.materno, p.primer_nombre
  ");
 //ejecutamos
@@ -41,7 +40,7 @@ $stmt->bindColumn('xestado', $xestado);
 $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
 ?>
 <div class="content">
-	<div class="container-fluid">
+  <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
           <div class="card">
@@ -159,11 +158,10 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
           </div>
           <?php
 
-          if($globalAdmin==1){
+          if($globalUserX==8){
           ?>
-  				<div class="card-footer fixed-bottom">               
-                <!-- <button class="btn btn-success"  onClick="location.href='<?=$urlsaveWSPersonal;?>'">Actualizar Datos</button> -->
-                <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormPersonal;?>&codigo=0'">Registrar</button>
+          <div class="card-footer fixed-bottom">               
+            <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormPersonal;?>&codigo=0'">Registrar</button>
           </div>
           <div id="resultados">
             <ul></ul>

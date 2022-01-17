@@ -119,8 +119,9 @@ $dbh = new Conexion();
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte Oficial</button>
-                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT</a>
-                	<a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-success text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		
+                	<a  href="#" class="btn btn-info" onclick="descargar_txt_libro_compras_excel()">Generar Excel (SIAT)</a>
+                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT (Facilito)</a>
+                	<!-- <a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-success text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		 -->
                 	
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
@@ -129,13 +130,13 @@ $dbh = new Conexion();
 			  	<div class="float-right">
 			  		<a href="index.php?opcion=reportesLibroComprasMeses" target="_blank" class="btn btn-info btn-sm"><i class="material-icons">open_in_new</i> Control Libro Compras</a>		
 			  		<?php 
-			  		if(verificarEdicionComprobanteUsuario($globalUser)!=0){
+			  		
 			  			?>
 			  		<a  href="index.php?opcion=reportesLibroComprasEdit" class="btn btn-danger btn-sm text-center" target="_blank"><i class="material-icons">edit</i> Editar Facturas</a>		
 			  		<?php 
-			  	   }
+			  	   
 			  	   ?>
-			  	  <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Control Libro Compras - PROYECTO</a>		
+			  	  <!-- <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Control Libro Compras - PROYECTO</a>		 -->
 			  	</div>
 			  </div>
 			  

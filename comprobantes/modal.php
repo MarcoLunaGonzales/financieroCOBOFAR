@@ -67,11 +67,20 @@
                 <table class="table table-condensed table-bordered table-sm">
                    <tr class="bg-primary text-white">
                      <td><small>REGIONAL</small></td>
-                     <td><small>CÓDIGO</small></td>
+                     <td><small>AREA</small></td>
                      <td><small>CUENTA</small></td>
                      <td><small>AUXILIAR</small></td>
                      <td><small>DEBE</small></td>
                      <td><small>HABER</small></td>
+                     <td><small>GLOSA</small></td>
+                   </tr>
+                   <tr class="bg-warning">
+                     <td><small>OFICINA CENTRAL</small></td>
+                     <td><small>ADMINISTRACION</small></td>
+                     <td><small>110202001</small></td>
+                     <td><small>2869</small></td>
+                     <td><small>100</small></td>
+                     <td><small>0</small></td>
                      <td><small>GLOSA</small></td>
                    </tr>
                  </table>  
@@ -240,7 +249,7 @@
                           </div>                                                                  
                           <!--No tiene funcion este campo-->
                           <div class="row">                                            
-                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasa Cero</label>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasas</label>
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
@@ -489,17 +498,17 @@
     	      	<div class="form-group col-sm-3">
             		<!--<label for="nro_cuenta" class="bmd-label-floating">Nro. Cuenta:</label>-->
                 <input type="hidden" id="nro_cuenta_id" name="nro_cuenta_id">
-            		<input type="number" class="form-control" style="background-color:#E3CEF6;text-align: left" id="nro_cuenta" name="nro_cuenta" onkeypress=" pulsar(event,'numero');" onkeyDown="pulsar(event,'numero');" onkeyUp="pulsar(event,'numero');" autofocus><!--onkeypress="buscarCuentaList('numero'); pulsar(event);" onkeyDown="buscarCuentaList('numero');" onkeyUp="buscarCuentaList('numero');"-->
+            		<input type="number" class="form-control" style="background-color:#E3CEF6;text-align: left" id="nro_cuenta" name="nro_cuenta"autofocus><!--onkeypress="buscarCuentaList('numero'); nkeyDown="buscarCuentaList('numero');" onkeyUp="buscarCuentaList('numero');"-->
           		</div>
           		<div class="form-group col-sm-3">
             		<!--<label for="cuenta" class="bmd-label-floating">Cuenta:</label>-->
                 <input type="hidden" id="cuenta_id" name="cuenta_id">
-            		<input type="text" class="form-control" id="cuenta" style="background-color:#E3CEF6;text-align: left" name="cuenta" onkeypress="pulsar(event,'nombre')" onkeyDown="pulsar(event,'nombre');" onkeyUp="pulsar(event,'nombre');"><!--onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
+            		<input type="text" class="form-control" id="cuenta" style="background-color:#E3CEF6;text-align: left" name="cuenta"  ><!--onkeypress="buscarCuentaList('nombre');keyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
           		</div>
               <div class="form-group col-sm-2">
                 <!--<label for="cuenta" class="bmd-label-floating">Cuenta Auxiliar:</label>-->
                 <input type="hidden" id="cuenta_id_auxiliar" name="cuenta_id_auxiliar">
-                <input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal" onkeypress="pulsar(event,'nombre')" onkeyDown="pulsar(event,'nombre');" onkeyUp="pulsar(event,'nombre');"><!--onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
+                <input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal"   value="0"><!--onkeypress="buscarCuentaList('nombre');buscarCuenta(form1)onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
               </div>
               <div class="form-group col-sm-2">
                   <button type="button" class="btn btn-danger btn-sm" onclick="buscarCuenta(form1);">
@@ -664,7 +673,7 @@
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Fecha</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input type="date" class="form-control" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>" required="true">
+                                <input type="date" class="form-control" name="fecha_fac" id="fecha_fac" min="<?=$fecha_ini_factura?>"  max="<?=$fecha_fin_factura?>" required="true">
                                 <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                             </div>
@@ -694,7 +703,7 @@
                           </div>                                                                  
                           <!--No tiene funcion este campo-->
                           <div class="row">                                            
-                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasa Cero</label>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasas</label>
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
@@ -760,7 +769,6 @@
                            <span class="fileinput-exists">Subir archivo .txt</span>
                            <input type="file" name="qrquincho" id="qrquincho" accept=".txt"/>
                          </span>
-                
                         </div>
                        </div>
                        <p>Los archivos cargados se adjuntaran a la lista de facturas existente</p>
@@ -768,7 +776,6 @@
                   </div>
                 </div>
               </div>
-        
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque ullam autem illum, minima doloribus doloremque adipisci dolorem, repellendus debitis animi laboriosam commodi dolores et sint, quod. Pariatur, repudiandae sequi assumenda.</p>-->
       </div>
       <div class="modal-footer justify-content-center">
@@ -821,8 +828,7 @@
                         while ($row = $stmtRetencion->fetch(PDO::FETCH_ASSOC)) {
                            $nombreX=$row['nombre'];
                            $abrevX=$row['abreviatura'];
-                           $codigoX=$row['codigo'];
-?>
+                           $codigoX=$row['codigo'];?>
                         <tr>
                           <td align="center" width="20%">
                           <div class="form-check">
@@ -969,3 +975,10 @@
   </div>
 </div>
 <!-- edit -->
+
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>

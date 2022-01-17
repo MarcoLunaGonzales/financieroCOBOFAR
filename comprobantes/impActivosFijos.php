@@ -189,5 +189,5 @@ $html.='</body>'.
 //$html = mb_convert_encoding($html,'UTF-8', 'ISO-8859-1');
 
  //echo $html;           
-descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDF("COBOFAR - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
 ?>

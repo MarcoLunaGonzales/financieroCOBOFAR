@@ -1,0 +1,9 @@
+http://10.10.1.245:8888/cobofar_comercial/reportes_internos/ventassaldosexcelcabecera.php?fi=02/02/2021&ff=28/02/2021&age1=AS&nombre=Ortega&ip=10.10.20.12
+
+
+10.10.1.245:8888/cobofar_comercial/reportes_internos/ventassaldosexceldetalle.php?fi=14/05/2021&ff=14/05/2021&age1=AG&nombre=MIRAFLORES&ip=10.10.12.12
+
+
+http://10.10.1.245:8888/cobofar_comercial/sp/listadoproductosKardexExcel2.php?ip=10.10.20.12&age=AS
+
+http://10.10.1.245:8888/cobofar_almacen_central/reportes_internos/ventasCanelas.php

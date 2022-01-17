@@ -11,7 +11,8 @@ $stmtCodAF->execute();
 
 ?>
 
-<select name="cod_tiposbienes" id="cod_tiposbienes" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required="true">
+<select name="cod_tiposbienes" id="cod_tiposbienes" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required="true" onchange="ajaxCodigoCorrelativo(this);">
+	<option value=""></option>
 <?php while ($row = $stmtCodAF->fetch()){ ?>
 	<option value="<?=$row["codigo"];?>"><?=$row["tipo_bien"];?></option>
 <?php } ?>

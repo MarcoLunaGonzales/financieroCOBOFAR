@@ -7,16 +7,19 @@ require_once 'functions.php';
 $dbh = new Conexion();
 
 
-$valor_forma_pago=obtenerValorConfiguracion(76);
-$valor_razon_social=obtenerValorConfiguracion(77);
-$valor_validacion=obtenerValorConfiguracion(90);
-if($valor_forma_pago==1)
-  $sw_sf_fp="checked";
-else $sw_sf_fp="";
+// $valor_forma_pago=obtenerValorConfiguracion(76);
+// $valor_razon_social=obtenerValorConfiguracion(77);
+$valor_validacion=obtenerValorConfiguracion(90); //validación de Libretas Bancarias en Comprobante
+$cod_contracuentapagos=obtenerValorConfiguracion(38);//contra cuenta pago proveedores
+$cod_tipocomprobantepago=obtenerValorConfiguracion(108);//TIPO COMPROBANTE PAGO PROVEEDORES
 
-if($valor_razon_social==1)
-  $sw_f_rs="checked";
-else $sw_f_rs="";
+// if($valor_forma_pago==1)
+//   $sw_sf_fp="checked";
+// else $sw_sf_fp="";
+
+// if($valor_razon_social==1)
+//   $sw_f_rs="checked";
+// else $sw_f_rs="";
 
 if($valor_validacion==1)
   $sw_v_lc="checked";
@@ -40,11 +43,11 @@ else $sw_v_lc="";
                       <thead class="fondo-boton">
                         <tr>
                           <th align="center">Configuración</th>
-                          <th align="center">H/D</th>
+                          <th width="40%" align="center">H/D</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
+                        <!-- <tr>
                           <td class="text-left">Edición de Forma de Pago en SF</td>
                           <td>
                             <div class="togglebutton">
@@ -54,8 +57,8 @@ else $sw_v_lc="";
                                </label>
                            </div>
                           </td>                          
-                        </tr>
-                        <tr>
+                        </tr> -->
+                        <!-- <tr>
                           <td class="text-left">Edición de Razón Social en Facturas</td>
                           <td>
                             <div class="togglebutton">
@@ -65,7 +68,7 @@ else $sw_v_lc="";
                                </label>
                            </div>
                           </td>
-                        </tr>
+                        </tr> -->
                         <tr>
                           <td class="text-left">Validación de Libretas Bancarias en Comprobantes</td>
                           <td>
@@ -77,14 +80,68 @@ else $sw_v_lc="";
                            </div>
                           </td>
                         </tr>
+                        <tr>
+                          <td class="text-left">Contra Cuenta Pago Proveedores (Haber)</td>
+                          <td>
+                              <div class="col-sm-10">
+                                <div class="form-group">
+                                  <select name="contra_cuentas_pagos" id="contra_cuentas_pagos" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                                    
+                                    <?php 
+                                    $sqlTipobien="SELECT codigo,numero,nombre from plan_cuentas where cod_estadoreferencial=1 order by nombre";
+                                    $stmtTipoBien = $dbh->prepare($sqlTipobien);
+                                    $stmtTipoBien->execute();
+                                    while ($row = $stmtTipoBien->fetch()){ ?>
+                                        <option <?php if($cod_contracuentapagos == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                    <?php } ?>
+                                  </select>
+                                </div>
+                              </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="text-left">Tipo Comprobante Pago Proveedores</td>
+                          <td>
+                              <div class="col-sm-10">
+                                <div class="form-group">
+                                  <select name="tipo_comprobante_pagoproveedores" id="tipo_comprobante_pagoproveedores" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                                    
+                                    <?php 
+                                    $sqlTipobien="SELECT codigo,nombre from tipos_comprobante where cod_estadoreferencial=1 order by nombre";
+                                    $stmtTipoBien = $dbh->prepare($sqlTipobien);
+                                    $stmtTipoBien->execute();
+                                    while ($row = $stmtTipoBien->fetch()){ ?>
+                                        <option <?php if($cod_tipocomprobantepago == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                    <?php } ?>
+                                  </select>
+                                </div>
+                              </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td><td></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td><td></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td><td></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td><td></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td><td></td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
-              </div>
-              <div class="card-body">
+                <div class="card-footer">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
+                </div>
               </div>
+              
                </form>
             </div>
           </div>  

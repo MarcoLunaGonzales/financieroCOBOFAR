@@ -73,8 +73,10 @@ try{
     $cuenta_bancaria = $result['cuenta_bancaria'];
     $created_at = $result['created_at'];
     $created_by = $result['created_by'];
-    $modified_at = $result['modified_at'];
-    $modified_by = $result['modified_by'];
+    $turno = $result['turno'];
+    $tipo_trabajo = $result['tipo_trabajo'];
+    $turno=obtenerNombreTurno($turno);
+    $tipo_trabajo=obtenerNombreTipoTrabajo($tipo_trabajo);
     //====================================
     //personal discapacitado
     $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
@@ -239,6 +241,16 @@ $html.=  '<header class="header">'.
                         '<td>Estado Personal</td>'.
                         '<td align="center">:</td>'.
                         '<td colspan=2>'.$cod_estadopersonal.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Turno</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$turno.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Tipo Trabajo</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$tipo_trabajo.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Haber Básico</td>'.

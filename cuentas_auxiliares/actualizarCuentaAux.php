@@ -77,14 +77,78 @@ if($codTipoProveedorCliente==1){
 		}
 	}	
 	showAlertSuccessError(TRUE,$urlList2);
+}elseif($codTipoProveedorCliente==3){//personal
+	$sqlProveedor="SELECT codigo, CONCAT_WS(' ',primer_nombre,paterno,materno)as nombre from personal where cod_estadopersonal=1 and cod_estadoreferencial=1 order by nombre";
+	$stmtProveedor = $dbh->prepare($sqlProveedor);
+	$stmtProveedor->execute();
+	while ($rowProveedor = $stmtProveedor->fetch(PDO::FETCH_ASSOC)) {
+	  $codProveedor=$rowProveedor['codigo'];
+	  $nombreProveedor=$rowProveedor['nombre'];
+	  $sqlCuenta="SELECT count(*)as contador from cuentas_auxiliares c where c.cod_cuenta='$codigoCuentaPadre' and c.cod_proveedorcliente='$codProveedor'";
+	  $stmtCuenta=$dbh->prepare($sqlCuenta);
+	  $stmtCuenta->execute();
+	  $cuentaRegistros=0;
+	  while($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)){
+	  	$cuentaRegistros=$rowCuenta['contador'];
+	  }
+  	  //echo $codProveedor." ".$nombreProveedor." ".$cuentaRegistros."<br>";
+		$flagSuccessDetalle=TRUE;
+		if($cuentaRegistros==0){
+			$stmtInsert = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta, cod_tipoauxiliar, cod_proveedorcliente) VALUES ('$nombreProveedor','1','$codigoCuentaPadre','2','$codProveedor')");
+			$flagSuccessDetalle=$stmtInsert->execute();
+		}
+	}	
+	showAlertSuccessError(TRUE,$urlList2);
+}elseif($codTipoProveedorCliente==4){//sucursales
+	$sqlProveedor="SELECT a.codigo, a.nombre,a.abreviatura from areas a,areas_organizacion ao
+    where a.codigo=ao.cod_area and ao.cod_unidad=2 and a.cod_estado=1 
+    order by 2";
+	$stmtProveedor = $dbh->prepare($sqlProveedor);
+	$stmtProveedor->execute();
+	while ($rowProveedor = $stmtProveedor->fetch(PDO::FETCH_ASSOC)) {
+	  $codProveedor=$rowProveedor['codigo'];
+	  $nombreProveedor=$rowProveedor['nombre'];
+	  $sqlCuenta="SELECT count(*)as contador from cuentas_auxiliares c where c.cod_cuenta='$codigoCuentaPadre' and c.cod_proveedorcliente='$codProveedor'";
+	  $stmtCuenta=$dbh->prepare($sqlCuenta);
+	  $stmtCuenta->execute();
+	  $cuentaRegistros=0;
+	  while($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)){
+	  	$cuentaRegistros=$rowCuenta['contador'];
+	  }
+  	  //echo $codProveedor." ".$nombreProveedor." ".$cuentaRegistros."<br>";
+		$flagSuccessDetalle=TRUE;
+		if($cuentaRegistros==0){
+			$stmtInsert = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta, cod_tipoauxiliar, cod_proveedorcliente) VALUES ('$nombreProveedor','1','$codigoCuentaPadre','2','$codProveedor')");
+			$flagSuccessDetalle=$stmtInsert->execute();
+		}
+	}	
+	showAlertSuccessError(TRUE,$urlList2);
+}elseif($codTipoProveedorCliente==5){//personal retirado
+	$sqlProveedor="SELECT codigo, CONCAT_WS(' ',primer_nombre,paterno,materno)as nombre from personal where  cod_estadoreferencial=1 and cod_estadopersonal=3 order by nombre";
+	$stmtProveedor = $dbh->prepare($sqlProveedor);
+	$stmtProveedor->execute();
+	while ($rowProveedor = $stmtProveedor->fetch(PDO::FETCH_ASSOC)) {
+	  $codProveedor=$rowProveedor['codigo'];
+	  $nombreProveedor=$rowProveedor['nombre'];
+	  $sqlCuenta="SELECT count(*)as contador from cuentas_auxiliares c where c.cod_cuenta='$codigoCuentaPadre' and c.cod_proveedorcliente='$codProveedor'";
+	  $stmtCuenta=$dbh->prepare($sqlCuenta);
+	  $stmtCuenta->execute();
+	  $cuentaRegistros=0;
+	  while($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)){
+	  	$cuentaRegistros=$rowCuenta['contador'];
+	  }
+  	  //echo $codProveedor." ".$nombreProveedor." ".$cuentaRegistros."<br>";
+		$flagSuccessDetalle=TRUE;
+		if($cuentaRegistros==0){
+			$stmtInsert = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta, cod_tipoauxiliar, cod_proveedorcliente) VALUES ('$nombreProveedor','1','$codigoCuentaPadre','2','$codProveedor')");
+			$flagSuccessDetalle=$stmtInsert->execute();
+		}
+	}	
+	showAlertSuccessError(TRUE,$urlList2);
 }elseif ($codTipoProveedorCliente==0) {
 	//echo "la cuenta no esta asociada a un estado de cuentas.";
 	showAlertSuccessError(TRUE,$urlList2);
 }
 
-
-
-//$flagSuccess=$stmt->execute();
-//showAlertSuccessError($flagSuccess,$urlList);
 
 ?>

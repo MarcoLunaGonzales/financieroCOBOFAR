@@ -17,9 +17,14 @@ $cod_areadesde = $_POST['cod_areadesde'];
 $cod_responsabledesde = $_POST["cod_responsables_responsabledesde"];
 $desde=$_POST['desde'];
 $hasta=$_POST['hasta'];
-
-
-
+$sqladd="";
+if($cod_responsabledesde <> -100){
+    $sqladd=" having unidad_origen=$cod_unidadorganizacionaldesde and area_origen=$cod_areadesde and personal_origen=$cod_responsabledesde;";
+    
+}else{
+    $cod_responsabledesde=obtenerValorConfiguracion(101);
+}
+$cod_autorizaactivofijo=obtenerValorConfiguracion(100);
 try{
     $sqlActivos="SELECT c.fechaasignacion, c.codigo,a.codigoactivo,a.activo,
 (SELECT cod_unidadorganizacional from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion desc limit 1)as unidad_origen,
@@ -28,7 +33,7 @@ try{
 
 FROM `activofijos_asignaciones` c join activosfijos a on a.codigo=c.cod_activosfijos where c.fechaasignacion between '$desde 00:00:00' and '$hasta 23:59:59'
 and c.cod_personal=$cod_responsable and c.cod_unidadorganizacional=$cod_unidadorganizacional and c.cod_area=$cod_area
-having unidad_origen=$cod_unidadorganizacionaldesde and area_origen=$cod_areadesde and personal_origen=$cod_responsabledesde;";  
+ $sqladd";  
 //echo $sqlActivos;
 
     $stmtActivos = $dbh->prepare($sqlActivos);
@@ -123,7 +128,7 @@ having unidad_origen=$cod_unidadorganizacionaldesde and area_origen=$cod_areades
                 <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsabledesde)?></td>
                 <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsable)?></td>
                 <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsable2)?></td>
-                <td class="s3 text-center"><b>Nombre:</b> Lic. Maria Chino</td>
+                <td class="s3 text-center"><b>Nombre:</b> Lic. <?=namePersonal($cod_autorizaactivofijo)?></td>
             </tr>
         </table>
     <?php }else{ ?>
@@ -141,7 +146,7 @@ having unidad_origen=$cod_unidadorganizacionaldesde and area_origen=$cod_areades
             <tr class="bg-celeste">
                 <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsabledesde)?></td>
                 <td class="s3 text-center"><b>Nombre:</b> <?=namePersonal($cod_responsable)?></td>
-                <td class="s3 text-center"><b>Nombre:</b> Lic. Maria Chino</td>
+                <td class="s3 text-center"><b>Nombre:</b> Lic. <?=namePersonal($cod_autorizaactivofijo)?></td>
             </tr>
     </table>
     <?php } ?>

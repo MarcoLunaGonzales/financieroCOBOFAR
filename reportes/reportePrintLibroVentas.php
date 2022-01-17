@@ -52,7 +52,7 @@ $stmt2->bindColumn('cod_estadofactura', $cod_estadofactura);
 $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
 
 //datos de la factura
-$stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (5)");
+$stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (1)");
 $stmtPersonal->execute();
 $result=$stmtPersonal->fetch();
 $sucursal=$result['sucursal'];

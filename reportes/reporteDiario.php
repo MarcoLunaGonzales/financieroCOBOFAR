@@ -78,7 +78,7 @@ $stmt->execute();
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
                   <div class="card-icon bg-blanco">
-                    <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
+                    <img class="" width="45" height="40" src="../assets/img/favicon.png">
                   </div>
                   <div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>
                   <h4 class="card-title text-center">Reporte Libro Diario</h4>

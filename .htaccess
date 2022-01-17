@@ -1,11 +1,11 @@
-    # 8 HORAS DE SESION 28800
-    php_value session.cookie_lifetime 28800
-    php_value session.gc_maxlifetime 28800
+    # 14 HORAS DE SESION 50400
+    php_value session.cookie_lifetime 50400
+    php_value session.gc_maxlifetime 50400
     # CAMBIAR EL PATH DE LAS SESIONES PARA EL IFINANCIERO
     php_value session.save_path C:\xampp\htdocs\financieroCOBOFAR\session\storage
     #php_value session.save_path C:\xamppNew\htdocs\ifinanciero\session\storage
    
-    php_value max_input_vars 2000
+    php_value max_input_vars 2400000
 	php_value post_max_size 64M
 	php_value memory_limit 256M
 	php_value upload_max_filesize 64M

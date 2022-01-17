@@ -19,9 +19,9 @@ $stmt = $dbh->prepare("select p.codigo as cod_persona,
 (select dpm.codigo from descuentos_personal_mes dpm where p.codigo=dpm.cod_personal and dpm.cod_descuento=$codDescuento and dpm.cod_mes=$codMes and dpm.cod_gestion=$idGestion and dpm.cod_estadoreferencial=1) as codigo,
 (select u.abreviatura from unidades_organizacionales u where u.codigo=p.cod_unidadorganizacional)as unidad,
 (select c.nombre from cargos c where c.codigo=p.cod_cargo)as cargo,
-concat(p.paterno,' ', p.materno,' ', p.primer_nombre) as nombrepersonal,
+CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) as nombrepersonal,
 (select dpm.monto from descuentos_personal_mes dpm where p.codigo=dpm.cod_personal and dpm.cod_descuento=$codDescuento and dpm.cod_mes=$codMes and dpm.cod_gestion=$idGestion and dpm.cod_estadoreferencial=1) as detalle
-from personal p  ORDER BY nombrepersonal");
+from personal p  where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 ORDER BY nombrepersonal");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

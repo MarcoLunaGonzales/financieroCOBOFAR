@@ -80,7 +80,9 @@ if($menuModulo==0){
               </p>
             </a>
             <div class="collapse" id="pagesExamples">
-              <ul class="nav">              
+              <ul class="nav">     
+
+
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=areasLista">
                     <span class="sidebar-mini"> A </span>
@@ -160,18 +162,18 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Escalas Antiguedad </span>
                     </a>
                 </li>
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listPoliticaDescuento">
                       <span class="sidebar-mini"> PDR </span>
                       <span class="sidebar-normal"> Politicas de Descuento por retrasos </span>
                     </a>
-                </li>
-                <li class="nav-item ">
+                </li> -->
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=personalFinExterna">
                     <span class="sidebar-mini"> PFE </span>
                     <span class="sidebar-normal"> Personal Financiaci&oacute;n Externa </span>
                   </a>
-                </li>
+                </li> -->
 
 
               </ul>
@@ -209,12 +211,12 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Descuentos</span>
                     </a>
                 </li>
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listDotacion">
                       <span class="sidebar-mini"> D </span>
                       <span class="sidebar-normal"> Dotaciones </span>
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listRcivaPersonalMes">
                       <span class="sidebar-mini"> F110 </span>
@@ -228,15 +230,21 @@ if($menuModulo==0){
                     </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=planillasSueldoPersonal">
+                  <a class="nav-link" href="?opcion=planillasSueldoPersonal" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
                     <span class="sidebar-mini"> PS </span>
                     <span class="sidebar-normal"> Planilla De Sueldos </span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=planillasAguinaldosPersonal">
-                    <span class="sidebar-mini"> PS </span>
+                    <span class="sidebar-mini"> PA </span>
                     <span class="sidebar-normal"> Planilla De Aguinaldos </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=planillasIndemnizacionesPersonal">
+                    <span class="sidebar-mini"> PI </span>
+                    <span class="sidebar-normal"> Planilla De Indemnizaciones</span>
                   </a>
                 </li>
                 <li class="nav-item ">
@@ -278,7 +286,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Ingresos & Descuentos </span>
                   </a>
                 </li>
-
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=rptPersonal_from">
+                    <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal">Personal </span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
@@ -399,22 +412,15 @@ if($menuModulo==0){
                     </a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=rptxrubrosxmes">
-                      <span class="sidebar-mini"> RM </span>
-                      <span class="sidebar-normal"> Por Rubro por Mes</span>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=rptDepreciacionesDetalladoFiltro">
-                      <span class="sidebar-mini"> RMD </span>
-                      <span class="sidebar-normal"> Por Rubro, por Mes Detallado</span>
-                    </a>
-                </li>
-
-                <li class="nav-item ">
                     <a class="nav-link" href="?opcion=rptactivosfijosxunidad">
-                      <span class="sidebar-mini"> RU </span>
+                      <span class="sidebar-mini"> RUAR </span>
                       <span class="sidebar-normal"> Por Oficina, Area y Responsable</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=afdardebaja_rpt">
+                      <span class="sidebar-mini"> AFB </span>
+                      <span class="sidebar-normal"> Activos Fijos Baja</span>
                     </a>
                 </li>
                 <li class="nav-item ">
@@ -429,6 +435,39 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Constancias de Traspaso</span>
                     </a>
                 </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptxrubrosxmes">
+                      <span class="sidebar-mini"> RM </span>
+                      <span class="sidebar-normal">Dep. Por Rubro por Mes</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptDepreciacionesDetalladoFiltro">
+                      <span class="sidebar-mini"> RMD </span>
+                      <span class="sidebar-normal">Dep. Por Rubro, por Mes Detallado</span>
+                    </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <!-- utilitarios -->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#utilitarios">
+              <i class="material-icons">build</i>
+              <p> Utilitarios
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="utilitarios">
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=cambiarResponsableAF">
+                    <span class="sidebar-mini"> CRAF </span>
+                    <span class="sidebar-normal"> Cambiar Responsable AF </span>
+                  </a>
+                </li>
+                
               </ul>
             </div>
           </li>
@@ -472,12 +511,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal">Distribucion Gastos Oficina</span>
                   </a>
                 </li>
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listDosificaciones">
                     <span class="sidebar-mini"> D </span>
                     <span class="sidebar-normal"> Dosificaciones</span>
                   </a>
-                </li>  
+                </li>  --> 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listEntidades">
                     <span class="sidebar-mini">E</span>
@@ -554,18 +593,18 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Caja Chica </span>
                   </a>
                 </li>
-                 <li class="nav-item ">
+                <!--  <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios_conta">
                     <span class="sidebar-mini"> SF </span>
                     <span class="sidebar-normal"> Solicitudes de Facturación</span>
                   </a> 
-                </li>
-                <li class="nav-item ">
+                </li> -->
+              <!--   <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasGeneradas">
                     <span class="sidebar-mini"> FG </span>
                     <span class="sidebar-normal"> Facturas Generadas</span>
                   </a>
-                </li>
+                </li> -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=contabilizarLibretasBancarias_lista">
                     <span class="sidebar-mini"> DNF </span>
@@ -591,18 +630,17 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="?opcion=listSolicitudIngresosAlmacen" style="background:rgba(9, 98, 143 ,0.6); color:#DEDEDE;font-weight:bold;">
+                  <a class="nav-link" href="?opcion=listSolicitudIngresosAlmacen_nuevo" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
                     <span class="sidebar-mini"> PIA </span>
-                    <span class="sidebar-normal"> Procesar Ingresos Almacen</span>
+                    <span class="sidebar-normal">Ingresos ALMACEN</span>
                   </a>
                 </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSolicitudRecursosSisActividad">
-                    <span class="sidebar-mini"> ASR </span>
-                    <span class="sidebar-normal"> Actividades Solitudes Recursos</span>
+                <li class="nav-item">
+                  <a class="nav-link" href="?opcion=main_cierrecaja_from" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
+                    <span class="sidebar-mini"> IS </span>
+                    <span class="sidebar-normal"> Ingresos SUCURSALES</span>
                   </a>
                 </li>
-
               </ul>
             </div>
           </li>
@@ -634,12 +672,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Libro Compras</span>
                   </a>
                 </li> 
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportesLibroVentas">
                     <span class="sidebar-mini"> LV </span>
                     <span class="sidebar-normal"> Libro Ventas</span>
                   </a>
-                </li>    
+                </li> -->    
                 <li class="nav-item ">
                   <a class="nav-link" href="caja_chica/rpt_proveedores_print.php" target="_blank">
                     <span class="sidebar-mini"> P </span>
@@ -670,12 +708,20 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Libretas Bancarias</span>
                   </a>
                 </li>
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="reportes_ventas/index.php" target="_blank">
                     <span class="sidebar-mini"> RV </span>
                     <span class="sidebar-normal"> Reportes Ventas</span>
                   </a>
+                </li> -->
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="http://10.10.1.16/cobofar_almacen_central/rpt_op_inv_pedidos.php" target="_blank">
+                    <span class="sidebar-mini"> RV </span>
+                    <span class="sidebar-normal"> Reportes Pedidos ALM</span>
+                  </a>
                 </li>
+
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportesFlujoEfectivo" target="_blank">
                     <span class="sidebar-mini"> FE </span>
@@ -777,7 +823,6 @@ if($menuModulo==0){
                 <b class="caret"></b>
               </p>
             </a>
-
             <div class="collapse" id="tablasPresSol">
               <ul class="nav">
                 <li class="nav-item ">
@@ -792,12 +837,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> D&iacute;as de Cr&eacute;dito</span>
                   </a>
                 </li>             
-                 <li class="nav-item ">
+                 <!-- <li class="nav-item ">
                   <a class="nav-link" href="index.php?opcion=listTarifarioServicios">
                     <span class="sidebar-mini"> TS </span>
                     <span class="sidebar-normal"> Tarifario de Servicios TCP</span>
                   </a>
-                </li> 
+                </li>  -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlanCuentasSolicitudesRecursos">
                     <span class="sidebar-mini">PSR</span>
@@ -931,29 +976,24 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Gesti&oacute;n SR</span>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" style="background:rgba(116, 24, 153,0.6); color:#E2AF0F;font-weight:bold;"  href="?opcion=listSolicitudRecursosAdminSis">
-                    <span class="sidebar-mini"> GSIS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n SR SIS</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
+               
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPagoProveedores">
                     <span class="sidebar-mini"> PP </span>
                     <span class="sidebar-normal"> Pagos</span>
                   </a>
-                </li>
+                </li> -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPagoProveedoresLotes">
                     <span class="sidebar-mini"> PL </span>
-                    <span class="sidebar-normal"> Pagos por Lotes</span>
+                    <span class="sidebar-normal"> Pagos Proveedores</span>
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPagoProveedoresAdmin">
+                  <!-- <a class="nav-link" style="background:rgba(37, 98, 83,0.6); color:#E2AF0F;font-weight:bold;" href="?opcion=listPagoProveedoresAdmin">
                     <span class="sidebar-mini"> GP </span>
                     <span class="sidebar-normal"> Gestión de Pagos</span>
-                  </a>
+                  </a> -->
                 </li>
                 <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=register_solicitudfacturacion_manual">
@@ -967,7 +1007,7 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Solicitud de Facturacion Venta Normas</span>
                   </a>
                 </li> -->
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios">
                     <span class="sidebar-mini"> SF </span>
                     <span class="sidebar-normal"> Solicitudes de Facturación </span>
@@ -978,7 +1018,7 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> GSF </span>
                     <span class="sidebar-normal"> Gesti&oacute;n Solicitudes de Facturación </span>
                   </a>
-                </li>
+                </li> -->
               </ul>
             </div>
           </li>  
@@ -993,54 +1033,62 @@ if($menuModulo==0){
             </a>
             <div class="collapse" id="reportesPresupuestoSol">
               <ul class="nav">
+
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportePagoProveedores">
+                    <span class="sidebar-mini"> RPP </span>
+                    <span class="sidebar-normal"> Reportes Pago Proveedores</span>
+                  </a>
+                </li>
+
+<!--                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportePlanificacionCursos">
                     <span class="sidebar-mini"> RPC </span>
                     <span class="sidebar-normal"> Reportes Planificacion Por Cursos</span>
                   </a>
-                </li>
-                <li class="nav-item ">
+                </li>-->
+          <!--  <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportePlanificacion">
                     <span class="sidebar-mini"> RP </span>
                     <span class="sidebar-normal"> Reportes Planificacion SEC</span>
                   </a>
-                </li>
-                <li class="nav-item ">
+                </li> -->
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportePlanificacionEC">
                     <span class="sidebar-mini"> RPT </span>
                     <span class="sidebar-normal"> Reportes Planificacion TCP/TCS</span>
                   </a>
-                </li>
-                <li class="nav-item ">
+                </li> -->
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reporteVentasResumido">
                     <span class="sidebar-mini"> RVR </span>
                     <span class="sidebar-normal"> Reportes Ventas Resumido</span>
                   </a>
-                </li>
-                <li class="nav-item ">
+                </li> -->
+            <!--     <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reporteIngresosPorFacturacion">
                     <span class="sidebar-mini"> RVR </span>
                     <span class="sidebar-normal"> Reportes Ingresos por Facturación</span>
                   </a>
-                </li>
+                </li> -->
                 <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reporte_solicitudfacturacion_filtro">
                     <span class="sidebar-mini"> RSF </span>
                     <span class="sidebar-normal"> Reporte Solicitud de Facturación</span>
                   </a>
                 </li>  -->                               
-                <li class="nav-item ">
+              <!--   <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportesSolicitudRecursosSis">
                     <span class="sidebar-mini"> CSRS </span>
                     <span class="sidebar-normal"> Control SR Proyecto SIS</span>
                   </a>
-                </li>
-                <li class="nav-item ">
+                </li> -->
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listObligacionesPago">
                     <span class="sidebar-mini"> OP </span>
                     <span class="sidebar-normal"> Obligaciones de Pago</span>
                   </a>
-                </li>                
+                </li>    -->             
               </ul>
             </div>
           </li>

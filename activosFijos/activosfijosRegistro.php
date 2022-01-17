@@ -48,6 +48,7 @@ $statementTIPOSAF = $dbh->query("select * from tipos_activos_fijos where cod_est
 
 //------------------------------------------------------------------- principal
 if ($codigo > 0){
+    $sw_codigo="disabled";//desabildia responable 1 y 2
     $stmt = $dbh->prepare("SELECT * ,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombreRubro,(select d.tipo_bien from tiposbienes d where d.codigo=cod_tiposbienes) as nombreBien,(select d.abreviatura from unidades_organizacionales d where d.codigo=cod_unidadorganizacional) as nombreUO,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombreResponsable FROM activosfijos where codigo =:codigo");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo);
@@ -72,6 +73,7 @@ if ($codigo > 0){
     $cod_empresa = $result['cod_empresa'];
     $activo = $result['activo'];
     $cod_responsables_responsable = $result['cod_responsables_responsable'];
+    $cod_responsables_responsable2 = $result['cod_responsables_responsable2'];
     $cod_responsables_autorizadopor = $result['cod_responsables_autorizadopor'];
     $created_at = $result['created_at'];
     $created_by = $result['created_by'];
@@ -106,6 +108,7 @@ if ($codigo > 0){
 
     $variableDisabled="true";
 } else {
+    $sw_codigo="";//desabildia responable 1 y 2
     //consulta para sacar el codigo del ultimo activoFijo
     $stmt = $dbh->prepare("SELECT max(codigo) AS id FROM activosfijos");
     //Ejecutamos;
@@ -135,7 +138,8 @@ if ($codigo > 0){
     $cod_empresa = '';
     $activo = '';
     $cod_responsables_responsable  = '';
-    $cod_responsables_autorizadopor  = '';
+    $cod_responsables_responsable2  = '';
+    $cod_responsables_autorizadopor  = obtenerValorConfiguracion(100);
     $created_at  = '';
     $created_by  = '';
     $modified_at  = '';
@@ -174,26 +178,13 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <div id="divCodigoAF">
-                                            <input type="text" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigoactivo;?>"/>
+                                            <input type="text" class="form-control" name="codigoactivo" id="codigoactivo" required="true" readonly="true" value="<?=$codigoactivo;?>"/>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- imagen qr-->
                                 <div class='col-sm-6'>
-                                        <?php
-                                            // require 'assets/phpqrcode/qrlib.php';
-                                            // $dir = 'qr_temp/';
-                                            // if(!file_exists($dir)){
-                                            //     mkdir ($dir);}
-                                            // $fileName = $dir.'test.png';
-                                            // $tamanio = 3; //tamaño de imagen que se creará
-                                            // $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                                            // $frameSize = 1; //marco de qr
-                                            // $contenido = "Cod:".$codigoactivo."\nRubro:".$nombreRubro."\nDesc:".$activo."\nRespo.:".$nombreUO.' - '.$nombreResponsable;
-
-                                            // QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
-                                            // echo '<img src="'.$fileName.'"/>';
-                                        ?>
+                                        
                                 </div>
 
                             </div><!--fin campo codigoactivo -->
@@ -204,13 +195,12 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <select name="cod_unidadorganizacional" id="cod_unidadorganizacional" onChange="ajaxAFunidadorganizacionalArea(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
-                                        
                                             <option value=""></option>
                                             <?php 
                                             $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
                                             $statementUO1 = $dbh->query($queryUO1);
                                             while ($row = $statementUO1->fetch()){ ?>
-                                                <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                                                <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":$sw_codigo;?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -220,20 +210,13 @@ if ($codigo > 0){
                                   <div class="col-sm-4">
                                     <div class="form-group" >
                                         <div id="div_contenedor_area">
-                                            <?php
-                                                if($codigo>0){?>
-
-                                                <?php }else{
-
-                                                }
-                                            ?>
                                             <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" >
                                                 <option value=""></option>
                                                 <?php 
                                                 $queryArea = "SELECT codigo,nombre,abreviatura FROM  areas WHERE cod_estado=1 order by nombre";
                                                 $statementArea = $dbh->query($queryArea);
                                                 while ($row = $statementArea->fetch()){ ?>
-                                                    <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                                                    <option <?=($cod_area==$row["codigo"])?"selected":$sw_codigo;?>  value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>                    
@@ -261,7 +244,7 @@ if ($codigo > 0){
                                 		<?php while ($row = $statementDepre->fetch()){ ?>
                             				<option <?php if($cod_depreciaciones == $row["codigo"]) echo "selected"; ?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                             			<?php } ?>
-                            		</select>				
+                            		</select>
                                     </div>
                                 </div>
                             </div><!--fin campo cod_depreciaciones -->
@@ -271,16 +254,20 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                 <div class="form-group">
                                     <div id="cod_tiposbienes_containers">
-                            		<select name="cod_tiposbienes" id="cod_tiposbienes" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required="true">
-                                        <option disabled selected value=""></option>
-                            			<?php while ($row = $statementTIPOSBIENES->fetch()){ ?>
-                            				<option <?php if($cod_tiposbienes == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["tipo_bien"];?></option>
-                            			<?php } ?>
-                            		</select>
+                                        <select name="cod_tiposbienes" id="cod_tiposbienes" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required="true" onchange="ajaxCodigoCorrelativo(this);">
+                                            <option disabled selected value=""></option>
+                                            <?php 
+                                            $sqlTipobien="SELECT * from tiposbienes where cod_estado=1 and cod_depreciaciones=$cod_depreciaciones order by 3 ";
+                                            $stmtTipoBien = $dbh->prepare($sqlTipobien);
+                                            $stmtTipoBien->execute();
+                                            while ($row = $stmtTipoBien->fetch()){ ?>
+                                                <option <?php if($cod_tiposbienes == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["tipo_bien"];?></option>
+                                            <?php } ?>
+                                        </select>
+                            		
                                     </div>
                                 </div>
                                 </div>
-
                                 <label class="col-sm-2 col-form-label">Fecha Alta</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
@@ -324,42 +311,40 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Estado Bien</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                            				<select name="estadobien" name="estadobien" class="selectpicker form-control form-control-sm" data-style="btn btn-primary">
-                            					<option <?php if("NUEVO" == $estadobien) echo "selected"; ?> value="NUEVO">NUEVO</option>
-                            					<option <?php if("BUENO" == $estadobien) echo "selected"; ?> value="BUENO">BUENO</option>
-                            					<option <?php if("REGULAR" == $estadobien) echo "selected"; ?> value="REGULAR">REGULAR</option>
-                            					<option <?php if("MALO" == $estadobien) echo "selected"; ?> value="MALO">MALO</option>
-                            					<option <?php if("OBSOLETO" == $estadobien) echo "selected"; ?> value="OBSOLETO">OBSOLETO</option>
-                            					<option <?php if("PESIMO" == $estadobien) echo "selected"; ?> value="PESIMO">PESIMO</option>
-                            				</select>
+                    				<select name="estadobien" name="estadobien" class="selectpicker form-control form-control-sm" data-style="btn btn-primary">
+                    					<option <?php if("NUEVO" == $estadobien) echo "selected"; ?> value="NUEVO">NUEVO</option>
+                    					<option <?php if("BUENO" == $estadobien) echo "selected"; ?> value="BUENO">BUENO</option>
+                    					<option <?php if("REGULAR" == $estadobien) echo "selected"; ?> value="REGULAR">REGULAR</option>
+                    					<option <?php if("MALO" == $estadobien) echo "selected"; ?> value="MALO">MALO</option>
+                    					<option <?php if("OBSOLETO" == $estadobien) echo "selected"; ?> value="OBSOLETO">OBSOLETO</option>
+                    					<option <?php if("PESIMO" == $estadobien) echo "selected"; ?> value="PESIMO">PESIMO</option>
+                    				</select>
                                 </div>
                                 </div><!--fin campo estadobien -->
                                 <label class="col-sm-2 col-form-label">Tipo Activo</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <select name="cod_tiposactivos" id="cod_tiposactivos" class="selectpicker form-control form-control-sm" data-style="btn btn-primary">
+                                    <select name="cod_tiposactivos" id="cod_tiposactivos" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  onchange="ajaxCodigoCorrelativo_fungible(this);">
                                         <?php while ($row = $statementTIPOSAF->fetch()){ ?>
                                             <option <?php if($tipo_af == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
                                 </div>
-
-                                
                             </div><!--fin campo cod_ubicaciones -->
 
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Nombre Activo</label>
-                                <div class="col-sm-7">
+                                <div class="col-sm-10">
                                 <div class="form-group">
-                                    <textarea rows="2" class="form-control" name="activo" id="activo" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$activo;?></textarea>
+                                    <textarea rows="2" class="form-control" name="activo" id="activo" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();" maxlength="50"><?=$activo;?></textarea>
                                 </div>
                                 </div>
                             </div><!--fin campo activo -->
 
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Datos Complementarios</label>
-                                <div class="col-sm-7">
+                                <div class="col-sm-10">
                                 <div class="form-group">
                                     <textarea rows="2" class="form-control" name="otrodato" id="otrodato" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$otrodato;?></textarea>
                                 </div>
@@ -367,30 +352,55 @@ if ($codigo > 0){
                             </div><!--fin campo activo -->
 
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Responsable</label>
+                                <label class="col-sm-2 col-form-label">Responsable 1</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <div id="div_personal_UO">
                                         <?php
                                         $stmtRR = $dbh->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
-                                        from personal p, ubicaciones u, unidades_organizacionales uo 
-                                        where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and uo.codigo=$cod_unidadorganizacional order by 2");
+                                        from personal p 
+                                        where cod_estadoreferencial=1 order by p.paterno");
                                         $stmtRR->execute();
                                         ?>
-                                        <select id="cod_responsables_responsable" name="cod_responsables_responsable" class="selectpicker form-control form-control-sm" 
-                                        data-style="btn btn-primary" data-size="5">
+                                        <select name="cod_responsables_responsable" id="cod_responsables_responsable" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                                            <option value=""></option>
                                             <?php while ($row = $stmtRR->fetch()){ ?>
-                                                <option <?=($cod_responsables_responsable==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>">
+                                                <option <?=($cod_responsables_responsable==$row["codigo"])?"selected":$sw_codigo;?> value="<?=$row["codigo"];?>">
                                                     <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
                                                 </option>
                                             <?php } ?>
 
                                         </select>
-
-                                    </div>
+                                    
                                 </div>
                                 </div><!--fin campo cod_responsables_responsable -->
+                                <label class="col-sm-2 col-form-label">Responsable 2</label>
+                                <div class="col-sm-4">
+                                <div class="form-group">
+                                    
+                                        <?php
+                                        $stmtRR = $dbh->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
+                                        from personal p 
+                                        where cod_estadoreferencial=1 order by p.paterno");
+                                        $stmtRR->execute();
+                                        ?>
+                                        <select name="cod_responsables_responsable2" id="cod_responsables_responsable2" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true">
+                                            <option value=""></option>
+                                            <?php while ($row = $stmtRR->fetch()){ ?>
+                                                <option <?=($cod_responsables_responsable2==$row["codigo"])?"selected":$sw_codigo;?> value="<?=$row["codigo"];?>">
+                                                    <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
+                                                </option>
+                                            <?php } ?>
 
+                                        </select>
+                                    
+                                </div>
+                                </div><!--fin campo cod_responsables_responsable -->
+                            </div><!--fin campo cod_responsables_autorizadopor -->
+                            
+
+
+                            <!-- proveedor -->
+                            <div class="row">
                                 <label class="col-sm-2 col-form-label">Autorizado Por</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
@@ -404,12 +414,7 @@ if ($codigo > 0){
                                     </select>
                                 </div>
                                 </div>
-                            </div><!--fin campo cod_responsables_autorizadopor -->
-                            
 
-
-                            <!-- proveedor -->
-                            <div class="row">
                                 <label class="col-sm-2 col-form-label">Proveedor :</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">                        

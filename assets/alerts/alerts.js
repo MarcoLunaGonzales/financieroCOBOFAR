@@ -180,8 +180,8 @@ alerts = {
     }
     else if (type == 'warning-message-and-confirmationGeneral') {
       swal({
-        title: '¿Estás Seguro?',
-        text: "¡No podrá revertir el Proceso!",
+        title: '¿Estás Segur@?',
+        text: "¡No podrás revertir el Proceso!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',
@@ -428,6 +428,19 @@ alerts = {
  
     else if(type == 'error-borrar-libreta-detalle'){
       swal("Errores encontrados!", "No se puede borrar el detalle de la libreta porque tiene asociada facturas y/o comprobantes", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
+
+    else if(type == 'error-comprobante-duplicado-pago'){
+      swal(":( ERROR!!!", "Éste pago ya tiene Un COMPROBANTE relacionado.", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
+    else if(type == 'error-comprobante-duplicado-ingreso-alm'){
+      swal(":( ERROR!!!", "Éste Ingreso ya tiene Un COMPROBANTE relacionado.", "error")
           .then((value) => {
           location.href=url;
       });

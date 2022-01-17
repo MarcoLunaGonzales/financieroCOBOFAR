@@ -33,19 +33,29 @@ if(isset($_POST['codigo_sr'])&&isset($_POST['codigo_personal'])){
 
 $codPadreArchivos=obtenerValorConfiguracion(84);
 
-$globalUser=$_SESSION["globalUser"];
-$globalGestion=$_SESSION["globalGestion"];
-$globalMes=$_SESSION['globalMes'];
-$globalUnidad=$_SESSION["globalUnidad"];
-$globalArea=$_SESSION["globalArea"];
-$globalAdmin=$_SESSION["globalAdmin"];
+if(isset($_SESSION["globalUser"])){
+  $globalUser=$_SESSION["globalUser"];
+  $globalGestion=$_SESSION["globalGestion"];
+  $globalMes=$_SESSION['globalMes'];
+  $globalUnidad=$_SESSION["globalUnidad"];
+  $globalArea=$_SESSION["globalArea"];
+  $globalAdmin=$_SESSION["globalAdmin"];
+}else{
+  $globalUser=-100;
+  $globalGestion=-100;
+  $globalMes=-100;
+  $globalUnidad=-100;
+  $globalArea=-100;
+  $globalAdmin=-100;
+}
+
 
 $fechaHoraActual=$_POST["fecha"];
 //$porcionesFecha = explode("/", $_POST['fecha']);
 //$fechaHoraActual=$porcionesFecha[2]."-".$porcionesFecha[1]."-".$porcionesFecha[0];
 $fechaHoraSistema=date("Y-m-d H:i:s");
 
-$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$_SESSION['globalUnidad'],$tipoComprobante,$globalMes);
+$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalAdmin,$tipoComprobante,$globalMes);
 
 $codComprobante=obtenerCodigoComprobante();
 $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by,salvado_temporal) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser',$salvado_temporal)";
@@ -144,23 +154,23 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         $stmtInsert = $dbh->prepare($sqlInsert);
         $flagArchivo=$stmtInsert->execute();    
         //print_r($sqlInsert);
-        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+        //if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
             //sibir archivos al servidor de documentos
-            $parametros=array(
-            "idD" => 15,
-            "idR" => $codArchivoAdjunto,
-            "idusr" => 90,
-            "Tipodoc" => 3596,
-            "descripcion" => $descripcion,
-            "codigo" => "",
-            "observacion" => "-",
-            "r" => "http://www.google.com",
-            "v" => true
-            );
-            $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+            // $parametros=array(
+            // "idD" => 15,
+            // "idR" => $codArchivoAdjunto,
+            // "idusr" => 90,
+            // "Tipodoc" => 3596,
+            // "descripcion" => $descripcion,
+            // "codigo" => "",
+            // "observacion" => "-",
+            // "r" => "http://www.google.com",
+            // "v" => true
+            // );
+            //$resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
            //unlink($target_path);
            //print_r($resultado);        
-          }
+          //}
 
       } else {    
           echo "error";
@@ -183,6 +193,13 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
 		$unidadDetalle=$_POST["unidad".$i];
 		$area=$_POST["area".$i];
+    if($unidadDetalle==null){
+      $unidadDetalle=1;
+    }
+    if($area==null){
+      $area=522;
+    }
+
 		$debe=$_POST["debe".$i];
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
@@ -272,7 +289,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
             // echo "tasa:".$tazaFac."<br>";
             // echo "nit:".$nit."<br>";
 
-		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tazaFac','$tipoFac')";
+		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra,tasas) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','0','$tipoFac','$tazaFac')";
 		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
 		      $flagSuccessDetalle2=$stmtDetalle2->execute();
          }

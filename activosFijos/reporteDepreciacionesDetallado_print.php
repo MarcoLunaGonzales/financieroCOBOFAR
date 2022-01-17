@@ -36,7 +36,7 @@ $gestion=nameGestion($gestion);
 //listamos las oficinas
 
 
-$sql="SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)oficina,(select d.abreviatura from  depreciaciones d where d.codigo=af.cod_depreciaciones)rubro,af.codigo,af.activo,md.d2_valorresidual,md.d5_incrementoporcentual,md.d4_valoractualizado,md.d6_depreciacionacumuladaanterior,md.d7_incrementodepreciacionacumulada,md.d8_depreciacionperiodo,md.d9_depreciacionacumuladaactual,md.d10_valornetobs,md.d11_vidarestante
+$sql="SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)oficina,(select ar.abreviatura from areas ar where ar.codigo=af.cod_area)area,(select d.abreviatura from  depreciaciones d where d.codigo=af.cod_depreciaciones)rubro,af.codigoactivo,af.activo,md.d2_valorresidual,md.d5_incrementoporcentual,md.d4_valoractualizado,md.d6_depreciacionacumuladaanterior,md.d7_incrementodepreciacionacumulada,md.d8_depreciacionperiodo,md.d9_depreciacionacumuladaactual,md.d10_valornetobs,md.d11_vidarestante
 from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
 WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
  and af.cod_unidadorganizacional in ($unidadOrgString) and af.cod_depreciaciones in ($depreciacionesString)  and m.mes=$mes2 and m.gestion=$gestion ORDER BY 1,2";
@@ -47,8 +47,9 @@ $stmt2->execute();
 //resultado
 
 $stmt2->bindColumn('oficina', $oficina_x);
+$stmt2->bindColumn('area', $area_x);
 $stmt2->bindColumn('rubro', $rubro_x);
-$stmt2->bindColumn('codigo', $codigoactivo);
+$stmt2->bindColumn('codigoactivo', $codigoactivo);
 $stmt2->bindColumn('activo', $activo);
 $stmt2->bindColumn('d2_valorresidual', $d2_valorresidual);
 // $stmt2->bindColumn('d3_factoractualizacion', $d3_factoractualizacion);
@@ -125,7 +126,7 @@ $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
                                     $sumRubroValorNeto+=$d10_valornetobs;
                                     ?>
                                    <tr>
-                                        <td class="text-center small"><small><?=$oficina_x;?></td>
+                                        <td class="text-center small"><small><?=$oficina_x;?>/<?=$area_x;?></td>
                                         <td class="text-center small"><small><?=$rubro_x;?></td>
 
                                         <td class="text-center small"><small><?=$codigoactivo;?></td>

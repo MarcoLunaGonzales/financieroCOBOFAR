@@ -508,13 +508,22 @@
 			require_once('solicitudes/listSolicitudRecursosAdminRegHistorico.php');
 		}
 
-		if ($_GET['opcion']=='listSolicitudIngresosAlmacen') {
-			require_once('ingresos_almacen/list.php');
-		}
-		if ($_GET['opcion']=='listSolicitudIngresosAlmacenHistorico') {
-			require_once('ingresos_almacen/list2.php');
-		}
 
+		//***
+		if ($_GET['opcion']=='listSolicitudIngresosAlmacen') {
+			require_once('ingresos_almacen_antiguo/list.php');
+		}
+		if ($_GET['opcion']=='listSolicitudIngresosAlmacen_filtro') {
+			require_once('ingresos_almacen_antiguo/filtro.php');
+		}
+		//*** INGRESOS ALMACEN NUEVO
+		
+		if ($_GET['opcion']=='listSolicitudIngresosAlmacen_nuevo') {
+			require_once('ingresos_almacen_nuevo/list.php');
+		}
+		if ($_GET['opcion']=='listSolicitudIngresosAlmacen_nuevo_filtro') {
+			require_once('ingresos_almacen_nuevo/filtro.php');
+		}
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
 			require_once('estados_cuenta/list.php');
@@ -622,6 +631,9 @@
 		if ($_GET['opcion']=='listPagoProveedorLote') {
 			require_once('obligaciones_pago/listPagoLote.php');
 		}
+		if ($_GET['opcion']=='listPagoProveedorLote_admin_historico') {
+			require_once('obligaciones_pago/listaAdmin_historial.php');
+		}
 
 		if ($_GET['opcion']=='listPagoProveedoresLotes') {
 			require_once('obligaciones_pago/listaLotes.php');
@@ -670,6 +682,13 @@
 		if ($_GET['opcion']=='deleteUbicacion') {
 			$codigo=$_GET['codigo'];
 			require_once('activosFijos/saveDelete2.php');
+		}
+		if ($_GET['opcion']=='afdardebaja') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/saveDardebaja.php');
+		}
+		if ($_GET['opcion']=='afdardebaja_rpt') {
+			require_once('reportes_activosfijos/reporte_bajasaf_filtro.php');
 		}
         if ($_GET['opcion']=='saveUbicaciones') {
             require_once('activosFijos/ubicacionesSave.php');
@@ -743,6 +762,9 @@
 		//ACTIVOS FIJOS
 		if ($_GET['opcion']=='activosfijosLista') {
 			require_once('activosFijos/activosfijosLista.php');
+		}
+		if ($_GET['opcion']=='activosfijosLista_fungibles') {
+			require_once('activosFijos/activosfijosLista_fungibles.php');
 		}
 		if ($_GET['opcion']=='activofijoRegister') {
 			$codigo=$_GET['codigo'];
@@ -888,12 +910,18 @@
 		if ($_GET['opcion']=='afEtiquetasFiltro') {
 			require_once('activosFijos/afEtiquetasFiltro.php');
 		}
-		//impresion etiquetas activos fijos
+		
 		if ($_GET['opcion']=='afConstanciasTraspaso') {
 			require_once('reportes_activosfijos/afConstanciasTraspaso.php');
 		}
         
-
+        //utilitarios AF
+        if ($_GET['opcion']=='cambiarResponsableAF') {
+			require_once('activosFijos/cambiar_responsable.php');
+		}
+		if ($_GET['opcion']=='cambiarResponsableAFsave') {
+            require_once('activosFijos/cambiar_responsable_save.php');
+		}
 
 		//*************************************************************************************************************/
 		//*************************************************************************************************************/
@@ -1002,7 +1030,10 @@
 			require_once('personal/rptrptIngresosDescuentosFiltro.php');
 		}
 
-
+		//reporte info del personal
+		if ($_GET['opcion']=='rptPersonal_from') {
+			require_once('personal/rptPersonal_from.php');
+		}
 		// if ($_GET['opcion']=='saveTiposContrato') {
 		// 	require_once('personal/tipos_contratosSave.php');
 		// }
@@ -1106,6 +1137,16 @@
 		if ($_GET['opcion']=='generarPlanillaAguinaldosPrevia') {
 			require_once('planillas/generarPlanillaAguinaldos.php'); //ok
 		}
+
+		//planillas indemnizaciones
+		if ($_GET['opcion']=='planillasIndemnizacionesPersonal') {
+			require_once('planillas/planillasIndemnizacionesList.php'); //ok
+		}
+		if ($_GET['opcion']=='planillasIndemnizacionesPersonal_save') {
+			require_once('planillas/generarPlanillaIndemnizaciones.php'); //ok
+		}
+
+		
 		//finiquitos
 		if ($_GET['opcion']=='finiquitos_list') {
 			require_once('planillas/finiquitosList.php'); //ok
@@ -1389,7 +1430,12 @@
 		}
 
 
-
+		if ($_GET['opcion']=='subirBonoExcel_global_from') {
+			require_once('bonos/subirExcel_global_from.php');
+		}
+		if ($_GET['opcion']=='subirBonoExcel_global_save') {
+			require_once('bonos/subirExcel_global_save.php');
+		}
 
 
 
@@ -1512,10 +1558,18 @@
 		if ($_GET['opcion']=='subirAnticipoExcel2') {
 			require_once('anticipos_personal/subirDatosExcel.php');
 		}
-		       //ayuda documento csv
-            if ($_GET['opcion']=='ayudaArchivoCsv') {
-			   require_once('anticipos_personal/helpCsv.php');
-		    }
+	       //ayuda documento csv
+	    if ($_GET['opcion']=='ayudaArchivoCsv') {
+		   require_once('anticipos_personal/helpCsv.php');
+	    }
+	    if ($_GET['opcion']=='plantilla_sueldos_list') {
+		   require_once('bonos/plantilla_sueldos_list.php');
+	    }
+	    if ($_GET['opcion']=='descargarExcelGlobal') {
+		   require_once('bonos/descargarExcelGlobal.php');
+	    }
+
+		    
 
 		//Escalas Antiguedad
 		if ($_GET['opcion']=='listEscalaAntiguedad') {
@@ -1864,8 +1918,6 @@
 			$fl=$_GET['fl'];
 			require_once('flujos_efectivo/plandecuentas_registrer.php');
 		}
-
-		
 		//abm dosificaciones
 		if ($_GET['opcion']=='listDosificaciones') {
 			require_once('dosificaciones/list.php');
@@ -1883,7 +1935,32 @@
 			$cod_sucursal=$_GET['cod_sucursal'];
 			require_once('dosificaciones/saveDelete.php');
 		}
+		//ingresos sucursales
+		if ($_GET['opcion']=='cierrecaja_from') {			
+			require_once('ingresos_sucursales/cierrecaja_diario_from.php');
+		}
 
+		if ($_GET['opcion']=='main_cierrecaja_from') {			
+			require_once('ingresos_sucursales/ventana_principal.php');
+		}
+		
+		if ($_GET['opcion']=='rpt_bajadepositos_from') {			
+			require_once('ingresos_sucursales/rpt_bajadepositos_from.php');
+		}
+		if ($_GET['opcion']=='rpt_bajadepositos_print') {			
+			require_once('ingresos_sucursales/rpt_bajadepositos_print.php');
+		}
+		if ($_GET['opcion']=='rpt_facturasgeneradas_comercial_from') {			
+			require_once('ingresos_sucursales/rpt_facturasgeneradas_comercial_from.php');
+		}
+		if ($_GET['opcion']=='auditoria_sucursales_from') {			
+			require_once('auditorias_traspasos/auditoria_sucursales_from.php');
+		}
+
+		//*****pago proveedores
+		if ($_GET['opcion']=='reportePagoProveedores') {
+			require_once('reportes_solicitud_recursos/reportePagoProveedores_from.php');
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}

@@ -273,15 +273,10 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
              <input style="background:#ffffff;font-size: 20px;color:#21618C;font-style:bold;" class="form-control" type="text" value="0" name="total_saldo_ec" id="total_saldo_ec" readonly="true" />
             </div>
           </div>
-
         </div>
-
       </div>
       <input type="hidden" id="cantidad_proveedores_modal" name="cantidad_proveedores_modal"value="0">
       <input type="hidden" id="cantidad_proveedores" name="cantidad_proveedores"value="0">
-      <!-- <div class="card-footer d-flex">
-        <a href="#" onclick="agregarLotePago_seleccionados()" class="btn btn-white btn-sm mx-auto" style="background:#07B46D; color:#F7FF5A;">SELECCIONAR</a>
-      </div> -->
     </div>  
   </div>
 </div>

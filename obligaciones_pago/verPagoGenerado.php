@@ -128,7 +128,7 @@ if(isset($_GET['sw_estado'])){
                   </div><?php
                 } ?>
               </div>
-					<div class="col-sm-4 div-center"><center><h3>Detalle de Pagos</h3></center></div>
+					<div class="col-sm-4 div-center"><center><h3>Detalle de Pago</h3></center></div>
 					<div class="col-sm-12 div-center">	
 						<table class="table table-bordered table-condensed">
 							<thead>

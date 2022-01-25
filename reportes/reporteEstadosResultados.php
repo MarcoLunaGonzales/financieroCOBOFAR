@@ -1,7 +1,10 @@
 <?php
 
 $formato=$_POST['formato'];
-include 'reporteEstadosResultados_all.php';
+if($formato==3){
+  include 'reporteEstadosResultados_all.php';
+}else{
+
 if($formato==2){ ?>
   <meta charset="utf-8">
   <style type="text/css">
@@ -444,6 +447,7 @@ if($formato==2){
   descargarPDF("COBOFAR - BALANCE GRAL ",$html);
 }
 
+}
 // //echo $html;
 // descargarPDF("COBOFAR - Estado de Resultados (".$tituloOficinas.")",$html);
 ?>

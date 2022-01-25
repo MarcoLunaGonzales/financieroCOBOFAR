@@ -161,6 +161,8 @@ $fechaHasta=$y."-12-31";
                       required>
                       <option value="1">PDF</option>
                       <option value="2">EXCEL</option>
+
+                      <option value="3">EXCEL TODO</option>
                   </select>
                 </div>
               </div>

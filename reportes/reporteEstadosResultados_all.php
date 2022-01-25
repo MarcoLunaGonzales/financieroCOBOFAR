@@ -1,6 +1,6 @@
 <?php
 
-$formato=$_POST['formato'];
+
 
 
 require_once '../conexion.php';
@@ -116,7 +116,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
               //listar los montos
               //$detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateadaHasta,1,$unidades,$areas,$codigo_4,$gestion,$fechaFormateada);
               $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle_areas($fechaFormateadaHasta,1,$unidades,$area_costo,$codigo_4,$gestion,$fechaFormateada);
-               while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
+              $index_5=1;
+              while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    $cod_cuentaX=$rowComp['cod_cuenta'];
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);
@@ -138,7 +139,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     if($montoX>0){
                       $html4.='<tr>'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroX).'</td>'.
-                           '<td class="td-border-none text-left">'.$nombreX.$index.'</td>'.
+                           '<td class="td-border-none text-left">'.$nombreX.'-i5:'.$index_5.'</td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
@@ -147,7 +148,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     }elseif($montoX<0){
                       $html4.='<tr>'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroX).'</td>'.
-                           '<td class="td-border-none text-left">'.$nombreX.$index.'</td>'.
+                           '<td class="td-border-none text-left">'.$nombreX.'-i5:'.$index_5.'</td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
@@ -156,14 +157,14 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     }elseif($montoX==0){
                       $html4.='<tr>'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroX).'</td>'.
-                           '<td class="td-border-none text-left">'.$nombreX.$index.'</td>'.
+                           '<td class="td-border-none text-left">'.$nombreX.'-i5:'.$index_5.'</td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right">-</td>';   
                      $html4.='</tr>';      
                     }
-               $index++;  
+                $index_5++;  
         
                }/* Fin del primer while*/
               if($sumaNivel4>0){
@@ -171,7 +172,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 $nombre_4=formateaPlanCuenta($nombre_4, $nivel_4);
                 $html3.='<tr class="bold">'.
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
-                  '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_4.'-i4:'.$index_4.'</td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
@@ -183,7 +184,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 $nombre_4=formateaPlanCuenta($nombre_4, $nivel_4);
                 $html3.='<tr class="bold">'.
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
-                  '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_4.'-i4:'.$index_4.'</td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
@@ -195,7 +196,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 $nombre_4=formateaPlanCuenta($nombre_4, $nivel_4);
                 $html3.='<tr class="bold">'.
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
-                  '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_4.'-i4:'.$index_4.'</td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
@@ -203,13 +204,14 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 $html3.='</tr>';
                 $html3.=$html4;       
               } 
+              $index_4++;
             }
             if($sumaNivel3>0){
               $sumaNivel2+=$sumaNivel3;
               $nombre_3=formateaPlanCuenta($nombre_3, $nivel_3);
               $html2.='<tr class="bold">'.
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_3).'</td>'.
-                  '<td class=" td-border-none text-left">'.$nombre_3.'i3:'.$index_3.'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_3.'-i3:'.$index_3.'</td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
@@ -221,7 +223,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
               $nombre_3=formateaPlanCuenta($nombre_3, $nivel_3);
               $html2.='<tr class="bold">'.
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_3).'</td>'.
-                  '<td class=" td-border-none text-left">'.$nombre_3.'i3:'.$index_3.'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_3.'-i3:'.$index_3.'</td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
@@ -237,7 +239,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             $monto_2=0;
             $html1.='<tr class="bold">'.
                     '<td class="td-border-none text-left">'.formatoNumeroCuenta($numero_2).'</td>'.
-                    '<td class="td-border-none text-left">'.$nombre_2.'i2:'.$index_2.'</td>'.
+                    '<td class="td-border-none text-left">'.$nombre_2.'-i2:'.$index_2.'</td>'.
                     '<td class="td-border-none text-right"></td>'.
                     '<td class="td-border-none text-right"></td>'.
                     '<td class="td-border-none text-right"></td>'.
@@ -251,7 +253,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             $monto_2=0;
             $html1.='<tr class="bold">'.
                     '<td class="td-border-none text-left">'.formatoNumeroCuenta($numero_2).'</td>'.
-                    '<td class="td-border-none text-left">'.$nombre_2.'i2:'.$index_2.'</td>'.
+                    '<td class="td-border-none text-left">'.$nombre_2.'-i2:'.$index_2.'</td>'.
                     '<td class="td-border-none text-right"></td>'.
                     '<td class="td-border-none text-right"></td>'.
                     '<td class="td-border-none text-right"></td>'.
@@ -270,7 +272,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
     if($sumaNivel1>0){
       $html.='<tr class="bold table-title">'.
                 '<td class="td-border-izquierda text-left">'.formatoNumeroCuenta($numero).'</td>'.
-                '<td class="td-border-centro text-left" width="50%">'.$nombre.'</td>'.
+                '<td class="td-border-centro text-left" width="50%">'.$nombre.'-i1:'.$index.'</td>'.
                 '<td class="td-border-centro text-right" width="10%"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
@@ -280,7 +282,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
     }elseif($sumaNivel1<0){
       $html.='<tr class="bold table-title">'.
                 '<td class="td-border-izquierda text-left">'.formatoNumeroCuenta($numero).'</td>'.
-                '<td class="td-border-centro text-left" width="50%">'.$nombre.'</td>'.
+                '<td class="td-border-centro text-left" width="50%">'.$nombre.'-i1:'.$index.'</td>'.
                 '<td class="td-border-centro text-right" width="10%"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
@@ -288,6 +290,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
      $html.='</tr>';
      $html.=$html1;
     }
+    $index++;  
 }
  $html.='</tbody></table>';
       

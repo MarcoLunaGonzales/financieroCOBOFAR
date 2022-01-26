@@ -136,7 +136,7 @@ $dbh = new Conexion();
 						                 <div class="col-sm-8">
 						                	<div class="form-group">
 						                		<div id="div_contenedor_fechaI">
-							                		<input type="text" class="form-control datepicker " autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaDesde?>">
+							                		<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaDesde?>">
 							                	</div>
 				                                
 						                     </div>
@@ -149,7 +149,7 @@ $dbh = new Conexion();
 						                 <div class="col-sm-8">
 						                	<div class="form-group">
 				                               <div id="div_contenedor_fechaH">
-						                			<input type="text" class="form-control datepicker " autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaHasta?>">
+						                			<input type="date" class="form-control " autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaHasta?>">
 						                		</div>
 						                    </div>
 						                  </div>

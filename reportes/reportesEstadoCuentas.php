@@ -27,7 +27,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
 ?>
 
 <div class="content">
-	<div class="container-fluid">
+  <div class="container-fluid">
     <div style="overflow-y: scroll;">
       <div class="col-md-12">
       <form id="form1" class="form-horizontal" action="<?=$rptEstadoCuentasprocesar;?>" method="post" target="_blank">
@@ -317,5 +317,5 @@ $globalUnidad=$_SESSION["globalUnidad"];
         </form>
       </div>  
     </div>
-	</div>
+  </div>
 </div>

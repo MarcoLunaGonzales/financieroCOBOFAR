@@ -40,6 +40,7 @@ $sql="SELECT c.codigo, c.cod_comprobante, c.cod_cuenta, c.cod_cuentaauxiliar, c.
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $nombreX=0;
+$index=1;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $codigoX=$row['codigo'];
   $codComprobanteX=$row['cod_comprobante'];
@@ -66,11 +67,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $stmtInsert->execute();
   
   
-
+  $index++
   
 }
 
-echo "<h6>HORA FIN PROCESO CARGADO ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
+echo "<h6>HORA FIN PROCESO CARGADO ESTADO CUENTAS: " . date("Y-m-d H:i:s")." Cont:$index</h6>";
 
 ?>
           </div>

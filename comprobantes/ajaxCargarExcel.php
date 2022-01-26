@@ -1,3 +1,4 @@
+<!-- <meta charset="utf-8"> -->
 <?php
 session_start();
 require_once '../conexion.php';
@@ -36,22 +37,37 @@ for ($fila=0; $fila < count($datos); $fila++) {
     }
 
     $unidadDet=codigoUnidadNombre(trim($datos[$fila][0]));//verficia la oficina por el nombre like '%nombre%' retorna codigo
-    $areaDet=502;// area por defecto 
+    //echo "<br>".$datos[$fila][1]."<br>";
+    if($datos[$fila][1]==null || $datos[$fila][1]=="" || $datos[$fila][1]==" "){
+      $areaDet=522;// area por defecto   
+    }else{
+      $areaDet=codigoAreaNombre(trim($datos[$fila][1]));
+    }
+    
     //$debe=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][2]));
     //$haber=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][3]));
-    $debe=(float)str_replace(",", "",$datos[$fila][2]);
-    $haber=(float)str_replace(",", "",$datos[$fila][3]);
+    $debe=(float)str_replace(",", "",$datos[$fila][4]);
+    $haber=(float)str_replace(",", "",$datos[$fila][5]);
     $totaldebDet+=$debe;
     $totalhabDet+=$haber;
-    $glosa=$datos[$fila][4];
-    $cod_cuenta=obtieneCuentaPorNumero(trim($datos[$fila][1]));
-    $cod_cuenta_aux=0;
+    $glosa=$datos[$fila][6];
+    $cod_cuenta=obtieneCuentaPorNumero(trim($datos[$fila][2]));
+    $cod_cuenta_aux=$datos[$fila][3];
     $nombre_cuenta=nameCuenta($cod_cuenta);
-    $nombre_cuenta_aux='';
-    $numero_cuenta=trim($datos[$fila][1]);
+    if($cod_cuenta_aux>0){
+      $nombre_cuenta_aux=nameCuentaAux($cod_cuenta_aux);
+    }else{
+      if($cod_cuenta_aux==""){
+        $cod_cuenta_aux=0;
+      }
+      $nombre_cuenta_aux='';
+    }
+    
+    $numero_cuenta=trim($datos[$fila][2]);
 
     $codigoCuenta=$cod_cuenta;
-    $codCuentaAuxDet=0;
+    $codCuentaAuxDet=$cod_cuenta_aux;
+    $nombre_auxiliar=$nombre_cuenta_aux;
     $numeroDet=$numero_cuenta;
     $nombreDet=$nombre_cuenta;
     
@@ -169,7 +185,7 @@ for ($fila=0; $fila < count($datos); $fila++) {
       itemFacturas.push(nfac);var nest=[];
       itemEstadosCuentas.push(nest);itemFacturas[<?=$idFila?>]=[];filaActiva=<?=$idFila?>;</script><?php
                                    
-                              ?><script>setBusquedaCuentaEdit('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');</script>   
+                              ?><script>setBusquedaCuentaEdit('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','<?=$codCuentaAuxDet?>','<?=$nombre_auxiliar?>');</script>   
 
     <div class="col-sm-1">
             <div class="form-group">      

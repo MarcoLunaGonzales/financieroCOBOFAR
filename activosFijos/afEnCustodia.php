@@ -132,7 +132,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                   <?php if($cod_estadoasignacionaf==2){?>
                   <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalDevolverAll" >Devolver todos los AF</button>
                   <?php }?>
-                  <?php if($globalUser==16){?>
+                  <?php if($globalUser==16 or $globalUser==17){?>
                   <button class="btn btn-info" onClick="location.href='activosFijos/save_aceptarAF_asignacion_all.php'">Recepcionar Todos los AF</button>
                   <?php }?>
                 </div>

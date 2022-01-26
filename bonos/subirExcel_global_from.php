@@ -8,7 +8,6 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 $codGestion = $_SESSION['globalGestion'];
 $nombreGestion=$_SESSION['globalNombreGestion'];
-
 ?>
 
 <div class="content">
@@ -43,9 +42,9 @@ $nombreGestion=$_SESSION['globalNombreGestion'];
 							<div class="col-sm-4">
 								<div class="form-group">
 									<select class="selectpicker form-control form-control-sm" name="opcionCargar" id="opcionCargar" data-style="<?= $comboColor; ?>" required="true">
-										<option disabled selected value="">Elija Opción</option>
+										<!-- <option disabled selected value="">Elija Opción</option>
 										<option value="1">Sobreescribir los datos existentes e insertar nuevos</option>
-										<option value="2">Mantener los datos existentes e insertar nuevos</option>
+										<option value="2">Mantener los datos existentes e insertar nuevos</option> -->
 										<option value="3">Borrar todo y cargar de nuevo</option>
 									</select>
 								</div>
@@ -62,8 +61,7 @@ $nombreGestion=$_SESSION['globalNombreGestion'];
 					</div>
 					<div class="card-footer ml-auto mr-auto">
 							<button type="submit" class="<?= $buttonNormal; ?>" name="enviar">Guardar</button>
-							<a href="<?=$urlList;?>" class="<?= $buttonCancel;?>"> <-- Volver </a>
-					    <a href="<?=$urlDescargarExcelGlobal;?>" target="_blank" class="btn btn-info"><span class="material-icons">download</span>Descargar Plantilla</a>
+							<a href="?opcion=planillasSueldoPersonal" class="<?= $buttonCancel;?>"> <-- Volver </a>
 					</div>
 				</div>
 			</form>

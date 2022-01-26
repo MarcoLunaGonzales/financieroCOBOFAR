@@ -106,7 +106,9 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                     <?php $index=1;
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                       $dep_nombre=trim(abrevDepreciacion($cod_depreciaciones)," - ");
-                      $tb_tipo=abrevTipoBienes($cod_tiposbienes);?>
+                      //$tb_tipo=abrevTipoBienes($cod_tiposbienes);
+                      $tb_tipo="";
+                      ?>
                       <tr>
                         <td  class="td-actions text-right">    
                             <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-info">

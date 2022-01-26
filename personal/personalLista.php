@@ -16,9 +16,8 @@ $stmt = $dbh->prepare("SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.pa
  (select a.abreviatura from areas a where a.codigo=cod_area)as xarea,
  (select ep.nombre from estados_personal ep where ep.codigo=cod_estadopersonal)as xestado,
  (select tp.nombre from tipos_personal tp where tp.codigo=cod_tipopersonal)as xcod_tipopersonal
- 
  from personal p
- where p.cod_estadopersonal<>2
+ where p.cod_estadoreferencial=1 and p.cod_estadopersonal<>3
  order by p.paterno, p.materno, p.primer_nombre
  ");
 //ejecutamos

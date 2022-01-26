@@ -8,16 +8,21 @@
     <div class="">
       <div class="wrapper">
       <?php 
-
+          $tipoLogin=obtenerValorConfiguracion(-10);
           if(!isset($_GET['opcion'])){
             $perfil=$_SESSION['globalPerfil'];
             $_SESSION['modulo']=0;
             include("cabecera_home.php");
             include("home.php");
           }else{//primer home
-
-            include("menu.php");
-            include("cabecera.php");
+            if(!isset($_GET['q'])){                
+              if($tipoLogin==1){
+                include("menu.php");
+              }else{
+                include("menuService.php");
+              }
+              include("cabecera.php");
+            }
             require_once('routing.php');
           }       
       ?>  

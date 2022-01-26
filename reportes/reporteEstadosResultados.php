@@ -1,5 +1,76 @@
 <?php
-session_start();
+
+$formato=$_POST['formato'];
+if($formato==3){
+  include 'reporteEstadosResultados_all.php';
+}else{
+
+if($formato==2){ ?>
+  <meta charset="utf-8">
+  <style type="text/css">
+    .d-none {display: none !important;}
+    .table{
+      width: 100%;  
+      border-collapse: collapse;}
+      .table .fila-primary td{
+   padding: 5px;
+    border-top: 0px;
+    border-right: 0px;
+    border-bottom: 1px solid black;
+    border-left: 0px;
+  }
+  .table .fila-totales td{
+    padding: 5px;
+    border-bottom: 0px;
+    border-right: 0px;
+    border-top: 1px solid black;
+    border-left: 0px;
+  }
+  .table tr td{
+    border: 1px solid black;
+  }
+  .td-border-none{
+    border: none !important;
+  }
+  .td-border-derecha{
+   border-bottom: 1px solid black !important;
+   border-right: 1px solid black !important;
+   border-top: 1px solid black !important;
+   border-left: 0px !important;
+  }
+  .td-border-centro{
+   border-bottom: 1px solid black !important;
+   border-right: 0px !important;
+   border-top: 1px solid black !important;
+   border-left: 0px !important;
+  }
+  .td-border-izquierda{
+   border-bottom: 1px solid black !important;
+   border-right: 0px !important;
+   border-top: 1px solid black !important;
+   border-left: 1px solid black !important;
+  }
+  .td-border-bottom{
+   border-bottom: 1px solid black !important;
+   border-right: 0px !important;
+   border-top: 0px !important;
+   border-left: 0px !important;
+  }
+  .table .table-title{
+   font-size: 12px;
+  }
+  </style>
+  <?php
+    header("Pragma: public");
+    header("Expires: 0");
+    $filename = "COBOFAR - ESTADOS DE RESULTADOS.xls";
+    header("Content-type: application/x-msdownload");
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Pragma: no-cache");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+
+}
+
 require_once '../conexion.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
@@ -8,7 +79,7 @@ require_once '../assets/libraries/CifrasEnLetras.php';
 setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();
-set_time_limit(300);
+set_time_limit(0);
 $fechaActual=date("Y-m-d");
 $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha_desde'];
@@ -19,34 +90,40 @@ $fechaHasta=$_POST['fecha_hasta'];
 $fechaTituloHasta= explode("-",$fechaHasta);
 $fechaFormateadaHasta=$fechaTituloHasta[2].'/'.$fechaTituloHasta[1].'/'.$fechaTituloHasta[0];
 
-
-
 $moneda=1; //$_POST["moneda"];
 $unidades=$_POST['unidad'];
 $entidades=$_POST['entidad'];
 // $StringEntidad=implode(",", $entidad);
-
 $stringEntidades="";
 foreach ($entidades as $valor ) {    
     $stringEntidades.=nameEntidad($valor).",";
-}    
+}
+
+$area_costo=$_POST['area_costo'];
+if(isset($_POST['costos_areas'])){
+  $centro_costo_sw=1;
+}else{
+  $centro_costo_sw=0;
+}
 
 
 $tituloOficinas="";
 for ($i=0; $i < count($unidades); $i++) { 
   $tituloOficinas.=abrevUnidad_solo($unidades[$i]).",";
 }
-$areas=array("prueba","prueba");//$_POST['area_costo'];
+// $areas=array("prueba","prueba");//$_POST['area_costo'];
 $html = '';
-$html.='<html>'.
-         '<head>'.
+$html.='<html>';
+         if($formato==1){
+         $html.='<head>'.
              '<!-- CSS Files -->'.
              '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
              '<link href="../assets/libraries/plantillaPDFBalance.css" rel="stylesheet" />'.
            '</head>';
+          }
 $html.='<body>';
 $html.=  '<header class="header">'.            
-            '<img class="imagen-logo-izq" src="../assets/img/favicon.png">'.
+            '<img class="imagen-logo-izq" width="50px" height="50px" src="../assets/img/icono_sm_cobofar.jpg">'.
             '<div id="header_titulo_texto">'.obtenerValorConfiguracion(43).'</div>'.
          '<div id="header_titulo_texto_inf_pegado">Del '.$fechaFormateada.' al '.$fechaFormateadaHasta.'</div>'.
          '<div id="header_titulo_texto_inf_pegado_Max">Expresado en Bolivianos</div>'.
@@ -122,8 +199,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             while ($row = $stmt4->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
               //listar los montos
-              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateadaHasta,1,$unidades,$areas,$codigo_4,$gestion,$fechaFormateada);
+              //$detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateadaHasta,1,$unidades,$areas,$codigo_4,$gestion,$fechaFormateada);
+              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle_areas($fechaFormateadaHasta,1,$unidades,$area_costo,$codigo_4,$gestion,$fechaFormateada);
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
+                   $cod_cuentaX=$rowComp['cod_cuenta'];
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);
                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
@@ -139,7 +218,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                    if($codigo==5000){                    
                     $tBolActivo+=$montoX;
                   }else{
-                    //$montoX=abs((float)($rowComp['total_debe']-$rowComp['total_haber']));
                     $tBolPasivo+=$montoX;
                   }
                     $sumaNivel4+=$montoX;  
@@ -172,7 +250,53 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                      $html4.='</tr>';      
                     }
                             
-               $index++;          
+               $index++;  
+
+               //para el  nivel 6 centro costos
+                if($centro_costo_sw==1 && $montoX<>0){
+                  $arrayUnidades=implode(",",$unidades);
+                  $arrayAreas=implode(",",$area_costo);
+                  $sql="SELECT a.nombre as nombre_area,d.cod_area,d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber
+                    from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante join areas a on a.codigo=d.cod_area join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional join plan_cuentas p on p.codigo=d.cod_cuenta 
+                    where c.fecha between '$fecha 00:00:00' and '$fechaHasta 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and d.cod_area in ($arrayAreas) and c.cod_estadocomprobante<>2 
+                    and  p.cod_padre=$codigo_4 and p.codigo=$cod_cuentaX
+                    group by (d.cod_area) 
+                    order by a.nombre";
+                             // echo $sql."<br>";
+                  $stmt6 = $dbh->prepare($sql);
+                  $stmt6->execute();                      
+                  $stmt6->bindColumn('cod_area', $cod_area_6);
+                  $stmt6->bindColumn('total_debe', $total_debe_6);
+                  $stmt6->bindColumn('total_haber', $total_haber_6);
+                  $stmt6->bindColumn('nombre_area', $nombre_6);
+                  $index_6=1;
+                  while ($row = $stmt6->fetch(PDO::FETCH_BOUND)) {
+                    $nombre_6=formateaPlanCuenta($nombre_6,6);
+                    $montoX_aux=(float)($total_debe_6-$total_haber_6);
+                    if($tipoCuentaIngresoGasto==4){
+                     $montoX_aux=$montoX_aux*-1;
+                   }                    
+                    if(number_format($montoX_aux, 2, '.', '')>0){
+                      $html4.='<tr  style="color:#9b59b6;font-size:9px">'.
+                           '<td class="td-border-none text-left"></td>'.
+                           '<td class="td-border-none text-left">'.$nombre_6.'</td>'.
+                           '<td class="td-border-none text-right">'.number_format($montoX_aux, 2, '.', ',').'</td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>';   
+                      $html4.='</tr>';      
+                    }elseif(number_format($montoX_aux, 2, '.', '')<0){
+                      $html4.='<tr  style="color:#9b59b6;font-size:9px">'.
+                           '<td class="td-border-none text-left" ></td>'.
+                           '<td class="td-border-none text-left">'.$nombre_6.'</td>'.
+                           '<td class="td-border-none text-right">('.number_format(abs($montoX_aux), 2, '.', ',').')</td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>';   
+                      $html4.='</tr>';      
+                    }
+                  }
+                 }//centro costos
                }/* Fin del primer while*/
               if($sumaNivel4>0){
                 $sumaNivel3+=$sumaNivel4;  
@@ -237,19 +361,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
               $html2.='</tr>';
               $html2.=$html3;
             }
-            // elseif($sumaNivel3==0){
-            //   $sumaNivel2+=$sumaNivel3;
-            //   $nombre_3=formateaPlanCuenta($nombre_3, $nivel_3);
-            //   $html2.='<tr class="bold">'.
-            //       '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_3).'</td>'.
-            //       '<td class=" td-border-none text-left">'.$nombre_3.'</td>'.
-            //       '<td class=" td-border-none text-right"></td>'.
-            //       '<td class=" td-border-none text-right">-</td>'.
-            //       '<td class=" td-border-none text-right"></td>'.
-            //       '<td class=" td-border-none text-right"></td>';   
-            //   $html2.='</tr>';
-            //   $html2.=$html3;
-            // }
           }
           if($sumaNivel2>0){
             $sumaNivel1+=$sumaNivel2;
@@ -279,20 +390,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
              $html1.='</tr>';
              $html1.=$html2; 
           }
-          // elseif($sumaNivel2==0){
-          //   $sumaNivel1+=$sumaNivel2;
-          //   $nombre_2=formateaPlanCuenta($nombre_2, $nivel_2);
-          //   $monto_2=0;
-          //   $html1.='<tr class="bold">'.
-          //           '<td class="td-border-none text-left">'.formatoNumeroCuenta($numero_2).'</td>'.
-          //           '<td class="td-border-none text-left">'.$nombre_2.'</td>'.
-          //           '<td class="td-border-none text-right"></td>'.
-          //           '<td class="td-border-none text-right"></td>'.
-          //           '<td class="td-border-none text-right">-</td>'.
-          //           '<td class="td-border-none text-right"></td>';   
-          //    $html1.='</tr>';
-          //    $html1.=$html2; 
-          // }
       }
 
     $nombre=formateaPlanCuenta($nombre, $nivel);
@@ -318,23 +415,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
      $html.='</tr>';
      $html.=$html1;
     }
-    // elseif ($sumaNivel1==0) {
-    //   $html.='<tr class="bold table-title">'.
-    //             '<td class="td-border-izquierda text-left">'.formatoNumeroCuenta($numero).'</td>'.
-    //             '<td class="td-border-centro text-left" width="60%">'.$nombre.'</td>'.
-    //             '<td class="td-border-centro text-right"></td>'.
-    //             '<td class="td-border-centro text-right"></td>'.
-    //             '<td class="td-border-centro text-right"></td>'.
-    //             '<td class="td-border-derecha text-right">-</td>';   
-    //  $html.='</tr>';
-    //  $html.=$html1;
-    // }
-    
 }
-
- $html.=    '</tbody></table>';
-     
-      
+ $html.='</tbody></table>';
       $totalResultado=$tBolPasivo-$tBolActivo;
       if($totalResultado>=0){
         $html.='<br><table class="table">'.
@@ -358,6 +440,14 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
 $html.='</body>'.
       '</html>';
-                    
-descargarPDF("COBOFAR - Estado de Resultados (".$tituloOficinas.")",$html);
+
+if($formato==2){
+  echo $html;
+}else{
+  descargarPDF("COBOFAR - BALANCE GRAL ",$html);
+}
+
+}
+// //echo $html;
+// descargarPDF("COBOFAR - Estado de Resultados (".$tituloOficinas.")",$html);
 ?>

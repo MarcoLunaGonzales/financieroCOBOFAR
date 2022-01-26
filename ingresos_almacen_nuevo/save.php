@@ -64,7 +64,11 @@ if($cod_ingresoalmacen>0){
     $nit_factura_proveedor=$row['nit_factura_proveedor'];
     $monto_factura_proveedor_desc=$row['monto_factura_proveedor_desc'];
     $monto_factura_proveedor=$row['monto_factura_proveedor'];
+    if($monto_desc == $monto_factura_proveedor_desc){
+      $monto_factura_proveedor_desc=0;
+    }
     $monto_desc=$monto_factura_proveedor-$monto_factura_proveedor_desc;
+
     // // $total_venta=$MFACTURA-$DESCTO1-$DESCTO2-$DESCTO3-$DESCTO4;
     // $total_venta=$MFACTURA-number_format($DESCTO1,2,'.','')-$DESCTO2-$DESCTO3-$DESCTO4;
     // $total_venta=number_format($total_venta,2,'.','');

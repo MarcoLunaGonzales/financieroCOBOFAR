@@ -532,35 +532,11 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
                 </thead>
                 <tbody id="tabla_archivos">
                   <?php
-                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=$codPadreArchivos"); //$codPadreArchivos //$codPadreArchivos localhost
-                  $stmtArchivo->execute();
                   $filaA=0;
-                  while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
-                     $filaA++;
-                     $codigoX=$rowArchivo['idClaDocumento'];
-                     $nombreX=$rowArchivo['Documento'];
-                     $ObligatorioX=$rowArchivo['Obligatorio'];
-                     $Obli='<i class="material-icons text-danger">clear</i> NO';
-                     if($ObligatorioX==1){
-                      $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
-                     }
+
+                  
                   ?>
-                  <tr>
-                    <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
-                    <td class="text-center"><?=$Obli?></td>
-                    <td class="text-right">
-                      <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
-                      <span class="input-archivo">
-                        <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
-                      </span>
-                      <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo
-                      </label>
-                    </td>    
-                    <td><?=$nombreX;?></td>
-                  </tr> 
-                  <?php
-                   }
-                  ?>       
+                     
                 </tbody>
               </table>
               <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
@@ -576,52 +552,5 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 </div>
 
 </form>
-
-
-
-<?php 
-//$dbh = new Conexion();
-
-// $sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 ";
-// $sqlBusqueda.=" order by p.numero";
-
-
-// $stmt = $dbh->prepare($sqlBusqueda);
-// $stmt->execute();
-// $stmt->bindColumn('codigo', $codigoCuenta);
-// $stmt->bindColumn('numero', $numeroCuenta);
-// $stmt->bindColumn('nombre', $nombreCuenta);
-		//$cont=0;$contAux=0;
-		// while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-
-		// 	$numeroCuenta=trim($numeroCuenta);
-		// 	$nombreCuenta=trim($nombreCuenta);
-
-		// 	$sqlCuentasAux="SELECT codigo, nombre, (select count(*) from estados_cuenta e, comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and c.cod_estadocomprobante<>2 and e.cod_cuentaaux=ca.codigo and e.cod_comprobantedetalleorigen=0)as contador FROM cuentas_auxiliares ca where ca.cod_cuenta='$codigoCuenta' order by 2";
-		// 	$stmtAux = $dbh->prepare($sqlCuentasAux);
-		// 	$stmtAux->execute();
-		// 	$stmtAux->bindColumn('codigo', $codigoCuentaAux);
-		// 	$stmtAux->bindColumn('nombre', $nombreCuentaAux);
-		// 	$stmtAux->bindColumn('contador', $contadorRegistrosEC);
-		// 	while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
-		// 		$txtNumRegistros="";
-		// 		if($contadorRegistrosEC>0){
-		// 			$txtNumRegistros=" -- **".$contadorRegistrosEC."**";
-		// 		}
-		// 		$nombreCuentaAux=$nombreCuentaAux." ".$txtNumRegistros;
-		?>
-			<!-- <script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});
-			</script> -->
-		<?php
-			// 	$contAux++;
-			// }  	
-		 ?><!-- <script>
-		    itemCuentas.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
-		 </script> --><?php	
-		//$cont++;
-		//}
-		?>
-
-<!-- <script>$('.selectpicker').selectpicker("refresh");</script> -->
 <?php require_once 'modal.php';?>
 

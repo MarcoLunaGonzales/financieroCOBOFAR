@@ -51,8 +51,8 @@ $html.='<html>'.
              '<link href="../assets/libraries/plantillaPDFBalance.css" rel="stylesheet" />'.
            '</head>';
 $html.='<body>';
-$html.=  '<header class="header">'.            
-            '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
+$html.=  '<header class="header">'.
+            '<img class="imagen-logo-izq" src="../assets/img/icono_sm_cobofar.jpg">'.
             '<div id="header_titulo_texto">Balance de Sumas y Saldos</div>'.
          '<div id="header_titulo_texto_inf_pegado">Practicado al '.$fechaFormateada.'</div>'.
          '<div id="header_titulo_texto_inf_pegado_Max">Expresado en Bolivianos</div>'.
@@ -89,7 +89,7 @@ $html.='<br><table class="table">
            $tBolDebeSaldo=0;$tBolHaberSaldo=0;
 // Preparamos
 $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.cod_padre, p.nivel, 
-  (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=1 and (p.codigo=1 or p.codigo=2 or p.codigo=3) order by p.numero");
+  (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=1 and (p.codigo=1000 or p.codigo=2000 or p.codigo=3000) order by p.numero");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -451,5 +451,5 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 $html.='</body>'.
       '</html>';
                     
-descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDF("COBOFAR - REPORTE SUMAS Y SALDOS",$html);
 ?>

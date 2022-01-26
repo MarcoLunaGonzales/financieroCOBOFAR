@@ -1,4 +1,70 @@
 <?php
+$formato=$_POST['formato'];
+if($formato==2){ ?>
+  <meta charset="utf-8">
+  <style type="text/css">
+    .d-none {display: none !important;}
+    .table{
+      width: 100%;  
+      border-collapse: collapse;}
+      .table .fila-primary td{
+   padding: 5px;
+    border-top: 0px;
+    border-right: 0px;
+    border-bottom: 1px solid black;
+    border-left: 0px;
+  }
+  .table .fila-totales td{
+    padding: 5px;
+    border-bottom: 0px;
+    border-right: 0px;
+    border-top: 1px solid black;
+    border-left: 0px;
+  }
+  .table tr td{
+    border: 1px solid black;
+  }
+  .td-border-none{
+    border: none !important;
+  }
+  .td-border-derecha{
+   border-bottom: 1px solid black !important;
+   border-right: 1px solid black !important;
+   border-top: 1px solid black !important;
+   border-left: 0px !important;
+  }
+  .td-border-centro{
+   border-bottom: 1px solid black !important;
+   border-right: 0px !important;
+   border-top: 1px solid black !important;
+   border-left: 0px !important;
+  }
+  .td-border-izquierda{
+   border-bottom: 1px solid black !important;
+   border-right: 0px !important;
+   border-top: 1px solid black !important;
+   border-left: 1px solid black !important;
+  }
+  .td-border-bottom{
+   border-bottom: 1px solid black !important;
+   border-right: 0px !important;
+   border-top: 0px !important;
+   border-left: 0px !important;
+  }
+  .table .table-title{
+   font-size: 12px;
+  }
+  </style>
+  <?php
+    header("Pragma: public");
+    header("Expires: 0");
+    $filename = "COBOFAR - BALANCE GRAL.xls";
+    header("Content-type: application/x-msdownload");
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Pragma: no-cache");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+}
+
 session_start();
 require_once '../conexion.php';
 require_once '../functionsGeneral.php';
@@ -11,10 +77,7 @@ $fechaActual=date("Y-m-d");
 $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha'];
 $fechaTitulo= explode("-",$fecha);
-
 $fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
-
-
 
 $moneda=1; //$_POST["moneda"];
 $unidades=$_POST['unidad'];
@@ -25,7 +88,6 @@ $stringEntidades="";
 foreach ($entidades as $valor ) {    
     $stringEntidades.=nameEntidad($valor).",";
 }    
-
 
 $tituloOficinas="";
 for ($i=0; $i < count($unidades); $i++) { 
@@ -46,15 +108,16 @@ if((int)$_POST['nivel']==6){
 }
 
 $mostrarNivel[(int)$_POST['nivel']]="";
-
 $areas=array("prueba","prueba");//$_POST['area_costo'];
 $html = '';
-$html.='<html>'.
-         '<head>'.
+$html.='<html>';
+         if($formato==1){
+         $html.='<head>'.
              '<!-- CSS Files -->'.
              '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
              '<link href="../assets/libraries/plantillaPDFBalance.css" rel="stylesheet" />'.
            '</head>';
+          }
 $html.='<body>';
 $html.=  '<header class="header">'.            
             '<img class="imagen-logo-izq" src="../assets/img/icono_sm_cobofar.jpg">'.
@@ -411,6 +474,13 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 /*$html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>';*/
 $html.='</body>'.
       '</html>';
+      
                    //echo $html;
-      descargarPDF("COBOFAR - BALANCE GRAL ",$html);
+
+      if($formato==2){
+        echo $html;
+      }else{
+        descargarPDF("COBOFAR - BALANCE GRAL ",$html);
+      }
+      
 ?>

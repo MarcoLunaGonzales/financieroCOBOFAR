@@ -53,7 +53,6 @@ $banderaLogin=0;
 	        }
 		}
 		$nombreGestion=nameGestion($codGestionActiva);
-
 		$_SESSION['globalUser']=$codigo;
 		$_SESSION['globalNameUser']=$nombre;
 		$_SESSION['globalGestion']=$codGestionActiva;

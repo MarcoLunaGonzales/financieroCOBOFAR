@@ -146,8 +146,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           <td class="text-center small"><?=$nombreUnidad;?></td>
                           <td class="text-center small"><?=$nombreComprobante;?></td>
                           <td class="text-center small"><?=strftime('%d/%m/%Y',strtotime($fechaComprobante));?></td>
-                          
-                          <!--td><?=$nombreMoneda;?></td-->
+                        
                           <td class="text-left small"><?=$glosaComprobante;?></td>
                           <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
                           <td class="td-actions text-right">

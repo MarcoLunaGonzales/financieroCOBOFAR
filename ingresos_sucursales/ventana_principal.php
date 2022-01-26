@@ -16,6 +16,8 @@ for ($i=0; $i <count($array_personal_respo_audi) ; $i++) {
     }
 }
 
+$fecha_actualización=date("d/m/Y", strtotime(obtenerFechaActualizacionComercial()));;
+
 ?>
 
 <div class="content">
@@ -37,19 +39,16 @@ for ($i=0; $i <count($array_personal_respo_audi) ; $i++) {
                        <a href="?opcion=cierrecaja_from" >
                           <div class="card-body ">
                              <h5 class="card-title" style="color:#ffffff;">GENERAR COMPROBANTE</h5>
-                             <p class="card-text text-small" style="color:#ffffff">-
-                             <br> Ingresos Sucursales</p>
+                             <p class="card-text text-small" style="color:#ffffff">Ingresos Sucursales<br>Última Actualización : <?=$fecha_actualización?><br>Trabajar hasta un día antes</p>
                              <i class="material-icons" style="color:#37474f">home_work</i>
                           </div>
                        </a>
                      </div>
-
                      <div class="card text-white mx-auto" style="background-color: #d98880; width: 18rem;">
                        <a href="?opcion=rpt_bajadepositos_from" >
                           <div class="card-body ">
                              <h5 class="card-title" style="color:#ffffff;">REPORTES</h5>
-                             <p class="card-text text-small" style="color:#ffffff">-
-                             <br>Baja de Depósitos</p>
+                             <p class="card-text text-small" style="color:#ffffff">Baja de Depósitos<br>Última Actualización : <?=$fecha_actualización?></p>
                              <i class="material-icons" style="color:#37474f">home_work</i>
                           </div>
                        </a>
@@ -59,8 +58,7 @@ for ($i=0; $i <count($array_personal_respo_audi) ; $i++) {
                        <a href="?opcion=rpt_facturasgeneradas_comercial_from" >
                           <div class="card-body ">
                              <h5 class="card-title" style="color:#ffffff;">REPORTES</h5>
-                             <p class="card-text text-small" style="color:#ffffff">-
-                             <br> Facturas Generadas</p>
+                             <p class="card-text text-small" style="color:#ffffff">Facturas Generadas<br>Última Actualización : <?=$fecha_actualización?></p>
                              <i class="material-icons" style="color:#37474f">home_work</i>
                           </div>
                        </a>
@@ -71,8 +69,7 @@ for ($i=0; $i <count($array_personal_respo_audi) ; $i++) {
                        <a href="?opcion=auditoria_sucursales_from" >
                           <div class="card-body ">
                              <h5 class="card-title" style="color:#ffffff;">AUDITORÍA</h5>
-                             <p class="card-text text-small" style="color:#ffffff">-
-                             <br>Traspaso Entre Sucursales</p>
+                             <p class="card-text text-small" style="color:#ffffff">Traspaso Entre Sucursales<br>Última Actualización : <?=$fecha_actualización?></p>
                              <i class="material-icons" style="color:#37474f">home_work</i>
                           </div>
                        </a>

@@ -36,7 +36,7 @@ if($codigo_aux==0){
 	$stmtInsertCab -> execute();
 	$ultimoIdInsertado = $dbh->lastInsertId();
 	// $ultimoIdInsertado=29;
-	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1 and fechalta<'$fechaFin' and a.cod_estadoactivofijo=1";
+	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1 and fechalta<='$fechaFin' and a.cod_estadoactivofijo=1";
 	// 829,9,10,5,8,270 // 271,272,2692 // and cod_unidadorganizacional in (10) and a.codigo in (2274,2275)
 		//echo $sqlActivos;
 	$stmtActivos = $dbh->prepare($sqlActivos);

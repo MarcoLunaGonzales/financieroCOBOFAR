@@ -764,7 +764,7 @@ function saveFactura(){
       contadorError++;
       errorCampoAjaxMensaje($('#imp_fac'),'Monto > 0');
     }
-    if($('#aut_fac').val()=='' || $('#aut_fac').val()==0 || $('#aut_fac').val()<1){
+    if($('#aut_fac').val()=='' || $('#aut_fac').val()==0 ){
       contadorError++;
       errorCampoAjaxMensaje($('#aut_fac'),'campo requerido');
     }              
@@ -1389,7 +1389,7 @@ function cargarComprobanteExcel() {
       var coli=0;
       var itemsFila=[];
     for(var x in cells) {
-        if(!(coli==1||coli==3||coli==7||coli==8)){
+        if(!(coli==7||coli==8)){
           itemsFila.push(cells[x]);
           row.append('<td>'+cells[x]+'</td>');   
         }
@@ -2013,7 +2013,6 @@ function readSingleFile(evt) {
                   var fecha =lines[i][2];
                   let arr = fecha.split('/');
                   var fecha_conv=arr[2]+"-"+arr[1]+"-"+arr[0];
-
                   $('#fecha_fac').val(fecha_conv);
                   $('#nit_fac').val(lines[i][3]);
                   $('#razon_fac').val(lines[i][4]);
@@ -2021,6 +2020,7 @@ function readSingleFile(evt) {
                   $('#aut_fac').val(lines[i][7]);
                   $('#imp_fac').val(lines[i][8]);
                   $('#ice_fac').val(lines[i][9]);
+                  $('#taza_fac').val(lines[i][11]);
                   $('#con_fac').val(lines[i][14]);
                   saveFactura();
                  } 
@@ -5727,6 +5727,65 @@ function CerrarPlanillaAguinaldosNA(cod_planilla){
         //$('#tabla1').load('activosFijos/afEnCustodia.php');
         //alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=planillasAguinaldosPersonal');
+      }
+    }
+  });
+}
+
+//funciones planilla indemnizaciones
+function ProcesarPlanillaIndemnizaciones(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=2",
+    url:"planillas/savePlanillaIndemnizaciones.php",
+    beforeSend:function(objeto){ 
+      $('#cargaP').css({display:'block'});
+      $('#AceptarProceso').css({display:'none'});
+      $('#CancelarProceso').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        $('#cargaP').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasIndemnizacionesPersonal');
+      }else{
+        $('#cargaP').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasIndemnizacionesPersonal');
+      }
+    }
+  });
+}
+function ReprocesarPlanillaIndemnizaciones(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=1",
+    url:"planillas/savePlanillaIndemnizaciones.php",
+    beforeSend:function(objeto){ 
+      $('#cargaR').css({display:'block'});
+      $('#AceptarReProceso').css({display:'none'});
+      $('#CancelarReProceso').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        $('#cargaR').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasIndemnizacionesPersonal');
+      }else{
+        $('#cargaR').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasIndemnizacionesPersonal');
+      }
+    }
+  });
+}
+function CerrarPlanillaIndemnizaciones(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=3",
+    url:"planillas/savePlanillaIndemnizaciones.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasIndemnizacionesPersonal');
       }
     }
   });
@@ -12299,6 +12358,7 @@ function filtrarCuentaComprobanteDetalle(){
   var codigos=[];
   var indice=0;
   var items = document.getElementsByName('lista_check');
+
   var cantidadCuentas=0;
   var cantidadCuentasSeleccionadas=0;
   var cantidadesSeleccionadas=0;
@@ -12333,19 +12393,38 @@ function filtrarCuentaComprobanteDetalle(){
               }else{
                 var urlEditar="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos)+"&codigos_seleccionados="+$("#codigos_seleccionados").val();
               }
-               window.open(urlEditar, '_blank');           
+              
+              window.open(urlEditar, '_blank');
+              window.close();
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
           }
         });
   }else{
-    if(cantidadCuentas==cantidadCuentasSeleccionadas){
-      var urlEditar="edit_prueba.php?codigo="+cod_comprobante;
+    if(cantidadesSeleccionadas>0){
+      if(cantidadCuentas==cantidadCuentasSeleccionadas){
+        var urlEditar="edit_prueba.php?codigo="+cod_comprobante;
+      }else{
+        var urlEditar="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos)+"&codigos_seleccionados="+$("#codigos_seleccionados").val();
+      }
+      window.open(urlEditar, '_blank');
+      window.close();
     }else{
-      var urlEditar="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos)+"&codigos_seleccionados="+$("#codigos_seleccionados").val();
+      Swal.fire({
+        title: 'Informativo',
+        text: "Seleccione al menos un item.",
+         type: 'warning',
+        confirmButtonClass: 'btn btn-default',
+        confirmButtonText: 'Aceptar',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            return(false);
+          }
+        });
     }
-     window.open(urlEditar, '_blank');    
+        
   }
 }
 
@@ -13896,7 +13975,7 @@ function saveFacturaEdit(){
       contadorError++;
       errorCampoAjaxMensaje($('#imp_fac'),'Monto > 0');
     }
-    if($('#aut_fac_edit').val()=='' || $('#aut_fac_edit').val()<1){
+    if($('#aut_fac_edit').val()==''){
       contadorError++;
       errorCampoAjaxMensaje($('#aut_fac'),'campo requerido');
     }              
@@ -16563,6 +16642,32 @@ function descargar_txt_libro_ventas(){
       }
     }
 }
+function descargar_txt_libro_ventas_excel(){
+    var cod_gestion=$("#gestiones").val();
+    //var cod_mes=$("#cod_mes_x").val();
+    var cod_mes=12;
+    var fecha_desde=$("#fecha_desde").val();
+    var fecha_hasta=$("#fecha_hasta").val();
+    var unidad=$("#unidad").val();
+    if(cod_gestion==null || cod_gestion==''){
+      Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
+    }else{
+      if(cod_mes==null || cod_mes==''){
+        Swal.fire("Informativo!", "Por favor Seleccione el mes!", "warning");
+      }else{
+        if(unidad==null || unidad==''){
+          Swal.fire("Informativo!", "Por favor seleccione la unidad!", "warning");
+        }else{   
+          // alert("llegue");
+
+          var urlEditar="reportes/reportePrintLibroVentasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta;    
+          window.open(urlEditar, '_blank');
+
+           
+        }         
+      }
+    }
+}
 function descargar_txt_libro_compras(){
     var cod_gestion=$("#gestiones").val();
     var cod_mes=$("#cod_mes_x").val();
@@ -16604,6 +16709,28 @@ function descargar_txt_libro_compras(){
             }
           }
           }); 
+        }      
+      }
+    }
+}
+function descargar_txt_libro_compras_excel(){
+    var cod_gestion=$("#gestiones").val();
+    var cod_mes=$("#cod_mes_x").val();
+    var unidad=$("#unidad").val();
+    if(cod_gestion==null || cod_gestion==''){
+      Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
+    }else{
+      if(cod_mes==null || cod_mes==''){
+        Swal.fire("Informativo!", "Por favor Seleccione el mes!", "warning");
+      }else{
+        if(unidad==null || unidad==''){
+          Swal.fire("Informativo!", "Por favor seleccione la unidad!", "warning");
+        }else{
+
+          var urlEditar="reportes/reportePrintLibroComprasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad;    
+          window.open(urlEditar, '_blank');
+
+         
         }      
       }
     }
@@ -19404,7 +19531,7 @@ function salvarComprobanteProceso(tipo){
            {
              window.location.href="../index.php?opcion=listComprobantes";
              swal.fire({
-               title: "El comprobante de guardó",
+               title: "El comprobante se guardó",
                text: "Guardado Temporal.",
                timer: 2000,
                showConfirmButton: false
@@ -19727,20 +19854,141 @@ function abrir_detalle_modal(codigo,cod_sucursal){
 }
 
 function redireccionarIngresosAlmacenAnt(cod_personal){
-  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
+  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
   //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php?p='+cod_personal, '_blank'); 
 }
 
 function pendientes_ingreso_almacen_ant(){
-  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
+  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php', '_blank'); 
   //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
 }
 function redireccionarIngresosAlmacen_nuevo(cod_personal){ 
-  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_nuevo/filtro.php', '_blank'); 
-  //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_nuevo/filtro.php', '_blank'); 
+  window.open('ingresos_almacen_nuevo/filtro.php', '_blank'); 
 }
 
 function pendientes_ingreso_almacen_nuevo(){
-  window.open('http://localhost:8090/financieroCOBOFAR/ingresos_almacen_nuevo/rpt_facturas_pendientes_from.php?', '_blank'); 
-  //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_nuevo/rpt_facturas_pendientes_from.php?', '_blank'); 
+  window.open('ingresos_almacen_nuevo/rpt_facturas_pendientes_from.php', '_blank'); 
+}
+
+function historico_ingresos_almacen_nuevo(fi,ff,idprov){
+  window.open('rpt_facturas_ingresadas.php?fi='+fi+'&ff='+ff+'&idprov='+idprov, '_blank'); 
+}
+
+
+function procesar_bonos_descuentos_planilla(nombre_mes,cod_mes,estado_planilla){
+  
+  if(estado_planilla==0){
+     Swal.fire({
+        title: 'Informativo',
+        text: "Por favor, Registrar la PLANILLA del mes de "+nombre_mes+", Gracias. :)",
+        type: 'warning',
+        
+        confirmButtonClass: 'btn btn-warning',
+        confirmButtonText: 'Aceptar',
+        buttonsStyling: false
+        }).then((result) => {
+          if (result.value) {
+            return(false);
+          } 
+        });
+  }else{
+    if(estado_planilla==1 || estado_planilla==2){//estado registrado o aprobado
+      Swal.fire({
+        title: '¿Estás Segur@?',
+        text: "Se procesará o reprocesará la PLANTILLA del mes de "+nombre_mes,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+        }).then((result) => {
+          if (result.value) {
+            iniciarCargaAjax();
+            $.ajax({
+              type:"POST",
+              data:"cod_mes="+cod_mes,
+              url:"bonos/plantilla_sueldos_procesar.php", 
+              success:function(r){
+                detectarCargaAjax();
+                if(r==1){              
+                    alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+                }else{
+                  Swal.fire("Ocurrió un error! :(", "Contáctese con el administrador.", "warning");
+                }
+              }
+            });
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+    }else{
+      if(estado_planilla==3){//cerrado
+         Swal.fire({
+          title: 'LO SIENTO :(',
+          text: "La PLANILLA del Mes de "+nombre_mes+", No se encuentra disponible.",
+          type: 'error',
+          
+          confirmButtonClass: 'btn btn-danger',
+          confirmButtonText: 'Aceptar',
+          buttonsStyling: false
+          }).then((result) => {
+            if (result.value) {
+              return(false);
+            } 
+          });
+      }
+    }  
+  }
+}
+
+function registrar_planilla_sueldos(){
+  var dias_trabajado=document.getElementById("dias_trabajado").value; 
+  if(dias_trabajado==0 || dias_trabajado=="" || dias_trabajado==" "){
+    document.getElementById('dias_trabajado').focus();
+    //Swal.fire("Informativo", "Por favor, introduzca días trabajados de Lunes a Sabado", "warning");  
+  }else{
+    $.ajax({
+      type:"POST",
+      data:"dias_trabajado="+dias_trabajado,
+      url:"planillas/generarPlanillaSueldo.php", 
+      success:function(r){
+        detectarCargaAjax();
+        if(r==1){              
+          alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+        }else{
+          if(r==0){
+            Swal.fire("Informativo", "La planilla ya se encuentra registrada. Gracias..", "warning");
+            $('#modalGenerarPlanilla').modal('hide');
+          }else{
+            Swal.fire("Ocurrió un error! :(", "Contáctese con el administrador.", "warning");  
+            $('#modalGenerarPlanilla').modal('hide');
+          }
+        }
+      }
+    });
+  }
+}
+
+function botonBuscar_pagoproveedores(){
+  iniciarCargaAjax();
+  var nro_pagoproveedor=$("#nro_pagoproveedor").val();
+  var valor_fi=$("#fechaBusquedaInicio").val();
+  var valor_ff=$("#fechaBusquedaFin").val();
+  var razon_social_b=$("#razon_social_b").val();
+  var personal_busqueda=$("#personal_busqueda").val();
+  ajax=nuevoAjax();
+  ajax.open('GET', 'obligaciones_pago/ajax_buscardor_avanzado_pagoproveedores.php?nro_pagoproveedor='+nro_pagoproveedor+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&razon_social_b='+razon_social_b+'&personal_busqueda='+personal_busqueda,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_pago_proveedores");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscador_pagoproveedores").modal("hide");
+      detectarCargaAjax();
+      // cargar_dataTable_ajax_listas('tablePaginator50NoFinder'); 
+    }
+  }
+  ajax.send(null)
 }

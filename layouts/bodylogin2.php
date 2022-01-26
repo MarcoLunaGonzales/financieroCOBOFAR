@@ -2125,87 +2125,133 @@
       });
       
 
-      var table_afxU=$('#tablePaginatorFixedPlanillaSueldo').DataTable({
-                "paging":   false,
-                  "info":     false,
-                  "language": {
-                      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                  },
-                  "order": false,
-                  "searching": false,
-                  fixedHeader: {
-                    header: true,
-                    footer: true
-                  },
-                  dom: 'Bfrtip',
-                  buttons:[
+    var table_afxU=$('#tablePaginatorFixedPlanillaSueldo').DataTable({
+        "paging":   false,
+          "info":     false,
+          "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+          },
+          "order": false,
+          "searching": false,
+          fixedHeader: {
+            header: true,
+            footer: true
+          },
+          dom: 'Bfrtip',
+          buttons:[
 
-                  {
-                      extend: 'copy',
-                      text:      '<i class="material-icons">file_copy</i>',
-                      titleAttr: 'Copiar',
-                      title: 'Planilla Sueldos Personal',
-                      exportOptions: {
-                          columns: ':visible'
+          {
+              extend: 'copy',
+              text:      '<i class="material-icons">file_copy</i>',
+              titleAttr: 'Copiar',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'csv',
+              text:      '<i class="material-icons">list_alt</i>',
+              titleAttr: 'CSV',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'excel',
+              text:      '<i class="material-icons">assessment</i>',
+              titleAttr: 'Excel',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'pdf',
+              text:      '<i class="material-icons">picture_as_pdf</i>',
+              titleAttr: 'Pdf',
+              title: 'Planilla Sueldos Personal',
+              //messageTop:'Reporte Libro Diario',
+              exportOptions: {
+                      columns: ':visible'
+              },
+            customize: function ( doc) {
+                 doc['footer']=(function(page, pages) { return {
+                       columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
+                            text: page.toString(), italics: true 
+                           },' de ',
+                           { text: pages.toString(), italics: true }]
+                        }],
+                       margin: [10, 5]
                       }
-                  },
-                  {
-                      extend: 'csv',
-                      text:      '<i class="material-icons">list_alt</i>',
-                      titleAttr: 'CSV',
-                      title: 'Planilla Sueldos Personal',
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  },
-                  {
-                      extend: 'excel',
-                      text:      '<i class="material-icons">assessment</i>',
-                      titleAttr: 'Excel',
-                      title: 'Planilla Sueldos Personal',
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  },
-                  {
-                      extend: 'pdf',
-                      text:      '<i class="material-icons">picture_as_pdf</i>',
-                      titleAttr: 'Pdf',
-                      title: 'Planilla Sueldos Personal',
-                      //messageTop:'Reporte Libro Diario',
-                      exportOptions: {
-                              columns: ':visible'
-                      },
-                    customize: function ( doc) {
-                         doc['footer']=(function(page, pages) { return {
-                               columns: ['COBOFAR - REPORTES',{alignment: 'right',text: [{ 
-                                    text: page.toString(), italics: true 
-                                   },' de ',
-                                   { text: pages.toString(), italics: true }]
-                                }],
-                               margin: [10, 5]
-                              }
-                         });
-                      doc.content.splice( 1, 0, {
-                          margin: [ 0, -50, 0, 12 ],
-                          alignment: 'left',
-                          image: imageLogo,
-                          width: 50,
-                          height: 50 
-                      } );
-                    }
-                  },
-                  {
-                      extend: 'print',
-                      text:      '<i class="material-icons">print</i>',
-                      titleAttr: 'Imprimir',
-                      title: 'Planilla Sueldos Personal',
-                      exportOptions: {
-                          columns: ':visible'
-                      }
-                  }
-                ]
-              });
+                 });
+              doc.content.splice( 1, 0, {
+                  margin: [ 0, -50, 0, 12 ],
+                  alignment: 'left',
+                  image: imageLogo,
+                  width: 50,
+                  height: 50 
+              } );
+            }
+          },
+          {
+              extend: 'print',
+              text:      '<i class="material-icons">print</i>',
+              titleAttr: 'Imprimir',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          }
+        ]
+    });
+    var table_afx10=$('#tablePaginatorFixedPlanillaSueldo_otros').DataTable({
+        "paging":   false,
+          "info":     false,
+          "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+          },
+          "order": false,
+          "searching": false,
+          fixedHeader: {
+            header: true,
+            footer: true
+          },
+          dom: 'Bfrtip',
+          buttons:[
+
+          {
+              extend: 'copy',
+              text:      '<i class="material-icons">file_copy</i>',
+              titleAttr: 'Copiar',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'csv',
+              text:      '<i class="material-icons">list_alt</i>',
+              titleAttr: 'CSV',
+              title: 'Planilla Sueldos Personal',
+              fieldBoundary: '',
+            fieldSeparator: ';',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'excel',
+              text:      '<i class="material-icons">assessment</i>',
+              titleAttr: 'Excel',
+              title: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+        ]
+    });
 
     var table_afxU=$('#tablePaginatorFixedTributaria').DataTable({
                 "paging":   false,
@@ -2299,6 +2345,23 @@
                   fixedHeader: {
                     header: true,
                     footer: true
+                  },
+                  dom: 'Bfrtip',
+                  buttons:[                 
+                ]
+              });
+
+        var table_afxU=$('#tablePaginatorHeader').DataTable({
+                "paging":   false,
+                  "info":     false,
+                  "language": {
+                      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                  },
+                  "order": false,
+                  "searching": false,
+                  fixedHeader: {
+                    header: true,
+                    footer: false
                   },
                   dom: 'Bfrtip',
                   buttons:[                 

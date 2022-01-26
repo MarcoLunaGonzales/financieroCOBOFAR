@@ -31,17 +31,19 @@ echo "<h6>Hora Inicio Proceso ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
 
 
 
-$codComprobanteOrigen = "4534,4705,4716,4717,4718,4814,4820,4822,4823,5183,6139,6140"; //COMP 
+$codComprobanteOrigen = "13101"; //COMP 
 $cod_cuenta=2035;//cuenta cuentas corrientes del personal (confg EC)  tipo personal 
 
 
 
-$sql="SELECT d.codigo,d.cod_comprobante,d.cod_cuenta,d.cod_cuentaauxiliar,d.debe,d.glosa,e.codigo as cod_ec from comprobantes_detalle d join estados_cuenta e on d.codigo=e.cod_comprobantedetalle
-where d.cod_cuenta=$cod_cuenta and d.debe>0 and d.cod_comprobante in ($codComprobanteOrigen)";
+$sql="SELECT d.codigo,d.cod_comprobante,d.cod_cuenta,d.cod_cuentaauxiliar,d.debe,d.glosa,e.codigo as cod_ec 
+from comprobantes_detalle d join estados_cuenta e on d.codigo=e.cod_comprobantedetalle
+where d.cod_cuenta=$cod_cuenta and d.debe>0 and d.cod_comprobante in ($codComprobanteOrigen) and d.codigo=305067";
 // echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $nombreX=0;
+$index=1;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $codigoX=$row['codigo'];
   $cod_comprobanteX=$row['cod_comprobante'];
@@ -68,12 +70,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $stmtInsert->execute();
       echo "$glosaX $sqlInsert  / $debeX <br>";
     }
+    $index++;
   }
-  
-  
+
 }
 
-echo "<h6>HORA FIN PROCESO CARGADO ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
+echo "<h6>HORA FIN PROCESO CARGADO ESTADO CUENTAS: " . date("Y-m-d H:i:s")." Cont: $index</h6>";
 
 ?>
           </div>

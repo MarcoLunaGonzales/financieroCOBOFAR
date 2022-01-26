@@ -1,5 +1,5 @@
 <?php
-require_once 'conexion.php';
+require_once 'conexion_comercial.php';
 require_once 'styles.php';
 
 $fechaActual=date('Y-m-d');
@@ -35,12 +35,11 @@ $fechaActual=date('Y-m-d');
               <div class="form-group">
                 <select class="selectpicker form-control" title="Seleccione una opcion" name="sucursal[]" id="sucursal" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
                   <?php 
-                    $queryUO1 = "SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select a.abreviatura from areas a where a.codigo=cod_area) as abrev_area
-                      FROM areas_organizacion
-                      where cod_estadoreferencial=1 and cod_unidad=2 order by nombre_area";
-                    $stmt = $dbh->query($queryUO1);
-                    while ($row = $stmt->fetch()){ ?>
-                      <option value="<?=$row['cod_area'];?>"><?=$row["nombre_area"];?></option>
+                    $queryUO1 = "SELECT a.cod_ciudad,a.nombre_almacen from almacenes a 
+                      where a.estado_pedidos=1 order by a.nombre_almacen";
+                    $resp=mysqli_query($dbh,$queryUO1);
+                  while($row=mysqli_fetch_array($resp)){  ?>
+                      <option value="<?=$row['cod_ciudad'];?>"><?=$row["nombre_almacen"];?></option>
                   <?php } ?>
                 </select>
               </div>

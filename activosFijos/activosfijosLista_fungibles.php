@@ -108,7 +108,8 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                     <?php $index=1;
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                       $dep_nombre=trim(abrevDepreciacion($cod_depreciaciones)," - ");
-                      $tb_tipo=abrevTipoBienes($cod_tiposbienes);
+                      //$tb_tipo=abrevTipoBienes($cod_tiposbienes);
+                      $tb_tipo="";
                       ?>
                       <tr>
                         <td  class="td-actions text-right">    

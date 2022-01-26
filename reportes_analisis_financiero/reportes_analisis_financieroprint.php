@@ -34,34 +34,34 @@ for ($i=0; $i < count($unidades); $i++) {
 $arrayUnidades=implode(",", $unidades);
 //CONSTANTES
 //ACTIVO CORRIENTE
-$cuentaActivoCorriente=6;
+$cuentaActivoCorriente=1001;
 $datosCalculables['AC']=number_format(obtenerBalanceHijosCuenta($cuentaActivoCorriente,obtenerNivelCuenta($cuentaActivoCorriente),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PASIVO CORRIENTE
-$cuentaPasivoCorriente=107;
+$cuentaPasivoCorriente=2001;
 $datosCalculables['PC']=number_format(obtenerBalanceHijosCuenta($cuentaPasivoCorriente,obtenerNivelCuenta($cuentaPasivoCorriente),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //ACTIVO TOTAL
-$cuentaActivoTotal=1;
+$cuentaActivoTotal=1000;
 $datosCalculables['AT']=number_format(obtenerBalanceHijosCuenta($cuentaActivoTotal,obtenerNivelCuenta($cuentaActivoTotal),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //INVENTARIO
-$cuentaInventarios=70;
+$cuentaInventarios=1056;
 $datosCalculables['I']=number_format(obtenerBalanceHijosCuenta($cuentaInventarios,obtenerNivelCuenta($cuentaInventarios),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PATRIMONIO NETO
-$cuentaPatrimonioNeto=3;
+$cuentaPatrimonioNeto=3000;
 $datosCalculables['PN']=number_format(obtenerBalanceHijosCuenta($cuentaPatrimonioNeto,obtenerNivelCuenta($cuentaPatrimonioNeto),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PASIVO TOTAL
-$cuentaPasivoTotal=2;
+$cuentaPasivoTotal=2000;
 $datosCalculables['PT']=number_format(obtenerBalanceHijosCuenta($cuentaPasivoTotal,obtenerNivelCuenta($cuentaPasivoTotal),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //DISPONIBLE
-$cuentaDisponible=7;
+$cuentaDisponible=1002;
 $datosCalculables['DISP']=number_format(obtenerBalanceHijosCuenta($cuentaDisponible,obtenerNivelCuenta($cuentaDisponible),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PASIVO A LARGO PLAZO
-$cuentaObligacionesLargo=171;
+$cuentaObligacionesLargo=2001;
 $datosCalculables['PLP']=number_format(obtenerBalanceHijosCuenta($cuentaObligacionesLargo,obtenerNivelCuenta($cuentaObligacionesLargo),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //ACTIVO NO CORRIENTE
-$cuentaActivoNoCorriente=88;
+$cuentaActivoNoCorriente=2038;
 $datosCalculables['ANC']=number_format(obtenerBalanceHijosCuenta($cuentaActivoNoCorriente,obtenerNivelCuenta($cuentaActivoNoCorriente),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //VENTAS
-$cuentaVentas=4;
+$cuentaVentas=4002;
 $datosCalculables['V']=number_format(obtenerBalanceHijosCuenta($cuentaVentas,obtenerNivelCuenta($cuentaVentas),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //VENTAS AL CRÉDITO
 $datosCalculables['Vcr']=12345;
@@ -71,11 +71,11 @@ $datosCalculables['CMV']=1;
 $datosCalculables['Ccr']=1;
 
 //datos Extra
-$cuentaEgresos=5;
+$cuentaEgresos=5000;
 $montoEgresos=obtenerBalanceHijosCuenta($cuentaEgresos,obtenerNivelCuenta($cuentaEgresos),$fechaDesde,$fecha,$arrayUnidades);
-$cuentaImpuesto=141;
+$cuentaImpuesto=2013;
 $montoImpuesto=obtenerBalanceHijosCuenta($cuentaImpuesto,obtenerNivelCuenta($cuentaImpuesto),$fechaDesde,$fecha,$arrayUnidades);
-$cuentaDepre=256;
+$cuentaDepre=5163;
 $montoDepre=obtenerBalanceHijosCuenta($cuentaDepre,obtenerNivelCuenta($cuentaDepre),$fechaDesde,$fecha,$arrayUnidades);
 //UTILIDAD NETA
 $datosCalculables['UN']=number_format($datosCalculables['V']-$montoEgresos-$montoImpuesto,2,'.','');
@@ -84,19 +84,25 @@ $datosCalculables['UO']=number_format($datosCalculables['V']-$montoEgresos-$mont
 //UTILIDAD BRUTA
 $datosCalculables['UB']=number_format($datosCalculables['V']-$montoEgresos,2,'.','');
 //CLIENTES
-$cuentaClientes=67;
+$cuentaClientes=1041;
 $datosCalculables['CL']=number_format(obtenerBalanceHijosCuenta($cuentaClientes,obtenerNivelCuenta($cuentaClientes),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PROVEEDORES
-$cuentaProveedoresServicio=153;
-$cuentaOtrosProveedores=154;
-$cuentaHonorariosProfesionales=235;
-$cuentaHonorariosDocencia=217;
+$cuentaProveedoresLP=2035;//proveedores La Paz
+$cuentaProveedoresCBBA=2036;//proveedores CBBA
+$cuentaProveedoresStaCruz=2037;//proveedores STCRUZ
+$cuentaProveedoresMarket=5110;//proveedores market
+$cuentaProvedoresAdmin=5085;//proveedores administracion
+$cuentaProveedoresImport=5111;//proveedores importacion
 
-$montoPS=obtenerBalanceHijosCuenta($cuentaProveedoresServicio,obtenerNivelCuenta($cuentaProveedoresServicio),$fechaDesde,$fecha,$arrayUnidades);
-$montoOP=obtenerBalanceHijosCuenta($cuentaOtrosProveedores,obtenerNivelCuenta($cuentaOtrosProveedores),$fechaDesde,$fecha,$arrayUnidades);
-$montoHP=obtenerBalanceHijosCuenta($cuentaHonorariosProfesionales,obtenerNivelCuenta($cuentaHonorariosProfesionales),$fechaDesde,$fecha,$arrayUnidades);
-$montoHD=obtenerBalanceHijosCuenta($cuentaHonorariosDocencia,obtenerNivelCuenta($cuentaHonorariosDocencia),$fechaDesde,$fecha,$arrayUnidades);
-$datosCalculables['P']=number_format($montoPS+$montoOP+$montoHP+$montoHD,2,'.','');
+
+
+$montoPLP=obtenerBalanceHijosCuenta($cuentaProveedoresLP,obtenerNivelCuenta($cuentaProveedoresLP),$fechaDesde,$fecha,$arrayUnidades);
+$montoPCBBA=obtenerBalanceHijosCuenta($cuentaProveedoresCBBA,obtenerNivelCuenta($cuentaProveedoresCBBA),$fechaDesde,$fecha,$arrayUnidades);
+$montoPST=obtenerBalanceHijosCuenta($cuentaProveedoresStaCruz,obtenerNivelCuenta($cuentaProveedoresStaCruz),$fechaDesde,$fecha,$arrayUnidades);
+$montoPMK=obtenerBalanceHijosCuenta($cuentaProveedoresMarket,obtenerNivelCuenta($cuentaProveedoresMarket),$fechaDesde,$fecha,$arrayUnidades);
+$montoPA=obtenerBalanceHijosCuenta($cuentaProvedoresAdmin,obtenerNivelCuenta($cuentaProvedoresAdmin),$fechaDesde,$fecha,$arrayUnidades);
+$montoPI=obtenerBalanceHijosCuenta($cuentaProveedoresImport,obtenerNivelCuenta($cuentaProveedoresImport),$fechaDesde,$fecha,$arrayUnidades);
+$datosCalculables['P']=number_format($montoPLP+$montoPCBBA+$montoPST+$montoPMK+$montoPA+$montoPI,2,'.','');
 
 
 function evaluarDatos($monto,$rango){
@@ -132,7 +138,7 @@ function evaluarDatos($monto,$rango){
                       <div class="float-right col-sm-2">
                       </div>
                       <h4 class="card-title"> 
-                        <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
+                        <img  class="card-img-top"  src="../icono_sm_cobofar.jpg" style="width:100%; max-width:250px;">
                           Analisís Financiero
                       </h4>
                       <h6 class="card-title">Practicado al: <?=$fechaFormateada?></h6>

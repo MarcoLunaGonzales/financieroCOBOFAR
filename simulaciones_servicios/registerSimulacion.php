@@ -150,6 +150,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            }
            $alcanceSimulacionXX=$alcanceSimulacionX;
            $descripcionServSimulacionXX=$descripcionServSimulacionX;
+
+
+
+           $anioXInicio=date("Y",strtotime($fechaX));
       }    
 ?>
 <script>
@@ -518,7 +522,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                  if($precioRegistrado==0){
                   $precioRegistrado=1;
                  }
-                 $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
+                 $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias,$anioXInicio); //tipo de costo 1:fijo,2:variable desde la plantilla
                  $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
                  $totalFijoPlan=$totalFijoPlan*$anioGeneral;

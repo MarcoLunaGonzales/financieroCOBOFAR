@@ -29,6 +29,12 @@ $stmtb->bindColumn('cod_personal', $codPersonalX);
 $stmtb->bindColumn('unidad', $unidadX);
 $stmtb->bindColumn('area', $areaX);
 $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
+
+
+$cod_contracuentapagos=obtenerValorConfiguracion(38);//contra cuenta pago proveedores
+$cod_tipocomprobantepago=obtenerValorConfiguracion(108);//TIPO COMPROBANTE PAGO PROVEEDORES
+
+
 ?>
 
 <input type="hidden" id="cod_solicitud" value="<?=$codSol?>">
@@ -74,6 +80,12 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                           <textarea type="text" class="form-control" name="observaciones_pago" required id="observaciones_pago" value=""></textarea>
                       </div>
                     </div>
+                    <div class="col-sm-4">
+                      <div class="form-group" >
+                          <input type="text" style="background:white;color:red;" readonly="true" class="form-control" value="Tipo: <?=nameTipoComprobante($cod_tipocomprobantepago)?>   -   Cuenta: <?=nameCuenta($cod_contracuentapagos)?>">
+                      </div>
+                    </div>
+                    
                   </div>
                   <div class="row">
                     <label class="col-sm-2 col-form-label">Tipo Pago</label>

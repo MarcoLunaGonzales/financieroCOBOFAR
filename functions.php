@@ -3860,7 +3860,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   //FUNCIONES DE REPORTE
   function obtenerPlanillaSueldosRevision($codigo){
-      require_once 'conexion3.php';
+      require_once 'conexion.php';
     $dbh = new Conexion3();
     $sql="SELECT p.codigo,p.cod_area,a.nombre as area, p.primer_nombre as nombres,p.paterno,p.materno,
     p.identificacion as ci,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,

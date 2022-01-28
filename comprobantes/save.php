@@ -29,36 +29,45 @@ if(isset($_POST['codigo_sr'])&&isset($_POST['codigo_personal'])){
   $codigoSRPER=$_POST['codigo_personal'];
 }
 
-
-
 $codPadreArchivos=obtenerValorConfiguracion(84);
-
 if(isset($_SESSION["globalUser"])){
   $globalUser=$_SESSION["globalUser"];
-  $globalGestion=$_SESSION["globalGestion"];
-  $globalMes=$_SESSION['globalMes'];
-  $globalUnidad=$_SESSION["globalUnidad"];
-  $globalArea=$_SESSION["globalArea"];
-  $globalAdmin=$_SESSION["globalAdmin"];
+  // $globalGestion=$_SESSION["globalGestion"];
+  // $globalNombreGestion=$_SESSION["globalNombreGestion"];
+  // $globalMes=$_SESSION['globalMes'];
+  $globalUnidad=1;
+  // $globalArea=$_SESSION["globalArea"];
+  // $globalAdmin=$_SESSION["globalAdmin"];
 }else{
   $globalUser=-100;
-  $globalGestion=-100;
-  $globalMes=-100;
-  $globalUnidad=-100;
-  $globalArea=-100;
-  $globalAdmin=-100;
+  // $globalGestion=-100;
+  // $globalMes=-100;
+  $globalUnidad=1;
+  // $globalArea=-100;
+  // $globalAdmin=-100;
+  // $globalNombreGestion=-100;
 }
 
 
 $fechaHoraActual=$_POST["fecha"];
-//$porcionesFecha = explode("/", $_POST['fecha']);
+$porcionesFecha = explode("-", $_POST['fecha']);
+$anio_comprobante=$porcionesFecha[0];
+$mes_comprobante=$porcionesFecha[1];
+$dia_comprobante=$porcionesFecha[2];
+
+$sqlGestion = "SELECT codigo from gestiones where nombre=$anio_comprobante";
+$stmtGestion = $dbh->prepare($sqlGestion);
+$stmtGestion->execute();
+$resultGestion=$stmtGestion->fetch();
+$cod_gestion = $resultGestion['codigo'];
 //$fechaHoraActual=$porcionesFecha[2]."-".$porcionesFecha[1]."-".$porcionesFecha[0];
+
 $fechaHoraSistema=date("Y-m-d H:i:s");
 
-$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalAdmin,$tipoComprobante,$globalMes);
+$nroCorrelativo=numeroCorrelativoComprobante($cod_gestion,$globalUnidad,$tipoComprobante,$mes_comprobante);
 
 $codComprobante=obtenerCodigoComprobante();
-$sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by,salvado_temporal) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser',$salvado_temporal)";
+$sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by,salvado_temporal) VALUES ('$codComprobante', '1', '$globalUnidad', '$anio_comprobante', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser',$salvado_temporal)";
 //echo $sqlInsert;
 
 $stmtInsert = $dbh->prepare($sqlInsert);

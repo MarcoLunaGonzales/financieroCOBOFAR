@@ -1,10 +1,10 @@
 <?php
 
 
-require_once '../conexion3.php';
+require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
-$dbh = new Conexion3();
+$dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
 $codigo_string = $_GET["cod_planilla"];//
@@ -45,14 +45,12 @@ set_time_limit(0);
     join areas a on p.cod_area=a.codigo
 
     where pm.cod_planilla=$cod_planilla $sql_add 
-    order by p.cod_unidadorganizacional,a.nombre,p.paterno";
+    order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
     //echo $sql;
     $stmt = $dbh->prepare($sql);
     //Ejecutamos
     $stmt->execute();
     // $result = $stmt->fetch();
-    
-
 $html = '';
 $html.='<html>'.
          '<head>'.

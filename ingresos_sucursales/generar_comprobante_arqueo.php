@@ -328,14 +328,14 @@ while($row=mysqli_fetch_array($resp)){
       $HBB=$suma_total_costo;
       // $cod_plancuenta_costos_contra=1057;
       $descripcion=$glosa." - ".nameCuenta($cod_plancuenta_costos_contra);
-      $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_area_cc,$cod_plancuenta_costos_contra);
+      $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(4,$cod_area_cc,$cod_plancuenta_costos_contra);
       if($cuenta_auxiliar==0){
         $nombre_area=nameArea($cod_area_cc);
         $codEstado="1";
         $stmtInsertAux = $dbh_cabecera->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
-        VALUES ('$nombre_area', $codEstado,$cod_plancuenta_costos_contra, 2, $cod_area_cc)");
+        VALUES ('$nombre_area', $codEstado,$cod_plancuenta_costos_contra, 4, $cod_area_cc)");
         $stmtInsertAux->execute();
-        $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_area_cc,$cod_plancuenta_costos_contra);
+        $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(4,$cod_area_cc,$cod_plancuenta_costos_contra);
       }
       $ordenDetalle++;
       $flagSuccessDet=insertarDetalleComprobante($codigo_comprobante,$cod_plancuenta_costos_contra,$cuenta_auxiliar,$cod_uo_cc,$cod_area_cc,$DBB,$HBB,$descripcion,$ordenDetalle);

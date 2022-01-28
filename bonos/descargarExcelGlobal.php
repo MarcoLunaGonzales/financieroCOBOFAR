@@ -58,9 +58,7 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
   		}
       ?>
       <!-- <th><small><b>APORTE SIND (BS)</b></small></th> -->
-
     </tr>
-    <tr>
   </thead>
   <tbody>
     <?php

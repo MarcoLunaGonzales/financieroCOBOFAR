@@ -1162,6 +1162,21 @@
 			$codigo=$_GET['codigo'];
 			require_once('planillas/finiquitosDelete.php');
 		}
+		//VACACIONES PERSONAL
+		if ($_GET['opcion']=='vacacionesPersonalLista') {
+			require_once('vacaciones_permisos/vacaciones_list.php'); //ok
+		}
+		if ($_GET['opcion']=='vacacionesPersonalForm') {
+			$codigo=$_GET['codigo'];
+			require_once('vacaciones_permisos/vacaciones_from.php');
+		}
+		if ($_GET['opcion']=='vacacionesPersonalSave') {
+			require_once('vacaciones_permisos/vacaciones_save.php');
+		}
+		if ($_GET['opcion']=='vacacionesPersonalDelete') {
+			$codigo=$_GET['codigo'];
+			require_once('vacaciones_permisos/vacaciones_delete.php');
+		}
 		
 		
 		

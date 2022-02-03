@@ -73,7 +73,7 @@ $html.='<body>'.
                                             '<td style="text-align: right;"><img class="imagen_der" src="../assets/img/ministerio.jpg"></td>'.
                                         '</tr>'.
                                         '<tr>'.
-                                            '<td><p class="header_texto_inf">'.obtenerValorConfiguracionEmpresa(1).'</p></td>'.
+                                            '<td><p class="header_texto_inf" style="font-size: 9px;">'.obtenerValorConfiguracionEmpresa(1).'<BR>'.obtenerValorConfiguracionEmpresa(8).'</p></td>'.
                                             '<td width="40%"><p  class="header_titulo_texto">FINIQUITO</p></td>'.
                                             '<td><p class="header_texto_inf">'.obtenerValorConfiguracionEmpresa(2).'</p></td>'.
                                         '</tr>'.
@@ -485,7 +485,7 @@ $html.='<body>'.
         '</body>'.
       '</html>';       
       // echo    $html;
-descargarPDFFiniquito("COBOFAR - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDFFiniquito("COBOFAR - FINIQUITO",$html);
 
 ?>
 

@@ -12717,5 +12717,23 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
    //echo $ing_planilla."/".$fecha_actual." Tot:".$total_dias_vacacion." mes:".$diferencia_mes_sobrante." dias:".$diferencia_dias_sobrante;
    return $total_dias_vacacion."#".$diferencia_mes_sobrante."#".$diferencia_dias_sobrante;
 }
+
+
+  function obtenerDiasVacacionUzadas($cod_personal){
+    $sql="SELECT sum(dias_vacacion)as uzadas from personal_vacaciones  where cod_personal=$cod_personal";
+   $dbh = new Conexion();
+   $valor=0;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['uzadas'];
+   }
+   if($valor=="" || $valor==null){
+      $valor=0;
+   }
+   // $dbh=null;
+   // $stmt=null;
+   return $valor;
+  }
  
 ?>

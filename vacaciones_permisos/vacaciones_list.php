@@ -84,7 +84,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                       $diferencia_mes_sobrante=$datos_array[1];
                       $diferencia_dias_sobrante=$datos_array[2];
                       
-                      $dias_uzadas=0;
+                      $dias_uzadas=obtenerDiasVacacionUzadas($codigo);
                       $saldo_vacacion=$total_dias_vacacion-$dias_uzadas;
                      ?>
                     <tr>
@@ -107,7 +107,8 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
         </div>
         <?php if ($globalAdmin == 1) { ?>
           <div class="card-footer fixed-bottom">
-            <button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=vacacionesPersonalForm'">Registrar</button>
+            <button class="btn btn-success" onClick="location.href='index.php?opcion=vacacionesPersonalForm'">Registrar Permiso x Vacación</button>
+            <a class="btn btn-warning" href="vacaciones_permisos/vacaciones_historico.php" target="_blank">Histórico Permiso x Vacación</a>
           </div>
         <?php } ?>
       </div>

@@ -649,9 +649,7 @@ if($menuModulo==0){
                 </li>
 
                 <li class="nav-item">
-            
-                  <a class="nav-link" href="http://10.10.1.10/cobofar_comercialplus/anulacion_facturas_from.php?cod_personal=<?=$globalUserX?>" target="_blank" style="background:rgba(9, 98, 143 ,0.6); color:#cd6155;font-weight:bold;">
-                    
+                    <a class="nav-link" href="http://localhost/cobofar_comercial/anulacion_facturas_from.php?cod_personal=<?=$globalUserX?>" target="_blank" style="background:rgba(9, 98, 143 ,0.6); color:#cd6155;font-weight:bold;">
                     <span class="sidebar-mini"> AF </span>
                     <span class="sidebar-normal"> ANULACIÓN FACTURAS</span>
                   </a>

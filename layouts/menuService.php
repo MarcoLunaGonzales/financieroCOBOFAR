@@ -107,10 +107,22 @@ order by a.ordenar";
   $stmt_submenu = $dbh->prepare($sql);
   $stmt_submenu->execute();
   while ($row_submenu = $stmt_submenu->fetch(PDO::FETCH_ASSOC)) {
+    $codigoSubMenu=$row_submenu['codigo'];
     $nombreSubMenu=$row_submenu['nombre'];
     $paginaSubMenu=$row_submenu['url'];
     $iconoSubMenu=$row_submenu['icono'];
-    $txtNuevaVentana=$row_submenu['txtNuevaVentana'];;
+    $txtNuevaVentana=$row_submenu['txtNuevaVentana'];
+    if($codigoSubMenu==105){
+
+      ?>
+      <li class="nav-item ">
+        <a class="nav-link" href="<?=$paginaSubMenu;?>?cod_personal=<?=$globalUserX?>" <?=$txtNuevaVentana;?> >
+          <span class="sidebar-mini"> <?=$iconoSubMenu;?> </span>
+          <span class="sidebar-normal"> <?=$nombreSubMenu; ?> </span>
+        </a>
+      </li>
+      <?php
+    }else{
       ?>
       <li class="nav-item ">
         <a class="nav-link" href="<?=$paginaSubMenu;?>" <?=$txtNuevaVentana;?> >
@@ -119,6 +131,9 @@ order by a.ordenar";
         </a>
       </li>
       <?php
+
+    }
+      
   } ?>
 
     <!--PARTE FINAL DE CADA MENU-->  

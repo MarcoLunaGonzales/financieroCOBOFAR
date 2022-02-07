@@ -12432,7 +12432,7 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
      $valor=$row['dias_trabajados']*30/$dias_trabajados_por_defecto;
    }
-   return(round($valor));
+   return(round($valor,0,PHP_ROUND_HALF_DOWN));
 }
 
 

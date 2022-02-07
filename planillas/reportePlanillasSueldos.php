@@ -1,15 +1,15 @@
 <?php
-require_once '../conexion3.php';
+require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
-session_start();
+// session_start();
 set_time_limit(0);
 
 $cod_mes=$_GET['cod_mes'];
 $cod_gestion=$_GET['cod_gestion'];
 $codPlanilla=$_GET['codigo_planilla'];
 //nombre de unidad
-$dbh = new Conexion3();
+$dbh = new Conexion();
 $mes=strtoupper(nombreMes($cod_mes));
 $gestion=nameGestion($cod_gestion);
 
@@ -76,7 +76,7 @@ $html.=  '<header class="header">'.
               // '<td width="2%">Nac ión</small></small></td>'.
               // '<td width="4%">Fech Nac</small></small></td>'.
               '<td><small><small>Cargo</small></small></td>'.
-              '<td><small><small>Turn</small></small></td>'.
+              // '<td><small><small>Turn</small></small></td>'.
               '<td><small><small>Fech Ing</small></small></td>'.
               '<td><small><small>Hrs Trab</small></small></td>'.
               '<td><small><small>Días Trab</small></small></td>'.
@@ -115,6 +115,7 @@ $html.=  '<header class="header">'.
            '<tbody>';
             $index=1;
             $codArea=0;
+            $cod_turno_aux=0;
             $rc_iva=0;
             // $atrasos=0;
             $anticipo=0;
@@ -163,9 +164,8 @@ $html.=  '<header class="header">'.
               $emision=$row['emision'];
               $sexo=$row['genero'];
               $nacion=$row['nacionalidad'];
-
               $cod_turno=$row['turno'];
-
+              
               $turno_nombre="";
               switch ($cod_turno) {
                 case 1:
@@ -174,56 +174,26 @@ $html.=  '<header class="header">'.
                 case 2:
                   $turno_nombre="TT";
                   break;
-                case 10:
+                case 3:
                   $turno_nombre="";
                   break;
               }
-             
-              // $sqlTotalOtroDescuentos = "SELECT SUM(monto) as suma_descuentos from descuentos_personal_mes 
-              //   where  cod_personal=$cod_personal_cargo and cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1";
-              // $stmtDescuentosOtros = $dbh->prepare($sqlTotalOtroDescuentos);
-              // $stmtDescuentosOtros->execute();
-              // $resultDescuentosOtros=$stmtDescuentosOtros->fetch();
-              // $sumaDescuentos_otros=$resultDescuentosOtros['suma_descuentos'];
-              if($codArea!=$row['cod_area']){
-                // if($codArea!=0){
-                //   $html.='<tr>'.
-                //   '<td style="border: 0;" colspan="8" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_dias).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_haberbasico).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_haberbasico_traba).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_bantig).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_bnoche).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_bdomin).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_bferi).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_bmov).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_brefr).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_breint).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_bventas).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_bfallo).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_bhrsex).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_totalganado).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_afpf).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_afpp).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_rciva).'</small></small></small></small></td>'.              
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_anticipo).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_dprest).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_dinvt).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_dvencid).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_datraso).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_dfalcaj).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_dodesc).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_daposind).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_totdesc).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" class="text-right"><small><small><small><small>'.formatNumberDec($subtotal_liqpag).'</small></small></small></small></td>'.
-                //   '<td style="border: 0;" ></td></tr>';
-                // }
-                
-                  
-                $html.='<tr>'.
-                      '<td colspan="36"><center>Departamento / Sucursal: <b>'.$row['area'].'</b></center></td>';
-                    $html.='</tr>';
-                $codArea=$row['cod_area'];
+              if($cod_turno==3){
+                if($codArea!=$row['cod_area']){
+                  $html.='<tr>'.
+                        '<td colspan="36"><center>Departamento / Sucursal: <b>'.$row['area'].'</b></center></td>';
+                      $html.='</tr>';
+                  $codArea=$row['cod_area'];
+                }
+              }else{
+                if($cod_turno_aux!=$cod_turno){
+                  $html.='<tr>'.
+                        '<td colspan="36"><center>Departamento / Sucursal: <b>'.$row['area'].' '.$turno_nombre.'</b></center></td>';
+                      $html.='</tr>';
+                  $cod_turno_aux=$cod_turno;
+                }  
               }
+
               $html.='<tr>'.
                 '<td class="text-center"><small><small><small>'.$index.'</small></small></small></td>'.
                 '<td class="text-left"><small><small><small>'.$row['ci'].' '.$emision.'</small></small></small></td>'.
@@ -232,7 +202,7 @@ $html.=  '<header class="header">'.
                 // '<td><small><small>'.$nacion.'</small></small></td>'.
                 // '<td><small><small>'.strftime('%d/%m/%Y',strtotime($fechaNac)).'</small></small></td>'.
                 '<td class="text-left"><small><small><small>'.$row['cargo'].'</small></small></small></td>'.
-                '<td class="text-left"><small><small><small>'.$turno_nombre.'</small></small></small></td>'.
+                // '<td class="text-left"><small><small><small>'.$turno_nombre.'</small></small></small></td>'.
                 '<td class="text-left"><small><small><small>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</small></small></small></td>'.
                 '<td class="text-right"><small><small><small>'.$hrsTrabajadas.'</small></small></small></td>'.
                 '<td class="text-right"><small><small><small>'.$dias_trabajados_planilla.'</small></small></small></td>'.

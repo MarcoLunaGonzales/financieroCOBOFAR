@@ -67,7 +67,7 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
         $incrementoDepreciacionAcumulada_7=$depreciacionAcumulada_6*($valorUFVActualizacion-1);
     }
     if($sw_nuevo==1){//es nuevo
-        $d2_valorresidual=0;
+        $valorResidual_2=0;
     }
     //rubro terreno tiene diferente proceso
     if($cod_depreciaciones!=$cod_depreciaciones_configuracion){

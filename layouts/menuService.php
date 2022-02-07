@@ -45,7 +45,7 @@ if($menuModulo==0){
 
 <div class="sidebar" data-color="purple" data-background-color="<?=$estiloMenu?>" data-image="assets/img/scz.jpg">
   <div class="logo">
-    <a href="http://http://ibnored.ibnorca.org/ifinanciero/" class="simple-text logo-mini">
+    <a href="" class="simple-text logo-mini">
       <img src="assets/img/icono_pastilla.png" width="30" />
     </a>
     <a href="index.php" class="simple-text logo-normal">
@@ -71,15 +71,15 @@ if($menuModulo==0){
 
 
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT codigo,id,actividad,pagina,icono,moduloWS FROM acceso_modulos_sistema where cod_modulo=$menuModulo");
+  $stmt = $dbh->prepare("SELECT codigo,nombre,url,icono,txtNuevaVentana from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1
+order by ordenar");
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$row['codigo'];
-    $idX=$row['id'];
-    $actividadX=$row['actividad'];
-    $paginaX=$row['pagina'];
+    $actividadX=$row['nombre'];
+    $paginaX=$row['url'];
     $iconoX=$row['icono'];
-    $moduloWSX=$row['moduloWS'];
+    $txtNuevaVentanaX=$row['txtNuevaVentana'];
 
   // $id=$objDet->id;
   // $actividad=$objDet->actividad;
@@ -90,34 +90,50 @@ if($menuModulo==0){
   //echo $id." ".$actividad." ".$pagina."<br>";
 ?>
     <li class="nav-item ">
-      <a class="nav-link" data-toggle="collapse" href="#<?=$idX;?>">
+      <a class="nav-link" data-toggle="collapse" href="#<?=$paginaX;?>">
         <i class="material-icons"><?=$iconoX;?></i>
         <p> <?=$actividadX;?>
           <b class="caret"></b>
         </p>
       </a>
-      <div class="collapse" id="<?=$idX;?>">
+      <div class="collapse" id="<?=$paginaX;?>">
         <ul class="nav"><!--hasta aqui el menu 1ra parte-->
   <?php 
-  $sql="SELECT a.codigo,a.actividadSubMenu,a.paginaSubMenu,a.iconoSubMenu,a.txtNuevaVentana,a.ordenar 
-    from acceso_modulos_sistema_url a join acceso_modulos_sistema_personal ap on a.codigo=ap.cod_accesomodulourl
-    where a.cod_accesomodulo in ($codigoX) and ap.cod_personal=$globalUserX order by a.ordenar";
-    // echo $sql;
+  $sql="select DISTINCT a.codigo,a.nombre,a.url,a.icono,a.txtNuevaVentana 
+from acceso_modulos_sistema_url a join acceso_modulos_sistema_perfiles_url b on a.codigo=b.cod_url
+where a.cod_padre=$codigoX and b.cod_perfil in (select perfil from personal_datosadicionales where cod_personal=$globalUserX)
+order by a.ordenar";
+  // echo $sql;
   $stmt_submenu = $dbh->prepare($sql);
   $stmt_submenu->execute();
   while ($row_submenu = $stmt_submenu->fetch(PDO::FETCH_ASSOC)) {
-    $actividadSubMenu=$row_submenu['actividadSubMenu'];
-    $paginaSubMenu=$row_submenu['paginaSubMenu'];
-    $iconoSubMenu=$row_submenu['iconoSubMenu'];
-    $txtNuevaVentana=$row_submenu['txtNuevaVentana'];;
+    $codigoSubMenu=$row_submenu['codigo'];
+    $nombreSubMenu=$row_submenu['nombre'];
+    $paginaSubMenu=$row_submenu['url'];
+    $iconoSubMenu=$row_submenu['icono'];
+    $txtNuevaVentana=$row_submenu['txtNuevaVentana'];
+    if($codigoSubMenu==105){
+
+      ?>
+      <li class="nav-item ">
+        <a class="nav-link" href="<?=$paginaSubMenu;?>?cod_personal=<?=$globalUserX?>" <?=$txtNuevaVentana;?> >
+          <span class="sidebar-mini"> <?=$iconoSubMenu;?> </span>
+          <span class="sidebar-normal"> <?=$nombreSubMenu; ?> </span>
+        </a>
+      </li>
+      <?php
+    }else{
       ?>
       <li class="nav-item ">
         <a class="nav-link" href="<?=$paginaSubMenu;?>" <?=$txtNuevaVentana;?> >
           <span class="sidebar-mini"> <?=$iconoSubMenu;?> </span>
-          <span class="sidebar-normal"> <?=$actividadSubMenu; ?> </span>
+          <span class="sidebar-normal"> <?=$nombreSubMenu; ?> </span>
         </a>
       </li>
       <?php
+
+    }
+      
   } ?>
 
     <!--PARTE FINAL DE CADA MENU-->  

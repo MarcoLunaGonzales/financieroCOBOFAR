@@ -238,7 +238,7 @@ $html.=  '<header class="header">'.
             '</header>'.
         '</body>'.
       '</html>';           
-descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDF("COBOFAR - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
 
 ?>
 

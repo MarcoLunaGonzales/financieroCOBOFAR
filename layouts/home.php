@@ -6,7 +6,7 @@
         <h3><b><FONT FACE="courier">Bienvenid@! <?=$_SESSION['globalNameUser'];?></FONT></b></h3>
       </div>
       <div class="row">
-         <?php if($perfil==1 or $perfil==2){?>
+         
         <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
          <a href="modulo.php?codigo=2" class="after-loop-item card border-0 card-snippets shadow-lg">
             <div class="card-body d-flex align-items-end flex-column text-right">
@@ -16,8 +16,7 @@
             </div>
          </a>
         </div> 
-         <?php } ?> 
-        <?php if($perfil==1 or $perfil==3){?>
+         
           <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
          <a href="modulo.php?codigo=1" class="after-loop-item card border-0 card-themes shadow-lg">
             <div class="card-body d-flex align-items-end flex-column text-right">
@@ -27,9 +26,7 @@
             </div>
          </a>
         </div>
-         <?php } ?>
-           
-        <?php if($perfil==1 or $perfil==4){?>
+         
         <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
          <a href="modulo.php?codigo=3" class="after-loop-item card border-0 card-templates shadow-lg">
             <div class="card-body d-flex align-items-end flex-column text-right">
@@ -39,8 +36,7 @@
             </div>
          </a>
         </div>
-         <?php } ?>
-        <?php if($perfil==1 or $perfil==5){?>
+         
         <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
          <a href="modulo.php?codigo=4" class="after-loop-item card border-0 card-guides shadow-lg">
             <div class="card-body d-flex align-items-end flex-column text-right">
@@ -50,7 +46,7 @@
             </div>
          </a>
         </div>
-        <?php } ?>
+        
            
         
       </div>

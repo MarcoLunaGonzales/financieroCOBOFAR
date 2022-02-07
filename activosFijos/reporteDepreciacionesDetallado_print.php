@@ -38,7 +38,7 @@ $gestion=nameGestion($gestion);
 
 $sql="SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)oficina,(select ar.abreviatura from areas ar where ar.codigo=af.cod_area)area,(select d.abreviatura from  depreciaciones d where d.codigo=af.cod_depreciaciones)rubro,af.codigoactivo,af.activo,md.d2_valorresidual,md.d5_incrementoporcentual,md.d4_valoractualizado,md.d6_depreciacionacumuladaanterior,md.d7_incrementodepreciacionacumulada,md.d8_depreciacionperiodo,md.d9_depreciacionacumuladaactual,md.d10_valornetobs,md.d11_vidarestante
 from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
-WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
  and af.cod_unidadorganizacional in ($unidadOrgString) and af.cod_depreciaciones in ($depreciacionesString)  and m.mes=$mes2 and m.gestion=$gestion ORDER BY 1,2";
  // echo $sql;
  $stmt2 = $dbh->prepare($sql);

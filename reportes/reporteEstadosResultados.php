@@ -1,7 +1,10 @@
 <?php
 
 $formato=$_POST['formato'];
-include 'reporteEstadosResultados_all.php';
+if($formato==3){
+  include 'reporteEstadosResultados_all.php';
+}else{
+
 if($formato==2){ ?>
   <meta charset="utf-8">
   <style type="text/css">
@@ -267,12 +270,14 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   $stmt6->bindColumn('total_haber', $total_haber_6);
                   $stmt6->bindColumn('nombre_area', $nombre_6);
                   $index_6=1;
+                  $suma_nivel6=0;
                   while ($row = $stmt6->fetch(PDO::FETCH_BOUND)) {
                     $nombre_6=formateaPlanCuenta($nombre_6,6);
                     $montoX_aux=(float)($total_debe_6-$total_haber_6);
                     if($tipoCuentaIngresoGasto==4){
                      $montoX_aux=$montoX_aux*-1;
                    }                    
+                   $suma_nivel6+=$montoX_aux;                    
                     if(number_format($montoX_aux, 2, '.', '')>0){
                       $html4.='<tr  style="color:#9b59b6;font-size:9px">'.
                            '<td class="td-border-none text-left"></td>'.
@@ -292,6 +297,17 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                            '<td class="td-border-none text-right"></td>';   
                       $html4.='</tr>';      
                     }
+                  }
+                  if(number_format($suma_nivel6, 2, '.', '')!=number_format($montoX, 2, '.', '')){
+                    $glosa_error="***REVISAR***";
+                    $glosa_error=formateaPlanCuenta($glosa_error,6);
+                    $html4.='<tr  style="color:red;font-size:9px">'.
+                           '<td class="td-border-none text-left" ></td>'.
+                           '<td class="td-border-none text-left">'.$glosa_error.'</td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td></tr>';      
                   }
                  }//centro costos
                }/* Fin del primer while*/
@@ -451,6 +467,7 @@ if($formato==2){
   descargarPDF("COBOFAR - BALANCE GRAL ",$html);
 }
 
+}
 // //echo $html;
 // descargarPDF("COBOFAR - Estado de Resultados (".$tituloOficinas.")",$html);
 ?>

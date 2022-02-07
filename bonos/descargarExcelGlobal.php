@@ -53,9 +53,9 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
       while ($row1 = $stmtDes->fetch(PDO::FETCH_ASSOC)) { 
         $nombre_descuento=$row1['nombre'];
         ?>
-  			<th><small><b><?=$nombre_descuento?></b></small></th><?php   
-  			$contador++;
-  		}
+        <th><small><b><?=$nombre_descuento?></b></small></th><?php   
+        $contador++;
+      }
       ?>
       <!-- <th><small><b>APORTE SIND (BS)</b></small></th> -->
 
@@ -71,6 +71,7 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
         $areas=$row['areas'];
         $identificacion=$row['identificacion'];
         $personal=$row['personal'];
+
         $turno=$row['turno'];
         $cod_unidadorganizacional=$row['cod_unidadorganizacional'];
         if($cod_unidadorganizacional!=1){

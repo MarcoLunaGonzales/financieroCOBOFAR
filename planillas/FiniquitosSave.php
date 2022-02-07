@@ -20,7 +20,7 @@ try {
     $duodecimas = $_POST["duodecimas"];
     $otros_pagar = $_POST["otros"];
     
-    
+    $anio_actual= date('Y');
     //$fecha_retiro = $_POST["fecha_retiro"];
     
 
@@ -41,27 +41,35 @@ try {
         $sql="SELECT  pr.fecha_retiro
           FROM personal p,personal_contratos c,personal_retiros pr
           WHERE c.cod_personal=p.codigo and pr.cod_personal=p.codigo and c.codigo=$codigo_contrato ORDER BY pr.codigo desc limit 1";
-          // echo $sql;
+           // echo "<br><br><br>".$sql;
         $stmtTipoContrato = $dbh->prepare($sql);
         $stmtTipoContrato->execute();
         $resultTipoContrato = $stmtTipoContrato->fetch();
         $fecha_retiro = $resultTipoContrato['fecha_retiro'];
     }
-    
-
-    $anio_retiro = date("Y", strtotime($fecha_retiro));
-    $mes_retiro = date("m", strtotime($fecha_retiro));
-    $dia_retiro = date("d", strtotime($fecha_retiro));
-    
+    //fecha ingreso
     $anio_ingreso = date("Y", strtotime($ing_contr_x));
     $mes_ingreso = date("m", strtotime($ing_contr_x));
     $dia_ingreso = date("d", strtotime($ing_contr_x));
 
-    $stmtGestion = $dbh->prepare("SELECT codigo from gestiones where nombre=$anio_retiro");
-    $stmtGestion->execute();
-    $resultGestion =  $stmtGestion->fetch();
-    $cod_gestion = $resultGestion['codigo'];
- 
+    //fecha retiro
+    $anio_retiro = date("Y", strtotime($fecha_retiro));
+    $mes_retiro = date("m", strtotime($fecha_retiro));
+    $dia_retiro = date("d", strtotime($fecha_retiro));
+    
+    // echo "<br><br><br>".$fecha_retiro;
+    $anio_retiro_1= date("Y",strtotime($fecha_retiro."- 1 month"));
+    $anio_retiro_2= date("Y",strtotime($fecha_retiro."- 2 month"));
+    $anio_retiro_3= date("Y",strtotime($fecha_retiro."- 3 month"));
+    $mes_retiro_1= date("m",strtotime($fecha_retiro."- 1 month"));
+    $mes_retiro_2= date("m",strtotime($fecha_retiro."- 2 month"));
+    $mes_retiro_3= date("m",strtotime($fecha_retiro."- 3 month"));
+    //aun no hay datos de planillas
+    
+
+    $cod_planilla_3_atras=obtener_id_planilla(codigoGestion($anio_retiro_3),($mes_retiro_3));
+    $cod_planilla_2_atras=obtener_id_planilla(codigoGestion($anio_retiro_2),($mes_retiro_2));
+    $cod_planilla_1_atras=obtener_id_planilla(codigoGestion($anio_retiro_1),($mes_retiro_1));
 
     $anios_aux=$anio_ingreso+$anios_trabajados_pagados;
     $ing_contr = $anios_aux.'/'.$mes_ingreso.'/'.$dia_ingreso;
@@ -69,32 +77,17 @@ try {
     $anio_ingreso2 = $anios_aux;
     $mes_ingreso2 = $mes_ingreso;
     $dia_ingreso2 = $dia_ingreso;
-    //aun no hay datos de planillas
-    $cod_planilla_3_atras=obtener_id_planilla($cod_gestion,($mes_retiro-3));
-    $cod_planilla_2_atras=obtener_id_planilla($cod_gestion,($mes_retiro-2));
-    $cod_planilla_1_atras=obtener_id_planilla($cod_gestion,($mes_retiro-1));
-    if($cod_planilla_3_atras==0 || $cod_planilla_3_atras=='')
-        $sueldo_3_atras=0;
-    else
-        $sueldo_3_atras=obtenerSueldomes($cod_personal,$cod_planilla_3_atras);   
-    if($cod_planilla_2_atras==0 || $cod_planilla_2_atras=='')
-        $sueldo_2_atras=0;
-    else
-        $sueldo_2_atras=obtenerSueldomes($cod_personal,$cod_planilla_2_atras);    
-    if($cod_planilla_1_atras==0 || $cod_planilla_1_atras=='')
-        $sueldo_1_atras=0;
-    else
-        $sueldo_1_atras=obtenerSueldomes($cod_personal,$cod_planilla_1_atras);
 
-
-    // $sueldo_3_atras=5843.18;//cambiar
-    // $sueldo_2_atras=5843.18;//cambiar
-    // $sueldo_1_atras=5843.18;//cambiar
+    if($cod_planilla_3_atras==0 || $cod_planilla_3_atras=='') $sueldo_3_atras=0; else $sueldo_3_atras=obtenerSueldomes($cod_personal,$cod_planilla_3_atras);   
+    if($cod_planilla_2_atras==0 || $cod_planilla_2_atras=='') $sueldo_2_atras=0; else $sueldo_2_atras=obtenerSueldomes($cod_personal,$cod_planilla_2_atras);    
+    if($cod_planilla_1_atras==0 || $cod_planilla_1_atras=='') $sueldo_1_atras=0; else $sueldo_1_atras=obtenerSueldomes($cod_personal,$cod_planilla_1_atras);
 
     $sueldo_promedio=($sueldo_3_atras+$sueldo_2_atras+$sueldo_1_atras)/3;
     //desahucio 3 meses
+    
     $desahucio_3_meses=0;//buscar valor
-    //indemnizacion
+
+    //indemnizacion ****
     $indemnizacion_anios_diferencia=$anio_retiro-$anio_ingreso2;
     if($mes_retiro>$mes_ingreso2) 
         $indemnizacion_meses_diferencia=$mes_retiro-$mes_ingreso2;
@@ -106,15 +99,27 @@ try {
     $indemnizacion_meses_monto=$sueldo_promedio/12*$indemnizacion_meses_diferencia;
     $indemnizacion_dias_monto=($sueldo_promedio/12/30)*$indemnizacion_dias_diferencia;//preguntar
     $suma_indemnizacion=$indemnizacion_anios_monto+$indemnizacion_meses_monto+$indemnizacion_dias_monto;
-    //aguinaldo
     
-    $aguinaldo_meses=$mes_retiro-1;
+    //Aguinaldo ***
+    // $aguinaldo_meses=$mes_retiro-1;
+    // if($ing_contr<$anio_actual.'-01-01'){
+    //     $dias_360=formatNumberDec(days_360($anio_actual.'-01-01',$fecha_retiro)/30);
+    // }else{
+    //     $dias_360=formatNumberDec(days_360($ing_planilla,$fecha_retiro)/30);
+    // }
+
+
+    $aguinaldo_meses = $mes_retiro_1;
     $aguinaldo_dias=$dia_retiro;
-    $aguinaldo_anios_monto=0;//Buscar datos
+
+    $aguinaldo_anios_monto=0;//AGUINALDO NO PAGADOS
 
     $aguinaldo_meses_monto=$sueldo_promedio/12*$aguinaldo_meses;
     $aguinaldo_dias_monto=($sueldo_promedio/12/30)*$aguinaldo_dias;
+
     $suma_aguinaldo=$aguinaldo_meses_monto+$aguinaldo_dias_monto;
+
+
     //vacaciones
     $vacaciones_dias=$vacaciones_pagar;
     $vacaciones_doudecimas=$duodecimas;

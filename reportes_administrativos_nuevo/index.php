@@ -16,7 +16,7 @@ $dbh = new Conexion();
 			<div class="card">
 			  	<div class="card-header card-success card-header-text">
 					<div class="card-text">
-				  		<h4 class="card-title">Reportes Comprobantes, Libro Compras</h4>
+				  		<h4 class="card-title">Reportes Comprobantes</h4>
 					</div>
 			  	</div>
 
@@ -27,14 +27,14 @@ $dbh = new Conexion();
 								<a href="<?=$urlreporte_comprobantessinfacturascompras_from;?>" class="btn btn-success"> Crédito Fiscal VS Libro Compra</a>
 							</div>
 				  		</div>
-				  		<div class="col-sm-4">
+				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a class="btn btn-rose" href="<?=$urlreporte_comprobantesincompletos_from;?>">
 				                    <span class="sidebar-normal"> Comprobantes Incompletos</span>
 				                </a>
 							</div>
 				  		</div>
-				  		<div class="col-sm-4">
+				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a class="btn btn-info" href="<?=$urlreporte_comprobantesinEC_from;?>">
 				                    <span class="sidebar-normal"> Comprobantes Sin Estados Cuenta</span>
@@ -43,31 +43,25 @@ $dbh = new Conexion();
 				  		</div>
 					</div>
 					
-<!-- 
+
 					<div class="row">				  	
 				  		<div class="col-sm-4">
 							<div class="form-group">								
-								<a class="btn btn-primary" href="<?=$urlReporteCajachica_comprobante_factura?>">				                
-				                    <span class="sidebar-normal"> FActuras Caja Chica Contra Caja Chica </span>
+								<a class="btn btn-primary" href="">				                
+				                    <span class="sidebar-normal"> Cantidad Comprobantes </span>
 				                </a>
 							</div>
 				  		</div>
-				  		<div class="col-sm-4">
-							<div class="form-group">								
-								<a class="btn btn-primary" href="../caja_chica/reporte_cajachica_filtro.php">			
-				                    <span class="sidebar-normal"> Caja Chica Monto Comprobante </span>
-				                </a>
-							</div>
-				  		</div>
-				  		<div class="col-sm-4">
-							<div class="form-group">								
-								<a class="btn btn-info" href="lista_de_estudiantes_sw.php">				                
-				                    <span class="sidebar-normal"> Control De Pago de Estudiantes WS </span>
+				  		<div class="col-sm-3">
+							<div class="form-group">
+								<a class="btn btn-warning" href="comprobantes_modificados_from.php">
+				                    <span class="sidebar-normal"> Comprobantes Modificados</span>
 				                </a>
 							</div>
 				  		</div>
 				  		
-					</div> -->
+				  		
+					</div>
 			  	</div>
 			</div>
 		<!-- 	<div class="card">

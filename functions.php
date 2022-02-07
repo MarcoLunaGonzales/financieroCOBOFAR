@@ -69,6 +69,24 @@
      }
      return($nombreX);
   }
+
+   function codigoGestion($nombre){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT codigo from gestiones where nombre=$nombre");
+      $stmt->bindParam(':codigo',$codigo);
+      $stmt->execute();
+      $codigoX=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigoX=$row['codigo'];
+      }
+      $dbh=null;
+      $stmt=null;
+      return($codigoX);
+  }
+
+
+
+
   function nameMoneda($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT nombre FROM monedas where codigo=:codigo");
@@ -3860,7 +3878,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   //FUNCIONES DE REPORTE
   function obtenerPlanillaSueldosRevision($codigo){
-      require_once 'conexion3.php';
+      require_once 'conexion.php';
     $dbh = new Conexion3();
     $sql="SELECT p.codigo,p.cod_area,a.nombre as area, p.primer_nombre as nombres,p.paterno,p.materno,
     p.identificacion as ci,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,
@@ -12363,11 +12381,10 @@ function reprocesar_costoventas_sucursales($fecha,$rpt_territorio){
    return $valor;
 }
 function reprocesar_costoventas_sucursales_2($fecha,$rpt_territorio){
-   $sql="SELECT sum((select ct.costo from costo_temp ct where ct.cod_material=sad.cod_material)*sad.cantidad_unitaria) as costo_venta
+   $sql="SELECT sum((select ct.costo from costo_promedio_mes ct where ct.cod_material=sad.cod_material)*sad.cantidad_unitaria) as costo_venta
       from salida_almacenes sa INNER JOIN salida_detalle_almacenes sad on sad.cod_salida_almacen=sa.cod_salida_almacenes
       where sa.fecha = '$fecha' and sa.cod_tiposalida=1001 and sa.salida_anulada=0 and sa.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
     where a.`cod_ciudad`='$rpt_territorio' and a.cod_tipoalmacen=1)";  
-
     //echo $sql;
    $valor=0;
    require("conexion_comercial.php");
@@ -12415,7 +12432,7 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
      $valor=$row['dias_trabajados']*30/$dias_trabajados_por_defecto;
    }
-   return(round($valor));
+   return(round($valor,0,PHP_ROUND_HALF_DOWN));
 }
 
 
@@ -12663,5 +12680,60 @@ function cargarValoresVentasYSaldosProductosArray_nuevosis($almacen,$fecha_venta
   return array($ingresos,$ingresos_unidad,$salida,$salida_unidad,$ventas,$ventas_unidad,$salida_ajuste,$salida_ajuste_unidad,$ingresos_costo,$salida_costo,$ventas_costo,$salida_ajuste_costo,0); //error 0
 }
 
+
+function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
+   $fechainicio=$ing_planilla;
+   $total_dias_vacacion=0;
+   $diferencia_mes_sobrante=0;
+   $diferencia_dias_sobrante=0;
+   while($fechainicio<=$fecha_actual){
+      //echo $fechainicio."<br>";
+      $date1 = new DateTime($fechainicio);
+      $date2 = new DateTime($fecha_actual);
+      $diff = $date1->diff($date2);    
+      $diferencia_anios=$diff->y;
+      for ($i=0; $i < count($array_escalas); $i++) { 
+         $datos=explode(',', $array_escalas[$i]);
+         $anios_inicio=$datos[0];
+         $anios_final=$datos[1];
+         $dias_vacacion=$datos[2];
+         if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
+            $total_dias_vacacion += $dias_vacacion;
+            break;
+         }
+      }
+      $fechainicio=date('Y-m-d',strtotime($fechainicio.'+1 year'));  
+   }
+
+   if($fechainicio!=$ing_planilla){
+      $fechainicio=date('Y-m-d',strtotime($fechainicio.'-1 year'));
+   }
+   $date1 = new DateTime($fechainicio);
+   $date2 = new DateTime($fecha_actual);
+   $diff = $date1->diff($date2);    
+   $diferencia_mes_sobrante=$diff->m;
+   $diferencia_dias_sobrante=$diff->d;
+
+   //echo $ing_planilla."/".$fecha_actual." Tot:".$total_dias_vacacion." mes:".$diferencia_mes_sobrante." dias:".$diferencia_dias_sobrante;
+   return $total_dias_vacacion."#".$diferencia_mes_sobrante."#".$diferencia_dias_sobrante;
+}
+
+
+  function obtenerDiasVacacionUzadas($cod_personal){
+    $sql="SELECT sum(dias_vacacion)as uzadas from personal_vacaciones  where cod_personal=$cod_personal";
+   $dbh = new Conexion();
+   $valor=0;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['uzadas'];
+   }
+   if($valor=="" || $valor==null){
+      $valor=0;
+   }
+   // $dbh=null;
+   // $stmt=null;
+   return $valor;
+  }
  
 ?>

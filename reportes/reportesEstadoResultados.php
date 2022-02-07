@@ -151,16 +151,16 @@ $fechaHasta=$y."-12-31";
                   </div>
                 </div>
             </div><!--fin campo RUBRO -->
-
-            
             <div class="row">
               <label class="col-sm-2 col-form-label">Formato</label>
               <div class="col-sm-7">
                 <div class="form-group">
                   <select name="formato" id="formato" class="selectpicker form-control form-control-sm " data-style="btn btn-rose"
                       required>
-                      <option value="1">PDF</option>
+                      <option value="1">PDF </option>
                       <option value="2">EXCEL</option>
+
+                      <option value="3">EXCEL FORMATO 2</option>
                   </select>
                 </div>
               </div>

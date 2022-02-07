@@ -126,11 +126,11 @@ $stmt->bindColumn('estado_comprobante', $cod_estadocomprobante);
         if($globalAdmin==1){
         ?>
         <div class="card-footer fixed-bottom">           
-          <a class="btn btn-success" target="_blank" onClick="redireccionarIngresosAlmacen_nuevo('<?=$globalUser?>')">Seleccionar Nuevo</a>
-          <a class="btn btn-warning" target="blank" onClick="pendientes_ingreso_almacen_nuevo()">Pendientes Nuevo</a>
+          <a class="btn btn-success" target="_blank" onClick="redireccionarIngresosAlmacen_nuevo('<?=$globalUser?>')">Seleccionar</a>
+          <a class="btn btn-warning" target="blank" onClick="pendientes_ingreso_almacen_nuevo()">Pendientes</a>
 
-          <a class="btn btn-info" target="_blank" onClick="redireccionarIngresosAlmacenAnt('<?=$globalUser?>')">Seleccionar Antiguo</a>
-          <a class="btn btn-warning" target="blank" onClick="pendientes_ingreso_almacen_ant()">Pendientes Antiguo</a>
+          <!-- <a class="btn btn-info" target="_blank" onClick="redireccionarIngresosAlmacenAnt()">Seleccionar Antiguo</a>
+          <a class="btn btn-warning" target="blank" onClick="pendientes_ingreso_almacen_ant()">Pendientes Antiguo</a> -->
         </div>
         <?php
         }

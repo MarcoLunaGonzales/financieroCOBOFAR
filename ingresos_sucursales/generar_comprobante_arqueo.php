@@ -22,10 +22,10 @@ session_start();
 set_time_limit(0);
 $globalUser=$_SESSION["globalUser"];
 $globalGestion=$_SESSION["globalGestion"];
-$globalUnidad=$_SESSION["globalUnidad"];
-$globalArea=$_SESSION["globalArea"];
-$globalAdmin=$_SESSION["globalAdmin"];
-$globalMes=$_SESSION['globalMes'];
+$globalUnidad=1;
+// $globalArea=$_SESSION["globalArea"];
+// $globalAdmin=$_SESSION["globalAdmin"];
+// $globalMes=$_SESSION['globalMes'];
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 //creacion del comprobante de pago
 $codComprobante=obtenerCodigoComprobante();
@@ -61,7 +61,7 @@ $fechai=$_GET['fechai'];
 $fechaf=$_GET['fechaf'];
 $sucursalgString=$_GET['cod_sucursal'];
 $cod_tiposalida_efectivo=1001;
-
+$tipoComprobante=1;//ingreso
 
 $string_configuracion=obtenerValorConfiguracion_array('49,50,51,56,110,111,112,113,114,115,117,118');
 $array_configuracion=explode(",",$string_configuracion);
@@ -91,19 +91,20 @@ $tc=$array_configuracion[9];
 $cod_plancuenta_qr=$array_configuracion[10];
 $cod_plancuenta_transfer=$array_configuracion[11];
 
-$sql="SELECT s.cod_almacen,(select a.nombre_almacen from almacenes a where a.cod_almacen=s.cod_almacen)as nombre_almacen,s.fecha 
+$sql="SELECT s.cod_almacen,(select a.nombre_almacen from almacenes a where a.cod_almacen=s.cod_almacen)as nombre_almacen,s.fecha,(select a.cod_ciudad from almacenes a where a.cod_almacen=s.cod_almacen)as cod_ciudad,(select c.cod_plancuenta from ciudades c where c.cod_ciudad in (select a.cod_ciudad from almacenes a where a.cod_almacen=s.cod_almacen))as cod_plancuenta,(SELECT c.cod_area from ciudades c where c.cod_ciudad in (select a.cod_ciudad from almacenes a where a.cod_almacen=s.cod_almacen))as cod_area 
   from salida_almacenes s 
-  where s.`cod_tiposalida`= $cod_tiposalida_efectivo  and s.`cod_almacen` in (select a.cod_almacen 
-from almacenes a, ciudades c
-where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_tipopago=1 GROUP BY s.cod_almacen,s.fecha order by s.fecha,2";
-  //echo $sql;
+  where s.`cod_tiposalida`= $cod_tiposalida_efectivo  and s.`cod_almacen` in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_tipopago=1 GROUP BY s.cod_almacen,s.fecha order by s.fecha,2";
+  // echo $sql;
 $contador_comprobantes=1;
 require("../conexion_comercial.php");
 $resp=mysqli_query($dbh,$sql);
 while($row=mysqli_fetch_array($resp)){
   $fechaVenta=$row['fecha'];
   $cod_almacen_x=$row['cod_almacen'];
-  $cod_ciudad=obtener_codciudad_almacen_nuevosis($cod_almacen_x,1);
+  $cod_ciudad=$row['cod_ciudad'];
+  $cod_plancuenta_x=$row['cod_plancuenta'];
+  $cod_area_cc=$row['cod_area'];
+  // $cod_ciudad=obtener_codciudad_almacen_nuevosis($cod_almacen_x,1);
   $nombre_almacen=$row['nombre_almacen'];
   $sw_relacion=verificarRelacionComprobante($cod_ciudad,$fechaVenta);
   if($sw_relacion>0){?>
@@ -114,21 +115,21 @@ while($row=mysqli_fetch_array($resp)){
       <td align='left'><?=$nombre_almacen?></td>
     </tr>
   <?php }else{
-    $tipoComprobante=1;//ingreso
+    
     $array_fechaIngreso=explode('-', $fechaVenta);
-
     $globalGestion=$array_fechaIngreso[0];
+    $cod_gestion=codigoGestion($globalGestion);
     $globalMes=$array_fechaIngreso[1];
-
     $globalMes=str_pad($globalMes, 2, "0", STR_PAD_LEFT);
-    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,$tipoComprobante,$globalMes);
+
+    $nroCorrelativo=numeroCorrelativoComprobante($cod_gestion,$globalUnidad,$tipoComprobante,$globalMes);
     $glosa="VENTAS SUC. ".$nombre_almacen." DE FECHA ".$fechaVenta;
     $fechaHoraActual=$fechaVenta;
     $codigo_comprobante=obtenerCodigoComprobante();
     $cod_uo_cc=1;//oficina central por defecto
-    $cod_area_cc=obtenerCodigoAreaciduad_comercial($cod_ciudad);
+    // $cod_area_cc=obtenerCodigoAreaciduad_comercial($cod_ciudad);
     $sqlInsert="INSERT INTO comprobantes (codigo,cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) 
-    VALUES ($codigo_comprobante,'1', '$globalUnidad', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fecha_comprobante', '$globalUser')";
+    VALUES ($codigo_comprobante,'1', '$globalUnidad', '$globalGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fecha_comprobante', '$globalUser')";
     // echo $sqlInsert;
     $stmtInsert = $dbh_cabecera->prepare($sqlInsert);
     $flagSuccessComprobante=$stmtInsert->execute();
@@ -202,14 +203,21 @@ while($row=mysqli_fetch_array($resp)){
 
         $suma_total_efectivo+=$DBB;
         //costeo
-        $costo_venta=obtenerCostoVenta_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
+        // $costo_venta=otenerCostoVenta_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);
+        $costo_venta=0;
         $suma_total_costo+=$costo_venta;
         $ordenDetalle++;
-        $descripcion=$glosa." - ".nameCuenta($cod_plancuenta);
+        if($cod_plancuenta==0 || $cod_plancuenta==null || $cod_plancuenta==""){
+          $descripcion=$glosa;
+          $cod_plancuenta=$cod_plancuenta_x;
+        }else{
+          $descripcion=$glosa." - ".nameCuenta($cod_plancuenta);
+        }
+        // $descripcion=$glosa." - ".nameCuenta($cod_plancuenta);
         $flagSuccessDet=insertarDetalleComprobante($codigo_comprobante,$cod_plancuenta,0,$cod_uo_cc,$cod_area_cc,$DBB,$HBB,$descripcion,$ordenDetalle);
         $index++;
       }
-       // Dolares
+      // Dolares
       if(count($analitico_dolar_array)>0){
         for ($x=0;$x<count($analitico_dolar_array); $x++) {
           $cod_cuenta_ext=$analitico_dolar_array[$x];
@@ -328,14 +336,14 @@ while($row=mysqli_fetch_array($resp)){
       $HBB=$suma_total_costo;
       // $cod_plancuenta_costos_contra=1057;
       $descripcion=$glosa." - ".nameCuenta($cod_plancuenta_costos_contra);
-      $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_area_cc,$cod_plancuenta_costos_contra);
+      $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(4,$cod_area_cc,$cod_plancuenta_costos_contra);
       if($cuenta_auxiliar==0){
         $nombre_area=nameArea($cod_area_cc);
         $codEstado="1";
         $stmtInsertAux = $dbh_cabecera->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
-        VALUES ('$nombre_area', $codEstado,$cod_plancuenta_costos_contra, 2, $cod_area_cc)");
+        VALUES ('$nombre_area', $codEstado,$cod_plancuenta_costos_contra, 4, $cod_area_cc)");
         $stmtInsertAux->execute();
-        $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_area_cc,$cod_plancuenta_costos_contra);
+        $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(4,$cod_area_cc,$cod_plancuenta_costos_contra);
       }
       $ordenDetalle++;
       $flagSuccessDet=insertarDetalleComprobante($codigo_comprobante,$cod_plancuenta_costos_contra,$cuenta_auxiliar,$cod_uo_cc,$cod_area_cc,$DBB,$HBB,$descripcion,$ordenDetalle);

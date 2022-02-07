@@ -1,11 +1,11 @@
 <?php //ESTADO FINALIZADO
 
-require_once __DIR__.'/../conexion.php';
-require '../assets/phpqrcode/qrlib.php';
+require_once __DIR__.'/../conexion3.php';
+// require '../assets/phpqrcode/qrlib.php';
 
 //require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
-$dbh = new Conexion();
+$dbh = new Conexion3();
 // set_time_limit(300)
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
@@ -32,8 +32,8 @@ try{
     $vacacion_total=$result['vacaciones_dias_monto']+$result['vacaciones_duodecimas_monto'];
     $aguinaldo_total=$result['aguinaldo_anios_monto']+$result['aguinaldo_meses_monto']+$result['aguinaldo_dias_monto'];
     //cantidad de dias,meses y años trabajados
-    $datos=obtenerTiempoDosFechas($result['fecha_ingreso'],$result['fecha_retiro'])
-    
+    $datos=obtenerTiempoDosFechas($result['fecha_ingreso'],$result['fecha_retiro']);
+    // echo $datos;
 
     $anios_servicio=$datos[0];
     $meses_servicio=$datos[1];
@@ -41,7 +41,6 @@ try{
 
     $total_beneficios_sociales=$aguinaldo_total+$vacacion_total+$result['indemnización_anios_monto']+$result['indemnización_meses_monto']+$result['indemnización_dias_monto']+$result['desahucio_monto'];
     
-
 
 $html = '';
 $html.='<html>'.
@@ -74,7 +73,7 @@ $html.='<body>'.
                                             '<td style="text-align: right;"><img class="imagen_der" src="../assets/img/ministerio.jpg"></td>'.
                                         '</tr>'.
                                         '<tr>'.
-                                            '<td><p class="header_texto_inf">'.obtenerValorConfiguracionEmpresa(1).'</p></td>'.
+                                            '<td><p class="header_texto_inf" style="font-size: 9px;">'.obtenerValorConfiguracionEmpresa(1).'<BR>'.obtenerValorConfiguracionEmpresa(8).'</p></td>'.
                                             '<td width="40%"><p  class="header_titulo_texto">FINIQUITO</p></td>'.
                                             '<td><p class="header_texto_inf">'.obtenerValorConfiguracionEmpresa(2).'</p></td>'.
                                         '</tr>'.
@@ -484,8 +483,9 @@ $html.='<body>'.
                     </tbody>
                 </table>'.
         '</body>'.
-      '</html>';           
-descargarPDFFiniquito("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+      '</html>';       
+      // echo    $html;
+descargarPDFFiniquito("COBOFAR - FINIQUITO",$html);
 
 ?>
 
@@ -494,191 +494,3 @@ descargarPDFFiniquito("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html)
     echo "Un error ocurrio".$ex->getMessage();
 }
 ?>
-
-
-<!-- '<table border="1" align="center" style="width: 80%;border-collapse: collapse;">'.
-                '<tbody style=" font-family: Times New Roman;
-                                font-size: 12px;
-                                    ">'; -->
-<!-- 
-                    $html.='<tr>'.
-                        '<td><b>Nombre : </b></td>'.
-                        '<td align="center" colspan=3><b>'.$result['primer_nombre'].' '.$result['paterno'].' '.$result['materno'].'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td><b>Motivo retiro</b></td>'.
-                        '<td align="center"colspan=3><b>'.$result['motivo_retiro'].'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td><b>Fecha Ingreso</b></td>'.
-                        '<td>'.$result['fecha_ingreso'].'</td>'.
-                        '<td></td>'.
-                        '<td></td>'.
-                    '</tr>'.    
-                    '<tr>'.
-                        '<td><b>Fecha Retiro</b></td>'.
-                        '<td>'.$result['fecha_retiro'].'</td>'.
-                        '<td></td>'.
-                        '<td></td>'.
-                    '</tr>'.                    
-                    '<tr>'.
-                        '<td colspan="4"><br></td>           '.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan=2><b>Sueldo Promedio</b></td>'.
-                        '<td align="center"><b>'.$result['sueldo_promedio'].'</b></td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>3 meses atrás</td>'.
-                        '<td>'.$result['sueldo_3_atras'].'</td>'.
-                        '<td></td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>2 meses atrás</td>'.
-                        '<td>'.$result['sueldo_2_atras'].'</td>'.
-                        '<td></td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>1 mes atrás</td>'.
-                        '<td>'.$result['sueldo_1_atras'].'</td>'.
-                        '<td></td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="4"><br></td>           '.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td><b>Desahucio tres meses</b></td>'.
-                        '<td></td>'.
-                        '<td></td>'.
-                        '<td><b>'.$result['desahucio_3_meses'].'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="4"><br></td>           '.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan=3><b>Indemnización</b></td>'.
-                        '<td><b>'.($result['indemnización_anios_monto']+$result['indemnización_meses_monto']+$result['indemnización_dias_monto']).'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Años</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['indemnización_anios_monto'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Meses</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['indemnización_meses_monto'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Días</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['indemnización_dias_monto'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="4"><br></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan=3><b>Aguinaldo</b></td>'.
-                        '<td><b>'.($result['aguinaldo_anios_monto']+$result['aguinaldo_meses_monto']+$result['aguinaldo_dias_monto']).'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Años</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['aguinaldo_anios_monto'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Meses</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['aguinaldo_meses_monto'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Días</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['aguinaldo_dias_monto'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="4"><br></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan=3><b>Vacaciones</b></td>'.
-                        '<td><b>'.($result['vacaciones_dias_monto']+$result['vacaciones_duodecimas_monto']).'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Días</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['vacaciones_dias_monto'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Duodecimas</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['vacaciones_duodecimas_monto'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="4"><br></td>           '.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td><b>Desahucio</b></td>'.
-                        '<td></td>'.
-                        '<td></td>'.
-                        '<td><b>'.$result['desahucio_monto'].'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="4"><br></td>           '.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan=3><b>Otros</b></td>'.
-                        '<td><b>'.($result['servicios_adicionales']+$result['subsidios_meses']+$result['finiquitos_a_cuenta']).'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Pago por otros servicios adicionales</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['servicios_adicionales'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Subsidios (meses)</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['subsidios_meses'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Finiquitos a cuenta</td>'.
-                        '<td></td>'.
-                        '<td>'.$result['finiquitos_a_cuenta'].'</td>'.
-                        '<td></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="4"><br></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td><b>DEDUCCIONES</b></td>'.
-                        '<td></td>'.
-                        '<td></td>'.
-                        '<td><b>'.$result['deducciones_total'].'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="4"><br></td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td><b>TOTAL A PAGAR</b></td>'.
-                        '<td></td>'.
-                        '<td></td>'.
-                        '<td><b>'.$result['total_a_pagar'].'</b></td>'.
-                    '</tr>'.
-                    '<tr>'.                        
-                        '<td colspan=4><b>'.$result['observaciones'].'</b></td>'.
-                    '</tr>'.
-                '</tbody>'.            
-            '</table>'. -->

@@ -1,28 +1,11 @@
-<meta charset="utf-8">
-<style type="text/css">
-    .d-none {
-        display: none !important;}
-</style>
 <?php //ESTADO FINALIZADO
 
-// header("Pragma: public");
-//     header("Expires: 0");
-//     $filename = "reporte_baja_depositos.xls";
-//     header("Content-type: application/x-msdownload");
-//     header("Content-Disposition: attachment; filename=$filename");
-//     header("Pragma: no-cache");
-//     header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-
-
-
 require_once __DIR__.'/../conexion.php';
+
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once  __DIR__.'/../fpdf_html.php';
-// require_once '../layouts/bodylogin2.php';
-
-ob_start();
-
+require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
@@ -38,6 +21,7 @@ $tipo_cp=$_POST["tipo_cp"];
 $ver_saldo=$_POST["ver_saldo"];
 
 if($ver_saldo==3){//saldos Generales
+   
    include "reportesEstadoCuentasPrint_saldos.php";
 }else{
 $proveedoresString=implode(",", $proveedores);
@@ -83,9 +67,33 @@ $areaAbrev=abrevArea($areaCostoArray);
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
 ?>
 
-
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon">
+                        <div class="float-right col-sm-2">
+                            <!-- <h6 class="card-title">Exportar como:</h6> -->
+                        </div>
+                        <h4 class="card-title"> 
+                            <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:50px;">
+                            Estado de Cuentas
+                        </h4>
+                      <!-- <h4 class="card-title text-center">Reporte De Activos Fijos Por Unidad</h4> -->
+                      <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
+                      <h6 class="card-title">Gestion: <?= $NombreGestion; ?></h6>
+                      <h6 class="card-title">Cuenta: <?=$stringGeneraCuentas;?></h6>
+                      <h6 class="card-title">Unidad:<?=$stringGeneraUnidades?></h6>             
+                      <div class="row">
+                        <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Oficina: </b> <small><?=$unidadAbrev?></small></h6></div>
+                        <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Area: </b> <small><?=$areaAbrev?></small></h6></div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
                             <?php 
-                            echo '<table class="table table-bordered table-condensed" id="tablePaginatorFixedEstadoCuentas100">'.
+                            $html='<table class="table table-bordered table-condensed" id="tablePaginatorFixedEstadoCuentas100">'.
                                 '<thead>'.
                                     '<tr class="">'.
                                         '<th class="text-left">Of.</th>'.
@@ -105,7 +113,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                     foreach ($cuenta as $cuentai ) {
                                         $nombreCuenta=nameCuenta($cuentai);//nombre de cuenta    
                                         
-                                        echo '<tr style="background-color:#9F81F7;">                                    
+                                        $html.='<tr style="background-color:#9F81F7;">                                    
                                             <td style="display: none;"></td>
                                             <td style="display: none;"></td>
                                             <td style="display: none;"></td>
@@ -229,7 +237,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                    $totalCredito=$totalCredito+$montoX;
                                                 }
                                                 //$nombreProveedorX=nameProveedor($codProveedor);
-                                                echo '<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
+                                                $html.='<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadCosto.'-'.$nombreAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
@@ -241,14 +249,14 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                     <td class="text-right text-muted font-weight-bold small">'.formatNumberDec($montoEstado).'</td>
                                                     <td class="text-right small">'.formatNumberDec($montoX).'</td>
                                                     <td class="text-right small font-weight-bold" '.$estiloFilasEstadoSaldo.'>'.formatNumberDec($montoX-$montoEstado).'</td>
-                                                </tr>';
+                                                </tr>'; 
                                             }else{ //cliente
                                                 // $nombreProveedorX=namecliente($codProveedor);
                                                 if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""&&$estiloEstados==""){
                                                   $totalDebito=$totalDebito+$montoX;
                                                  }
                                                 
-                                                 echo '<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
+                                                 $html.='<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadCosto.'-'.$nombreAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
@@ -302,7 +310,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                           $totalDebito=$totalDebito+$montoX_d;    
                                                         }
                                                         
-                                                        echo '<tr style="background-color:#ECCEF5;" class="'.$estiloEstados.' '.$mostrarFilasEstado.' text-muted">
+                                                        $html.='<tr style="background-color:#ECCEF5;" class="'.$estiloEstados.' '.$mostrarFilasEstado.' text-muted">
                                                             <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                             <td class="text-left small"></td>
                                                             <td class="text-center small">'.$nombreComprobanteY.'</td>
@@ -323,7 +331,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                           $totalCredito=$totalCredito+$montoX_d;    
                                                         }
                                                         
-                                                        echo '<tr  style="background-color:#ECCEF5;" class="'.$estiloEstados.' '.$mostrarFilasEstado.' text-muted">
+                                                        $html.='<tr  style="background-color:#ECCEF5;" class="'.$estiloEstados.' '.$mostrarFilasEstado.' text-muted">
                                                             <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                             <td class="text-left small"></td>
                                                             <td class="text-center small">'.$nombreComprobanteY.'</td>
@@ -347,7 +355,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                     if($totalSaldo<0){
                                         $totalSaldo=$totalSaldo*(-1);
                                     }                                        
-                                        echo '<tr>                                            
+                                        $html.='<tr>                                            
                                             <td style="display: none;"></td>
                                             <td style="display: none;"></td>
                                             <td style="display: none;"></td>
@@ -363,13 +371,16 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 
                                 </tbody>
                             </table>';
-                            
+                            echo $html;
 
-                              $html = ob_get_clean();
-  
-echo $html;
                             ?>
- 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
 
 
 <?php

@@ -69,7 +69,7 @@ where c.cod_gestion=year('$desde') and c.cod_mes=MONTH('$hasta') having costo_un
                 $index++;
                 $html.='<tr>'.
                 '<td class="text-center small">'.$index.'</td>'.
-                '<td class="text-left small">'.$row['descripcion_material'].'</td>'.
+                '<td class="text-left small">'.$row['descripcion_material'].' ('.$row['cod_material'].')</td>'.
                 '<td class="text-left small">'.$row['cantidad_presentacion'].'</td>'.
                 '<td class="text-left small">'.$row['costo_unitario'].'</td>'.
                 '<td class="text-left small">'.$row['precio'].'</td>'.

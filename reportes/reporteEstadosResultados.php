@@ -429,6 +429,13 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
      $html.=$html1;
     }
 }
+
+
+
+
+
+
+
  $html.='</tbody></table>';
       $totalResultado=$tBolPasivo-$tBolActivo;
       if($totalResultado>=0){

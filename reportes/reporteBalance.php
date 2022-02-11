@@ -264,12 +264,14 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   $stmt6->bindColumn('total_haber', $total_haber_6);
                   $stmt6->bindColumn('nombre', $nombre_6);
                   $index_6=1;
+                  $suma_nivel6=0;
                   while ($row = $stmt6->fetch(PDO::FETCH_BOUND)) {
                     $nombre_6=formateaPlanCuenta($nombre_6,6);
                     $montoX_aux=(float)($total_debe_6-$total_haber_6);
                     if($codigo<>1000){
                       $montoX_aux=$montoX_aux*(-1);
                     }
+                    $suma_nivel6+=$montoX_aux;    
                     if(number_format($montoX_aux, 2, '.', '')>0){
                       $html4.='<tr class="'.$mostrarNivel[6].'" style="color:#9b59b6;font-size:9px">'.
                            '<td class="td-border-none text-left"></td>'.
@@ -290,7 +292,19 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       $html4.='</tr>';      
                     }
                   }
-                }
+
+                  if(number_format($suma_nivel6, 2, '.', '')!=number_format($montoX, 2, '.', '') && $suma_nivel6>0){
+                    $glosa_error="***REVISAR***";
+                    $glosa_error=formateaPlanCuenta($glosa_error,6);
+                    $html4.='<tr  style="color:red;font-size:9px">'.
+                           '<td class="td-border-none text-left" ></td>'.
+                           '<td class="td-border-none text-left">'.$glosa_error.'</td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td></tr>';      
+                  }
+                }//fin de nivel 6
               } /* Fin del primer while*/
 
                $cuentaResultado=obtenerValorConfiguracion(47);

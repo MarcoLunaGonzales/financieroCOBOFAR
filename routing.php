@@ -890,6 +890,9 @@
             require_once('activosFijos/reporteDepreciacionesDetallado_filtro.php');
 		}
 
+		if ($_GET['opcion']=='rptDepreciacionesGestion') {
+            require_once('reportes_activosfijos/reporte_depreciacion_gestion_from.php');
+		}
 		if ($_GET['opcion']=='rptactivosfijosxunidad') {
 			require_once('activosFijos/rptactivosfijosxunidad.php');
 		}
@@ -1168,14 +1171,14 @@
 		}
 		if ($_GET['opcion']=='vacacionesPersonalForm') {
 			$codigo=$_GET['codigo'];
-			require_once('vacaciones_permisos/vacaciones_from.php');
+			require_once('vacaciones_permisos/vacaciones_list.php');
 		}
 		if ($_GET['opcion']=='vacacionesPersonalSave') {
-			require_once('vacaciones_permisos/vacaciones_save.php');
+			require_once('vacaciones_permisos/vacaciones_list.php');
 		}
-		if ($_GET['opcion']=='vacacionesPersonalDelete') {
+		if ($_GET['opcion']=='vacacionesdeletepersonal') {
 			$codigo=$_GET['codigo'];
-			require_once('vacaciones_permisos/vacaciones_delete.php');
+			require_once('vacaciones_permisos/vacaciones_list.php');
 		}
 		
 		

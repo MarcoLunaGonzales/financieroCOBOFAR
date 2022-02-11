@@ -126,10 +126,18 @@ try {
         $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (16,$codigo,'$refrigerio_pactado2',1,1)";
         $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
         $stmtMontoPactado->execute();
+
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (17,$codigo,'0',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+
         $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (18,$codigo,'$comision_ventas',1,1)";
         $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
         $stmtMontoPactado->execute();
         $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (19,$codigo,'$fallo_caja',1,1)";
+        $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
+        $stmtMontoPactado->execute();
+        $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (20,$codigo,'0',1,1)";
         $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
         $stmtMontoPactado->execute();
         $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (100,$codigo,'$aporte_sindicato',1,2)";

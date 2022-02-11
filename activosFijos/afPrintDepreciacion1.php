@@ -77,7 +77,7 @@ try{
     $stmt2 = $dbh->prepare("SELECT * 
     from mesdepreciaciones m, mesdepreciaciones_detalle md
     WHERE m.codigo = md.cod_mesdepreciaciones 
-    and md.cod_activosfijos = :codigo and m.estado=1 order by m.codigo desc");
+    and md.cod_activosfijos = :codigo and m.estado=1 order by m.codigo desc limit 1");
     // Ejecutamos
     //$stmt2->bindParam(':mes',$mes2);
     $stmt2->bindParam(':codigo',$codigo_af);

@@ -426,7 +426,7 @@ if($menuModulo==0){
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=afdardebaja_rpt">
                       <span class="sidebar-mini"> AFB </span>
-                      <span class="sidebar-normal"> Activos Fijos Baja</span>
+                      <span class="sidebar-normal"> Activos Fijos Altas y Bajas</span>
                     </a>
                 </li>
                 <li class="nav-item ">

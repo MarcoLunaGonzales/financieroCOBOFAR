@@ -63,7 +63,7 @@ $total_valorNeto=0;
                                 <?php
                                     $sql="SELECT af.cod_depreciaciones 
                                     from  activosfijos af 
-                                    WHERE af.cod_estadoactivofijo=1 and  af.cod_proy_financiacion=0 and af.tipo_af=1 and af.fechalta<='2021-01-01' GROUP BY af.cod_depreciaciones";
+                                    WHERE af.cod_proy_financiacion=0 and af.tipo_af=1 and af.fechalta<='2021-01-01' GROUP BY af.cod_depreciaciones";
                                     $stmt_rubro = $dbh->prepare($sql);
                                     $stmt_rubro->execute();
                                     $stmt_rubro->bindColumn('cod_depreciaciones', $cod_depreciaciones_rubros);
@@ -73,7 +73,7 @@ $total_valorNeto=0;
                                         $nombreRubros=nameDepreciacion($cod_depreciaciones_rubros);
                                         $stmt2 = $dbh->prepare("SELECT sum(af.valorinicial)as valorinicial,sum(depreciacionacumulada)as depreacumulada,sum(valorresidual)as valorresidual
                                         from activosfijos af
-                                        WHERE af.cod_estadoactivofijo=1 and  af.cod_proy_financiacion=0 and af.tipo_af=1 and af.fechalta<='2021-01-01' and af.cod_depreciaciones=$cod_depreciaciones_rubros");
+                                        WHERE af.cod_proy_financiacion=0 and af.tipo_af=1 and af.fechalta<='2021-01-01' and af.cod_depreciaciones=$cod_depreciaciones_rubros");
                                         // Ejecutamos
                                         $stmt2->execute();
                                         //resultado

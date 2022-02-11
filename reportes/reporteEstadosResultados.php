@@ -298,7 +298,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       $html4.='</tr>';      
                     }
                   }
-                  if(number_format($suma_nivel6, 2, '.', '')!=number_format($montoX, 2, '.', '')){
+                  if(number_format($suma_nivel6, 2, '.', '')!=number_format($montoX, 2, '.', '') && $suma_nivel6>0){
                     $glosa_error="***REVISAR***";
                     $glosa_error=formateaPlanCuenta($glosa_error,6);
                     $html4.='<tr  style="color:red;font-size:9px">'.

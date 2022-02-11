@@ -35,7 +35,7 @@ while ($rowPersonal = $stmtPersonalDistribucion->fetch(PDO::FETCH_ASSOC))
    } 
 }
 if($sw_auxiliar==0){//distribucion de sueldos cuadrando
-   $sqlBonos = "SELECT codigo,cod_tipocalculobono,cod_cuenta from bonos where cod_estadoreferencial=1 and codigo in (15,16)";
+   $sqlBonos = "SELECT codigo,cod_tipocalculobono,cod_cuenta from bonos where cod_estadoreferencial=1 ";
    // echo $sqlBonos;
    $stmtBonos = $dbh->prepare($sqlBonos);
    $stmtBonos->execute();                      
@@ -48,7 +48,7 @@ if($sw_auxiliar==0){//distribucion de sueldos cuadrando
      $arrayBonos[] = $cod_bono.'@@@'.$cod_tipocalculobono.'@@@'.$cod_cuenta;
    }
 
-   $sqlAreas = "SELECT codigo,nombre from areas where cod_estado=1 and centro_costos=1 and codigo =108 order by nombre";
+   $sqlAreas = "SELECT codigo,nombre from areas where cod_estado=1 and centro_costos=1  order by nombre";
    $stmtAreas = $dbh->prepare($sqlAreas);
    $stmtAreas->execute();                      
    $stmtAreas->bindColumn('codigo',$cod_area);

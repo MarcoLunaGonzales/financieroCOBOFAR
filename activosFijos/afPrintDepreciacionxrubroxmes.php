@@ -61,7 +61,7 @@ $total_valorNeto=0;
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
+                <div class="card-header  card-header-icon">
                   <div class="float-right col-sm-2">
                     <!-- <h6 class="card-title">Exportar como:</h6> -->
                   </div>
@@ -96,8 +96,7 @@ $total_valorNeto=0;
                                     <th class=" small bg-primary font-weight-bold">Valor Neto</th>                                    
                                 </tr>
                                 <?php
-                                    $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
-                                             and af.cod_unidadorganizacional=$cod_unidadorganizacional and m.mes = $mes2 and m.gestion=$gestion GROUP BY af.cod_depreciaciones";
+                                    $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo and af.cod_unidadorganizacional=$cod_unidadorganizacional and m.mes = $mes2 and m.gestion=$gestion GROUP BY af.cod_depreciaciones";
                                     $stmt_rubro = $dbh->prepare($sql);
                                     $stmt_rubro->execute();
                                     $stmt_rubro->bindColumn('cod_depreciaciones', $cod_depreciaciones_rubros);
@@ -162,6 +161,102 @@ $total_valorNeto=0;
                                 <td class="bg-secondary text-white small"><?=formatNumberDec($total_deprePeriodo); ?></td>
                                 <td class="small"><?=formatNumberDec($totalrubro_depreciacion); ?></td>
                                 <td class="small"><?=formatNumberDec($total_valorNeto); ?></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+
+
+                    <!-- *******************TOTAL CONSOLIDADO ***************** -->
+
+
+
+                    <BR><BR><BR>
+                    <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
+                        <tbody>
+                           
+                           <tr class="bg-dark text-white">
+                                    <th colspan="11" >***CONSOLIDADO MES***</th>
+                                </tr>
+                            <tr class="bg-info text-white">
+                                <th class=" small bg-primary ">Rubro</th>
+                                <th class=" small bg-primary font-weight-bold">Valor<br>Anterior</th>
+                                <th class=" small bg-primary font-weight-bold">Actualización</th>
+                                <th class=" small bg-primary font-weight-bold">Valor<br>Actualizado</th>
+                                <th class=" small bg-primary font-weight-bold">Depreciación<br>Acumulada Anterior</th>
+                                <th class=" small bg-primary font-weight-bold">Actualización<br>Depreciación Acumulada</th>
+                                <th class=" small bg-primary font-weight-bold">Depreciación Periodo</th>
+                                <th class=" small bg-primary font-weight-bold">Depreciación Acumulada</th>
+                                <th class=" small bg-primary font-weight-bold">Valor Neto</th>                                    
+                            </tr>
+                            <?php
+
+                            $totalValorAnterior_2=0;
+                            $total_rubro_actualizacion_2=0;
+                            $total_valor_actualizado_2=0;
+                            $total_depreAcumAnt_2=0;
+                            $total_actDepAcum_2=0;
+                            $total_deprePeriodo_2=0;
+                            $totalrubro_depreciacion_2=0;
+                            $total_valorNeto_2=0;
+
+                            $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo and  af.cod_unidadorganizacional in ($unidadOrgString) and m.mes = $mes2 and m.gestion=$gestion GROUP BY af.cod_depreciaciones";
+                            $stmt_rubro_total = $dbh->prepare($sql);
+                            $stmt_rubro_total->execute();
+                            $stmt_rubro_total->bindColumn('cod_depreciaciones', $cod_depreciaciones_rubros);
+                            while ($row = $stmt_rubro_total->fetch()) { 
+                                $nombreRubros_2=nameDepreciacion($cod_depreciaciones_rubros);
+                                $stmt2_total = $dbh->prepare("SELECT sum(md.d10_valornetobs)valorNeto,sum(md.d9_depreciacionacumuladaactual)totalDepreAcumu,sum(md.d8_depreciacionperiodo)deprePeriodo,sum(md.d7_incrementodepreciacionacumulada)actDepAcum,sum(md.d6_depreciacionacumuladaanterior)depreAcumAnt,sum(md.d5_incrementoporcentual)actualizacion_porcentual,sum(md.d4_valoractualizado)valorActualizado,sum(md.d2_valorresidual)valorresidual
+                                    from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
+                                    WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+                                      and  af.cod_unidadorganizacional in ($unidadOrgString)
+                                      and m.mes = $mes2 and m.gestion=$gestion and af.cod_depreciaciones=$cod_depreciaciones_rubros");
+                                $stmt2_total->execute();
+                                $stmt2_total->bindColumn('valorresidual', $valorresidual_2);
+                                $stmt2_total->bindColumn('actualizacion_porcentual', $actualizacion_porcentual_2);
+                                $stmt2_total->bindColumn('valorActualizado', $valorActualizado_2);
+                                $stmt2_total->bindColumn('depreAcumAnt', $depreAcumAnt_2);
+                                $stmt2_total->bindColumn('actDepAcum', $actDepAcum_2);
+                                $stmt2_total->bindColumn('deprePeriodo', $deprePeriodo_2);
+                                $stmt2_total->bindColumn('totalDepreAcumu', $totalDepreAcumu_2);
+                                $stmt2_total->bindColumn('valorNeto', $valorNeto_2);
+                                while ($row = $stmt2_total->fetch()) {                                             
+                                    //totales
+                                    $totalValorAnterior_2+=$valorresidual_2;
+                                    $total_rubro_actualizacion_2+=$actualizacion_porcentual_2;
+                                    $total_valor_actualizado_2+=$valorActualizado_2;
+                                    $total_depreAcumAnt_2+=$depreAcumAnt_2;
+                                    $total_actDepAcum_2+=$actDepAcum_2;
+                                    $total_deprePeriodo_2+=$deprePeriodo_2;
+                                    $totalrubro_depreciacion_2+=$totalDepreAcumu_2;
+                                    $total_valorNeto_2+=$valorNeto_2;
+                                    ?>
+                                    <tr class="">
+                                        <td class="small bg-primary text-left text-white"><small><?=$nombreRubros_2?></small></td>
+                                        <td class="small"><small><?=formatNumberDec($valorresidual_2);?></small></td>
+                                        <td class="small bg-success text-white"><small><?=formatNumberDec($actualizacion_porcentual_2);?></small></td>
+                                        <td class="small"><small><?=formatNumberDec($valorActualizado_2);?></small></td>
+                                        <td class="small"><small><?=formatNumberDec($depreAcumAnt_2); ?></small></td>
+                                        <td class="small bg-success text-white"><small><?=formatNumberDec($actDepAcum_2); ?></small></td>
+                                        <td class="small bg-success text-white"><small><?=formatNumberDec($deprePeriodo_2); ?></small></td>
+                                        <td class="small"><small><?=formatNumberDec($totalDepreAcumu_2); ?></small></td>
+                                        <td class="small"><small><?=formatNumberDec($valorNeto_2); ?></small></td>
+                                        </tr>
+                                    <?php 
+                                }
+                            }?>
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-dark text-white">
+                                <th colspan="1">Total :</th>
+                                <td class="small"><?=formatNumberDec($totalValorAnterior_2); ?></td>
+                                <td class="bg-secondary text-white small"><?=formatNumberDec($total_rubro_actualizacion_2); ?></td>
+                                <td class="small"><?=formatNumberDec($total_valor_actualizado_2);?></td>
+                                <td class="small"><?=formatNumberDec($total_depreAcumAnt_2);?></td>
+                                <td class="bg-secondary text-white small"><?=formatNumberDec($total_actDepAcum_2); ?></td>
+                                <td class="bg-secondary text-white small"><?=formatNumberDec($total_deprePeriodo_2); ?></td>
+                                <td class="small"><?=formatNumberDec($totalrubro_depreciacion_2); ?></td>
+                                <td class="small"><?=formatNumberDec($total_valorNeto_2); ?></td>
                             </tr>
                         </tfoot>
                     </table>

@@ -59,7 +59,6 @@ $dbh = new Conexion();
                                     $valorInicial=$row['valorinicial'];
                                     $valorDepreciacionAcum=$row['depreciacionacumulada'];
                                     $valorresidual=$row['valorresidual'];
-
                                     $totalValorInicial+=$valorInicial;
                                     $totalDepreciacionAcum+=$valorDepreciacionAcum;
                                     $totalResidual+=$valorresidual;

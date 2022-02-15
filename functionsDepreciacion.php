@@ -69,6 +69,9 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
     if($sw_nuevo==1){//es nuevo
         $valorResidual_2=0;
     }
+
+
+
     //rubro terreno tiene diferente proceso
     if($cod_depreciaciones!=$cod_depreciaciones_configuracion){
         if($vidautilmeses_restante>=$numeroMesesDepreciacion){//vida util mayor a la cantidad de meses a depreciar            
@@ -92,8 +95,6 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
                     $depreciacionPeriodo_8=0;
                 }
             }
-
-            
             $vida_util_restante=0;
             //$valorNetoActivo_10=1;
         }
@@ -112,14 +113,12 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
             $vida_util_restante=0;
             //$valorNetoActivo_10=1;
         }
-        // if($sw_nuevo==1795){//caso especial af a.codigo=1795 llegará en variable $sw_nuevo
-        //     $valorInicial=59.16;
-        //     $valorResidual_2=$valorInicial;
-        //     $depreciacionAcumulada_6=58.16;
-        //     $valorActivoActualizado_4=59.16;            
-        //     $depreciacionActualAcumulada_9=58.16;
-        // }
+
     }
+    if($sw_nuevo==-100){//se dio de baja
+        $vida_util_restante=0;
+    }
+    
     //echo "ValorAnt:".$valorResidual_2."depreAcum:".$depreciacionAcumulada_6."-incremeDepreAc:".$incrementoDepreciacionAcumulada_7."-DeprePeriodo".$depreciacionPeriodo_8."=DepreActualAcum:".$depreciacionActualAcumulada_9." NEto:".$valorNetoActivo_10."<br>";
     $sqlInsertDet="INSERT INTO mesdepreciaciones_detalle (cod_mesdepreciaciones, cod_activosfijos, d2_valorresidual, d3_factoractualizacion, d4_valoractualizado, d5_incrementoporcentual, d6_depreciacionacumuladaanterior, d7_incrementodepreciacionacumulada, d8_depreciacionperiodo, d9_depreciacionacumuladaactual, d10_valornetobs, fecha_inicio, fecha_fin,d11_vidarestante) values ('$ultimoIdInsertado', '$codActivo', '$valorResidual_2', '$factorActualizacion_3', '$valorActivoActualizado_4', '$valorIncrementoPorcentual_5', '$depreciacionAcumulada_6', '$incrementoDepreciacionAcumulada_7', '$depreciacionPeriodo_8', '$depreciacionActualAcumulada_9','$valorNetoActivo_10', '$fechaInicioDepreciacion', '$fechaFinalDepreciacion','$vida_util_restante')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);

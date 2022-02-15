@@ -41,7 +41,7 @@
     if($month==9){    return ("Sep");  }
     if($month==10){    return ("Oct");  }         
     if($month==11){    return ("Nov");  }         
-    if($month==12){    return ("Dic");  }             
+    if($month==12){    return ("Dic");  }
   }
   function nombreMes($month){
     if($month==1){    return ("Enero");   }
@@ -12768,6 +12768,106 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
    return $valor;
   }
 
+function obtenerValorInicialDepreciacionGestion($cod_depreciaciones_rubros,$gestion,$unidadOrgString){
+
+   if($gestion==2021){//inicio del sistema y depreciacion
+      $sql="SELECT sum(af.valorinicial)as valorActualizado,sum(af.depreciacionacumulada)as depreciacionacumulada,sum(af.valorresidual)as valorresidual
+       from activosfijos af
+       WHERE af.cod_proy_financiacion=0 and af.tipo_af=1 and af.fechalta<='2021-01-01' and af.cod_depreciaciones=$cod_depreciaciones_rubros and af.cod_unidadorganizacional in ($unidadOrgString)";
+
+
+   }else{//modificar
+      $sql="SELECT sum(af.valorinicial)as valorinicial
+       from activosfijos af
+       WHERE af.cod_proy_financiacion=0 and af.tipo_af=1 and af.fechalta<='2021-01-01' and af.cod_depreciaciones=$cod_depreciaciones_rubros and af.cod_unidadorganizacional in ($unidadOrgString)";
+   }
+   
+   $dbh = new Conexion();
+   $valorneto=0;
+   $depreciacionacumulada=0;
+   $valorresidual=0;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valorActualizado=$row['valorActualizado'];//neto
+      $depreciacionacumulada=$row['depreciacionacumulada'];
+      $valorresidual=$row['valorresidual'];//valor neto
+   }
+    
+   return $valorActualizado."###".$depreciacionacumulada."###".$valorresidual;
+
+  }
+
+  function obtenerValorUltimoDepreciacionGestion($cod_depreciaciones_2,$gestion,$mes2,$unidadOrgString){
+      $sql="SELECT sum(md.d4_valoractualizado)valorActualizado,sum(md.d9_depreciacionacumuladaactual)totalDepreAcumu,sum(md.d10_valornetobs)valorNeto
+         from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
+         WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+           and  af.cod_unidadorganizacional in ($unidadOrgString)
+           and  m.gestion=$gestion  and m.mes=$mes2
+           and af.cod_depreciaciones=$cod_depreciaciones_2";
+      $dbh = new Conexion();
+      $valorActualizado=0;
+      $totalDepreAcumu=0;
+      $valorNeto=0;
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $valorActualizado=$row['valorActualizado'];
+         $totalDepreAcumu=$row['totalDepreAcumu'];
+         $valorNeto=$row['valorNeto'];
+      }
+      return $valorActualizado."###".$totalDepreAcumu."###".$valorNeto;
+  }
+
+  function obterValorAltasAFGestion($cod_depreciaciones_2,$gestion,$unidadOrgString){
+      $fecha_inicio=$gestion.'-01-01';
+      $fecha_fin=$gestion.'-12-31';
+      $sql="SELECT sum(valorinicial)as valorinicial
+     from activosfijos 
+     where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and  fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59'
+     and fechalta <> '2021-01-01' and cod_depreciaciones in ($cod_depreciaciones_2)";
+      $dbh = new Conexion();
+      $valor=0;
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $valor=$row['valorinicial'];
+      }
+      if($valor=="" || $valor==null){
+         $valor=0;
+      }   
+      return $valor;
+
+  }
+
+   function obterValorBajasAFGestion($cod_depreciaciones_2,$gestion,$unidadOrgString){
+      $fecha_inicio=$gestion.'-01-01';
+      $fecha_fin=$gestion.'-12-31';
+      $sql="SELECT codigo
+        from activosfijos 
+        where cod_estadoactivofijo = 3 and tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString)
+        and fecha_baja BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59' and cod_depreciaciones in ($cod_depreciaciones_2)";
+
+      $dbh = new Conexion();
+      $valor=0;
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $codigoX=$row['codigo'];
+         $stmt2 = $dbh->prepare("SELECT d10_valornetobs 
+         from mesdepreciaciones m, mesdepreciaciones_detalle md
+         WHERE m.codigo = md.cod_mesdepreciaciones 
+         and md.cod_activosfijos = $codigoX and m.estado=1 order by m.codigo desc limit 1");
+         $stmt2->execute();
+         $row2 = $stmt2->fetch();
+         // $d2_valorresidual = $row2["d2_valorresidual"];
+         $valor += $row2["d10_valornetobs"];
+      }
+   
+      return $valor;
+
+  }
+
   function cargarValoresVentasYSaldosProductosArray_prodrotacion($almacen,$fecha_ini,$fecha_fin,$productos){
     set_time_limit(0);
     $estilosVenta=1;
@@ -12841,11 +12941,13 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
        $ventas_unidad[$row['cod_material']]=$row['VENTAS_UNIDAD'];    
     } 
 
-
-
     mysqli_close($enlaceCon);
     return array($ingresos,$ingresos_unidad,$salida,$salida_unidad,$ventas,$ventas_unidad,$ingresos_ant,$ingresos_unidad_ant,$salida_ant,$salida_unidad_ant);
-  }
+}
+
+
+
+  
  
 
  function obtenerProveedornombre_presentacionAlmacen_nuevo($string_prov){       

@@ -36,7 +36,7 @@ $stmtGestiones = $dbh->query($sql);
                     <?php
                       while ($row = $stmtGestiones->fetch()) { ?>
                         <option value="<?=$row["nombre"];?>"><?=$row["nombre"];?></option>
-                        <!-- <option value="<?=$codigoX;?>"><?=$nombre;?></option>                                                   -->
+                        
                         <?php }?>
 
                   </select>

@@ -90,7 +90,7 @@ $razon_social=$result['razon_social'];
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
+                <div class="card-header  card-header-icon">
                   <div class="card-icon bg-blanco">
                     <img class="" width="60" height="50" src="../assets/img/favicon.png">
                   </div>                  

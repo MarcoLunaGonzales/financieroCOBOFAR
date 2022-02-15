@@ -110,10 +110,12 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	// fin de valores de configruacion
 
 	//============select del personal
-	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
-	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
-	cod_tipoafp,ing_planilla,cuenta_bancaria
-	from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
+	$sql = "SELECT p.identificacion,p.codigo,p.haber_basico,p.cod_grado_academico,
+	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=p.cod_grado_academico) as p_grado_academico,  
+	p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.turno
+	from personal p join areas a on p.cod_area=a.codigo
+	where cod_estadoreferencial=1 and cod_estadopersonal=1
+	order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
@@ -123,6 +125,9 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
 	$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);
 	$stmtPersonal->bindColumn('cuenta_bancaria', $cuenta_bancaria);
+
+	$stmtPersonal->bindColumn('cod_area', $cod_area);
+	$stmtPersonal->bindColumn('turno', $turno);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
 

@@ -63,9 +63,9 @@ $stmt->execute();
                   '<th >Comprobante</th>'.
                   '<th >Fecha</th>'.
                   '<th >Glosa</th>'.
-                  
-                  '<th >Costo</th>'.
                   '<th >Venta</th>'.
+                  '<th >Costo</th>'.
+                  
                   '<th >Diferencia</th>'.
                   '<th >Cod Producto</th>'.
                   '<th >Producto</th>'.
@@ -81,6 +81,7 @@ $stmt->execute();
               $totalimportediferencia=0;
               $index=0;
               while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $label_row="";
                   $index++;
                   $codigo=$rowComp['codigo'];
                   $nombreCbte=nombreComprobante($codigo);
@@ -140,10 +141,6 @@ $stmt->execute();
                       '<td class="text-right font-weight-bold"></td>'.
                       '</tr>';
                   }
-
-                  
-
-                  
                 }                    
             
             $html.=    '</tbody></table>';

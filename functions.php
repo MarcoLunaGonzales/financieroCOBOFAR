@@ -3878,18 +3878,18 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   //FUNCIONES DE REPORTE
   function obtenerPlanillaSueldosRevision($codigo){
-      require_once 'conexion.php';
+      require_once 'conexion3.php';
     $dbh = new Conexion3();
-    $sql="SELECT p.codigo,p.cod_area,a.nombre as area, p.primer_nombre as nombres,p.paterno,p.materno,
+    $sql="SELECT p.codigo,pm.cod_area,a.nombre as area, p.primer_nombre as nombres,p.paterno,p.materno,
     p.identificacion as ci,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,
-    pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje,pp.a_solidario_13000,pp.a_solidario_25000,pp.rc_iva,pp.atrasos,pp.anticipo,p.fecha_nacimiento,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,(select tg.abreviatura from tipos_genero tg where tg.codigo=p.cod_genero)as genero,(select pp2.abreviatura from personal_pais pp2 where pp2.codigo=p.cod_nacionalidad) as nacionalidad,p.turno
+    pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje,pp.a_solidario_13000,pp.a_solidario_25000,pp.rc_iva,pp.atrasos,pp.anticipo,p.fecha_nacimiento,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,(select tg.abreviatura from tipos_genero tg where tg.codigo=p.cod_genero)as genero,(select pp2.abreviatura from personal_pais pp2 where pp2.codigo=p.cod_nacionalidad) as nacionalidad,pm.turno
     FROM personal p
     join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
-    join areas a on p.cod_area=a.codigo
+    join areas a on pm.cod_area=a.codigo
     join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
     where pm.cod_planilla=$codigo 
-    order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
+    order by pm.correlativo_planilla";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -12385,13 +12385,13 @@ function reprocesar_costoventas_sucursales_2($fecha,$rpt_territorio){
       from salida_almacenes sa INNER JOIN salida_detalle_almacenes sad on sad.cod_salida_almacen=sa.cod_salida_almacenes
       where sa.fecha = '$fecha' and sa.cod_tiposalida=1001 and sa.salida_anulada=0 and sa.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
     where a.`cod_ciudad`='$rpt_territorio' and a.cod_tipoalmacen=1)";  
-    //echo $sql;
+    // echo $sql."<br>";
    $valor=0;
    require("conexion_comercial.php");
    $resp=mysqli_query($dbh,$sql);
    while($row=mysqli_fetch_array($resp)){ 
-      $monto=number_format($row['costo_venta'],1,'.','');
       
+      $monto=number_format($row['costo_venta'],1,'.','');
       $valor+=$monto;
    } 
    mysqli_close($dbh);
@@ -12816,25 +12816,24 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
         from activosfijos 
         where cod_estadoactivofijo = 3 and tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString)
         and fecha_baja BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59' and cod_depreciaciones in ($cod_depreciaciones_2)";
-
       $dbh = new Conexion();
-      $valor=0;
+      $valor_altas_actualizacion=0;
+      $valor_altas_depreciacion=0;
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
          $codigoX=$row['codigo'];
-         $stmt2 = $dbh->prepare("SELECT d10_valornetobs 
+         $stmt2 = $dbh->prepare("SELECT d4_valoractualizado,d9_depreciacionacumuladaactual 
          from mesdepreciaciones m, mesdepreciaciones_detalle md
          WHERE m.codigo = md.cod_mesdepreciaciones 
          and md.cod_activosfijos = $codigoX and m.estado=1 order by m.codigo desc limit 1");
          $stmt2->execute();
          $row2 = $stmt2->fetch();
          // $d2_valorresidual = $row2["d2_valorresidual"];
-         $valor += $row2["d10_valornetobs"];
+         $valor_altas_actualizacion += $row2["d4_valoractualizado"];
+         $valor_altas_depreciacion += $row2["d9_depreciacionacumuladaactual"];
       }
-   
-      return $valor;
-
+      return $valor_altas_actualizacion."###".$valor_altas_depreciacion;
   }
  
 ?>

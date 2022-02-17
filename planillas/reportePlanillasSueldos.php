@@ -71,11 +71,13 @@ $html.=  '<header class="header">'.
             '<tr class="table-title bold text-center">'.
               '<td width="1%"><small><small>Nro</small></small></td>'.
               '<td width="4%"><small><small>CI EXT</small></small></td>'.
-              '<td width="10%"><small><small>Apellidos y Nombres</small></small></td>'.
+              '<td><small><small>Paterno</small></small></td>'.
+              '<td><small><small>Materno</small></small></td>'.
+              '<td width="5%"><small><small>Nombres</small></small></td>'.
               '<td width="2%"><small><small>Sex</small></small></td>'.
               // '<td width="2%">Nac ión</small></small></td>'.
-              // '<td width="4%">Fech Nac</small></small></td>'.
-              '<td><small><small>Cargo</small></small></td>'.
+              '<td width="4%"><small><small>Fech Nac</small></small></td>'.
+              '<td width="10%"><small><small>Cargo</small></small></td>'.
               // '<td><small><small>Turn</small></small></td>'.
               '<td><small><small>Fech Ing</small></small></td>'.
               '<td><small><small>Hrs Trab</small></small></td>'.
@@ -108,8 +110,7 @@ $html.=  '<header class="header">'.
               '<td><small><small>O Desc</small></small></td>'.
               '<td><small><small>Apo Sind</small></small></td>'.
               '<td><small><small>Tot Desc</small></small></td>'.
-              '<td ><small><small>Liq Pag</small></small></td>'.
-              '<td width="4%"><small><small>FIRMA</small></small></td>';
+              '<td ><small><small>Liq Pag</small></small></td>';
             $html.='</tr>'.
            '</thead>'.
            '<tbody>';
@@ -181,14 +182,14 @@ $html.=  '<header class="header">'.
               if($cod_turno==3){
                 if($codArea!=$row['cod_area']){
                   $html.='<tr>'.
-                        '<td colspan="36"><center>Departamento / Sucursal: <b>'.$row['area'].'</b></center></td>';
+                        '<td colspan="38"><center>Departamento / Sucursal: <b>'.$row['area'].'</b></center></td>';
                       $html.='</tr>';
                   $codArea=$row['cod_area'];
                 }
               }else{
                 if($cod_turno_aux!=$cod_turno){
                   $html.='<tr>'.
-                        '<td colspan="36"><center>Departamento / Sucursal: <b>'.$row['area'].' '.$turno_nombre.'</b></center></td>';
+                        '<td colspan="38"><center>Departamento / Sucursal: <b>'.$row['area'].' '.$turno_nombre.'</b></center></td>';
                       $html.='</tr>';
                   $cod_turno_aux=$cod_turno;
                 }  
@@ -197,10 +198,12 @@ $html.=  '<header class="header">'.
               $html.='<tr>'.
                 '<td class="text-center"><small><small><small>'.$index.'</small></small></small></td>'.
                 '<td class="text-left"><small><small><small>'.$row['ci'].' '.$emision.'</small></small></small></td>'.
-                '<td class="text-left"><small><small><small>'.$row['paterno']." ".$row['materno']." ".$row['nombres'].'</small></small></small></td>'.
+                '<td class="text-left"><small><small><small>'.$row['paterno'].'</small></small></small></td>'.
+                '<td class="text-left"><small><small><small>'.$row['materno'].'</small></small></small></td>'.
+                '<td class="text-left"><small><small><small>'.$row['nombres'].'</small></small></small></td>'.
                 '<td class="text-left"><small><small><small>'.$sexo.'</small></small></small></td>'.
                 // '<td><small><small>'.$nacion.'</small></small></td>'.
-                // '<td><small><small>'.strftime('%d/%m/%Y',strtotime($fechaNac)).'</small></small></td>'.
+                '<td><small><small>'.strftime('%d/%m/%Y',strtotime($fechaNac)).'</small></small></td>'.
                 '<td class="text-left"><small><small><small>'.$row['cargo'].'</small></small></small></td>'.
                 // '<td class="text-left"><small><small><small>'.$turno_nombre.'</small></small></small></td>'.
                 '<td class="text-left"><small><small><small>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</small></small></small></td>'.
@@ -224,8 +227,6 @@ $html.=  '<header class="header">'.
                     $porcen_monto=$dias_trabajados_planilla*100/$dias_trabajados_mes;
                     $montoX_aux=$porcen_monto*$montoX/100;
                   }else $montoX_aux=$montoX;
-
-
                   // $monto_bonos_otros+=$montoX_aux;
                   if($cod_bono_aux==15 or $cod_bono_aux==16){//sumamos en uno los refrigerios
                     $montoX_refri+=$montoX_aux;
@@ -311,8 +312,7 @@ $html.=  '<header class="header">'.
                 }  
                 
               $html.='<td class="text-right"><small><small><small>'.formatNumberDec($row['monto_descuentos']*$porcentaje/100).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec($row['liquido_pagable']*$porcentaje/100).'</small></small></small></td>'.
-                '<td><small><small><small></small></small></small></td>';
+                '<td class="text-right"><small><small><small>'.formatNumberDec($row['liquido_pagable']*$porcentaje/100).'</small></small></small></td>';
               $html.='</tr>';
               //suma de totales
               $subtotal_haberbasico_traba+=$row['haber_basico2']*$porcentaje/100;                  
@@ -331,7 +331,7 @@ $html.=  '<header class="header">'.
             }
       $html.='</tbody>';
       $html.='<tfoot><tr>'.
-          '<td style="border: 0;" colspan="8" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_dias).'</b></small></small></small></small></td>'.
+          '<td style="border: 0;" colspan="11" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_dias).'</b></small></small></small></small></td>'.
           '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_haberbasico).'</b></small></small></small></small></td>'.
           '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_haberbasico_traba).'</b></small></small></small></small></td>'.
           '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_bantig).'</b></small></small></small></small></td>'.
@@ -359,7 +359,7 @@ $html.=  '<header class="header">'.
           '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_daposind).'</b></small></small></small></small></td>'.
           '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_totdesc).'</b></small></small></small></small></td>'.
           '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_liqpag).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" ></td></tr>
+          '</tr>
       </tfoot>';
 $html.='</table><br><br><br>';        
 

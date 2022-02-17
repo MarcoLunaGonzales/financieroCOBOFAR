@@ -28,15 +28,7 @@
 	}else{
 		$nombre_uo=nameUnidad($cod_uo);
 	}
-	$sqlArea="SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
-	from personal_area_distribucion
-	where cod_estadoreferencial=1 and cod_uo in ($cod_uo)
-	GROUP BY cod_area order by cod_uo,nombre_area";
-	// echo $sqlArea;
-	$stmtArea = $dbh->prepare($sqlArea);
-	$stmtArea->execute();
-	$stmtArea->bindColumn('cod_area', $cod_area_x);
-	$stmtArea->bindColumn('nombre_area', $nombre_area_x);
+
 ?>
 
 <style>
@@ -179,30 +171,34 @@ table {
 									//$dias_trabajados_asistencia=30;//ver datos
 										// $dias_trabajados_por_defecto = obtenerValorConfiguracionPlanillas(22); //por defecto
 									$dias_trabajados_por_defecto=30; 
-									while ($row = $stmtArea->fetch(PDO::FETCH_BOUND)) 
-									{
+									
 										$sql = "SELECT ppm.cod_personalcargo,ppm.cod_gradoacademico,ppm.dias_trabajados,ppm.horas_pagadas,ppm.haber_basico,
 												ppm.bono_academico,ppm.bono_antiguedad,ppm.monto_bonos,ppm.total_ganado,ppm.monto_descuentos,
 												ppm.liquido_pagable,ppm.afp_1,ppm.afp_2,ppm.dotaciones,pad.porcentaje,
+
+												pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.rc_iva,pp.anticipo,pp.seguro_de_salud,pp.riesgo_profesional,pp.provivienda,pp.a_patronal_sol,pp.total_a_patronal,
+
 											(SELECT ga.nombre from personal_grado_academico ga where ga.codigo=ppm.cod_gradoacademico) as grado_academico,
-									        (select p.primer_nombre from personal p where p.codigo=ppm.cod_personalcargo) as personal,
-									        (select pa.paterno from personal pa where pa.codigo=ppm.cod_personalcargo) as paterno,
-									        (select pa.materno from personal pa where pa.codigo=ppm.cod_personalcargo) as materno,
-									        (select p3.identificacion from personal p3 where p3.codigo=ppm.cod_personalcargo) as doc_id,
-									        (select (select pd.abreviatura from personal_departamentos pd where pd.codigo=p3.cod_lugar_emision)
-									             from personal p3 where p3.codigo=ppm.cod_personalcargo) as lug_emision,
-									  		(select p4.lugar_emision_otro from personal p4 where p4.codigo=ppm.cod_personalcargo) as lug_emision_otro,pad.cod_uo,pad.cod_area
-											from planillas_personal_mes ppm,personal_area_distribucion pad
-											where ppm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1 and cod_planilla=$cod_planilla and pad.cod_uo in($cod_uo) and pad.cod_area=$cod_area_x and pad.cod_estadoreferencial=1 order by paterno";
+									        p.primer_nombre,p.paterno,p.materno,p.identificacion,
+									        (select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as lug_emision,
+									  		p.lugar_emision_otro,pad.cod_uo,ppm.cod_area,a.abreviatura as nombre_area
+											FROM personal p
+									    join planillas_personal_mes ppm on ppm.cod_personalcargo=p.codigo
+									      join planillas_personal_mes_patronal pp on pp.cod_planilla=ppm.cod_planilla and pp.cod_personal_cargo=ppm.cod_personalcargo
+									    join areas a on ppm.cod_area=a.codigo
+									    join personal_area_distribucion pad on ppm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
+											where ppm.cod_planilla=$cod_planilla and pad.cod_uo in($cod_uo)  
+											order by ppm.correlativo_planilla";
+											// echo $sql;
 										$stmtPersonal = $dbh->prepare($sql);
 										$stmtPersonal->execute();	
 										$stmtPersonal->bindColumn('cod_personalcargo', $cod_personalcargo);
-										$stmtPersonal->bindColumn('personal', $nombrePersonal);
+										$stmtPersonal->bindColumn('primer_nombre', $nombrePersonal);
 										$stmtPersonal->bindColumn('paterno', $paterno);
 										$stmtPersonal->bindColumn('materno', $materno);
-										$stmtPersonal->bindColumn('doc_id', $doc_id);
+										$stmtPersonal->bindColumn('identificacion', $doc_id);
 										$stmtPersonal->bindColumn('lug_emision', $lug_emision);
-										$stmtPersonal->bindColumn('lug_emision_otro', $lug_emision_otro);
+										$stmtPersonal->bindColumn('lugar_emision_otro', $lug_emision_otro);
 										$stmtPersonal->bindColumn('cod_gradoacademico', $cod_gradoacademico);
 										$stmtPersonal->bindColumn('grado_academico', $grado_academico);
 										$stmtPersonal->bindColumn('dias_trabajados', $dias_trabajados_asistencia);
@@ -220,28 +216,33 @@ table {
 										$stmtPersonal->bindColumn('porcentaje', $porcentaje);
 										$stmtPersonal->bindColumn('cod_uo', $cod_uo_xy);
 										$stmtPersonal->bindColumn('cod_area', $cod_area_xy);
+										$stmtPersonal->bindColumn('nombre_area', $nombreAreaxy);
+
+										$stmtPersonal->bindColumn('a_solidario_13000', $a_solidario_13000);
+										$stmtPersonal->bindColumn('a_solidario_25000', $a_solidario_25000);
+										$stmtPersonal->bindColumn('a_solidario_35000', $a_solidario_35000);
+										$stmtPersonal->bindColumn('rc_iva', $rc_iva);
+										$stmtPersonal->bindColumn('anticipo', $anticipo);
+										$stmtPersonal->bindColumn('seguro_de_salud', $seguro_de_salud);
+										$stmtPersonal->bindColumn('riesgo_profesional', $riesgo_profesional);
+
+										$stmtPersonal->bindColumn('provivienda', $provivienda);
+										$stmtPersonal->bindColumn('a_patronal_sol', $a_patronal_sol);
+										$stmtPersonal->bindColumn('total_a_patronal', $total_a_patronal);
+
+	
+
+
 										while ($row = $stmtPersonal->fetch()) 
 										{  
-			                $sql = "SELECT *                              
-			                        from planillas_personal_mes_patronal 
-			                        where cod_planilla=$cod_planilla and cod_personal_cargo=$cod_personalcargo";
-			                  $stmtPersonalPatronal = $dbh->prepare($sql);
-			                  $stmtPersonalPatronal->execute();
-			                  $resultPatronal=$stmtPersonalPatronal->fetch();
-			                  $codigo_ppm_patronal=$resultPatronal['codigo'];
-			                  $cod_planilla_p=$resultPatronal['cod_planilla'];
-			                  $cod_personal_cargo_p=$resultPatronal['cod_personal_cargo'];
-			                  $a_solidario_13000=$resultPatronal['a_solidario_13000'];
-			                  $a_solidario_25000=$resultPatronal['a_solidario_25000'];
-			                  $a_solidario_35000=$resultPatronal['a_solidario_35000'];
-			                  $rc_iva=$resultPatronal['rc_iva'];
-			                  $atrasos=$resultPatronal['atrasos'];
-			                  $anticipo=$resultPatronal['anticipo'];
-			                  $seguro_de_salud=$resultPatronal['seguro_de_salud'];
-			                  $riesgo_profesional=$resultPatronal['riesgo_profesional'];
-			                  $provivienda=$resultPatronal['provivienda'];
-			                  $a_patronal_sol=$resultPatronal['a_patronal_sol'];
-			                  $total_a_patronal=$resultPatronal['total_a_patronal'];
+			                // $sql = "SELECT *                              
+			                //         from planillas_personal_mes_patronal 
+			                //         where cod_planilla=$cod_planilla and cod_personal_cargo=$cod_personalcargo";
+			                //   $stmtPersonalPatronal = $dbh->prepare($sql);
+			                //   $stmtPersonalPatronal->execute();
+			                //   $resultPatronal=$stmtPersonalPatronal->fetch();
+			                  
+			                  
 			                  //dividiendo montos a su porcentaje respectivo
 			                  $haber_basico_tp=$haber_basico*$porcentaje/100;
 			                  $bono_antiguedad_tp=$bono_antiguedad*$porcentaje/100;
@@ -268,8 +269,9 @@ table {
 			                  // $sum_total_dotaciones+=$dotaciones_tp;
 			                  $sum_total_l_pagable+=$liquido_pagable_tp;
 			                  $sum_total_a_patronal+=$total_a_patronal_tp;
-			                  $nombreAreaxy=trim(abrevArea($cod_area_xy),",");
-			                  $nombreuoxy=trim(abrevUnidad($cod_uo_xy),",");
+			                  // $nombreAreaxy=trim(abrevArea($cod_area_xy),",");
+
+			                  // $nombreuoxy=trim(abrevUnidad($cod_uo_xy),",");
 
 			                ?>
 			              	<tr >                                                        
@@ -279,18 +281,8 @@ table {
 			                    <td class="text-left small"><small><?=$paterno;?></small></td>
 			                    <td class="text-left small"><small><?=$materno;?></small></td>
 			                    <td class="text-left small"><small><?=$nombrePersonal;?></small></td>
-			                    
-			                    <?php //if($porcentaje!=100){ 
-			                    	?>
-			                    <!-- <td class="text-center small"><small><span class="badge badge-danger"><?=$porcentaje;?></span></small></td> -->
-			                    <?php //}else{ 
-			                    	?>
-			                    <!-- <td class="text-center small"><small><?=$porcentaje;?></small></td> -->
-			                    <?php //}
-			                    ?>
 			                    <td class="text-center small" width="2%"><small><?=$dias_trabajados_asistencia;?></small></td>   
 			                    <td class="text-center small"><small><?=formatNumberDec($haber_basico_tp);?></small></td>
-			                                 
 			                    <td class="text-center small"><small><?=formatNumberDec($bono_antiguedad_tp);?></small></td>
 			                    <?php
 			                    if($swBonosOtro)
@@ -440,7 +432,7 @@ table {
 			                	<?php 
 			                  $index+=1;
 			            	}
-									}?>                      
+									?>                      
 	              </tbody>
 	              <tfoot>
 	                <tr class="bg-dark text-white">                  

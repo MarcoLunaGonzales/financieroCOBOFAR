@@ -37,7 +37,7 @@ if($codigo_aux==0){
 	$ultimoIdInsertado = $dbh->lastInsertId();
 	// $ultimoIdInsertado=29;
 	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion,a.cod_estadoactivofijo,DATE_FORMAT(a.fecha_baja,'%Y-%m-%d')as fecha_bajax 
-	from activosfijos a where a.tipo_af=1 and fechalta<='$fechaFin'  and a.cod_estadoactivofijo in (1) ";
+	from activosfijos a where a.tipo_af=1 and fechalta<='$fechaFin'  and a.cod_estadoactivofijo in (1,3) ";
 	// 829,9,10,5,8,270 // 271,272,2692 // and cod_unidadorganizacional in (10) and a.codigo in (2274,2275)
 		// echo $sqlActivos;
 	$stmtActivos = $dbh->prepare($sqlActivos);
@@ -91,15 +91,23 @@ if($codigo_aux==0){
   				$vidautilmeses_restante_af=$vidautilmeses_restante_af-1;//ponemos en estado normal
   				// echo $fechaFinalDepreciacion."<br>";
 			}
+			$sw_baja=true;
 			if($cod_estadoactivofijo==3){//activo dado de Baja
 				if($fecha_baja<=$fechaFinalDepreciacion){
+					if($fecha_baja<$fechaInicioDepreciacion){
+						$sw_baja=false;
+					}
+
 					$fechaFinalDepreciacion=$fecha_baja;	//31 de enero
   					$sw_nuevo=-100;//indicamos que se dio de baja
 				}
 			}
 
-			//echo "fechas depre: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;			
-			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
+			if($sw_baja){
+				//echo "fechas depre: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;			
+				$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
+			}
+			
 		}else{			
 			$sqlValidacion2="SELECT d.gestion, d.mes, dd.d4_valoractualizado, dd.d9_depreciacionacumuladaactual,dd.d11_vidarestante from mesdepreciaciones d, mesdepreciaciones_detalle dd where d.codigo=dd.cod_mesdepreciaciones and dd.cod_activosfijos=$codActivo order by dd.codigo desc limit 0,1;";
 			//echo $sqlValidacion2;
@@ -132,15 +140,25 @@ if($codigo_aux==0){
   				$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day'));	
   				$vidautilmeses_restante_af=$vidautilmeses_restante_af-1;//ponemos en estado normal
 			}
+
+			$sw_baja=true;
 			if($cod_estadoactivofijo==3){//activo dado de Baja
 				if($fecha_baja<=$fechaFinalDepreciacion){
+					if($fecha_baja<$fechaInicioDepreciacion){
+						$sw_baja=false;
+					}
+
 					$fechaFinalDepreciacion=$fecha_baja;	//31 de enero
   					$sw_nuevo=-100;//indicamos que se dio de baja
 				}
 			}
-			// echo "   *** FECHAS COMPARACION: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;
-			// echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>";
-			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicialDepreciado,$depreciacionAcumDepreciado,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
+
+			if($sw_baja){
+
+				// echo "   *** FECHAS COMPARACION: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;
+				// echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>";
+				$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicialDepreciado,$depreciacionAcumDepreciado,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
+			}
 		}
 	}
 	$flagSuccess=true;

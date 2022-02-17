@@ -64,10 +64,19 @@ if($cod_ingresoalmacen>0){
     $nit_factura_proveedor=$row['nit_factura_proveedor'];
     $monto_factura_proveedor_desc=$row['monto_factura_proveedor_desc'];
     $monto_factura_proveedor=$row['monto_factura_proveedor'];
-    if($monto_desc == $monto_factura_proveedor_desc){
-      $monto_factura_proveedor_desc=0;
-    }
+    
     $monto_desc=$monto_factura_proveedor-$monto_factura_proveedor_desc;
+
+    // if($monto_factura_proveedor == $monto_factura_proveedor_desc){
+    //   $monto_desc=0;
+    // }
+
+
+
+    // if($monto_desc == $monto_factura_proveedor_desc){
+    //   $monto_factura_proveedor_desc=0;
+    // }
+    // $monto_desc=$monto_factura_proveedor-$monto_factura_proveedor_desc;
 
     // // $total_venta=$MFACTURA-$DESCTO1-$DESCTO2-$DESCTO3-$DESCTO4;
     // $total_venta=$MFACTURA-number_format($DESCTO1,2,'.','')-$DESCTO2-$DESCTO3-$DESCTO4;
@@ -75,7 +84,7 @@ if($cod_ingresoalmacen>0){
     // // $FECHA=trim($FECHA,' 00:00:00.000');
     // $FECHA1_array=explode(" ", $FECHA1);
     // $FECHA1=$FECHA1_array[0];
-    
+
     $IDPROVEEDOR_nuevo=codigoProveedorNuevo($cod_proveedor);
     $sqlInsertDet="INSERT INTO ingresos_almacen_detalle(cod_ingresoalmacen, cod_proveedor,factura,fecha_factura,dcto_almacen,nit,autorizacion,codigo_control,monto_factura,desc_total) 
     VALUES ($cod_ingresoalmacen,'$IDPROVEEDOR_nuevo','$nro_factura_proveedor','$f_factura_proveedor','$cod_ingreso_almacen','$nit_factura_proveedor','$aut_factura_proveedor','$con_factura_proveedor',$monto_factura_proveedor_desc,$monto_desc)";
@@ -84,47 +93,12 @@ if($cod_ingresoalmacen>0){
     $flagSuccess=$stmtInsertDet->execute();
   }
 }
-if($flagSuccess){
-     echo  "
-   <script >$(document).ready(function() {
-    swal({
-        title: 'CORRECTO',
-        text: 'Se procesó correctamente!!! :D',
-        type: 'success',
-        confirmButtonClass: 'btn btn-success',
-        confirmButtonText: 'Aceptar',
-        buttonsStyling: false
-      }).then((result) => {
-          if (result.value) {
-            window.close();
-            return(true);
-          } 
-        });
 
-});</script>";
-}else{
-     echo  "
-   <script >$(document).ready(function() {
-    swal({
-        title: 'ERROR',
-        text: 'Hubo un error en el proceso. Contactese con el administrador :(,
-        type: 'error',
-        confirmButtonClass: 'btn btn-success',
-        confirmButtonText: 'Aceptar',
-        buttonsStyling: false
-      }).then((result) => {
-          if (result.value) {
-            window.close();
-            return(true);
-          } 
-        });
-
-});</script>";
-}
+showAlertSuccessError($flagSuccess,"../".$urlList);  
 
 
 
-// showAlertSuccessError($flagSuccess,"../".$urlList);  
+
 
 
 ?>

@@ -12979,6 +12979,11 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     $devolucion=[];
     $devolucion_unidad=[];
     //para saldo  Anterior    
+    
+
+    // if(strtotime($fecha_ini)<strotime("2021-12-01")){
+
+    // }
     $fecha_ant = date("Y-m-d", strtotime("-1 month", strtotime($fecha_ini)));
 
     //ingresos
@@ -12987,7 +12992,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
       where i.cod_ingreso_almacen=id.cod_ingreso_almacen and m.codigo_material=id.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and i.fecha<'$fecha_ini' and i.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and i.ingreso_anulado=0
       GROUP BY pl.cod_proveedor";
-      // echo $sql; 
+    //  echo $sql; 
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){  
        $ingresos_ant[$row['cod_proveedor']]=$row['INGRESO']; 

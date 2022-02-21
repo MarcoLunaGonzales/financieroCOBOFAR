@@ -19992,3 +19992,59 @@ function botonBuscar_pagoproveedores(){
   }
   ajax.send(null)
 }
+
+
+function agregardatosModalEdicionPlantillaSueldos(datos){  
+  var d=datos.split('/');
+ 
+  document.getElementById("codigo_e").value=d[0];
+  document.getElementById("nombre_e").value=d[1];
+  document.getElementById("cod_gestion_e").value=d[2];
+  document.getElementById("cod_mes_e").value=d[3];
+  
+  document.getElementById("faltas_e").value=d[4];
+  document.getElementById("faltas_sin_descuento_e").value=d[5];
+  document.getElementById("dias_vacacion_e").value=d[6];
+  document.getElementById("dias_trabajados_e").value=d[7];
+
+  document.getElementById("domingos_e").value=d[8];
+  document.getElementById("feriados_e").value=d[9];
+  document.getElementById("noches_e").value=d[10];
+
+  document.getElementById("domingo_reemp_e").value=d[11];
+  document.getElementById("feriado_reemp_e").value=d[12];
+  document.getElementById("ordinario_reemp_e").value=d[13];
+
+  document.getElementById("hxdomingo_e").value=d[14];
+  document.getElementById("hxferiado_e").value=d[15];
+  document.getElementById("hxdianormal_e").value=d[16];
+
+  document.getElementById("reintegro_e").value=d[17];
+  document.getElementById("obs_reintegro_e").value=d[18];
+  
+  document.getElementById("anticipo_e").value=d[19];
+  document.getElementById("prestamos_e").value=d[20];
+  document.getElementById("inventarios_e").value=d[21];
+  document.getElementById("vencidos_e").value=d[22];
+  document.getElementById("atrasos_e").value=d[23];
+  document.getElementById("faltante_caja_e").value=d[24];
+  document.getElementById("otros_descuentos_e").value=d[25];
+  document.getElementById("aporte_sindicato_e").value=d[26];
+}
+
+function guardar_edit_plantilla_sueldos(codigo_e,cod_gestion_e,cod_mes_e,dias_trabajados_e,faltas_e,faltas_sin_descuento_e,dias_vacacion_e,domingos_e,feriados_e,noches_e,domingo_reemp_e,feriado_reemp_e,ordinario_reemp_e,hxdomingo_e,hxferiado_e,hxdianormal_e,reintegro_e,obs_reintegro_e,anticipo_e,prestamos_e,inventarios_e,vencidos_e,atrasos_e,faltante_caja_e,otros_descuentos_e,aporte_sindicato_e){
+
+  $.ajax({
+    type:"POST",
+    data:"codigo_e="+codigo_e+"&cod_gestion_e="+cod_gestion_e+"&cod_mes_e="+cod_mes_e+"&dias_trabajados_e="+dias_trabajados_e+"&faltas_e="+faltas_e+"&faltas_sin_descuento_e="+faltas_sin_descuento_e+"&dias_vacacion_e="+dias_vacacion_e+"&domingos_e="+domingos_e+"&feriados_e="+feriados_e+"&noches_e="+noches_e+"&domingo_reemp_e="+domingo_reemp_e+"&feriado_reemp_e="+feriado_reemp_e+"&ordinario_reemp_e="+ordinario_reemp_e+"&hxdomingo_e="+hxdomingo_e+"&hxferiado_e="+hxferiado_e+"&hxdianormal_e="+hxdianormal_e+"&reintegro_e="+reintegro_e+"&obs_reintegro_e="+obs_reintegro_e+"&anticipo_e="+anticipo_e+"&prestamos_e="+prestamos_e+"&inventarios_e="+inventarios_e+"&vencidos_e="+vencidos_e+"&atrasos_e="+atrasos_e+"&faltante_caja_e="+faltante_caja_e+"&otros_descuentos_e="+otros_descuentos_e+"aporte_sindicato_e="+aporte_sindicato_e,
+    url:"plantilla_sueldos_editar_save.php",
+    success:function(r){
+      if(r==1){
+        //alerts.showSwal('success-message','ingresos_almacen_antiguo/seleccionar.php?fecha_desde='+fecha_desde+'&fecha_hasta='+fecha_hasta);
+        Swal.fire("Se procedió con el cambio!", "Por favor actualizar Página.", "success");        
+      }else{
+        Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
+      }
+    }
+  });
+}

@@ -84,14 +84,12 @@ if($alert==true){
                         VALUES ('$cod_personal','$codGestion','$codMes','$faltas','$faltas_sin_descuento','$dias_vacacion','$dias_trabajados_l_s','$domingos_normal','$feriado_normal','$noche_normal','$domingo_reemplazo','$feriado_reemplazo','$ordinario_reemplazo','$hxdomingo_extras','$hxferiado_extras','$hxdnnormal_extras','$reintegro','$obs_reintegro',$cod_estadoreferencial)";
                     //echo $sqlKardex;
                     $stmtKardex = $dbh->prepare($sqlKardex);
-                    $flagSuccess=$stmtKardex->execute();
-                    
+                    $flagSuccess=$stmtKardex->execute();                    
                     //**INGRESAMOS ANTICIPOS
                     $anticipos=$datos[19];
                     $stmtAnticipos = $dbh->prepare("INSERT INTO anticipos_personal (cod_gestion,cod_mes,cod_personal,monto,fecha_registro, cod_estadoreferencial) 
                         VALUES ($codGestion,$codMes,$cod_personal,$anticipos,now(),$codEstado)");
                     $flagSuccess=$stmtAnticipos->execute();
-
                     $contador_excel=20;
                     for ($j=0; $j <count($descuentos_array) ; $j++) { 
                         $codDescuento=$descuentos_array[$j];
@@ -114,13 +112,12 @@ if($alert==true){
                         VALUES ($cod_descuento_as,$cod_personal,$codGestion,$codMes,$aporte_sindicato,$codEstado)");
                     $flagSuccess=$stmtSindicato->execute();
                 }
-                
             }
         }
         showAlertSuccessError($flagSuccess,'?opcion=planillasSueldoPersonal');
     }
     fclose($fichero); 
-    unlink($destino); 
+    // unlink($destino); 
 
 
 }

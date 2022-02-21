@@ -24,6 +24,8 @@ foreach ($unidadOrganizacional as $valor ) {
 }
 
 $mes2=12;//ULTIMA DEPRECIACION
+
+
 $nombre_mes=nombreMes($mes2);
 $gestion=nameGestion($gestion);
 $fechaUltimo=$gestion."-".$mes2."-01";
@@ -81,23 +83,23 @@ $total_valorNeto=0;
                                 <th>Depreciación<br>Acumulada Anterior</th>
                                 <th>Actualización<br>Depreciación Acumulada</th>
                                 <th>Depreciación Periodo</th>
-                                <th>Depreciación Bajas</th>
+                                
                                 <th>Depreciación Acumulada</th>
                                 <th>Valor Neto</th>                                    
                             </tr>
                             <?php
 
-                            $totalValorAnterior_2=0;
-                            $total_rubro_actualizacion_2=0;
-                            $total_valor_actualizado_2=0;
-                            $total_depreAcumAnt_2=0;
-                            $total_actDepAcum_2=0;
-                            $total_deprePeriodo_2=0;
-                            $total_deprePeriodo_bajas=0;
-                            $totalrubro_depreciacion_2=0;
-                            $total_valorNeto_2=0;
-                            $totalValorAltas_actualizacion=0;
-                            $totalValorBajas_actualizacion=0;
+                                $totalValorAnterior_2=0;
+                                $total_rubro_actualizacion_2=0;
+                                $total_valor_actualizado_2=0;
+                                $total_depreAcumAnt_2=0;
+                                $total_actDepAcum_2=0;
+                                $total_deprePeriodo_2=0;
+                                $total_deprePeriodo_bajas=0;
+                                $totalrubro_depreciacion_2=0;
+                                $total_valorNeto_2=0;
+                                $totalValorAltas_actualizacion=0;
+                                $totalValorBajas_actualizacion=0;
 
                                 $stmt2_total = $dbh->prepare("SELECT af.cod_depreciaciones,sum(md.d8_depreciacionperiodo)deprePeriodo,sum(md.d7_incrementodepreciacionacumulada)actDepAcum,sum(md.d5_incrementoporcentual)actualizacion_porcentual
                                     from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
@@ -141,7 +143,7 @@ $total_valorNeto=0;
                                     $valorNeto_2=$datos_array[2];
 
 
-                                    
+                                    $deprePeriodo_2=$deprePeriodo_2-$valor_bajas_depre;
                                     //totales
                                     $totalValorAnterior_2+=$valorActualizado_inicial;
                                     $total_rubro_actualizacion_2+=$actualizacion_porcentual_2;
@@ -155,7 +157,7 @@ $total_valorNeto=0;
                                     $totalValorAltas_actualizacion+=$valor_altas_actualizacion;
                                     $totalValorBajas_actualizacion+=$valor_bajas_actualizacion;
 
-                                    $total_deprePeriodo_bajas+=$valor_bajas_depre;
+                                    // $total_deprePeriodo_bajas+=$valor_bajas_depre;
                                     ?>
                                     <tr>
                                         <td class="small bg-dark text-left text-white"><?=$nombreRubros_2?></td>
@@ -167,7 +169,7 @@ $total_valorNeto=0;
                                         <td><?=formatNumberDec($depreAcumAnt_2); ?></td>
                                         <td><?=formatNumberDec($actDepAcum_2); ?></td>
                                         <td><?=formatNumberDec($deprePeriodo_2); ?></td>
-                                        <td><?=formatNumberDec($valor_bajas_depre); ?></td>
+                                        
                                         <td><?=formatNumberDec($totalDepreAcumu_2); ?></td>
                                         <td><?=formatNumberDec($valorNeto_2); ?></td>
                                         </tr>
@@ -187,9 +189,8 @@ $total_valorNeto=0;
                                 <td><?=formatNumberDec($total_depreAcumAnt_2);?></td>
                                 <td><?=formatNumberDec($total_actDepAcum_2); ?></td>
                                 <td><?=formatNumberDec($total_deprePeriodo_2); ?></td>
-                                <td><?=formatNumberDec($total_deprePeriodo_bajas); ?></td>
-                                <td><?=formatNumberDec($totalrubro_depreciacion_2); ?></td>
                                 
+                                <td><?=formatNumberDec($totalrubro_depreciacion_2); ?></td>
                                 <td class="small"><?=formatNumberDec($total_valorNeto_2); ?></td>
                             </tr>
                         </tfoot>

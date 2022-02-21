@@ -29,9 +29,9 @@ $dbhDet = new Conexion();
                   
 <?php
 
-echo "<h6>Hora Inicio Proceso ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
+echo "<h6>Hora Inicio Proceso: " . date("Y-m-d H:i:s")."</h6>";
 
-$fecha_inicio='2021-12-01';
+$fecha_inicio='2021-10-01';
 $fecha_fin='2021-12-31';
 
 $sql="SELECT ccd.cod_ciudad,ccd.fecha,ccd.cod_comprobante 
@@ -62,7 +62,7 @@ while ($row = $statementUO1->fetch()){
 
 }
 
-echo "<h6>HORA FIN PROCESO CARGADO ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
+echo "<h6>HORA FIN PROCESO: " . date("Y-m-d H:i:s")."</h6>";
 
 ?>
           </div>

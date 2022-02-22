@@ -1,6 +1,6 @@
 <?php
 
-require_once '../layouts/bodylogin.php';
+// require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
@@ -50,8 +50,10 @@ $stmtKardex = $dbh->prepare($sqlKardex);
 $flagSuccess=$stmtKardex->execute();                    
 if($flagSuccess){
 	//**INGRESAMOS ANTICIPOS
-	$stmtAnticipos = $dbh->prepare("UPDATE anticipos_personal set  monto='$anticipo_e',fecha_registro
-	where cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
+	$sql="UPDATE anticipos_personal set  monto='$anticipo_e'
+	where cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1";
+	// echo $sql;
+	$stmtAnticipos = $dbh->prepare($sql);
 	$flagSuccess=$stmtAnticipos->execute();
 	//prestamos
 	$stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$prestamos_e
@@ -83,7 +85,7 @@ if($flagSuccess){
 	$flagSuccess=$stmtDescuentos->execute();    
 }
 
-$flagSuccess=$stmt->execute();
+
 if($flagSuccess){
     echo 1;
 }else echo 2;

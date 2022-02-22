@@ -70,7 +70,7 @@ $nombre_mes=nombreMes($cod_mes);
                   $index=0;
                    $sql="select p.codigo,a.nombre as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,k.cod_gestion,k.cod_mes,k.faltas,k.faltas_sin_descuento,k.dias_vacacion,k.dias_trabajados,k.domingos_trabajados_normal,k.feriado_normal,k.noche_normal,k.domingo_reemplazo,k.feriado_reemplazo,k.ordianrio_reemplazo,k.hxdomingo_extras,k.hxferiado_extras,k.hxdnnormal_extras,k.reintegro,k.obs_reintegro
                   from personal_kardex_mes k join personal p on p.codigo=k.cod_personal join areas a on p.cod_area=a.codigo
-                  where k.cod_gestion=$codGestionActiva and k.cod_mes=$cod_mes and k.cod_estadoreferencial=1 and k.cod_personal=32
+                  where k.cod_gestion=$codGestionActiva and k.cod_mes=$cod_mes and k.cod_estadoreferencial=1 
                   order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
                   // echo $sql;
                   $stmtDet = $dbh->prepare($sql);

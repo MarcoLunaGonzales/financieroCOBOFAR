@@ -1,8 +1,18 @@
-<?php
+<meta charset="utf-8">
+    <?php
+    $sw_excel=0;
+    header("Pragma: public");
+    header("Expires: 0");
+    $filename = "facturas_almacen_pendientes_nuevo.csv";
+    header("Content-type: application/x-msdownload");
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Pragma: no-cache");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+
 // require_once '../conexion3.php';
 
 
-require_once '../layouts/bodylogin2.php';
+
 require_once '../conexion.php';
 require_once '../styles.php';
 require_once '../functionsGeneral.php';
@@ -10,32 +20,17 @@ require_once '../functions.php';
 require_once '../functionsReportes.php';
 
   $dbh = new Conexion();
-
   $cod_planilla = $_GET["codigo_planilla"];//
   $cod_gestion = $_GET["cod_gestion"];//
   $cod_mes = $_GET["cod_mes"];//
-
-
   $mes=strtoupper(nombreMes($cod_mes));
   $gestion=nameGestion($cod_gestion);
 
 
 ?>
-<div class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header <?=$colorCard;?> card-header-icon">
-            <div class="card-icon bg-blanco">
-              <img class="" width="50" height="40" src="../assets/img/favicon.png">
-            </div>
-             <!--<div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>-->
-             <h4 class="card-title text-center">Planillas AFP Previsión</h4>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered table-condensed" width="100%" align="center"  id="tablePaginatorFixedPlanillaSueldo_otros">
+
+
+              <table class="table table-bordered table-condensed" width="100%" >
                   <thead>
                     <tr class="table-title small bold text-center">                  
                       <td class="small">TIPO DOC.</td> 
@@ -103,14 +98,8 @@ require_once '../functionsReportes.php';
                     }
                     ?>     
                   </tbody>
-                </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>  
-  </div>
-</div>
+              </table>
+
 
 <?php
 

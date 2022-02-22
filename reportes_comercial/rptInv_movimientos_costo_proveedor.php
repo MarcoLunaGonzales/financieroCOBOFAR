@@ -101,7 +101,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
           $ingresos_costo_ant=$datosFila[7];
           $salidas_ant=$datosFila[8];
           $salidas_costo_ant=$datosFila[9];
-
+          $salidas_costo_ven=$datosFila[10];
 
           if(isset($ingresos[$codigo_proveedor]))
             $variable_ingresos=$ingresos[$codigo_proveedor];
@@ -134,13 +134,16 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
           if(isset($salidas_costo_ant[$codigo_proveedor]))
             $variable_salidas_costo_ant=$salidas_costo_ant[$codigo_proveedor];
           else $variable_salidas_costo_ant=0;
+          if(isset($salidas_costo_ven[$codigo_proveedor]))
+            $variable_salidas_costo_ven=$salidas_costo_ven[$codigo_proveedor];
+          else $variable_salidas_costo_ven=0;
 
 
  
           $cantSaldo_ant=$variable_ingresos_costo_ant-abs($variable_salidas_costo_ant);
 
           $totalIngresos=$variable_ingresos_costo;
-          $totalSalidas=$variable_salidas_costo;           
+          $totalSalidas=$variable_salidas_costo+$variable_salidas_costo_ven;           
           //VENTAS
           $cantVentas=$variable_ventas_costo;
 

@@ -22,6 +22,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
  // echo $sql;
 
 $totalValoradoGen=0;$totalSaldoIniGen=0;$totalIngresosValGen=0;$totalTraspasosValGen=0;$totalVentasValGen=0;
+$totalTraspasosVenValGen=0;
 ?>
 
 <div class="content">
@@ -48,7 +49,8 @@ $totalValoradoGen=0;$totalSaldoIniGen=0;$totalIngresosValGen=0;$totalTraspasosVa
       <th>SUCURSAL</th>
       <th>Saldo Ant.</th>
       <th>Ingresos</th>
-      <th>Traspasos</th>
+      <th>Traspasos<br>Sucursales</th>
+      <th>Traspasos<br>Vencidos</th>
       <th>Ventas</th>
       <th>Saldo Final</th>
       <?php
@@ -86,7 +88,7 @@ $totalValoradoGen=0;$totalSaldoIniGen=0;$totalIngresosValGen=0;$totalTraspasosVa
             <td><?=$cod_sucursal?></td>
             <td style="text-align: left;"><?=$nombre_sucursal?></td>
         <?php
-$totalValorado=0;$totalSaldoIni=0;$totalIngresosVal=0;$totalTraspasosVal=0;$totalVentasVal=0;
+$totalValorado=0;$totalSaldoIni=0;$totalIngresosVal=0;$totalTraspasosVal=0;$totalTraspasosValVen=0;$totalVentasVal=0;
       for ($i=0; $i <count($array_proveedores) ; $i++){ 
         $codigo_proveedor=$array_proveedores[$i]; 
         $nombre_proveedor=$nombre_proveedor_array[$codigo_proveedor];
@@ -105,7 +107,7 @@ $totalValorado=0;$totalSaldoIni=0;$totalIngresosVal=0;$totalTraspasosVal=0;$tota
           $ingresos_costo_ant=$datosFila[7];
           $salidas_ant=$datosFila[8];
           $salidas_costo_ant=$datosFila[9];
-
+          $salidas_costo_ven=$datosFila[10];
 
           if(isset($ingresos[$codigo_proveedor]))
             $variable_ingresos=$ingresos[$codigo_proveedor];
@@ -138,17 +140,20 @@ $totalValorado=0;$totalSaldoIni=0;$totalIngresosVal=0;$totalTraspasosVal=0;$tota
           if(isset($salidas_costo_ant[$codigo_proveedor]))
             $variable_salidas_costo_ant=$salidas_costo_ant[$codigo_proveedor];
           else $variable_salidas_costo_ant=0;
-
+          if(isset($salidas_costo_ven[$codigo_proveedor]))
+            $variable_salidas_costo_ven=$salidas_costo_ven[$codigo_proveedor];
+          else $variable_salidas_costo_ven=0;
 
  
           $cantSaldo_ant=$variable_ingresos_costo_ant-abs($variable_salidas_costo_ant);
 
           $totalIngresos=$variable_ingresos_costo;
-          $totalSalidas=$variable_salidas_costo;           
+          $totalSalidas=$variable_salidas_costo;
+          $totalSalidasVen=$variable_salidas_costo_ven;           
           //VENTAS
           $cantVentas=$variable_ventas_costo;
 
-          $cantSaldo=+($totalIngresos+$cantSaldo_ant)-$totalSalidas-$cantVentas;          
+          $cantSaldo=+($totalIngresos+$cantSaldo_ant)-$totalSalidas-$cantVentas-$totalSalidasVen;          
           if($cantSaldo<0){
             $cantSaldo=0;
           }
@@ -158,11 +163,13 @@ $totalValorado=0;$totalSaldoIni=0;$totalIngresosVal=0;$totalTraspasosVal=0;$tota
           $valoradoSaldoIni=number_format($cantSaldo_ant,2,'.','');
           $valoradoIngresos=number_format($totalIngresos,2,'.','');
           $valoradoTraspaso=number_format($totalSalidas,2,'.','');
+          $valoradoTraspasoVen=number_format($totalSalidasVen,2,'.','');
           $valoradoVentas=number_format($cantVentas,2,'.','');
           $totalValorado+=$valoradoMes; 
           $totalSaldoIni+=$valoradoSaldoIni; 
           $totalIngresosVal+=$valoradoIngresos; 
-          $totalTraspasosVal+=$valoradoTraspaso; 
+          $totalTraspasosVal+=$valoradoTraspaso;
+          $totalTraspasosValVen+=$valoradoTraspasoVen; 
           $totalVentasVal+=$valoradoVentas;
 
           $totalValoradoGen+=$valoradoMes; 
@@ -170,12 +177,14 @@ $totalValorado=0;$totalSaldoIni=0;$totalIngresosVal=0;$totalTraspasosVal=0;$tota
           $totalIngresosValGen+=$valoradoIngresos; 
           $totalTraspasosValGen+=$valoradoTraspaso; 
           $totalVentasValGen+=$valoradoVentas; 
+          $totalTraspasosVenValGen=$valoradoTraspasoVen; 
           
         }
         ?>
         <td><?=number_format($totalSaldoIni,2,'.',',')?></td>
             <td><?=number_format($totalIngresosVal,2,'.',',')?></td>
             <td><?=number_format($totalTraspasosVal,2,'.',',')?></td>
+            <td><?=number_format($totalTraspasosValVen,2,'.',',')?></td>
             <td><?=number_format($totalVentasVal,2,'.',',')?></td>
             <td><?=number_format($totalValorado,2,'.',',')?></td>
 
@@ -189,6 +198,7 @@ $totalValorado=0;$totalSaldoIni=0;$totalIngresosVal=0;$totalTraspasosVal=0;$tota
             <td><?=number_format($totalSaldoIniGen,2,'.',',')?></td>
             <td><?=number_format($totalIngresosValGen,2,'.',',')?></td>
             <td><?=number_format($totalTraspasosValGen,2,'.',',')?></td>
+            <td><?=number_format($totalTraspasosVenValGen,2,'.',',')?></td>
             <td><?=number_format($totalVentasValGen,2,'.',',')?></td>
             <th><?=number_format($totalValoradoGen,2,'.',',')?></th>
       </tr>    

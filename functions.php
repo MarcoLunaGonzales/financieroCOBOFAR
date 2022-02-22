@@ -12974,6 +12974,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     $ingresos_unidad=[];
     $salida=[];
     $salida_unidad=[];
+    $salida_unidad_ven=[];
     $ventas=[];
     $ventas_unidad=[];
     $lineas=[];
@@ -13025,14 +13026,24 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     //salidas
     $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
       where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
-      and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001
+      and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and s.almacen_destino<>1078
       GROUP BY pl.cod_proveedor";
-      // echo  $sql."<br><br><br>*$proveedores**";
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){  
        $salida[$row['cod_proveedor']]=$row['SALIDA'];   
        $salida_unidad[$row['cod_proveedor']]=$row['SALIDA_COSTO'];        
     }
+
+    //salidas vencidos
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
+      where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
+      and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and s.almacen_destino=1078
+      GROUP BY pl.cod_proveedor";
+    $resp=mysqli_query($enlaceCon,$sql);
+    while($row=mysqli_fetch_array($resp)){   
+       $salida_unidad_ven[$row['cod_proveedor']]=$row['SALIDA_COSTO'];        
+    }
+
 
     //VENTAS
     $tipoPago="1,2,3,4";
@@ -13045,7 +13056,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     } 
 
     mysqli_close($enlaceCon);
-    return array($ingresos,$ingresos_unidad,$salida,$salida_unidad,$ventas,$ventas_unidad,$ingresos_ant,$ingresos_unidad_ant,$salida_ant,$salida_unidad_ant);
+    return array($ingresos,$ingresos_unidad,$salida,$salida_unidad,$ventas,$ventas_unidad,$ingresos_ant,$ingresos_unidad_ant,$salida_ant,$salida_unidad_ant,$salida_unidad_ven);
   }
 
 
@@ -13133,6 +13144,7 @@ function obtenerProveedor_presentacionAlmacen_nuevo(){
     //VENTAS
     $tipoPago="1,2,3,4";
     $sql="select sd.cod_material,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)VENTAS,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)VENTAS_COSTO  FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen join material_apoyo m on m.codigo_material=sd.cod_material where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($productos) and s.`cod_tiposalida`=1001 and s.`cod_almacen` in ($almacen) and s.salida_anulada=0 and s.cod_tipopago in ($tipoPago) and s.`fecha` BETWEEN '$fecha_ini' and '$fecha_fin' GROUP BY sd.cod_material";
+    //echo $sql;
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){    
        $ventas[$row['cod_material']]=$row['VENTAS'];

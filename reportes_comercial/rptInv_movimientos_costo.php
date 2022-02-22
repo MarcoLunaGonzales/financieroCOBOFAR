@@ -73,7 +73,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
           $cod_almacen=$row['cod_almacen'];
           $nombre_almacen=$row['nombre_almacen'];
           ?><script>document.getElementById('nombre_sucursal').innerHTML='Sucursal: <?=$nombre_almacen?>';</script><?php
-          $informacion=cargarValoresVentasYSaldosProductosArray_prodrotacion($cod_almacen,$fechai,$fechaf,$stringProductos);
+          $informacion=cargarValoresVentasYSaldosProductosArray_prodrotacionProducto($cod_almacen,$fechai,$fechaf,$stringProductos);
           $datosSucursal[$cod_almacen]=$informacion;
           $string_sucursales.=$cod_almacen.",";
         }
@@ -149,12 +149,14 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
 
           $totalIngresos_ant=$variable_ingresos_ant+($variable_ingresos_unidad_ant);
           $totalSalidas_ant=abs($variable_salidas_ant)+(abs($variable_salidas_unidad_ant)); 
-          $cantSaldo_ant=$totalIngresos_ant-$totalSalidas_ant;
 
-          $totalIngresos=$variable_ingresos+($variable_ingresos_unidad);
-          $totalSalidas=abs($variable_salidas)+(abs($variable_salidas_unidad));           
+          $cantSaldo_ant=($totalIngresos_ant-$totalSalidas_ant)*$costo_producto_ant;
+
+          $totalIngresos=$variable_ingresos_unidad;
+          $totalSalidas=abs($variable_salidas_unidad);           
           //VENTAS
-          $cantVentas=$variable_ventas+($variable_ventas_unidad);
+          //$cantVentas=$variable_ventas+($variable_ventas_unidad);
+          $cantVentas=$variable_ventas_unidad;
           $cantSaldo=+($totalIngresos+$cantSaldo_ant)-$totalSalidas-$cantVentas;
           if($cantSaldo<0){
             $cantSaldo=0;
@@ -162,10 +164,10 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
 
 
           
-          $valoradoSaldoIni=number_format($cantSaldo_ant*$costo_producto_ant,2,'.','');
-          $valoradoIngresos=number_format($totalIngresos*$costo_producto,2,'.','');
-          $valoradoTraspaso=number_format($totalSalidas*$costo_producto,2,'.','');
-          $valoradoVentas=number_format($cantVentas*$costo_producto,2,'.','');
+          $valoradoSaldoIni=number_format($cantSaldo_ant,2,'.','');
+          $valoradoIngresos=number_format($totalIngresos,2,'.','');
+          $valoradoTraspaso=number_format($totalSalidas,2,'.','');
+          $valoradoVentas=number_format($cantVentas,2,'.','');
           //$valoradoMes=number_format($cantSaldo*$costo_producto,2,'.','');
           $valoradoMes=number_format(($valoradoSaldoIni+$valoradoIngresos)-$valoradoTraspaso-$valoradoVentas,2,'.','');
           $totalValorado+=$valoradoMes; 

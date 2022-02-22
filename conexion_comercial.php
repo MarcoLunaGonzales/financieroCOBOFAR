@@ -4,7 +4,7 @@ error_reporting(0);
 // $dbh=mysqli_connect("p:10.10.1.232","isullcamani","B0l1v14.@1202**","farmaciasventas");
 
 //$dbh=mysqli_connect("p:10.10.1.11","dhuarina","B0l1v14.@1202","farmaciasventascostos");
-$dbh=mysqli_connect("p:10.10.1.11","dhuarina","B0l1v14.@1202","farmaciasventas100");
+$dbh=mysqli_connect("p:10.10.1.11","dhuarina","B0l1v14.@1202","farmaciasventas");
 
 if (mysqli_connect_errno())
 {

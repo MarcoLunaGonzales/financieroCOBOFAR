@@ -177,7 +177,7 @@ $totalValorado=0;$totalSaldoIni=0;$totalIngresosVal=0;$totalTraspasosVal=0;$tota
           $totalIngresosValGen+=$valoradoIngresos; 
           $totalTraspasosValGen+=$valoradoTraspaso; 
           $totalVentasValGen+=$valoradoVentas; 
-          $totalTraspasosVenValGen=$valoradoTraspasoVen; 
+          $totalTraspasosVenValGen+=$valoradoTraspasoVen; 
           
         }
         ?>

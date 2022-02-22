@@ -85,7 +85,6 @@ if($flagSuccess){
 	$flagSuccess=$stmtDescuentos->execute();    
 }
 
-
 if($flagSuccess){
     echo 1;
 }else echo 2;

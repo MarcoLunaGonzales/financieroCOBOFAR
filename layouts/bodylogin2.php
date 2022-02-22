@@ -85,10 +85,6 @@
   
 
   <!--ESTE ES EL DOCUMENTO DEL BODYLOGIN -->
-
-
-
-
   <script>
     $(document).ready(function() {
       // Initialise Sweet Alert library
@@ -236,27 +232,11 @@
             "scrollCollapse": true
         });
         
-             $('#tablePaginator').DataTable( {
+      $('#tablePaginator').DataTable( {
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
-            initComplete: function () {
-            // Apply the search
-            this.api().columns().every( function () {
-                var that = this;
-                if($("#area_solicitud_lista").length>0){
-                  $("#area_solicitud_lista").on( 'change', function () {
-                    if ( that.search() !== this.value ) {
-                        that.column(0).search( this.value ).draw();
-                    }
-                  });          
-                }
-            });
-            },
-            "ordering": false/*,
-             'scrollY': '70vh', 
-             'scrollCollapse': false,
-             "scrollX": false*/
+            "ordering": false
         } );
       
         $('#example').DataTable({
@@ -2371,11 +2351,6 @@
                 ]
               });
 
-
-
-
-
-
         var table_afxU=$('#tablePaginatorHeader').DataTable({
                 "paging":   false,
                   "info":     false,
@@ -2475,34 +2450,8 @@
                 ]
               });
 
-
-        $('.dataTable tbody').on('click', 'tr', function () {
-          $('.dataTable tbody tr').removeClass("fila_activa_color");
-          $(this).addClass("fila_activa_color");
-          var texto= $(this).text().replace(/ /g,'').replace(/\n/g,'').substr(0,70);
-          localStorage.ClassName = texto;
-         } );
-         SetClass();
-
     });
 
- 
-    function SetClass() {
-     //before assigning class check local storage if it has any value
-     $(".dataTable tbody tr").each(function(){
-         if($(this).text().replace(/ /g,'').replace(/\n/g,'').substr(0,70)==localStorage.ClassName){
-            $(this).addClass("fila_activa_color");
-         }
-      });
-     }
   </script>
-
-
-<script type="application/javascript">
-    $('input[type="file"]').change(function(e){
-        var fileName = e.target.files[0].name;
-        $('.custom-file-label').html(fileName);
-    });
-</script>
 </body>
 </html>

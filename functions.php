@@ -13063,8 +13063,6 @@ function obtenerProveedor_presentacionAlmacen_nuevo(){
     return $proveedor;     
   }
 
-
-
    function obtenerDescuentosGestionActiva($codigo,$cod_gestion,$cod_mes){
       $dbh = new Conexion();
       $stmt = $dbh->prepare("SELECT d.cod_descuento,d.monto 

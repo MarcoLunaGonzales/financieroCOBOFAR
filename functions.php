@@ -12381,7 +12381,7 @@ function reprocesar_costoventas_sucursales($fecha,$rpt_territorio){
    return $valor;
 }
 function reprocesar_costoventas_sucursales_2($fecha,$rpt_territorio){
-   $sql="SELECT sum((select ct.costo from costo_promedio_mes ct where ct.cod_material=sad.cod_material)*sad.cantidad_unitaria) as costo_venta
+   $sql="SELECT sum((select ct.costo_unitario from costoscobofar.costo_transaccion ct where ct.cod_material=sad.cod_material and ct.cod_documento=sa.cod_salida_almacenes and ct.cod_tipodocumento=0)*sad.cantidad_unitaria) as costo_venta 
       from salida_almacenes sa INNER JOIN salida_detalle_almacenes sad on sad.cod_salida_almacen=sa.cod_salida_almacenes
       where sa.fecha = '$fecha' and sa.cod_tiposalida=1001 and sa.salida_anulada=0 and sa.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
     where a.`cod_ciudad`='$rpt_territorio' and a.cod_tipoalmacen=1)";  
@@ -12390,7 +12390,6 @@ function reprocesar_costoventas_sucursales_2($fecha,$rpt_territorio){
    require("conexion_comercial.php");
    $resp=mysqli_query($dbh,$sql);
    while($row=mysqli_fetch_array($resp)){ 
-      
       $monto=number_format($row['costo_venta'],1,'.','');
       $valor+=$monto;
    } 
@@ -13076,6 +13075,29 @@ function obtenerProveedor_presentacionAlmacen_nuevo(){
   }
 
 
+
+   function obtenerDescuentosGestionActiva($codigo,$cod_gestion,$cod_mes){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT d.cod_descuento,d.monto 
+      from descuentos_personal_mes d join descuentos dd on d.cod_descuento=dd.codigo
+      where d.cod_gestion=$cod_gestion and d.cod_mes=$cod_mes and d.cod_personal=$codigo and d.cod_estadoreferencial=1 and dd.cod_estadoreferencial=1
+      order by d.cod_descuento");
+      $stmt->execute();
+      $array_descuentos=[];
+      
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $array_descuentos[$row['cod_descuento']]=$row['monto'];
+      }
+      //obtenemos anticipos
+      $stmt_anti = $dbh->prepare("SELECT monto from anticipos_personal where cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_personal=$codigo and cod_estadoreferencial=1");
+      $stmt_anti->execute();
+      while ($row_anti = $stmt_anti->fetch(PDO::FETCH_ASSOC)) {
+         $array_descuentos['1000']=$row_anti['monto'];
+      }
+      // var_dump($array_descuentos);
+      return $array_descuentos;
+   }
+
  function cargarValoresVentasYSaldosProductosArray_prodrotacionProducto($almacen,$fecha_ini,$fecha_fin,$productos){
     set_time_limit(0);
     $estilosVenta=1;
@@ -13154,6 +13176,7 @@ function obtenerProveedor_presentacionAlmacen_nuevo(){
     mysqli_close($enlaceCon);
     return array($ingresos,$ingresos_unidad,$salida,$salida_unidad,$ventas,$ventas_unidad,$ingresos_ant,$ingresos_unidad_ant,$salida_ant,$salida_unidad_ant);
 }
+
 
 
 ?>

@@ -123,8 +123,8 @@ if($sw==0){
         $stmtDet = $dbh_detalle->prepare($sqlDet);
         $stmtDet->execute();
         //fin comprobante detalle
-        $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
-        VALUES ('$codComprobanteDetalle', '$cod_plancuenta', '$monto_pago', '$proveedor', '$fecha_pago','$cod_solicitudrecursos','$cuentaAuxiliar')";
+        $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
+        VALUES ('$codComprobanteDetalle', '$cod_plancuenta', '$monto_pago', '$proveedor', '$fecha_pago','$cod_solicitudrecursos','$cuentaAuxiliar','$glosaDetalle')";
         //echo "<br>".$sqlDetalleEstadoCuenta."ECECEC";
         $stmtDetalleEstadoCuenta = $dbh_detalle->prepare($sqlDetalleEstadoCuenta);
         $stmtDetalleEstadoCuenta->execute();

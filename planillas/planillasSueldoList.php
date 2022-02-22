@@ -21,8 +21,7 @@ for ($i=0; $i <count($array_personal) ; $i++) {
   }  
 }
 
-
-
+$dbh = new Conexion();
 
 $cod_mes_global=$_SESSION['globalMes'];
 $nombre_mes=nombreMes($cod_mes_global);
@@ -38,7 +37,7 @@ while ($rowVerifPlani = $stmtVerifPlani->fetch(PDO::FETCH_ASSOC)) {
   $estado_planilla=$rowVerifPlani['cod_estadoplanilla'];
 }
 
-$dbh = new Conexion();
+
 $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,dias_trabajo,
 (select m.nombre from meses m where m.codigo=cod_mes)as mes,
 (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
@@ -257,10 +256,12 @@ $stmtAdmnin->bindColumn('dias_trabajo', $dias_trabajados);
             <?php
               if($usuario_admin==1){
               ?>
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalGenerarPlanilla">Registrar Planilla Actual (1)</button> 
-                <a href="bonos/descargarExcelGlobal.php" target="_blank" class="btn btn-warning"><span class="material-icons">download</span>Descargar Plantilla (2)</a>
-                <button class="btn btn-success" onClick="location.href='index.php?opcion=subirBonoExcel_global_from'"><span class="material-icons">file_upload</span>Cargar Plantilla (3)</button>
-                <button class="btn btn-rose" onClick="procesar_bonos_descuentos_planilla('<?=$nombre_mes?>','<?=$cod_mes_global?>','<?=$estado_planilla?>')"><span class="material-icons">sync</span>Procesar o reprocesar PLANTILLA (4)</button>
+                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalGenerarPlanilla">Registrar Planilla Actual (1)</button> 
+                <a href="bonos/descargarExcelGlobal.php" target="_blank" class="btn btn-warning btn-sm"><span class="material-icons">download</span>Descargar Plantilla (2)</a>
+                <button class="btn btn-success btn-sm" onClick="location.href='index.php?opcion=subirBonoExcel_global_from'"><span class="material-icons">file_upload</span>Cargar Plantilla (3)</button>
+                <a href="bonos/plantilla_sueldos_editar.php" target="_blank" class="btn btn-primary btn-sm"><span class="material-icons">edit</span>Editar Plantilla (3.1)</a>
+                
+                <button class="btn btn-rose btn-sm" onClick="procesar_bonos_descuentos_planilla('<?=$nombre_mes?>','<?=$cod_mes_global?>','<?=$estado_planilla?>')"><span class="material-icons">sync</span>Procesar o reprocesar PLANTILLA (4)</button>
               <?php
               }
               ?>

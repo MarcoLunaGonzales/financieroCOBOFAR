@@ -13176,5 +13176,20 @@ function obtenerProveedor_presentacionAlmacen_nuevo(){
 }
 
 
+ function obtenerMontoDetalleSalida($codigo){
+       $sql="select  sum(s.`monto_unitario` ) as monto
+    from salida_detalle_almacenes s
+    where s.cod_salida_almacen='$codigo' ";
+     //echo $sql;
+     $valor=0;
+     require("conexion_comercial_oficial.php");
+     $resp=mysqli_query($dbh,$sql);
+     while($row=mysqli_fetch_array($resp)){ 
+         $valor=redondearDecimal($row['monto']);
+     } 
+     mysqli_close($dbh);
+     return $valor;
+   }
+
 
 ?>

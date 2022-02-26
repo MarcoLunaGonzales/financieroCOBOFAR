@@ -91,6 +91,12 @@ if($sw_auxiliar==0){//distribucion de sueldos cuadrando
         $fechaHoraActual=$gestionTrabajo."-".$codMesActiva."-".$diaUltimo." ".$horasActual;
       } 
     }
+
+
+     //indicamos que ya se realizo el comprbante      
+      $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas set comprobante=1 where codigo=$codigo_planilla");
+      $stmtUdatePlanilla->execute();
+
    $ordenDetalle=1;//
    $nroCorrelativo=numeroCorrelativoComprobante($gestionTrabajo,$globalUnidad_ofcen,$tipoComprobante,$codMesActiva);
    //$numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $globalUnidad_ofcen, $gestionTrabajo, $mesTrabajo);

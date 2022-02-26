@@ -14,7 +14,55 @@ $codGestionActiva=$_SESSION['globalGestion'];
 $cod_mes=$_SESSION['globalMes'];
 $nombre_mes=nombreMes($cod_mes);
 
-?>
+
+$estado_planilla=0;
+$sql="SELECT cod_estadoplanilla from planillas where cod_mes=$cod_mes and cod_gestion=$codGestionActiva";
+// echo $sql; 
+$stmtVerifPlani=$dbh->prepare($sql);
+$stmtVerifPlani->execute();
+$estado_planilla=0;
+while ($rowVerifPlani = $stmtVerifPlani->fetch(PDO::FETCH_ASSOC)) {
+  $estado_planilla=$rowVerifPlani['cod_estadoplanilla'];
+}
+
+if($estado_planilla==0){ // registrar plaanilla mes 
+  ?>
+  <script type="text/javascript">
+    Swal.fire({
+        title: 'A ocurrido un error :(',
+        text: "Registre la PLANILLA del mes en curso, Gracias.",
+        type: 'warning',
+        confirmButtonClass: 'btn btn-warning',
+        confirmButtonText: 'Aceptar',
+        buttonsStyling: false
+        }).then((result) => {
+          if (result.value) {
+            window.close();
+            return(false);
+          } 
+        });
+   </script>
+<?php
+}else{
+  if($estado_planilla==3){//planilla cerrada 
+    ?>
+    <script type="text/javascript">
+      Swal.fire({
+        title: 'LO SIENTO :("',
+        text: "La Planilla No se encuentra disponible.",
+        type: 'error',
+        confirmButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Aceptar',
+        buttonsStyling: false
+        }).then((result) => {
+          if (result.value) {
+            window.close();
+            return(false);
+          } 
+      });
+     </script>
+    <?php
+  }else{ ?>
 
 <div class="content">
   <div class="container-fluid">
@@ -26,10 +74,7 @@ $nombre_mes=nombreMes($cod_mes);
               <img class="" width="40" height="40" src="../assets/img/favicon.png">
             </div>
             <h3 class="card-title text-center"><b>Plantilla Sueldos<br>Mes : <?=$nombre_mes?> - <?=$nombreGestion?></b></h3>
-            
-            
           </div>
-          
           <div class="card-body">
             <div class="table-responsive">
               <table id="tablePaginatorHeaderFooter" class="table table-bordered table-condensed table-striped " style="width:100%">
@@ -68,7 +113,7 @@ $nombre_mes=nombreMes($cod_mes);
                 <tbody>
                   <?php
                   $index=0;
-                   $sql="select p.codigo,a.nombre as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,k.cod_gestion,k.cod_mes,k.faltas,k.faltas_sin_descuento,k.dias_vacacion,k.dias_trabajados,k.domingos_trabajados_normal,k.feriado_normal,k.noche_normal,k.domingo_reemplazo,k.feriado_reemplazo,k.ordianrio_reemplazo,k.hxdomingo_extras,k.hxferiado_extras,k.hxdnnormal_extras,k.reintegro,k.obs_reintegro
+                   $sql="SELECT p.codigo,a.nombre as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,k.cod_gestion,k.cod_mes,k.faltas,k.faltas_sin_descuento,k.dias_vacacion,k.dias_trabajados,k.domingos_trabajados_normal,k.feriado_normal,k.noche_normal,k.domingo_reemplazo,k.feriado_reemplazo,k.ordianrio_reemplazo,k.hxdomingo_extras,k.hxferiado_extras,k.hxdnnormal_extras,k.reintegro,k.obs_reintegro
                   from personal_kardex_mes k join personal p on p.codigo=k.cod_personal join areas a on p.cod_area=a.codigo
                   where k.cod_gestion=$codGestionActiva and k.cod_mes=$cod_mes and k.cod_estadoreferencial=1 
                   order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
@@ -427,3 +472,12 @@ $nombre_mes=nombreMes($cod_mes);
     });    
   });
 </script>
+
+<?php
+
+
+  }
+}
+
+
+?>

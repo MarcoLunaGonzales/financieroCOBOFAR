@@ -21,6 +21,17 @@ $cod_planilla=$_POST['cod_planilla'];
 $cod_estadoplanilla=$_POST['sw'];
 $sw=$_POST['sw'];
 
+
+$cod_mes=$_SESSION['globalMes'];
+$nombreGestion=$_SESSION['globalNombreGestion'];
+
+$cod_mes = str_pad($cod_mes, 2, "0", STR_PAD_LEFT);//
+$fecha_inicio=$nombreGestion.'-'.$cod_mes.'-01';
+$fecha_final=date('Y-m-t',strtotime($fecha_inicio));
+
+
+
+
 // if($sw==2){
 // 	$nombre_gestion_x=$_SESSION['globalNombreGestion'];
 // 	$cod_mes_x=$_SESSION['globalMes'];
@@ -83,7 +94,6 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	$aporte_solidario_25000 = 0;
 	$aporte_solidario_35000 = 0;
 	$RC_IVA = 0;
-
 	$atrasos = 0;
 	$anticipo = 0;
 	$dotaciones=0;
@@ -110,12 +120,29 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	// fin de valores de configruacion
 	$correlativo_planilla=1;
 	//============select del personal
-	$sql = "SELECT p.identificacion,p.codigo,p.haber_basico,p.cod_grado_academico,
+	// $sql = "SELECT p.identificacion,p.codigo,p.haber_basico,p.cod_grado_academico,
+	// (Select pga.porcentaje from personal_grado_academico pga where pga.codigo=p.cod_grado_academico) as p_grado_academico,  
+	// p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.turno
+	// from personal p join areas a on p.cod_area=a.codigo
+	// where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1
+	// order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
+
+$sql="SELECT p.identificacion,p.codigo,p.haber_basico,p.cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=p.cod_grado_academico) as p_grado_academico,  
-	p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.turno
+	p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno
 	from personal p join areas a on p.cod_area=a.codigo
 	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1
-	order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
+
+	UNION
+	
+ 	select p.identificacion,p.codigo,p.haber_basico,p.cod_grado_academico,
+	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=p.cod_grado_academico) as p_grado_academico,  
+	p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno
+	from personal p join personal_retiros pr on p.codigo=pr.cod_personal 
+	join areas a on p.cod_area=a.codigo
+	where pr.fecha_retiro BETWEEN '$fecha_inicio' and '$fecha_final' 
+	order by cod_unidadorganizacional,area,turno,paterno";
+
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
@@ -130,7 +157,6 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 	$stmtPersonal->bindColumn('turno', $turno);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-
 		if($cuenta_bancaria>0){
 			$cuenta_habilitada=1;
 		}else{

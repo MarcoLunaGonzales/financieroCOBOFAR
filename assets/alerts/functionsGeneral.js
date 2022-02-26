@@ -5285,12 +5285,12 @@ function agregaformEditEva(datos){
   document.getElementById("codigo_contratoEv").value=d[1];
   document.getElementById("fecha_EvaluacionEv").value=d[3];
 }
-function agregaformRetiroPersonal(datos,indice){
+function agregaformRetiroPersonal(datos){
   //console.log("datos: "+datos);
   var d=datos.split('/');
   document.getElementById("codigo_personalR").value=d[0];
   document.getElementById("codigo_contratoR").value=d[1];
-  document.getElementById("indiceR").value=indice;
+  // document.getElementById("indiceR").value=indice;
 
   // document.getElementById("cod_areaE").value=d[2];
   // document.getElementById("porcentajeE").value=d[3];
@@ -5373,10 +5373,6 @@ function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones,
         }else{
           alerts.showSwal('success-message','index.php?opcion=personalLista');
         }
-        
-        
-
-        
       }else{
         if(r==2){
           // alerts.showSwal('error-message6','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
@@ -19854,12 +19850,12 @@ function abrir_detalle_modal(codigo,cod_sucursal){
 }
 
 function redireccionarIngresosAlmacenAnt(cod_personal){
-  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
+  // window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
   //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php?p='+cod_personal, '_blank'); 
 }
 
 function pendientes_ingreso_almacen_ant(){
-  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php', '_blank'); 
+  // window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php', '_blank'); 
   //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
 }
 function redireccionarIngresosAlmacen_nuevo(cod_personal){ 

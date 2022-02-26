@@ -131,6 +131,7 @@ $fecha_actual=date("d/m/Y");
                                   if($fecha_fincontrato_x=="INDEFINIDO"){
                                     $fecha_fincontrato=$fecha_fincontrato_x;
                                     $label='<span class="badge badge-success">';
+                                    $labelEvaluacion='<span>';
                                     //fecha evaluacion
                                     $porcionesEvaluacion = explode("/", $fecha_evaluacioncontrato);
                                     $anioEvaluacion= $porcionesEvaluacion[2]; // porción1
@@ -161,6 +162,7 @@ $fecha_actual=date("d/m/Y");
                                     $anioFin= $porcionesFin[2]; // porción1
                                     $mesFin= $porcionesFin[1]; // porción2 
                                     $diaFin= $porcionesFin[0]; // porción2
+
                                     if($anioActual==$anioFin){
                                       if($mesActual-$mesFin==-1){
                                         $label='<span class="badge badge-warning">';
@@ -220,15 +222,14 @@ $fecha_actual=date("d/m/Y");
                                     <i class="material-icons" style="color:#464f55" title="Editar Fecha Revisión">notifications</i>
                                   </button>
                                 <?php }?>
-                                  
                                 </td>
                                 <td><?=$labelEstado.$estado_contrato."</span>";?></td>
                                 <td><?=$fecha_finalizado;?></td>
                                 <td class="td-actions text-right">
                                   <?php
                                   if($cod_estadocontrato==1){ ?>
-                                  	<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalContratoFin" onclick="agregaContratoFin('<?=$datos;?>')">
-                                      <i class="material-icons" title="Finalizar Contrato">play_for_work</i>
+                                  	<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
+                                      <i class="material-icons" title="Finalizar Contrato & Retirar Personal">play_for_work</i>
                                     </button>
                                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaformPCE('<?=$datos;?>')">
                                   		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>
@@ -241,7 +242,7 @@ $fecha_actual=date("d/m/Y");
                                       <button class="btn btn-primary" onClick="location.href='<?=$urlFormFiniquitos;?>&codigo=0&codigo_contrato=<?=$codigo_contrato?>'"><i class="material-icons" title="Registrar Finiquito">play_for_work</i></button>
                                     <?php }elseif($cod_finiquito==null && $cod_tipocontrato==$cod_contradoidefinido){?>
                                       <button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>',2)">
-                                        <i class="material-icons" title="Retirar Personal y Registrar Finiquito">play_for_work</i>
+                                        <i class="material-icons" title="Registrar Finiquito 2">play_for_work</i>
                                      </button>
                                     <?php }
                                   }?>
@@ -257,17 +258,10 @@ $fecha_actual=date("d/m/Y");
               <div class="card-footer fixed-bottom">
                 <?php
                 if($globalAdmin==1){
-                ?>            
+                ?>
                   <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarC" onclick="agregaformPC('<?=$datos;?>')">
                       <i class="material-icons" title="Agregar Contrato">add</i>
   		             </button>
-                   <?php
-                   if($sw_control_retiros==0){?>
-                     <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>',1)">
-                      <i class="material-icons" title="Retirar Personal">play_for_work</i>
-                   </button>                             
-                   <?php } ?>
-                  
                 <?php
                 }
                 ?>
@@ -333,9 +327,8 @@ $fecha_actual=date("d/m/Y");
         <input type="hidden" name="codigo_personalB" id="codigo_personalB" value="0">
         <input type="hidden" name="codigo_contratoB" id="codigo_contratoB" value="0">
         <P align="center">
-             <b>POR FAVOR, VERIFIQUE QUE NO ESTÉ VIGENTE (Finalice Contrato).</b><br> ¿Deseas Continuar?
+          <b>POR FAVOR, VERIFIQUE QUE NO ESTÉ VIGENTE (Finalice Contrato).</b><br> ¿Deseas Continuar?
         </P>
-        
       </div>       
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EliminarPC" data-dismiss="modal">Aceptar</button>
@@ -406,7 +399,7 @@ $fecha_actual=date("d/m/Y");
     </div>
   </div>
 </div>
-<!-- finalizar contrato-->
+<!-- finalizar contrato *****************************************--> 
 <div class="modal fade" id="modalContratoFin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
@@ -433,7 +426,7 @@ $fecha_actual=date("d/m/Y");
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Retirar Personal</h4>
+        <h4 class="modal-title" id="myModalLabel">Finalizar Contrato & Retirar Personal</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personalR" id="codigo_personalR" value="0">
@@ -463,7 +456,7 @@ $fecha_actual=date("d/m/Y");
           <label class="col-sm-3 col-form-label" style="color:#424242"> Observación : </label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input class="form-control" type="text" name="observaciones" id="observaciones" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+              <input class="form-control" type="text" name="observaciones" id="observaciones"/>
             </div>
           </div>
         </div>

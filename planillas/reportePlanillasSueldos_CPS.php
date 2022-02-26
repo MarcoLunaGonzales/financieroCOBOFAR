@@ -42,7 +42,7 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
 <table class="table table-bordered table-condensed" width="100%" align="center"  id="tablePaginatorFixedPlanillaSueldo_otros">
     <thead>
       <tr class="table-title small bold text-center">                  
-        <td>N°</td> 
+        <td >N°</td> 
         <td>DES</td> 
         <td>CI</td>
         <td>EXT</td>

@@ -2234,6 +2234,8 @@
               extend: 'csv',
               text:      '<i class="material-icons">list_alt</i>',
               titleAttr: 'CSV',
+              charset: 'UTF-8',
+              bom: true,
               title: 'Planilla Sueldos Personal',
               fieldBoundary: '',
             fieldSeparator: ';',

@@ -9,7 +9,7 @@ $estilosVenta=1;
 $fecha_reporte=date("d/m/Y");
 $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 $sql_tipo_ingreso="select nombre_tipoingreso from tipos_ingreso where cod_tipoingreso='1003'";
-$resp_tipo_ingreso=mysqli_query($enlaceCon,$sql_tipo_ingreso);
+$resp_tipo_ingreso=mysqli_query($dbh,$sql_tipo_ingreso);
 $datos_tipo_ingreso=mysqli_fetch_array($resp_tipo_ingreso);
 $nombre_tipoingreso=$datos_tipo_ingreso[0];
 
@@ -43,7 +43,7 @@ if($tipo==3){
 		) l  where origen>0 order by l.fecha_ingreso desc;";
 
 	//echo $sql;
-	$resp=mysqli_query($enlaceCon,$sql);
+	$resp=mysqli_query($dbh,$sql);
 	echo "<p>Los Traspasos Ingresados fuera de las $titulo_perido Están marcados con <b style='color:#FF5733'>color rojo</b><p>";
 	echo "<center><br>
 	<table class='table table-condensed table-bordered' width='100%'>";

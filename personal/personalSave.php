@@ -65,9 +65,6 @@ try {
     $turno=$_POST['turno'];
     $tipo_trabajo=$_POST['tipo_trabajo'];
 
-
-
-
     $noche_pactado=$_POST['noche_pactado'];
     $domingo_pactado=$_POST['domingo_pactado'];
     $feriado_pactado=$_POST['feriado_pactado'];
@@ -81,12 +78,17 @@ try {
     $cod_cajasalud=$_POST['cod_cajasalud'];
 
 
-
-
-
     $created_by = $globalUser;
     $modified_by = $globalUser;
     $cod_estadoreferencial=1;
+    //contrato
+    $cod_tipocontrato=1;//tipo contrato indefinido
+    $val_conf_meses_alerta_indef=obtenerValorConfiguracion(12);
+    $fecha_fincontrato="INDEFINIDO";
+    $fecha_evaluacioncontrato_x= date("Y-m-d",strtotime($ing_planilla."+ ".$val_conf_meses_alerta_indef." month")); 
+    $fecha_evaluacioncontrato = date("Y-m-d",strtotime($fecha_evaluacioncontrato_x."- 1 days")); 
+
+
     $porcentaje=100;
     if($codigo==0){
         $codigo=obtenerCodigoPersonal();
@@ -98,6 +100,11 @@ try {
         $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_uo,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 
         values ('$codigo','$cod_unidadorganizacional','$cod_area','$porcentaje','$cod_estadoreferencial','$created_by','$modified_by')");
         $stmtDistribucion->execute(); 
+        //insertamos el contrato indefinido
+
+        $stmtDistribucion = $dbh->prepare("INSERT INTO personal_contratos(cod_personal, cod_tipocontrato, fecha_iniciocontrato,fecha_fincontrato, fecha_evaluacioncontrato, cod_estadoreferencial, cod_estadocontrato) values('$codigo','$cod_tipocontrato','$ing_planilla','$fecha_fincontrato','$fecha_evaluacioncontrato','1','1')");
+        $stmtDistribucion->execute(); 
+
         //actualizamos la parte de personal discapacitado
         if($tipo_persona_discapacitado==0){
             $fecha_nac_persona_dis=null;
@@ -171,19 +178,24 @@ try {
         //sacamos el id de area distribucion area distribucion
         $stmtPer = $dbhS->prepare("SELECT codigo 
                 from personal_area_distribucion 
-                where cod_personal=:cod_personal ORDER BY 1 DESC");
-        $stmtPer->bindParam(':cod_personal', $codigo);
+                where cod_personal='$codigo' ORDER BY 1 DESC");
         $stmtPer->execute();
         $resultPer=$stmtPer->fetch();
         $codigo_areaDP=$resultPer['codigo'];
         $stmtDistribucion = $dbh->prepare("UPDATE personal_area_distribucion 
-            set cod_uo=:cod_uo,cod_area=:cod_area,porcentaje=:porcentaje,monto=:haber_basico where codigo=:codigo_areaDP");
-        $stmtDistribucion->bindParam(':codigo_areaDP', $codigo_areaDP);
-        $stmtDistribucion->bindParam(':cod_uo', $cod_unidadorganizacional); 
-        $stmtDistribucion->bindParam(':cod_area', $cod_area); 
-        $stmtDistribucion->bindParam(':porcentaje', $porcentaje);            
-        $stmtDistribucion->bindParam(':haber_basico', $haber_basico);   
-        $stmtDistribucion->execute();     
+            set cod_uo='$cod_unidadorganizacional',cod_area='$cod_area',porcentaje='$porcentaje',monto='$haber_basico' where codigo=$codigo_areaDP");
+        $stmtDistribucion->execute();
+        //actualizamos contrato
+        $stmtPer = $dbhS->prepare("SELECT codigo 
+                from personal_contratos 
+                where cod_personal=$codigo and cod_estadoreferencial=1 and cod_estadocontrato=1");
+        $stmtPer->execute();
+        $resultPer=$stmtPer->fetch();
+        $codigo_contrato=$resultPer['codigo'];
+        $stmtUContrato = $dbh->prepare("UPDATE personal_contratos set fecha_iniciocontrato='$ing_planilla', fecha_evaluacioncontrato='$fecha_evaluacioncontrato' where codigo=$codigo_contrato");  
+        $stmtUContrato->execute();
+
+
         //actualizamos la parte de personal discapacitado        
         $stmtDiscapacitado = $dbh->prepare("UPDATE personal_discapacitado set tipo_persona_discapacitado = :tipo_persona_discapacitado,
             nro_carnet_discapacidad=:nro_carnet_discapacidad,fecha_nac_persona_dis=:fecha_nac_persona_dis,cod_estadoreferencial=:cod_estadoreferencial

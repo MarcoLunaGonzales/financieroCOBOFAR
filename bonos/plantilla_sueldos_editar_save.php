@@ -51,7 +51,7 @@ $flagSuccess=$stmtKardex->execute();
 if($flagSuccess){
 	//**INGRESAMOS ANTICIPOS
 	$sql="UPDATE anticipos_personal set  monto='$anticipo_e'
-	where cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1";
+	where cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1 and cod_personal='$codigo_e'";
 	// echo $sql;
 	$stmtAnticipos = $dbh->prepare($sql);
 	$flagSuccess=$stmtAnticipos->execute();

@@ -12688,9 +12688,9 @@ function AjaxGestionFechaHasta(cod_gestion){
   contenedor = document.getElementById('div_contenedor_fechaH');
   ajax=nuevoAjax();
   if($("#reporteEgreso").length>0||$("#reporteIngreso").length>0){
-    ajax.open('GET', '../reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);
+    ajax.open('GET', '../reportes/GestionHastaAjax.php?cod_gestion='+cod_gestion,true);
   }else{
-    ajax.open('GET', 'reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);
+    ajax.open('GET', 'reportes/GestionHastaAjax.php?cod_gestion='+cod_gestion,true);
   }
   
   ajax.onreadystatechange=function() {
@@ -12723,7 +12723,7 @@ function AjaxGestionFechaHastaMes(cod_gestion){
   var contenedor; 
   contenedor = document.getElementById('div_contenedor_fechaH');
   ajax=nuevoAjax();
-  ajax.open('GET', 'reportes/GestionhastaAjaxMes.php?cod_gestion='+cod_gestion,true);
+  ajax.open('GET', 'reportes/GestionHastaAjaxMes.php?cod_gestion='+cod_gestion,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
@@ -20039,7 +20039,31 @@ function guardar_edit_plantilla_sueldos(codigo_e,cod_gestion_e,cod_mes_e,dias_tr
         alerts.showSwal('success-message','plantilla_sueldos_editar.php');
         // Swal.fire("Se procedió con el cambio!", "Por favor actualizar Página.", "success");        
       }else{
-        Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
+        Swal.fire("A ocurrido un error!", "No se pudo Editar la plantilla.", "warning");        
+      }
+    }
+  });
+}
+
+function agregardatosModal_configuracionComercial(datos){  
+  var d=datos.split('/');
+ 
+  document.getElementById("cod_ciudad").value=d[0];
+  document.getElementById("nombre").value=d[1];
+  document.getElementById("nombre_cuenta").value=d[2];
+  document.getElementById("nombre_cuenta2").value=d[3];
+}
+
+function guardar_edit_configuracionComercial(cod_ciudad,cod_cuentaBancaria,cod_cuentaBancaria2){
+  $.ajax({
+    type:"POST",
+    data:"cod_ciudad="+cod_ciudad+"&cod_cuentaBancaria="+cod_cuentaBancaria+"&cod_cuentaBancaria2="+cod_cuentaBancaria2,
+    url:"ingresos_sucursales/configuraciones_cuentas_save.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=rpt_configuraciones_comercial');
+      }else{
+        Swal.fire("A ocurrido un error!", "No se pudo editar la cuenta Bancaria.", "warning");        
       }
     }
   });

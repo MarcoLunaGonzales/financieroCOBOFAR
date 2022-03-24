@@ -62,7 +62,6 @@ $hora_rptinidefault=date('H:m');
 						  
 						</div>
 				  </div>
-				
 				  <label class="col-sm-2 col-form-label">Fecha Ingreso</label>
 				  <div class="col-sm-2">
 						<div class="form-group">
@@ -77,7 +76,7 @@ $hora_rptinidefault=date('H:m');
 				</div>
 
 				<div class="row">
-				  <label class="col-sm-2 col-form-label">Observaciones</label>
+				  <label class="col-sm-2 col-form-label">Motivo</label>
 				  <div class="col-sm-8">
 						<div class="form-group">
 						  <INPUT  type='text' class='form-control'  id='observaciones' name='observaciones' required>

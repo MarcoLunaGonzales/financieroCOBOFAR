@@ -21,7 +21,6 @@ $fecha_pago=date("Y-m-d H:i:s");
 $flagSuccess=false;
 $sw=verificar_relacion_comprobante_ingresoAlm($codigo);
 if($sw==0){
-    $codComprobante=obtenerCodigoComprobante();
     $anioActual=date("Y");
     $mesActual=date("m");
     $diaActual=date("d");
@@ -46,6 +45,13 @@ if($sw==0){
     $unidadSol=$globalUnidad;
     $areaSol=$globalArea;
 
+    $sw_comprobante=0;
+    while ($sw_comprobante==0) {
+        $codComprobante=obtenerCodigoComprobante();    
+        if(verificarExistenciaComprobante($codComprobante)==0){
+            $sw_comprobante=1;
+        }
+    }
     $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) 
     VALUES ('$codComprobante', '1', '$globalUnidad', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fecha_pago', '$globalUser')";
     $stmtInsert = $dbh->prepare($sqlInsert);

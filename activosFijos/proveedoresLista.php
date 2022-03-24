@@ -26,8 +26,6 @@ $stmt->bindColumn('telefono', $telefono);
 $stmt->bindColumn('email', $email);
 $stmt->bindColumn('personacontacto', $personacontacto);
 
-
-
 ?>
 
 <div class="content">
@@ -96,8 +94,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
               if($globalAdmin==1){
               ?>
       				<div class="card-footer fixed-bottom">
-                    <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
-                    <!-- <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegistrarProv;?>&codigo=0'">Registrar</button> -->
+                    
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegistrarProv;?>&codigo=0'">Registrar</button>
               </div>
               <?php
               }

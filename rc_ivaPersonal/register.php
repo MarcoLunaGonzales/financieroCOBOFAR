@@ -48,7 +48,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 							  	<option disabled selected value="">Persona</option>
 							  	<?php
 								  $stmt = $dbh->prepare("select p.codigo as codigo, concat(p.paterno,' ', p.materno, ' ', p.primer_nombre) as nombrepersona from personal p 
-								  where p.codigo not in 
+								  where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1 and p.codigo not in 
 								  (select d.cod_personal from rc_ivapersonal d where 
 								  d.cod_mes=$codMes and d.cod_gestion=$codGestion) ORDER BY p.paterno");
 								$stmt->execute();

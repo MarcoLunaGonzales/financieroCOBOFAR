@@ -103,8 +103,8 @@ if ($codigo > 0){
     $archivo = "activosfijos/imagenes/".$imagen;//sale mal
 
     //asignaciones
-    $query2 = "SELECT * FROM v_activosfijos_asignaciones where codigo = ".$codigo;
-    $statement2 = $dbh->query($query2);
+    // $query2 = "SELECT * FROM v_activosfijos_asignaciones where codigo = ".$codigo;
+    // $statement2 = $dbh->query($query2);
 
     $variableDisabled="true";
 } else {
@@ -161,11 +161,11 @@ if ($codigo > 0){
 //echo $variableDisabled;
 ?>
 <div class="content">
-	<div class="container-fluid">
+    <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
                 <form id="form1" class="form-horizontal" action="<?=$urlSave6;?>" method="post"  enctype="multipart/form-data">
-        			<div class="card">
+                    <div class="card">
                         <div class="card-header <?=$colorCard;?> card-header-text">
                             <div class="card-text">
                               <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?> <?=$moduleNameSingular6;?></h4>
@@ -228,23 +228,23 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Tipo Alta</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                    				<select name="tipoalta" id="tipoalta" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required="true">
+                                    <select name="tipoalta" id="tipoalta" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required="true">
                                     <!--<select name="tipoalta" id="tipoalta" class="selectpicker " data-style="select-with-transition">-->
-                    					<option <?php if("NUEVO" == $tipoalta) echo "selected"; ?> value="NUEVO">NUEVO</option>
-                    					<option <?php if("USADO" == $tipoalta) echo "selected"; ?> value="USADO">USADO</option>
-                    				</select>
+                                        <option <?php if("NUEVO" == $tipoalta) echo "selected"; ?> value="NUEVO">NUEVO</option>
+                                        <option <?php if("USADO" == $tipoalta) echo "selected"; ?> value="USADO">USADO</option>
+                                    </select>
                                 </div>
                                 </div><!--fin campo tipoalta -->
 
                                 <label class="col-sm-2 col-form-label">Rubro</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                            		<select name="cod_depreciaciones" id="cod_depreciaciones" onchange="ajaxCodigoActivo(this);" required="true" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true">
-                            			<option disabled selected value=""></option>
-                                		<?php while ($row = $statementDepre->fetch()){ ?>
-                            				<option <?php if($cod_depreciaciones == $row["codigo"]) echo "selected"; ?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                            			<?php } ?>
-                            		</select>
+                                    <select name="cod_depreciaciones" id="cod_depreciaciones" onchange="ajaxCodigoActivo(this);" required="true" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true">
+                                        <option disabled selected value=""></option>
+                                        <?php while ($row = $statementDepre->fetch()){ ?>
+                                            <option <?php if($cod_depreciaciones == $row["codigo"]) echo "selected"; ?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <?php } ?>
+                                    </select>
                                     </div>
                                 </div>
                             </div><!--fin campo cod_depreciaciones -->
@@ -264,7 +264,7 @@ if ($codigo > 0){
                                                 <option <?php if($cod_tiposbienes == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["tipo_bien"];?></option>
                                             <?php } ?>
                                         </select>
-                            		
+                                    
                                     </div>
                                 </div>
                                 </div>
@@ -311,14 +311,14 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Estado Bien</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                    				<select name="estadobien" name="estadobien" class="selectpicker form-control form-control-sm" data-style="btn btn-primary">
-                    					<option <?php if("NUEVO" == $estadobien) echo "selected"; ?> value="NUEVO">NUEVO</option>
-                    					<option <?php if("BUENO" == $estadobien) echo "selected"; ?> value="BUENO">BUENO</option>
-                    					<option <?php if("REGULAR" == $estadobien) echo "selected"; ?> value="REGULAR">REGULAR</option>
-                    					<option <?php if("MALO" == $estadobien) echo "selected"; ?> value="MALO">MALO</option>
-                    					<option <?php if("OBSOLETO" == $estadobien) echo "selected"; ?> value="OBSOLETO">OBSOLETO</option>
-                    					<option <?php if("PESIMO" == $estadobien) echo "selected"; ?> value="PESIMO">PESIMO</option>
-                    				</select>
+                                    <select name="estadobien" name="estadobien" class="selectpicker form-control form-control-sm" data-style="btn btn-primary">
+                                        <option <?php if("NUEVO" == $estadobien) echo "selected"; ?> value="NUEVO">NUEVO</option>
+                                        <option <?php if("BUENO" == $estadobien) echo "selected"; ?> value="BUENO">BUENO</option>
+                                        <option <?php if("REGULAR" == $estadobien) echo "selected"; ?> value="REGULAR">REGULAR</option>
+                                        <option <?php if("MALO" == $estadobien) echo "selected"; ?> value="MALO">MALO</option>
+                                        <option <?php if("OBSOLETO" == $estadobien) echo "selected"; ?> value="OBSOLETO">OBSOLETO</option>
+                                        <option <?php if("PESIMO" == $estadobien) echo "selected"; ?> value="PESIMO">PESIMO</option>
+                                    </select>
                                 </div>
                                 </div><!--fin campo estadobien -->
                                 <label class="col-sm-2 col-form-label">Tipo Activo</label>
@@ -491,12 +491,12 @@ if ($codigo > 0){
                             <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
                             <a href="?opcion=activosfijosLista" class="<?=$buttonCancel;?>">Volver</a>
                         </div>
-        			</div>
+                    </div>
                 </form>
-    		</div>
+            </div>
         </div>
-	
-	</div>
+    
+    </div>
 </div>
 
 <!-- carga de proveedores -->

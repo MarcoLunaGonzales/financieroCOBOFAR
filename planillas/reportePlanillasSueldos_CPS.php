@@ -66,10 +66,11 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
         <td>MOVILIDAD</td>
         <td>REFRIGERIO</td>
         <td>TOTAL GANADO</td>
-        <td>AP VEJEZ</td>
-        <td>RIESGO PROF</td>
-        <td>COM AFP</td>
-        <td>APO SOL</td>
+        <td>AP VEJEZ 10%</td>
+        <td>RIESGO PROF 1.71%</td>
+        <td>COM AFP 0.5%</td>
+        <td>APO SOL 0.5%</td>
+        <td>APO SOL 13</td>
         <td>RC IVA</td>
         <td>ANTICIPOS</td>
         <td>PRESTAMOS</td>
@@ -90,9 +91,7 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
       
 
       $sql = "SELECT a.nombre,p.identificacion,( select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision)as lugar_emision,p.fecha_nacimiento,p.paterno,p.materno,p.primer_nombre,
-      (select c.nombre from cargos c where c.codigo=p.cod_cargo)as cargo,p.ing_planilla,ppm.dias_trabajados,ppm.haber_basico,ppm.haber_basico_pactado,ppm.bono_antiguedad,ppm.total_ganado,ppm.afp_1,ppm.afp_2,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,pp.rc_iva,ppm.liquido_pagable,pp.riesgo_profesional,
-
-
+      (select c.nombre from cargos c where c.codigo=p.cod_cargo)as cargo,p.ing_planilla,ppm.dias_trabajados,ppm.haber_basico,ppm.haber_basico_pactado,ppm.bono_antiguedad,ppm.total_ganado,ppm.afp_1,ppm.afp_2,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,pp.rc_iva,ppm.liquido_pagable,pp.riesgo_profesional,ppm.monto_descuentos,pp.seguro_de_salud,
       (select bm.monto from bonos_personal_mes bm where bm.cod_bono=11 and bm.cod_estadoreferencial=1 and bm.cod_personal=p.codigo and bm.cod_gestion=$cod_gestion and bm.cod_mes=$cod_mes) as bnoches,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=12 and bm.cod_estadoreferencial=1 and bm.cod_personal=p.codigo and bm.cod_gestion=$cod_gestion and bm.cod_mes=$cod_mes) as bdomingos,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=13 and bm.cod_estadoreferencial=1 and bm.cod_personal=p.codigo and bm.cod_gestion=$cod_gestion and bm.cod_mes=$cod_mes) as bferiados,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=14 and bm.cod_estadoreferencial=1 and bm.cod_personal=p.codigo and bm.cod_gestion=$cod_gestion and bm.cod_mes=$cod_mes) as bmovilidad,(select sum(bm.monto) from bonos_personal_mes bm where bm.cod_bono in (15,16) and bm.cod_estadoreferencial=1 and bm.cod_personal=p.codigo and bm.cod_gestion=$cod_gestion and bm.cod_mes=$cod_mes) as brefrig,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=17 and bm.cod_estadoreferencial=1 and bm.cod_personal=p.codigo and bm.cod_gestion=$cod_gestion and bm.cod_mes=$cod_mes) as breintegro,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=18 and bm.cod_estadoreferencial=1 and bm.cod_personal=p.codigo and bm.cod_gestion=$cod_gestion and bm.cod_mes=$cod_mes) as bventas,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=19 and bm.cod_estadoreferencial=1 and bm.cod_personal=p.codigo and bm.cod_gestion=$cod_gestion and bm.cod_mes=$cod_mes) as bfallo,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=20 and bm.cod_estadoreferencial=1 and bm.cod_personal=p.codigo and bm.cod_gestion=$cod_gestion and bm.cod_mes=$cod_mes) as bextras,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=1 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as dprestamos,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=2 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as dinventarios,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=3 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as dvencidos,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=4 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as datrasos,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=5 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as dfaltante,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=6 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as dotros,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=100 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as daportesind
 
       from personal p
@@ -128,6 +127,9 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
         $stmtPersonal->bindColumn('a_solidario_35000', $a_solidario_35000);
         $stmtPersonal->bindColumn('riesgo_profesional', $riesgo_profesional);
 
+        $stmtPersonal->bindColumn('seguro_de_salud', $seguro_de_salud);
+
+        
         $stmtPersonal->bindColumn('rc_iva', $rc_iva);
         $stmtPersonal->bindColumn('bventas', $bventas);
         $stmtPersonal->bindColumn('bfallo', $bfallo);
@@ -146,17 +148,29 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
         $stmtPersonal->bindColumn('dfaltante', $dfaltante);
         $stmtPersonal->bindColumn('dotros', $dotros);
         $stmtPersonal->bindColumn('daportesind', $daportesind);
+
+
+        // $stmtPersonal->bindColumn('descuentos_otros', $descuentos_otros);
+        // $stmtPersonal->bindColumn('bonos_otros', $bonos_otros);
+        $stmtPersonal->bindColumn('monto_descuentos', $monto_descuentos);
+        // $stmtPersonal->bindColumn('monto_bonos', $monto_bonos);
       
 
 
         while ($row = $stmtPersonal->fetch()) 
         {  
           // $aporte_caja=$afp_1+$afp_2;
-          $aporte_caja=$afp_1+$afp_2+$a_solidario_13000+$a_solidario_25000+$a_solidario_35000;
-          $total_descuentos=$dprestamos+ $dinventarios+ $dvencidos+ $datrasos+ $dfaltante+ $dotros+ $daportesind;
-          $ComAFP=$total_ganado*$porcentaje_aport_afp/100;
-          $aposol=$total_ganado*$porcentaje_aport_sol/100;
+
+          $aporte_caja=$seguro_de_salud/100;//10%
+          $aporte_sol13=$a_solidario_13000+$a_solidario_25000+$a_solidario_35000;
+          $ComAFP=$total_ganado*$porcentaje_aport_afp/100;//0.5%
+          $aposol=$total_ganado*$porcentaje_aport_sol/100;//0.5%
+
+          $aportes=$aporte_caja+$aporte_sol13+$riesgo_profesional+$ComAFP+$aposol;
+
+          // $total_descuentos=$aportes+$anticipo+$dprestamos+ $dinventarios+ $dvencidos+ $datrasos+ $dfaltante+ $dotros+ $daportesind;
           
+          $total_descuentos=$monto_descuentos;
           ?>
               <tr>
                 <td class="small"><small>N°</small></td> 
@@ -187,6 +201,7 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
                 <td class="small"><small><?=formatNumberDec($riesgo_profesional)?></small></td>
                 <td class="small"><small><?=formatNumberDec($ComAFP)?></small></td>
                 <td class="small"><small><?=formatNumberDec($aposol)?></small></td>
+                <td class="small"><small><?=formatNumberDec($aporte_sol13)?></small></td>
                 <td class="small"><small><?=formatNumberDec($rc_iva)?></small></td>
                 <td class="small"><small><?=formatNumberDec($anticipo)?></small></td>
                 <td class="small"><small><?=formatNumberDec($dprestamos)?></small></td>
@@ -205,7 +220,6 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
              ?>
     </tbody>
   </table>
-
             </div>
           </div>
         </div>
@@ -214,5 +228,5 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
   </div>
 </div>
 
-?>
+
 

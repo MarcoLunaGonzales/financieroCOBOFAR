@@ -2339,7 +2339,7 @@ function obtenerTotalesPlantillaServicio($codigo,$tipo,$mes){
   }
 
   function calculaIva($monto){
-    $calculo=$monto*0.13;
+    $calculo=round($monto*0.13);
     return ($calculo);
   }
 
@@ -3438,6 +3438,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $dbh = null;
     return ($aporte_rc_iva_neto);
   }
+   function obtenerRC_IVA_planilla($codigo_personal,$cod_gestion_x,$cod_mes_x)
+   {
+   $dbh_t = new Conexion();
+    $sql = "select impuesto_rc_iva_retenido 
+      from planillas_tributarias p join planillas_tributarias_personal_mes_2 pd on p.codigo=pd.cod_planillatributaria 
+      where pd.cod_personal=$codigo_personal and p.cod_gestion=$cod_gestion_x and p.cod_mes=$cod_mes_x ";
+    $stmtRCIVA = $dbh_t->prepare($sql);
+    $stmtRCIVA->execute();
+    $resultRCIVA=$stmtRCIVA->fetch();
+    $total_descuentos_otros = $resultRCIVA['impuesto_rc_iva_retenido'];
+    if($total_descuentos_otros=='' || $total_descuentos_otros==null){
+      $total_descuentos_otros=0;
+    }
+    $stmtRCIVA = null;
+    $dbh_t = null;
+    return $total_descuentos_otros;
+   }
 
   function obtenerAtrasoPersonal($id_personal,$haber_basico,$cod_gestion,$mes){
     $dbh = new Conexion();
@@ -3882,7 +3899,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $dbh = new Conexion3();
     $sql="SELECT p.codigo,pm.cod_area,a.nombre as area, p.primer_nombre as nombres,p.paterno,p.materno,
     p.identificacion as ci,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,
-    pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje,pp.a_solidario_13000,pp.a_solidario_25000,pp.rc_iva,pp.atrasos,pp.anticipo,p.fecha_nacimiento,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,(select tg.abreviatura from tipos_genero tg where tg.codigo=p.cod_genero)as genero,(select pp2.abreviatura from personal_pais pp2 where pp2.codigo=p.cod_nacionalidad) as nacionalidad,pm.turno
+    pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje,pp.a_solidario_13000,pp.a_solidario_25000,pp.rc_iva,pp.atrasos,pp.anticipo,p.fecha_nacimiento,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,(select tg.abreviatura from tipos_genero tg where tg.codigo=p.cod_genero)as genero,(select pp2.abreviatura from personal_pais pp2 where pp2.codigo=p.cod_nacionalidad) as nacionalidad,pm.turno,pm.correlativo_planilla
     FROM personal p
     join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
@@ -3894,9 +3911,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $dbh = null;
-    
     return $stmt;
   }
+
   function obtenerPlanillaSueldoRevisionBonos($cod_personalcargo,$cod_gestion,$cod_mes,$dias_trabajados_asistencia,$dias_trabajados){
     require_once 'conexion3.php';
     $total_bonos1=0;
@@ -4271,7 +4288,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerSueldoMinimo(){
     $dbh = new Conexion();
-    $stmt = $dbh->prepare("SELECT * from configuraciones_planillas where id_configuracion=1");
+    $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=1");
     $stmt->execute();
     $result= $stmt->fetch();
     $monto=$result['valor_configuracion'];
@@ -4303,10 +4320,10 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $monto=0;
     $dbh = new Conexion();
     set_time_limit(300);
-    $stmt = $dbh->prepare("SELECT ptd.total_saldo_favordependiente from planillas_tributarias_personal_mes ptd join planillas_tributarias pt on pt.codigo=ptd.cod_planillatributaria where ptd.cod_personal='$cod_persona' and pt.cod_mes='$cod_mes' and pt.cod_gestion='$cod_gestion'");
+    $stmt = $dbh->prepare("SELECT ptd.saldo_credito_fiscal_mes_siguiente from planillas_tributarias_personal_mes_2 ptd join planillas_tributarias pt on pt.codigo=ptd.cod_planillatributaria where ptd.cod_personal='$cod_persona' and pt.cod_mes='$cod_mes' and pt.cod_gestion='$cod_gestion'");
     $stmt->execute();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $monto = $row['total_saldo_favordependiente'];
+    $monto = $row['saldo_credito_fiscal_mes_siguiente'];
     }
     if($monto==null){
       $monto=0;
@@ -6885,7 +6902,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante
               where (c.fecha between '$fi 00:00:00' and '$fa 23:59:59') $sqlUnidades and c.cod_gestion='$gestion' and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.numero like '5%' and p.nivel=5 order by p.numero)";
-          //echo $sql;
+           echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -12517,7 +12534,7 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
       return($valor);
   }
   function obtenerFechaActualizacionComercial(){//COEMRCIAL BK
-   $sql="SELECT  fecha from salida_almacenes 
+   $sql="SELECT CONCAT_WS(' ',fecha,hora_salida)as fecha from salida_almacenes 
       where cod_tiposalida=1001 and salida_anulada=0 order by fecha desc limit 1";
       require("conexion_comercial.php");
       $resp=mysqli_query($dbh,$sql);
@@ -13177,19 +13194,115 @@ function obtenerProveedor_presentacionAlmacen_nuevo(){
 
 
  function obtenerMontoDetalleSalida($codigo){
-       $sql="select  sum(s.`monto_unitario` ) as monto
-    from salida_detalle_almacenes s
-    where s.cod_salida_almacen='$codigo' ";
-     //echo $sql;
-     $valor=0;
-     require("conexion_comercial_oficial.php");
-     $resp=mysqli_query($dbh,$sql);
-     while($row=mysqli_fetch_array($resp)){ 
-         $valor=redondearDecimal($row['monto']);
-     } 
-     mysqli_close($dbh);
-     return $valor;
+   $sql="select  sum(s.`monto_unitario` ) as monto
+   from salida_detalle_almacenes s
+   where s.cod_salida_almacen='$codigo' ";
+   //echo $sql;
+   $valor=0;
+   require("conexion_comercial_oficial.php");
+   $resp=mysqli_query($dbh,$sql);
+   while($row=mysqli_fetch_array($resp)){ 
+   $valor=redondearDecimal($row['monto']);
+   } 
+   mysqli_close($dbh);
+  return $valor;
+}
+function obtenerSucursalesActivas(){
+   $nombre=[];
+   $codigo=[];
+   $i=0;
+   require("conexion_comercial_oficial.php");
+   $sql = "SELECT cod_almacen,nombre_almacen from almacenes where estado_pedidos=1 order by nombre_almacen";
+   $resp=mysqli_query($dbh,$sql);
+   while ($dat = mysqli_fetch_array($resp)) {
+      $nombre[$dat['cod_almacen']]=$dat['nombre_almacen'];  
+      $codigo[$i]=$dat['cod_almacen'];  
+      $i++;
+   }
+   return array($codigo,$nombre);
+}
+
+
+function obtenerInicioFinFacturas_nuevo($cod_dosificacion,$fechai,$fechaf){
+    $sql="SELECT min(s.nro_correlativo)as min,max(s.nro_correlativo) as max
+    from  salida_almacenes s
+    where s.cod_tiposalida=1001
+    and s.cod_tipo_doc in (1) 
+    and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_dosificacion=$cod_dosificacion
+    ORDER BY s.nro_correlativo LIMIT 1";
+    //echo  $sql;
+    $valorI=0;
+    $valorF=0;
+    require("conexion_comercial_oficial.php");
+    $respaux=mysqli_query($dbh,$sql);
+    while($row=mysqli_fetch_array($respaux)){ 
+      $valorI=$row['min'];
+      $valorF=$row['max'];
+    }
+    return array($valorI,$valorF);
+}
+function obtenerVentasTotales_nuevo($cod_dosificacion,$fechai,$fechaf){
+    $sql="SELECT s.monto_final as  monto
+    from salida_almacenes s
+    where s.cod_tiposalida=1001
+    and s.cod_tipo_doc in (1) 
+    and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_dosificacion=$cod_dosificacion
+    and s.salida_anulada=0";
+    //echo  $sql;
+    $valor=0;
+    require("conexion_comercial_oficial.php");
+    $resp=mysqli_query($dbh,$sql);
+    while($row=mysqli_fetch_array($resp)){ 
+      $monto=number_format($row['monto'],1,'.','');  
+      $valor+=$monto;
+    }
+    return($valor);
+}
+
+   function verificarExistenciaComprobante($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT codigo from comprobantes where codigo=$codigo ");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+      }
+      return($valor);
    }
 
+
+   function obtenerTotalDias_fechas($fecha_inicial,$fecha_final){  
+      $date1 = new DateTime($fecha_inicial);
+      $date2 = new DateTime($fecha_final);
+      $diff = $date1->diff($date2);
+      $diferencia=$diff->d;
+      $diferencia=$diferencia+1;//el primer dia no lo toma encuenta
+      return $diferencia;
+   }
+
+   function obtenerTotaldomingos_fechas($fecha_inicial,$fecha_final){
+      $starDate = new DateTime($fecha_inicial);
+      $endDate = new DateTime($fecha_final);
+      $contador=0;
+      while( $starDate <= $endDate){
+         if($starDate->format('l')== 'Sunday'){
+            $contador++;
+        }
+        $starDate->modify("+1 days");
+      }
+      return $contador;
+   }
+
+   function obtenerTotalferiados_fechas($fecha_inicial,$fecha_final){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT count(*) as contador from dias_feriados
+      where fecha BETWEEN '$fecha_inicial' and '$fecha_final'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['contador'];
+      }
+      return($valor);
+   }
 
 ?>

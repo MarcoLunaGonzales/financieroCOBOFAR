@@ -1171,14 +1171,14 @@
 		}
 		if ($_GET['opcion']=='vacacionesPersonalForm') {
 			$codigo=$_GET['codigo'];
-			require_once('vacaciones_permisos/vacaciones_list.php');
+			require_once('vacaciones_permisos/vacaciones_from.php');
 		}
 		if ($_GET['opcion']=='vacacionesPersonalSave') {
-			require_once('vacaciones_permisos/vacaciones_list.php');
+			require_once('vacaciones_permisos/vacaciones_save.php');
 		}
 		if ($_GET['opcion']=='vacacionesdeletepersonal') {
 			$codigo=$_GET['codigo'];
-			require_once('vacaciones_permisos/vacaciones_list.php');
+			require_once('vacaciones_permisos/vacaciones_save_delete.php');
 		}
 		
 		
@@ -1973,6 +1973,9 @@
 		}
 		if ($_GET['opcion']=='auditoria_sucursales_from') {			
 			require_once('auditorias_traspasos/auditoria_sucursales_from.php');
+		}
+		if ($_GET['opcion']=='rpt_configuraciones_comercial') {			
+			require_once('ingresos_sucursales/configuraciones_cuentas_list.php');
 		}
 
 		//*****pago proveedores

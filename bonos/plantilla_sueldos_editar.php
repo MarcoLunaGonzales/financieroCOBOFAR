@@ -77,7 +77,8 @@ if($estado_planilla==0){ // registrar plaanilla mes
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table id="tablePaginatorHeaderFooter" class="table table-bordered table-condensed table-striped " style="width:100%">
+              <table id="tablePaginatorHeaderFooter" class="table table-bordered table-condensed table-striped  table-sm table-secondary" style="width:100%">
+                
                 <thead>                              
                   <tr>
                     <th><small><b>CI</b></small></th>

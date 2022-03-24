@@ -194,7 +194,9 @@ $sql="SELECT p.identificacion,p.codigo,p.haber_basico,p.cod_grado_academico,
 		$aporte_solidario_25000 = obtenerAporteSolidario25000($total_ganado);
 		$aporte_solidario_35000 = obtenerAporteSolidario35000($total_ganado);
 
-		$RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
+		// $RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
+
+		$RC_IVA=obtenerRC_IVA_planilla($codigo_personal,$cod_gestion_x,$cod_mes_x);
 
 		// $atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico_x,$cod_gestion_x,$cod_mes_x);//ee
 		$atrasos = 0;//ee

@@ -69,48 +69,48 @@ $html.=  '<header class="header">'.
           $html.='<table class="table">'.
             '<thead>'.
             '<tr class="table-title bold text-center">'.
-              '<td width="1%"><small><small>Nro</small></small></td>'.
-              '<td width="4%"><small><small>CI EXT</small></small></td>'.
-              '<td><small><small>Paterno</small></small></td>'.
-              '<td><small><small>Materno</small></small></td>'.
-              '<td width="5%"><small><small>Nombres</small></small></td>'.
-              '<td width="2%"><small><small>Sex</small></small></td>'.
-              // '<td width="2%">Nac ión</small></small></td>'.
-              '<td width="4%"><small><small>Fech Nac</small></small></td>'.
-              '<td width="10%"><small><small>Cargo</small></small></td>'.
-              // '<td><small><small>Turn</small></small></td>'.
-              '<td><small><small>Fech Ing</small></small></td>'.
-              '<td><small><small>Hrs Trab</small></small></td>'.
-              '<td><small><small>Días Trab</small></small></td>'.
-              '<td><small><small>Haber Basico</small></small></td>'.
-              '<td><small><small>Haber Basico DTrab</small></small></td>'.
-              '<td><small><small>Bono Ant</small></small></td>'.
-              // '<td width="4%"><small><small>Otr Bonos</small></small></td>'.
-              '<td><small><small>Noch</small></small></td>'.
-              '<td><small><small>Dom</small></small></td>'.
-              '<td><small><small>Feri ado</small></small></td>'.
-              '<td><small><small>Mov</small></small></td>'.
-              '<td><small><small>Refr</small></small></td>'.
-              '<td><small><small>Rein tegro</small></small></td>'.
-              '<td><small><small>Com Ven</small></small></td>'.
-              '<td><small><small>Fallo</small></small></td>'.
-              '<td><small><small>Hrs Extr</small></small></td>'.
-              '<td><small><small>Tota Gana</small></small></td>'.
-              '<td><small><small>AFP F</small></small></td>'.
-              '<td><small><small>AFP P</small></small></td>'.
-              '<td><small><small>Ap.Sol</small></small></td>'.
-              '<td><small><small>RC-IVA</small></small></td>'.              
-              '<td><small><small>Anti cipo</small></small></td>'.
-              // '<td>Otr Desc</small></small></td>'.
-              '<td><small><small>Pres tamo</small></small></td>'.
-              '<td><small><small>In vent</small></small></td>'.
-              '<td><small><small>Ven cid</small></small></td>'.
-              '<td><small><small>Atr aso</small></small></td>'.
-              '<td><small><small>Fal Caj</small></small></td>'.
-              '<td><small><small>O Desc</small></small></td>'.
-              '<td><small><small>Apo Sind</small></small></td>'.
-              '<td><small><small>Tot Desc</small></small></td>'.
-              '<td ><small><small>Liq Pag</small></small></td>';
+              '<td width="1%"><small><small><small>Nro</small></small></small></td>'.
+              '<td width="4%"><small><small><small>CI EXT</small></small></small></td>'.
+              '<td><small><small><small>Paterno</small></small></small></td>'.
+              '<td><small><small><small>Materno</small></small></small></td>'.
+              '<td width="5%"><small><small><small>Nombres</small></small></small></td>'.
+              '<td width="2%"><small><small><small>Sex</small></small></small></td>'.
+              // '<td width="2%">Nac ión</small></small></small></td>'.
+              '<td width="4%"><small><small><small>Fech Nac</small></small></small></td>'.
+              '<td width="10%"><small><small><small>Cargo</small></small></small></td>'.
+              // '<td><small><small><small>Turn</small></small></small></td>'.
+              '<td><small><small><small>Fech Ing</small></small></small></td>'.
+              '<td><small><small><small>Hrs Trab</small></small></small></td>'.
+              '<td><small><small><small>Días Trab</small></small></small></td>'.
+              '<td><small><small><small>Haber Basico</small></small></small></td>'.
+              '<td><small><small><small>Haber Basico DTrab</small></small></small></td>'.
+              '<td><small><small><small>Bono Ant</small></small></small></td>'.
+              // '<td width="4%"><small><small><small>Otr Bonos</small></small></small></td>'.
+              '<td><small><small><small>Noch</small></small></small></td>'.
+              '<td><small><small><small>Dom</small></small></small></td>'.
+              '<td><small><small><small>Feri ado</small></small></small></td>'.
+              '<td><small><small><small>Mov</small></small></small></td>'.
+              '<td><small><small><small>Refr</small></small></small></td>'.
+              '<td><small><small><small>Rein tegro</small></small></small></td>'.
+              '<td><small><small><small>Com Ven</small></small></small></td>'.
+              '<td><small><small><small>Fallo</small></small></small></td>'.
+              '<td><small><small><small>Hrs Extr</small></small></small></td>'.
+              '<td><small><small><small>Tota Gana</small></small></small></td>'.
+              '<td><small><small><small>AFP F</small></small></small></td>'.
+              '<td><small><small><small>AFP P</small></small></small></td>'.
+              '<td><small><small><small>Ap.Sol</small></small></small></td>'.
+              '<td><small><small><small>RC-IVA</small></small></small></td>'.              
+              '<td><small><small><small>Anti cipo</small></small></small></td>'.
+              // '<td>Otr Desc</small></small></small></td>'.
+              '<td><small><small><small>Pres tamo</small></small></small></td>'.
+              '<td><small><small><small>In vent</small></small></small></td>'.
+              '<td><small><small><small>Ven cid</small></small></small></td>'.
+              '<td><small><small><small>Atr aso</small></small></small></td>'.
+              '<td><small><small><small>Fal Caj</small></small></small></td>'.
+              '<td><small><small><small>O Desc</small></small></small></td>'.
+              '<td><small><small><small>Apo Sind</small></small></small></td>'.
+              '<td><small><small><small>Tot Desc</small></small></small></td>'.
+              '<td ><small><small><small>Liq Pag</small></small></small></td>';
             $html.='</tr>'.
            '</thead>'.
            '<tbody>';
@@ -196,22 +196,22 @@ $html.=  '<header class="header">'.
               }
 
               $html.='<tr>'.
-                '<td class="text-center"><small><small><small>'.$index.'</small></small></small></td>'.
-                '<td class="text-left"><small><small><small>'.$row['ci'].' '.$emision.'</small></small></small></td>'.
-                '<td class="text-left"><small><small><small>'.$row['paterno'].'</small></small></small></td>'.
-                '<td class="text-left"><small><small><small>'.$row['materno'].'</small></small></small></td>'.
-                '<td class="text-left"><small><small><small>'.$row['nombres'].'</small></small></small></td>'.
-                '<td class="text-left"><small><small><small>'.$sexo.'</small></small></small></td>'.
+                '<td class="text-center"><small><small><small><small>'.$row['correlativo_planilla'].'</small></small></small></small></td>'.
+                '<td class="text-left"><small><small><small><small>'.$row['ci'].' '.$emision.'</small></small></small></small></td>'.
+                '<td class="text-left"><small><small><small><small>'.$row['paterno'].'</small></small></small></small></td>'.
+                '<td class="text-left"><small><small><small><small>'.$row['materno'].'</small></small></small></small></td>'.
+                '<td class="text-left"><small><small><small><small>'.$row['nombres'].'</small></small></small></small></td>'.
+                '<td class="text-left"><small><small><small><small>'.$sexo.'</small></small></small></small></td>'.
                 // '<td><small><small>'.$nacion.'</small></small></td>'.
                 '<td><small><small>'.strftime('%d/%m/%Y',strtotime($fechaNac)).'</small></small></td>'.
-                '<td class="text-left"><small><small><small>'.$row['cargo'].'</small></small></small></td>'.
-                // '<td class="text-left"><small><small><small>'.$turno_nombre.'</small></small></small></td>'.
-                '<td class="text-left"><small><small><small>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.$hrsTrabajadas.'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.$dias_trabajados_planilla.'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec($row['haber_basico_pactado']*$porcentaje/100).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec($row['haber_basico2']*$porcentaje/100).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec($row['bono_antiguedad']*$porcentaje/100).'</small></small></small></td>';
+                '<td class="text-left"><small><small><small><small>'.$row['cargo'].'</small></small></small></small></td>'.
+                // '<td class="text-left"><small><small><small><small>'.$turno_nombre.'</small></small></small></small></td>'.
+                '<td class="text-left"><small><small><small><small>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.$hrsTrabajadas.'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.$dias_trabajados_planilla.'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['haber_basico_pactado']*$porcentaje/100).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['haber_basico2']*$porcentaje/100).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bono_antiguedad']*$porcentaje/100).'</small></small></small></small></td>';
                 $montoX_refri=0;//para el refrigerio
                 for ($j=0; $j <count($arrayBonos);$j++){ 
                   $cod_bono_aux=$arrayBonos[$j];                          
@@ -232,7 +232,7 @@ $html.=  '<header class="header">'.
                     $montoX_refri+=$montoX_aux;
                     if($cod_bono_aux==16){
                        $subtotal_brefr+=$montoX_refri*$porcentaje/100;
-                      $html.='<td  class="text-right"><small><small><small>'.formatNumberDec($montoX_refri*$porcentaje/100).'</small></small></small></td>';
+                      $html.='<td  class="text-right"><small><small><small><small>'.formatNumberDec($montoX_refri*$porcentaje/100).'</small></small></small></small></td>';
                     }
                   }else{
                     switch ($cod_bono_aux) {
@@ -261,15 +261,15 @@ $html.=  '<header class="header">'.
                           $subtotal_bhrsex+=$montoX_aux*$porcentaje/100;
                       break;
                     }
-                    $html.='<td  class="text-right"><small><small><small>'.formatNumberDec($montoX_aux*$porcentaje/100).'</small></small></small></td>';  
+                    $html.='<td  class="text-right"><small><small><small><small>'.formatNumberDec($montoX_aux*$porcentaje/100).'</small></small></small></small></td>';  
                   }
                 }
-                $html.='<td class="text-right"><small><small><small>'.formatNumberDec($row['total_ganado']*$porcentaje/100).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec($row['afp_1']*$porcentaje/100).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec($row['afp_2']*$porcentaje/100).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec(($row['a_solidario_13000']+$row['a_solidario_25000'])*$porcentaje/100).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec($rc_iva*$porcentaje/100).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec($anticipo*$porcentaje/100).'</small></small></small></td>';
+                $html.='<td class="text-right"><small><small><small><small>'.formatNumberDec($row['total_ganado']*$porcentaje/100).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['afp_1']*$porcentaje/100).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['afp_2']*$porcentaje/100).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['a_solidario_13000']+$row['a_solidario_25000'])*$porcentaje/100).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($rc_iva*$porcentaje/100).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($anticipo*$porcentaje/100).'</small></small></small></small></td>';
                 // $sumaDescuentos_otros=0;
                 for ($j=0; $j <count($arrayDescuentos); $j++) { 
                   $cod_descuento_aux=$arrayDescuentos[$j];                          
@@ -308,11 +308,11 @@ $html.=  '<header class="header">'.
                     break;
                   }
                   // $sumaDescuentos_otros+=$montoX_tp;
-                  $html.='<td  class="text-right"><small><small><small>'.formatNumberDec($montoX_tp).'</small></small></small></td>';
+                  $html.='<td  class="text-right"><small><small><small><small>'.formatNumberDec($montoX_tp).'</small></small></small></small></td>';
                 }  
                 
-              $html.='<td class="text-right"><small><small><small>'.formatNumberDec($row['monto_descuentos']*$porcentaje/100).'</small></small></small></td>'.
-                '<td class="text-right"><small><small><small>'.formatNumberDec($row['liquido_pagable']*$porcentaje/100).'</small></small></small></td>';
+              $html.='<td class="text-right"><small><small><small><small>'.formatNumberDec($row['monto_descuentos']*$porcentaje/100).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['liquido_pagable']*$porcentaje/100).'</small></small></small></small></td>';
               $html.='</tr>';
               //suma de totales
               $subtotal_haberbasico_traba+=$row['haber_basico2']*$porcentaje/100;                  
@@ -331,34 +331,34 @@ $html.=  '<header class="header">'.
             }
       $html.='</tbody>';
       $html.='<tfoot><tr>'.
-          '<td style="border: 0;" colspan="11" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_dias).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_haberbasico).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_haberbasico_traba).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_bantig).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_bnoche).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_bdomin).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_bferi).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_bmov).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_brefr).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_breint).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_bventas).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_bfallo).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_bhrsex).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_totalganado).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_afpf).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_afpp).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_aporSol).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_rciva).'</b></small></small></small></small></td>'.              
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_anticipo).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_dprest).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_dinvt).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_dvencid).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_datraso).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_dfalcaj).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_dodesc).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_daposind).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_totdesc).'</b></small></small></small></small></td>'.
-          '<td style="border: 0;" class="text-right"><small><small><small><small><b>'.formatNumberDec($subtotal_liqpag).'</b></small></small></small></small></td>'.
+          '<td style="border: 0;" colspan="11" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_dias).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_haberbasico).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_haberbasico_traba).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bantig).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bnoche).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bdomin).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bferi).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bmov).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_brefr).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_breint).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bventas).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bfallo).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bhrsex).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_totalganado).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_afpf).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_afpp).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_aporSol).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_rciva).'</b></small></small></small></small></small></td>'.              
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_anticipo).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_dprest).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_dinvt).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_dvencid).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_datraso).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_dfalcaj).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_dodesc).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_daposind).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_totdesc).'</b></small></small></small></small></small></td>'.
+          '<td style="border: 0;" class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_liqpag).'</b></small></small></small></small></small></td>'.
           '</tr>
       </tfoot>';
 $html.='</table><br><br><br>';        

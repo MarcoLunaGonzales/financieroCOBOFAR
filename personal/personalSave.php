@@ -182,17 +182,24 @@ try {
         $stmtPer->execute();
         $resultPer=$stmtPer->fetch();
         $codigo_areaDP=$resultPer['codigo'];
-        $stmtDistribucion = $dbh->prepare("UPDATE personal_area_distribucion 
-            set cod_uo='$cod_unidadorganizacional',cod_area='$cod_area',porcentaje='$porcentaje',monto='$haber_basico' where codigo=$codigo_areaDP");
+        $sql="UPDATE personal_area_distribucion 
+            set cod_uo='$cod_unidadorganizacional',cod_area='$cod_area',porcentaje='$porcentaje',monto='$haber_basico' where codigo='$codigo_areaDP'";
+        
+        $stmtDistribucion = $dbh->prepare($sql);
         $stmtDistribucion->execute();
+        
         //actualizamos contrato
-        $stmtPer = $dbhS->prepare("SELECT codigo 
+        $sql="SELECT codigo 
                 from personal_contratos 
-                where cod_personal=$codigo and cod_estadoreferencial=1 and cod_estadocontrato=1");
+                where cod_personal=$codigo and cod_estadoreferencial=1 and cod_estadocontrato=1";
+        
+        $stmtPer = $dbhS->prepare($sql);
         $stmtPer->execute();
         $resultPer=$stmtPer->fetch();
         $codigo_contrato=$resultPer['codigo'];
-        $stmtUContrato = $dbh->prepare("UPDATE personal_contratos set fecha_iniciocontrato='$ing_planilla', fecha_evaluacioncontrato='$fecha_evaluacioncontrato' where codigo=$codigo_contrato");  
+        $Sql="UPDATE personal_contratos set fecha_iniciocontrato='$ing_planilla', fecha_evaluacioncontrato='$fecha_evaluacioncontrato' where codigo=$codigo_contrato";
+        
+        $stmtUContrato = $dbh->prepare($sql);  
         $stmtUContrato->execute();
 
 

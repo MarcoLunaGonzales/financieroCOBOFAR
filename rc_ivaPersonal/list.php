@@ -64,8 +64,8 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                     <tr>
                       <td class="text-center"><?= $index; ?></td>
                       <td class="text-left"><?= nombrePersona($cod_personal); ?></td>
-                      <td class="text-right"><?= $monto; ?></td>
-                      <td class="text-right"><?= $monto_iva; ?></td>
+                      <td class="text-right"><?=formatNumberDec($monto);?></td>
+                      <td class="text-right"><?=formatNumberDec($monto_iva);?></td>
                       <td class="td-actions text-right">
                         <?php
                         if ($globalAdmin == 1) {

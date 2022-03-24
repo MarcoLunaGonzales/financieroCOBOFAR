@@ -70,7 +70,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 			$numeroCuenta=trim($numeroCuenta);
 			$nombreCuenta=trim($nombreCuenta);
 
-			$sqlCuentasAux="SELECT codigo, nombre, cod_tipoauxiliar, cod_proveedorcliente FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' $sqlBusquedaauxiliar order by 2";
+			$sqlCuentasAux="SELECT codigo, nombre, cod_tipoauxiliar, cod_proveedorcliente FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' $sqlBusquedaauxiliar and cod_estadoreferencial=1 order by 2";
 			$stmtAux = $dbh->prepare($sqlCuentasAux);
 			$stmtAux->execute();
 			$stmtAux->bindColumn('codigo', $codigoCuentaAux);

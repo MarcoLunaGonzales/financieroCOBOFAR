@@ -1,5 +1,5 @@
+<meta charset="utf-8">
 <?php
-
 require_once 'conexion.php';
 require_once 'styles.php';
 
@@ -16,7 +16,7 @@ for ($i=0; $i <count($array_personal_respo_audi) ; $i++) {
     }
 }
 
-$fecha_actualización=date("d/m/Y", strtotime(obtenerFechaActualizacionComercial()));;
+$fecha_actualización=date("d/m/Y h:i:s", strtotime(obtenerFechaActualizacionComercial()));
 
 ?>
 
@@ -31,7 +31,8 @@ $fecha_actualización=date("d/m/Y", strtotime(obtenerFechaActualizacionComercial
                   </div>
                 </div>
                 <div class="card-body">
-                  <h4 class="text-center">Ingresos Sucursales</h4>
+                  <h4 class="text-center" style="color:blue;">INGRESOS SUCURSALES</h4>
+                  <h4 class="text-center" style="color:red;">Última Actualización : <?=$fecha_actualización?><br>Se recomienda trabajar hasta un día antes :)</h4>
                   <!-- <a href="index.php?opcion=principal_CajaChica_historico" target="_blank" class="btn btn-primary btn-sm float-right" style="background-color:#707B7C;">Ir Al Histórico</a> -->
                   <div class="row div-center text-center">
 
@@ -39,7 +40,7 @@ $fecha_actualización=date("d/m/Y", strtotime(obtenerFechaActualizacionComercial
                        <a href="?opcion=cierrecaja_from" >
                           <div class="card-body ">
                              <h5 class="card-title" style="color:#ffffff;">GENERAR COMPROBANTE</h5>
-                             <p class="card-text text-small" style="color:#ffffff">Ingresos Sucursales<br>Última Actualización : <?=$fecha_actualización?><br>Trabajar hasta un día antes</p>
+                             <p class="card-text text-small" style="color:#ffffff">***<br>Ingresos Sucursales</p>
                              <i class="material-icons" style="color:#37474f">home_work</i>
                           </div>
                        </a>
@@ -47,8 +48,8 @@ $fecha_actualización=date("d/m/Y", strtotime(obtenerFechaActualizacionComercial
                      <div class="card text-white mx-auto" style="background-color: #d98880; width: 18rem;">
                        <a href="?opcion=rpt_bajadepositos_from" >
                           <div class="card-body ">
-                             <h5 class="card-title" style="color:#ffffff;">REPORTES</h5>
-                             <p class="card-text text-small" style="color:#ffffff">Baja de Depósitos<br>Última Actualización : <?=$fecha_actualización?></p>
+                             <h5 class="card-title" style="color:#ffffff;">BAJA DE DEPOSITOS</h5>
+                             <p class="card-text text-small" style="color:#ffffff">***<br>Reportes</p>
                              <i class="material-icons" style="color:#37474f">home_work</i>
                           </div>
                        </a>
@@ -57,8 +58,8 @@ $fecha_actualización=date("d/m/Y", strtotime(obtenerFechaActualizacionComercial
                     <div class="card text-white mx-auto" style="background-color:#CD5C5C; width: 18rem;">
                        <a href="?opcion=rpt_facturasgeneradas_comercial_from" >
                           <div class="card-body ">
-                             <h5 class="card-title" style="color:#ffffff;">REPORTES</h5>
-                             <p class="card-text text-small" style="color:#ffffff">Facturas Generadas<br>Última Actualización : <?=$fecha_actualización?></p>
+                             <h5 class="card-title" style="color:#ffffff;">FACTURAS</h5>
+                             <p class="card-text text-small" style="color:#ffffff">***<br>Reportes</p>
                              <i class="material-icons" style="color:#37474f">home_work</i>
                           </div>
                        </a>
@@ -69,12 +70,22 @@ $fecha_actualización=date("d/m/Y", strtotime(obtenerFechaActualizacionComercial
                        <a href="?opcion=auditoria_sucursales_from" >
                           <div class="card-body ">
                              <h5 class="card-title" style="color:#ffffff;">AUDITORÍA</h5>
-                             <p class="card-text text-small" style="color:#ffffff">Traspaso Entre Sucursales<br>Última Actualización : <?=$fecha_actualización?></p>
-                             <i class="material-icons" style="color:#37474f">home_work</i>
+                             <p class="card-text text-small" style="color:#ffffff">***<br>Traspaso Entre Sucursales</p>
+                             <i class="material-icons" style="color:#37474f">pending_actions</i>
                           </div>
                        </a>
                      </div>
                  <?php }?>
+
+                    <div class="card text-white mx-auto" style="background-color:#1f618d; width: 18rem;">
+                       <a href="?opcion=rpt_configuraciones_comercial" >
+                          <div class="card-body ">
+                             <h5 class="card-title" style="color:#ffffff;">CONFIGURACIONES</h5>
+                             <p class="card-text text-small" style="color:#ffffff">***<br>Cuentas de Sucursales</p>
+                             <i class="material-icons" style="color:#37474f">settings</i>
+                          </div>
+                       </a>
+                     </div>
                    </div>
                 </div>
               </div>

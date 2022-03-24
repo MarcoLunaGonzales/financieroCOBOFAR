@@ -18,8 +18,9 @@
 		(Select i.abreviatura from tipos_identificacion_personal i where i.codigo=p.cod_tipo_identificacion) as tipo_identificacion,p.tipo_identificacion_otro,
 		p.identificacion
 		from planillas_tributarias_personal_mes_2 pt
-		join personal p on p.codigo=pt.cod_personal
-		where pt.cod_planillatributaria=$codPlanilla";
+		join personal p on p.codigo=pt.cod_personal join areas a on p.cod_area=a.codigo
+		where pt.cod_planillatributaria=$codPlanilla
+		order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
 
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();		
@@ -32,7 +33,7 @@
         <div class="card">
           <div class="card-header <?=$colorCard;?> card-header-icon">            
             <h4 class="card-title"> 
-              <img  class="card-img-top"  src="../marca.png" style="widtd:100%; max-width:250px;">
+              <img  class="card-img-top"  src="../marca.png" style="widtd:50%; max-width:50px;">
                 <b>PLANILLA TRIBUTARIA V2</b>
             </h4>                  
             <h6 class="card-title"><small>
@@ -116,11 +117,11 @@
 				                    <td class="small"><?=formatNumberDec($row['formulario_110_13']);?></td>
 				                    <td class="small"><?=formatNumberDec($row['saldo_favor_fisico']);?></td>
 				                    <td class="text-center small"><?=formatNumberDec($row['saldo_favor_dependiente']);?></td>
-				                    <td class="text-white small"><?=formatNumberDec($row['saldo_mes_anterior']);?></td>
+				                    <td class="text-white small" style="background:#e59866;"><?=formatNumberDec($row['saldo_mes_anterior']);?></td>
 				                    <td  class="text-center small"><?=formatNumberDec($row['mantenimiento_saldo_mes_anterior']);?></td>
 				                    <td class="text-center small"><?=formatNumberDec($row['saldo_anterior_actualizado']);?></td>
 				                    <td class="text-center small"><?=formatNumberDec($row['saldo_utilizado']);?></td>
-				                    <td class="text-center small"><?=formatNumberDec($row['impuesto_rc_iva_retenido']);?></td>
+				                    <td class="text-white text-center small" style="background:red;"><?=formatNumberDec($row['impuesto_rc_iva_retenido']);?></td>
 				                    <td class="text-center small"><?=formatNumberDec($row['saldo_credito_fiscal_mes_siguiente']);?></td>
 				                </tr> 
 			                  	<?php 

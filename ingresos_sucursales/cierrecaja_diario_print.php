@@ -27,7 +27,10 @@ $sql="SELECT s.cod_almacen,(select a.nombre_almacen from almacenes a where a.cod
   from salida_almacenes s 
   where s.`cod_tiposalida`= $cod_tiposalida_efectivo  and s.`cod_almacen` in (select a.cod_almacen 
 from almacenes a, ciudades c
-where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_tipopago=1 GROUP BY s.cod_almacen,s.fecha order by s.fecha,2";
+where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' 
+ GROUP BY s.cod_almacen,s.fecha 
+ 
+ order by s.fecha,2";
 // echo $sql;
 ?>
 <div class="content">

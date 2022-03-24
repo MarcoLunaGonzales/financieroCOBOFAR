@@ -73,12 +73,15 @@ header("Content-type: application/x-msdownload");
 header("Content-Disposition: attachment; filename=$filename");
 header("Pragma: no-cache");
 header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-$dias_trabajados_mes = obtenerValorConfiguracionPlanillas(22); //por defecto
-
+$dias_trabajados_mes_x = obtenerValorConfiguracionPlanillas(22); //dias ingresados del mes
 
 $cod_mes = str_pad($cod_mes, 2, "0", STR_PAD_LEFT);//
 $fecha_inicio=$nombreGestion.'-'.$cod_mes.'-01';
 $fecha_final=date('Y-m-t',strtotime($fecha_inicio));
+
+$total_dias_mes=obtenerTotalDias_fechas($fecha_inicio,$fecha_final);
+$total_domingos_mes=obtenerTotaldomingos_fechas($fecha_inicio,$fecha_final);
+$total_feriados_mes=obtenerTotalferiados_fechas($fecha_inicio,$fecha_final);
 
 // $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional FROM personal p where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1 order by p.cod_unidadorganizacional,2,p.turno,p.paterno";
 $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,p.ing_contr as fecha,1 as tipo
@@ -142,8 +145,26 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
       $cod_unidadorganizacional=$row['cod_unidadorganizacional'];
       $fecha=$row['fecha']; //fecha ingreso o retiro
       $tipo=$row['tipo'];//1 ingreso 2 retiro
+      if($tipo==1 and $fecha>$fecha_inicio){//ingreso durante el mes
+        $fecha_inicio_x=$fecha;
+        $fecha_final_x=date('Y-m-t',strtotime($fecha_inicio));
+        $total_dias_mes=obtenerTotalDias_fechas($fecha_inicio_x,$fecha_final_x);
+        $total_domingos_mes=obtenerTotaldomingos_fechas($fecha_inicio_x,$fecha_final_x);
+        $total_feriados_mes=obtenerTotalferiados_fechas($fecha_inicio_x,$fecha_final_x);
+        $dias_trabajados_mes=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
+      }elseif($tipo==2){//se retiro durante el mes
+        $fecha_inicio_x=$nombreGestion.'-'.$cod_mes.'-01';
+        $fecha_final_x=$fecha;
+        $total_dias_mes=obtenerTotalDias_fechas($fecha_inicio_x,$fecha_final_x);
+        $total_domingos_mes=obtenerTotaldomingos_fechas($fecha_inicio_x,$fecha_final_x);
+        $total_feriados_mes=obtenerTotalferiados_fechas($fecha_inicio_x,$fecha_final_x);
+        $dias_trabajados_mes=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
+      }else{
+        $dias_trabajados_mes=$dias_trabajados_mes_x;
+      }
+      
+      // $dias_trabajados_mes=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
 
-      // $dias_trabajados_mes
       if($cod_unidadorganizacional!=1){
         if($turno==1){
           $areas=$areas." TM";

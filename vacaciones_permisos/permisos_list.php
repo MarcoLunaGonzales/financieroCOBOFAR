@@ -2,6 +2,7 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 
+
 $globalAdmin = $_SESSION["globalAdmin"];
 $dbh = new Conexion();
 

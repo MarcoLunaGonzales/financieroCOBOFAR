@@ -30,7 +30,7 @@ $fechaActual=date("Y-m-d");
     p.identificacion
     from planillas_tributarias_personal_mes_2 pt
     join personal p on p.codigo=pt.cod_personal join areas a on p.cod_area=a.codigo
-    where pt.cod_planillatributaria=$codPlanilla and p.cod_unidadorganizacional=1
+    where pt.cod_planillatributaria=$codPlanilla
      order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
 
   $stmtPersonal = $dbh->prepare($sql);

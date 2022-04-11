@@ -39,13 +39,20 @@ echo "<div class='table-responsive'>";
 echo "<table class='table table-condensed table-bordered' id='tablePaginatorReport_facturasgeneradas'>";
 echo "<thead><tr class='bg-info text-white'><th>Proceso</th><th>Nro. Factura</th><th>Fecha/hora<br>Registro Salida</th><th>Caja</th><th>Monto</th>
   <th>Razon Social</th><th>NIT</th><th>Pago</th><th>Datos A.</th><th>&nbsp;</th></tr></thead> <tbody>";
-$consulta = "
+// $consulta = "
+//   SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
+//   (select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
+//   s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
+//   (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado,(SELECT cod_medico from recetas_salidas where cod_salida_almacen=s.cod_salida_almacenes LIMIT 1)cod_medico,monto_cancelado_usd,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer_anulacion)as personal_anulacion,s.fecha_anulacion,(select us2.usuario from usuarios_sistema us2 where us2.codigo_funcionario=s.cod_chofer)as nombre_responsable
+//   FROM salida_almacenes s, tipos_salida ts 
+//   WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursal)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_tiposalida=1001 and s.cod_chofer in ($personalgString) ORDER BY s.fecha desc, s.nro_correlativo ";
+  $consulta = "
   SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
   (select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
   s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
   (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,(SELECT count(*) from registro_depositos where cod_funcionario=s.cod_chofer and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN CONCAT(fecha,' ',hora,':00') and CONCAT(fechaf,' ',horaf,':00') and cod_estadoreferencial=1)AS depositado,(SELECT cod_medico from recetas_salidas where cod_salida_almacen=s.cod_salida_almacenes LIMIT 1)cod_medico,monto_cancelado_usd,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer_anulacion)as personal_anulacion,s.fecha_anulacion,(select us2.usuario from usuarios_sistema us2 where us2.codigo_funcionario=s.cod_chofer)as nombre_responsable
   FROM salida_almacenes s, tipos_salida ts 
-  WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursal)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_tiposalida=1001 and s.cod_chofer in ($personalgString) ORDER BY s.fecha desc, s.nro_correlativo ";
+  WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursal)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_tiposalida=1001 ORDER BY s.fecha desc, s.nro_correlativo ";
 
 //echo $consulta;
 //

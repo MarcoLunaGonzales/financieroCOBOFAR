@@ -6,7 +6,7 @@ require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 require_once '../conexion2.php';
 $dbh_detalle = new Conexion2();
-$dbh = new Conexion();
+$dbh_cabecera = new Conexion();
 $codigo=$_GET["codigo"];
 session_start();
 $globalUser=$_SESSION["globalUser"];
@@ -54,16 +54,16 @@ if($sw==0){
     }
     $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) 
     VALUES ('$codComprobante', '1', '$globalUnidad', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fecha_pago', '$globalUser')";
-    $stmtInsert = $dbh->prepare($sqlInsert);
+    $stmtInsert = $dbh_cabecera->prepare($sqlInsert);
     $flagSuccessComprobante=$stmtInsert->execute();
     
     $sqlDelete="";
     $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
-    $stmtDel = $dbh->prepare($sqlDelete);
+    $stmtDel = $dbh_cabecera->prepare($sqlDelete);
     $flagSuccess=$stmtDel->execute();
 
     $sqlInsert4="UPDATE ingresos_almacen set cod_comprobante=$codComprobante where codigo=$codigo;";
-    $stmtInsert4 = $dbh->prepare($sqlInsert4);
+    $stmtInsert4 = $dbh_cabecera->prepare($sqlInsert4);
     $stmtInsert4->execute();
     $indexCompro=1;
     
@@ -130,6 +130,7 @@ if($sw==0){
         $codigo_control=$row['codigo_control'];  
         $monto_factura=$row['monto_factura'];  
         $monto_descuento=$row['desc_total'];  
+        $dcto_almacen=$row['dcto_almacen'];  
         $razon_social=nameProveedor($cod_proveedor);
         $cod_plancuenta_proveedores=obtenerValorConfiguracion(36);//proveedores
         $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedor,$cod_plancuenta_proveedores);
@@ -155,7 +156,7 @@ if($sw==0){
         $stmtDet->execute();
         //INGRESAMOS FACTURAS RELACIONADAS
         $sqlDetalleCompra="INSERT INTO facturas_compra(cod_comprobantedetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero,tipo_compra,desc_total) VALUES ($codComprobanteDetalle_iva,$nit,$factura,'$fecha_factura','$razon_social',$monto_factura,0,'$autorizacion','$codigo_control',0,0,1,$monto_descuento)";
-        //echo "<br>".$sqlDetalleCompra."ECECEC";
+        // echo "<br>".$sqlDetalleCompra."***";
         $stmtDetalleFacturas = $dbh_detalle->prepare($sqlDetalleCompra);
         $stmtDetalleFacturas->execute();
         //INGRESAMOS ESTADOS DE CUENTA
@@ -163,10 +164,17 @@ if($sw==0){
           VALUES ('$codComprobanteDetalle', '$cod_plancuenta_proveedores', '$haber', '$cod_proveedor', '$fechaHoraActual','0','$cuentaAuxiliar','$glosaDetalle')";
         $stmtDetalleEstadoCuenta = $dbh_detalle->prepare($sqlDetalleEstadoCuenta);
         $stmtDetalleEstadoCuenta->execute();
-        
+        //actualizamos datos comercial
+
+        require_once '../conexion_comercial_oficial.php';
+        $sql_update="UPDATE ingreso_almacenes set estado_contabilizado=1,cod_comprobante=$codComprobante,contabilizado_por='$globalUser'
+        where cod_ingreso_almacen=$dcto_almacen";
+        // echo $sql;
+        $sql_inserta = mysqli_query($dbh,$sql_update);
+
         $indexCompro++;
     }
-    $dbh="";
+    $dbh_cabecera="";
     $dbh_detalle="";
 }
 

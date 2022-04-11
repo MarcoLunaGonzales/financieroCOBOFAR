@@ -213,7 +213,8 @@ $stmtAdmnin->bindColumn('dias_trabajo', $dias_trabajados);
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
                             
-                            <li role="presentation" ><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><i class="material-icons text-warning">assignment_turned_in</i><small>PLANILLA GRAL.</small></a></li>
+                            <li role="presentation" ><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100&tipo=1" target="_blank"><i class="material-icons text-warning">assignment_turned_in</i><small>PLANILLA GRAL. PDF</small></a></li>
+                            <li role="presentation" ><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100&tipo=2" target="_blank"><i class="material-icons text-success">assignment_turned_in</i><small>PLANILLA GRAL. EXCEL</small></a></li>
                             
                             <li role="presentation"><a role="item" href="boletas/boletas_print.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-rose">class</i><small>BOLETAS</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_depositoBanco.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=1" target="_blank"><i class="material-icons text-success">verified_user</i><small>CON CUENTA</small></a></li>

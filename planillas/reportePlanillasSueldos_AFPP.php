@@ -80,6 +80,16 @@ require_once '../functionsReportes.php';
                       {  
                         $primer_nombre.=" ";
                         $array_nombre=explode(' ', $primer_nombre);
+                        $segundo_nombre=$array_nombre[1];
+                        if(isset($array_nombre[2])){
+                          $segundo_nombre.="  ".$array_nombre[2];
+                        }
+                        if(isset($array_nombre[3])){
+                          $segundo_nombre.="  ".$array_nombre[3];
+                        }
+                        if(isset($array_nombre[4])){
+                          $segundo_nombre.="  ".$array_nombre[4];
+                        }
                         
                         ?>
                         <tr>
@@ -91,7 +101,7 @@ require_once '../functionsReportes.php';
                           <td class="text-left small"><?=$materno?></td>
                           <td class="text-left small"><?=$apellido_casada?></td>
                           <td class="text-left small"><?=$array_nombre[0]?></td>
-                          <td class="text-left small"><?=$array_nombre[1]?></td>
+                          <td class="text-left small"><?=$segundo_nombre?></td>
                           <td class="text-left small"></td>
                           <td class="text-left small"></td>
                           <td class="text-right small"><?=$dias_trabajados?></td>

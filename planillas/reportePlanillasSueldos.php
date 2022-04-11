@@ -8,10 +8,27 @@ set_time_limit(0);
 $cod_mes=$_GET['cod_mes'];
 $cod_gestion=$_GET['cod_gestion'];
 $codPlanilla=$_GET['codigo_planilla'];
+
+$tipo=$_GET['tipo'];
+
 //nombre de unidad
 $dbh = new Conexion();
 $mes=strtoupper(nombreMes($cod_mes));
 $gestion=nameGestion($cod_gestion);
+
+
+if($tipo==2){ ?>
+  <meta charset="utf-8">
+  
+  <?php
+    header("Pragma: public");
+    header("Expires: 0");
+    $filename = "Planilla_".$mes."_".$gestion.".xls";
+    header("Content-type: application/x-msdownload");
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Pragma: no-cache");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+}
 
 $dias_trabajados_mes=30; 
 $hrsTrabajadas=8;
@@ -40,12 +57,15 @@ while ($row = $stmtDescuento->fetch())
 
 //html del reporte
 $html = '';
-$html.='<html>'.
-         '<head>'.
+
+   if($tipo==1){
+         $html.='<head>'.
              '<!-- CSS Files -->'.
              '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
              '<link href="../assets/libraries/plantillaPDF_planillas.css" rel="stylesheet" />'.
            '</head>';
+          }
+ 
 $html.='<body>'.
         '<script type="text/php">'.
       'if ( isset($pdf) ) {'. 
@@ -218,11 +238,16 @@ $html.=  '<header class="header">'.
                   $sqlBonosOtrs = "SELECT bpm.monto,b.cod_tipocalculobono
                         from bonos_personal_mes bpm,bonos b 
                         where   bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and  bpm.cod_bono=$cod_bono_aux and bpm.cod_estadoreferencial=1";
+
                   $stmtBonosOtrs = $dbh->prepare($sqlBonosOtrs);
-                  $stmtBonosOtrs->execute();
-                  $resultBonosOtros=$stmtBonosOtrs->fetch();
-                  $montoX=$resultBonosOtros['monto'];
-                  $tipoBonoX=$resultBonosOtros['cod_tipocalculobono'];
+                  $stmtBonosOtrs->execute();     
+                  $montoX=0;
+                  $tipoBonoX=0;                
+                  while ($rowBonosOtrs = $stmtBonosOtrs->fetch()) 
+                  { 
+                    $montoX=$rowBonosOtrs['monto'];                    
+                    $tipoBonoX=$rowBonosOtrs['cod_tipocalculobono'];
+                  }
                   if($tipoBonoX==2){
                     $porcen_monto=$dias_trabajados_planilla*100/$dias_trabajados_mes;
                     $montoX_aux=$porcen_monto*$montoX/100;
@@ -278,8 +303,12 @@ $html.=  '<header class="header">'.
                         where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$cod_mes and  cod_descuento=$cod_descuento_aux and cod_estadoreferencial=1";
                   $stmtDescuentos = $dbh->prepare($sqlDescuentos);
                   $stmtDescuentos->execute();
-                  $resultDescOtros=$stmtDescuentos->fetch();
-                  $montoX=$resultDescOtros['monto'];
+
+                  $montoX=0;
+                  while ($resultDescOtros = $stmtDescuentos->fetch()) 
+                  { 
+                    $montoX=$resultDescOtros['monto'];
+                  }
                   if($montoX==""){
                     $montoX=0;
                   }
@@ -309,7 +338,7 @@ $html.=  '<header class="header">'.
                   }
                   // $sumaDescuentos_otros+=$montoX_tp;
                   $html.='<td  class="text-right"><small><small><small><small>'.formatNumberDec($montoX_tp).'</small></small></small></small></td>';
-                }  
+                }
                 
               $html.='<td class="text-right"><small><small><small><small>'.formatNumberDec($row['monto_descuentos']*$porcentaje/100).'</small></small></small></small></td>'.
                 '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['liquido_pagable']*$porcentaje/100).'</small></small></small></small></td>';
@@ -382,5 +411,11 @@ $stmtDescuentos=null;
 
  // echo $html;
 
-descargarPDFHorizontal("Planilla_".$mes."_".$gestion,$html);
+if($tipo==2){
+  echo $html;
+}else{
+  descargarPDFHorizontal("Planilla_".$mes."_".$gestion,$html);
+}
+
+
 ?>

@@ -20,7 +20,9 @@ require_once '../functionsGeneral.php';
   $mes=strtoupper(nombreMes($cod_mes));
   $gestion=nameGestion($cod_gestion);
 
-
+$fecha_x=$gestion.'-'.$cod_mes.'-01';
+$fecha_cns=date("Y-m-t",strtotime($fecha_x."+ 1 month")); 
+$datos_fecha=explode("-", $fecha_cns);
 
 $porcentaje_aport_afp=obtenerValorConfiguracionPlanillas(12);
 $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
@@ -186,7 +188,7 @@ $html.='<table width="100%">
   <tr >
   <td width="25%"><center><p>______________________________<BR>'.obtenerValorConfiguracionPlanillas(25).'<BR>REPRESENTANTE LEGAL COBOFAR S.A.</p></center></td>
   <td><center><p>SELLO</p></center></td>
-  <td width="25%"><center><p></p></center></td>
+  <td width="25%"><center><p>LA PAZ, '.$datos_fecha[2].' DE '.strtoupper(nombreMes($datos_fecha[1])).' DE '.$datos_fecha[0].'</p></center></td>
   </tr>
 </table>';
 

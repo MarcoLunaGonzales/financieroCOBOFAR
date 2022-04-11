@@ -28,7 +28,6 @@ if($sw_excel==1){
   require_once '../layouts/bodylogin2.php';
 }
 
-
 require_once '../conexion_comercial_oficial.php'; 
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
@@ -67,7 +66,7 @@ $fechaTitulo="De ".$desde." a ".$hasta;
     $sql="SELECT ia.cod_ingreso_almacen,ia.nro_correlativo,p.nombre_proveedor,ia.observaciones,ia.nro_factura_proveedor,ia.created_by,ia.created_date,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.aut_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor,(select CONCAT_WS(' ',f.nombres,f.paterno)  from funcionarios f where f.codigo_funcionario=ia.created_by)as personal_ingreso
                     from ingreso_almacenes ia join proveedores p on ia.cod_proveedor=p.cod_proveedor
                     where ia.f_factura_proveedor BETWEEN '$fechaDesde 00:00:00' and '$fechahasta 23:59:59'
-                    and ia.cod_tipoingreso=1004 and ia.cod_tipo_doc=1 and ia.estado_guardado>0 and ia.ingreso_anulado=0  ORDER BY nro_factura_proveedor";
+                    and ia.cod_tipoingreso=1004 and ia.cod_tipo_doc=1 and ia.estado_guardado>0 and ia.ingreso_anulado=0 and ia.estado_contabilizado<>1  ORDER BY nro_factura_proveedor";
                   //echo $sql;
     $resp=mysqli_query($dbh,$sql);
     while($row=mysqli_fetch_array($resp)){ 
@@ -88,8 +87,8 @@ $fechaTitulo="De ".$desde." a ".$hasta;
       // $total_venta=$MFACTURA-number_format($DESCTO1,2,'.','')-$DESCTO2-$DESCTO3-$DESCTO4;
       // $total_venta=number_format($total_venta,2,'.','');
       // $datos_ingreso=$DCTO."/".$DOCUM."/".$FECHA1."/".$RUC."/".$REFE1."/".$REFE."/".$total_venta."/".$fechaDesde."/".$fechahasta;
-      $sw_contabilizacion=verificarContabilizacion_ingresos_dcto($cod_ingreso_almacen);
-      if($sw_contabilizacion==0){ 
+      // $sw_contabilizacion=verificarContabilizacion_ingresos_dcto($cod_ingreso_almacen);
+      // if($sw_contabilizacion==0){ 
         $index++;
         ?>
       <tr>
@@ -105,7 +104,7 @@ $fechaTitulo="De ".$desde." a ".$hasta;
         <td class="text-right small"><?=formatNumberDec($monto_factura_proveedor_desc);?></td>
       </tr>
       <?php   
-      }                               
+      // }                               
     }?>
   </tbody>
 </table>

@@ -2226,6 +2226,7 @@
               text:      '<i class="material-icons">file_copy</i>',
               titleAttr: 'Copiar',
               title: 'Planilla Sueldos Personal',
+
               exportOptions: {
                   columns: ':visible'
               }
@@ -2236,9 +2237,10 @@
               titleAttr: 'CSV',
               charset: 'UTF-8',
               bom: true,
-              title: 'Planilla Sueldos Personal',
+              title: '',
+              filename: 'Planilla Sueldos Personal',
               fieldBoundary: '',
-            fieldSeparator: ';',
+             fieldSeparator: ';',
               exportOptions: {
                   columns: ':visible'
               }
@@ -2247,10 +2249,14 @@
               extend: 'excel',
               text:      '<i class="material-icons">assessment</i>',
               titleAttr: 'Excel',
-              title: 'Planilla Sueldos Personal',
+              title: '',
+                filename: 'Planilla Sueldos Personal',
               exportOptions: {
                   columns: ':visible'
-              }
+              },customize: function( xlsx ) {
+                  var source = xlsx.xl['workbook.xml'].getElementsByTagName('sheet')[0];
+                  source.setAttribute('name','Hoja1');
+                }
           },
         ]
     });

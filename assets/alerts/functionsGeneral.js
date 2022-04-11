@@ -20068,3 +20068,42 @@ function guardar_edit_configuracionComercial(cod_ciudad,cod_cuentaBancaria,cod_c
     }
   });
 }
+
+
+//vacaciones
+function agregaformVacaciones(datos){
+  // console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personal_modal").value=d[0];
+  document.getElementById("gestion_modal").value=d[1];
+  document.getElementById("dias_vacacion").value=d[2];
+  document.getElementById("saldo_modal").value=d[2];
+  document.getElementById("ing_planilla").value=d[3];
+  document.getElementById("fecha_actual").value=d[4];
+  // document.getElementById("nombre_personal_modal").value=d[5];
+  var datos_cabecera="Gestión : "+d[1]+" Total días disponibles : "+d[2];
+  // alert(datos_cabecera);
+  document.getElementById("datos_cabecera").value=datos_cabecera;
+  // var b = document.getElementById("dias_vacacion");
+
+  // b.setAttribute("min", "5");
+  // b.setAttribute("max", d[2]);
+}
+
+function RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,observaciones_modal,ing_planilla,fecha_actual){
+  $.ajax({
+    type:"POST",
+    data:"codigo_personal_modal="+codigo_personal_modal+"&gestion_modal="+gestion_modal+"&dias_vacacion="+dias_vacacion+"&fecha_inicio_modal="+fecha_inicio_modal+"&fecha_final_modal="+fecha_final_modal+"&observaciones_modal="+observaciones_modal,
+    url:"vacaciones_permisos/vacaciones_save.php",
+    success:function(r){
+      // console.log(r);
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=vacaciones_detalle&codigo='+codigo_personal_modal+'&ing_planilla='+ing_planilla+'&fecha_actual='+fecha_actual);
+      }else{
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+      } 
+    }
+  });
+}
+
+

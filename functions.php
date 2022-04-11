@@ -12280,7 +12280,7 @@ function obtenerIngresoPendienteDatos($codIngreso){
 
    function listaDetalleIngresosAlmacen($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_proveedor,factura,fecha_factura,nit,autorizacion,codigo_control,monto_factura,desc_total  from ingresos_almacen_detalle where cod_ingresoalmacen=$codigo");
+     $stmt = $dbh->prepare("SELECT cod_proveedor,factura,fecha_factura,nit,autorizacion,codigo_control,monto_factura,desc_total,dcto_almacen  from ingresos_almacen_detalle where cod_ingresoalmacen=$codigo");
      $stmt->execute();
      return $stmt;
   }
@@ -12473,13 +12473,66 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
       // $nfac=$row['nro_factura_proveedor'];
       $dcto=$row['cod_ingreso_almacen'];
       // $FECHA1=date("d/m/Y", strtotime($FECHA1));
-      
       $valor=$IDPROVEEDOR."#####".$NIT."#####".$REFE."#####".$factura."#####".$auto."#####".$FECHA1."#####".$MFACTURA."#####".$dcto;
       }
       //$valor="NO ENCONTRADO";
        mysqli_close($dbh);
       return($valor);
   }
+
+  function verificar_nit_fac_fecha($nit,$factura,$fecha){
+      $sql="SELECT ia.cod_ingreso_almacen,p.nombre_proveedor,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor,ia.monto_factura_proveedor_desc,ia.aut_factura_proveedor
+   from ingreso_almacenes ia join proveedores p on ia.cod_proveedor=p.cod_proveedor
+   where ia.cod_tipoingreso=1004 and ia.cod_tipo_doc=1 and ia.estado_guardado>0 and ia.ingreso_anulado=0 and ia.nro_factura_proveedor=$factura and ia.nit_factura_proveedor=$nit and ia.f_factura_proveedor='$fecha'";
+      //echo $sql;
+      $valor="NO ENCONTRADO";
+      require("conexion_comercial_oficial.php");
+      $resp=mysqli_query($dbh,$sql);
+      while($row=mysqli_fetch_array($resp)){ 
+      $IDPROVEEDOR=$row['nombre_proveedor'];
+      // $FECHA=$row['FECHA'];
+      $FECHA1=$row['f_factura_proveedor'];
+      $MFACTURA=$row['monto_factura_proveedor_desc'];
+      $REFE1=$row['aut_factura_proveedor'];
+      $REFE=$row['con_factura_proveedor'];
+      $NIT=$row['nit_factura_proveedor'];
+      // $nfac=$row['nro_factura_proveedor'];
+      $dcto=$row['cod_ingreso_almacen'];
+      // $FECHA1=date("d/m/Y", strtotime($FECHA1));
+      $valor=$IDPROVEEDOR."#####".$NIT."#####".$REFE."#####".$factura."#####".$REFE1."#####".$FECHA1."#####".$MFACTURA."#####".$dcto;
+      }
+      //$valor="NO ENCONTRADO";
+       mysqli_close($dbh);
+      return($valor);
+  }
+
+
+  function verificar_nit_fac_monto($nit,$factura,$monto){
+      $sql="SELECT ia.cod_ingreso_almacen,p.nombre_proveedor,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor,ia.monto_factura_proveedor_desc,ia.aut_factura_proveedor
+   from ingreso_almacenes ia join proveedores p on ia.cod_proveedor=p.cod_proveedor
+   where ia.cod_tipoingreso=1004 and ia.cod_tipo_doc=1 and ia.estado_guardado>0 and ia.ingreso_anulado=0 and ia.nro_factura_proveedor=$factura and ia.nit_factura_proveedor=$nit and ia.monto_factura_proveedor_desc='$MFACTURA'";
+      //echo $sql;
+      $valor="NO ENCONTRADO";
+      require("conexion_comercial_oficial.php");
+      $resp=mysqli_query($dbh,$sql);
+      while($row=mysqli_fetch_array($resp)){ 
+      $IDPROVEEDOR=$row['nombre_proveedor'];
+      // $FECHA=$row['FECHA'];
+      $FECHA1=$row['f_factura_proveedor'];
+      $MFACTURA=$row['monto_factura_proveedor_desc'];
+      $REFE1=$row['aut_factura_proveedor'];
+      $REFE=$row['con_factura_proveedor'];
+      $NIT=$row['nit_factura_proveedor'];
+      // $nfac=$row['nro_factura_proveedor'];
+      $dcto=$row['cod_ingreso_almacen'];
+      // $FECHA1=date("d/m/Y", strtotime($FECHA1));
+      $valor=$IDPROVEEDOR."#####".$NIT."#####".$REFE."#####".$factura."#####".$REFE1."#####".$FECHA1."#####".$MFACTURA."#####".$dcto;
+      }
+      //$valor="NO ENCONTRADO";
+       mysqli_close($dbh);
+      return($valor);
+  }
+
    function verificar_nit_control($nit,$codigo){
    
       $sql="SELECT ia.cod_ingreso_almacen,p.nombre_proveedor,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nro_factura_proveedor,ia.aut_factura_proveedor
@@ -12509,7 +12562,7 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
   function verificar_nit_fac($nit,$factura){
       $sql="SELECT ia.cod_ingreso_almacen,p.nombre_proveedor,ia.f_factura_proveedor,ia.con_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nit_factura_proveedor,ia.monto_factura_proveedor_desc,ia.nro_factura_proveedor,ia.aut_factura_proveedor
    from ingreso_almacenes ia join proveedores p on ia.cod_proveedor=p.cod_proveedor
-   where ia.cod_tipoingreso=1004 and ia.cod_tipo_doc=1 and ia.estado_guardado>0 and ia.ingreso_anulado=0 and ia.nit_factura_proveedor=$nit and ia.nro_factura_proveedor=$factura";
+   where ia.cod_tipoingreso=1004 and ia.cod_tipo_doc=1 and ia.estado_guardado>0 and ia.ingreso_anulado=0 and ia.nit_factura_proveedor=$nit and ia.nro_factura_proveedor=$factura order by cod_ingreso_almacen desc limit 1";
       $valor="NO ENCONTRADO";
       require("conexion_comercial_oficial.php");
       $resp=mysqli_query($dbh,$sql);
@@ -12767,8 +12820,13 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
 }
 
 
-  function obtenerDiasVacacionUzadas($cod_personal){
-    $sql="SELECT sum(dias_vacacion)as uzadas from personal_vacaciones  where cod_personal=$cod_personal";
+  function obtenerDiasVacacionUzadas($cod_personal,$gestion){
+    if($gestion==-100){
+      $sql="SELECT sum(dias_vacacion)as uzadas from personal_vacaciones  where cod_personal=$cod_personal and cod_estadoreferencial=1";
+    }else{
+      $sql="SELECT sum(dias_vacacion)as uzadas from personal_vacaciones  where cod_personal=$cod_personal and gestion=$gestion and cod_estadoreferencial=1";
+    }
+    
    $dbh = new Conexion();
    $valor=0;
    $stmt = $dbh->prepare($sql);

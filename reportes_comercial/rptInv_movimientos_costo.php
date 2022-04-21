@@ -42,7 +42,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
             <div class="card-icon bg-blanco">
               <img class="" width="50" height="40" src="../assets/img/favicon.png">
             </div>
-             <h4 class="card-title text-center">REPORTE MOVIENTOS COSTO - PRODUCTO</h4>
+             <h4 class="card-title text-center">REPORTE MOVIMIENTOS COSTO - PRODUCTO</h4>
           </div>
           <div class="card-body">
             <h6 class="card-title" id="nombre_sucursal">Sucursal:</h6>  
@@ -51,7 +51,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
 
 <table class="table table-bordered table-condensed" id="tablePaginator1001">
   <thead>
-    <tr><th></th><th></th><th colspan="20" align="center"><b>REPORTE MOVIENTOS DE PRODUCTOS - COSTOS</b></th></tr>
+    <tr><th></th><th></th><th colspan="20" align="center"><b>REPORTE MOVIMIENTOS COSTO - PRODUCTO</b></th></tr>
     <tr style="border:1px;">
       <th>CODIGO</th>
       <th>DES</th>

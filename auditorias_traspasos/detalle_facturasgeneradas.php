@@ -1,7 +1,7 @@
 <?php
 
 require_once '../functions.php';
-require("../conexion_comercial2.php");
+require("../conexion_comercial_oficial.php");
 
 $codigo_salida=$_GET['codigo_salida'];
 
@@ -14,7 +14,7 @@ $sum_cantidad=0;
 $sum_monto=0;
 $index=0;
 
-$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
+$resp_detalle=mysqli_query($dbh,$sql_detalle);
 
 while($dat_detalle=mysqli_fetch_array($resp_detalle))
 {
@@ -52,5 +52,5 @@ while($dat_detalle=mysqli_fetch_array($resp_detalle))
     <td style="color:blue;"><small></small></td>
     <td style="color:blue;"><small>TOTAL</small></td>
     <td style="color:blue;"><small><?=$sum_cantidad?></small></td>
-    <td style="color:blue;"><small><?=number_format(round($sum_monto,1, PHP_ROUND_HALF_UP),2)?></small></td>
+    <td style="color:blue;"><small><?=number_format($sum_monto,2)?></small></td>
   </tr>

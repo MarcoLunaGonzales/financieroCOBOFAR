@@ -29,11 +29,12 @@ if($sw_excel==1){
 }
 require_once '../functions.php';
 require("../conexion_comercial.php");
-require("../conexion_comercial2.php");
+// require("../conexion_comercial2.php");
 
 $fechai=$_POST['fechainicio'];
 $fechaf=$_POST['fechafin'];
-$sucursal=$_POST['sucursal'];
+$sucursal_origen=$_POST['sucursal_origen'];
+$sucursal_destino=$_POST['sucursal_destino'];
 $tipo=$_POST['tipo'];
 
 $periodo_ingreso=$_POST['periodo_ingreso'];
@@ -43,18 +44,25 @@ $periodo_ingreso=$_POST['periodo_ingreso'];
 $fecha_actual=date('Y-m-d');
 $fecha_limite=date('Y-m-d',strtotime($fecha_actual.'-'.$periodo_ingreso.' day'));
 //echo $fecha_limite."**";
-$sucursalgString="";
-foreach ($sucursal as $sucursali) {   
-  $sucursalgString.=$sucursali.",";
+$sucursalgStringDestino="";
+foreach ($sucursal_destino as $sucursald) {   
+  $sucursalgStringDestino.=$sucursald.",";
 }
-$sucursalgString=trim($sucursalgString,",");
+$sucursalgStringDestino=trim($sucursalgStringDestino,",");
+
+$sucursalgStringOrigen="";
+foreach ($sucursal_origen as $sucursalo) {   
+  $sucursalgStringOrigen.=$sucursalo.",";
+}
+$sucursalgStringOrigen=trim($sucursalgStringOrigen,",");
+
 
 if($tipo==2 || $tipo==3){
   include "auditoria_sucursales_print_tiempo.php";
 }elseif($tipo==1){
 $sql="SELECT s.cod_salida_almacenes,s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito,(select al.nombre_almacen from almacenes al where al.cod_almacen=s.almacen_destino)as nombre_almacen_des,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer)as nombre_responsable,s.hora_salida
   FROM salida_almacenes s, tipos_salida ts, almacenes a 
-  where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null) ORDER BY s.fecha desc, s.nro_correlativo desc ";
+  where s.fecha between '$fechai' and '$fechaf' and s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringDestino)) and s.cod_almacen in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringOrigen)) and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null) ORDER BY s.fecha desc, s.nro_correlativo desc ";
 
 // echo "<br><br><br>".$sql;
 
@@ -116,6 +124,8 @@ if($sw_excel==1){?>
                     $salida_anulada=$dat[7];   
                     $nombre_responsable=$dat[10];
                     $hora_salida=$dat[11];
+
+                    $monto_transaccion=obtenerMontoDetalleSalida($codigo);
                     $color_fondo = "";
                     if($fecha_salida<$fecha_limite){
                       $color_fondo = "style='background:#ff8080'";
@@ -126,14 +136,14 @@ if($sw_excel==1){?>
                       $obs_salida=$obs_salida."<br><b class='text-danger'>(".$dat[8].")</b>";
                     }?>
                     <tr <?=$color_fondo?>>
-                      <td><?=$nombre_almacen_origen?></td>
-                      <td><?=$nombre_responsable?></td>
-                      <td><?=$nombre_tiposalida?></td>
+                      <td class="text-left"><?=$nombre_almacen_origen?></td>
+                      <td class="text-left"><?=$nombre_responsable?></td>
+                      <td class="text-left"><?=$nombre_tiposalida?></td>
                       <td align='center'><?=$fecha_salida_mostrar?> <?=$hora_salida?></td>
-                      <td align='center'><?=$nro_correlativo?></td>
-                      <td>&nbsp;<?=$obs_salida?></td>
-                      <td>&nbsp;<?=$nombre_almacen_dest?></td>
-                      <td>&nbsp;</td>
+                      <td align='center'>T - <?=$nro_correlativo?></td>
+                      <td class="text-left">&nbsp;<?=$obs_salida?></td>
+                      <td class="text-left">&nbsp;<?=$nombre_almacen_dest?></td>
+                      <td>&nbsp;<?=number_format($monto_transaccion,2)?></td>
                       <td class='td-actions text-right'><?php if($sw_excel==1){?> <a href='#' rel='tooltip' class='btn btn-warning' onclick='abrir_detalle_modal("<?=$codigo?>",0);return false;'><i class='material-icons' title='Ver Detalle'>list</i></a><?php }?></td>
                     </tr>
                 <?php

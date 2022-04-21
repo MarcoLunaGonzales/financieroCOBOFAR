@@ -5,6 +5,7 @@ require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalGestion=$_SESSION["globalNombreGestion"];
 
 $dbh = new Conexion();
 
@@ -69,7 +70,7 @@ $stmtProyecto->bindColumn('proyecto', $nombre_proyecto);
 $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
 ?>
 <div class="content">
-	<div class="container-fluid">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
         <div class="card">
@@ -125,7 +126,6 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                           <td class="text-left small"><small><?=$dep_nombre;?>/<?=$tb_tipo;?></small></td>
                           <td class="text-left small"><small><?=strtoupper($nombre_responsable)?></small></td>
                           <td class="text-left small"><small><?=strtoupper($nombre_responsable2)?></small></td>
-                          <!-- <td class="text-left small"><?=$proy_financiacion;?></td> -->
                           <td class="td-actions text-right">
                             <div class="btn-group dropdown">
                               <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Primarios">
@@ -142,9 +142,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                                 <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
                                   <i class="material-icons text-info" >transfer_within_a_station</i>Transferir AF
                                 </a>
-                                <!-- <button rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDardeBaja;?>&codigo=<?=$codigo;?>')">
-                                  <i class="material-icons text-danger" >flight_land</i>Dar de Baja AF
-                                </button>  -->
+                               
                                 <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>')">
                                   <i class="material-icons text-danger"  title="Editar">flight_land</i>Dar de Baja AF
                                 </button><?php } ?>
@@ -176,7 +174,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                                        <i class="material-icons" title="Imprimir Comporbante" style="color:red">print</i>
                                    </a> 
                               <?php }elseif($contabilizado==0){ ?>
-                                <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
+                                <a href="executeComprobanteActivoFijo.php?codigo_activo=<?=$codigo_activo;?>" target="_blank" > 
                                   <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
                                 </a>
                               <?php }
@@ -193,8 +191,8 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
         <?php
         if($globalAdmin==1){
         ?>
-				<div class="card-footer fixed-bottom">
-              <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
+        <div class="card-footer fixed-bottom">
+              
           <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegistrar_activosfijos;?>&codigo=0'">Registrar</button>
         </div>
         <?php

@@ -88,7 +88,7 @@ if($alert==true){
                     //**INGRESAMOS ANTICIPOS
                     $anticipos=$datos[19];
                     $stmtAnticipos = $dbh->prepare("INSERT INTO anticipos_personal (cod_gestion,cod_mes,cod_personal,monto,fecha_registro, cod_estadoreferencial) 
-                        VALUES ($codGestion,$codMes,$cod_personal,$anticipos,now(),$codEstado)");
+                        VALUES ($codGestion,$codMes,$cod_personal,$anticipos,NOW(),$codEstado)");
                     $flagSuccess=$stmtAnticipos->execute();
                     $contador_excel=20;
                     for ($j=0; $j <count($descuentos_array) ; $j++) { 

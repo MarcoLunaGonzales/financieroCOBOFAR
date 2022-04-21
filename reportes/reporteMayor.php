@@ -141,7 +141,8 @@ z-index: 20;
                    for ($cta=0; $cta < cantidadF($codcuentaMayor); $cta++) { 
                      $porcionesCuenta = explode("@", $codcuentaMayor[$cta]);
                      $cuentaCta=$porcionesCuenta[0];
-                     $sql="SELECT * from cuentas_auxiliares where cod_cuenta=$cuentaCta and cod_estadoreferencial=1";
+                     $sql="SELECT * from cuentas_auxiliares where cod_cuenta=$cuentaCta and cod_estadoreferencial=1 ";
+                     // $sql="SELECT * from cuentas_auxiliares where cod_cuenta=$cuentaCta and cod_estadoreferencial=1 and codigo in (451,428,977,446,438,633,442,431,510,527,538)";
                      $stmtAux = $dbh->prepare($sql);
                      $stmtAux->execute();
                      while ($rowAux = $stmtAux->fetch(PDO::FETCH_ASSOC)) {

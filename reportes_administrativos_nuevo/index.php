@@ -14,9 +14,9 @@ $dbh = new Conexion();
 	<div class="container-fluid">
 		<div class="col-md-12">
 			<div class="card">
-			  	<div class="card-header card-success card-header-text">
-					<div class="card-text">
-				  		<h4 class="card-title">Reportes Comprobantes</h4>
+			  	<div class="card-header card-success card-header-text" >
+					<div class="card-text" style=" background: #c7cad3;">
+				  		<h4 class="card-title" style="color:red;">Comprobantes</h4>
 					</div>
 			  	</div>
 
@@ -30,14 +30,14 @@ $dbh = new Conexion();
 				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a class="btn btn-rose" href="<?=$urlreporte_comprobantesincompletos_from;?>">
-				                    <span class="sidebar-normal"> Comprobantes Incompletos</span>
+				                    <span class="sidebar-normal">Comprobantes Incompletos</span>
 				                </a>
 							</div>
 				  		</div>
 				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a class="btn btn-info" href="<?=$urlreporte_comprobantesinEC_from;?>">
-				                    <span class="sidebar-normal"> Comprobantes Sin Estados Cuenta</span>
+				                    <span class="sidebar-normal">Comprobantes Sin Estados Cuenta</span>
 				                </a>
 							</div>
 				  		</div>
@@ -45,10 +45,10 @@ $dbh = new Conexion();
 					
 
 					<div class="row">				  	
-				  		<div class="col-sm-4">
+				  		<div class="col-sm-3">
 							<div class="form-group">								
 								<a class="btn btn-primary" href="">				                
-				                    <span class="sidebar-normal"> Cantidad Comprobantes </span>
+				                    <span class="sidebar-normal"> Cantidad Comprobantes</span>
 				                </a>
 							</div>
 				  		</div>
@@ -59,61 +59,36 @@ $dbh = new Conexion();
 				                </a>
 							</div>
 				  		</div>
-				  		
-				  		
 					</div>
 			  	</div>
 			</div>
-		<!-- 	<div class="card">
-			  	<div class="card-header card-danger card-header-text">
-					<div class="card-text">
-				  		<h4 class="card-title">Reportes Facturación,estado de resultados,comprobantes</h4>
+
+			<div class="card">
+				<div class="card-header card-success card-header-text" >
+					<div class="card-text" style=" background: #c7cad3;">
+				  		<h4 class="card-title" style="color:red;">Impuestos</h4>
 					</div>
 			  	</div>
-
-			  	<div class="card-body ">
-					<div class="row">				
-						<div class="col-sm-4">
-							<div class="form-group">								
-								<a class="btn btn-info" href="reporte_verif_reportes_resultados_filtro.php">				                
-				                    <span class="sidebar-normal"> reportes vs estado resultados</span>
+				<div class="card-body ">
+					<div class="row">
+				  		<div class="col-sm-3">
+							<div class="form-group">
+								<a class="btn btn-danger" href="cuadro_ventas_from.php">
+				                    <span class="sidebar-normal"> Cuadro Ventas Automaticas</span>
 				                </a>
 							</div>
-				  		</div>  	
-				  		<div class="col-sm-4">
+				  		</div>
+				  		<div class="col-sm-3">
 							<div class="form-group">
-								<a class="btn btn-warning" href="reporte_verificacion_facturas_comprobante_filtro.php">				                
-				                    <span class="sidebar-normal"> Facturas vs Comprobantes</span>
+								<a class="btn btn-success" href="cuadro_facturas_manuales_from.php">
+				                    <span class="sidebar-normal"> Cuadro Facturas Manuales</span>
 				                </a>
 							</div>
 				  		</div>
 					</div>
-
-					
 			  	</div>
 			</div>
-			<div class="card">
-			  	<div class="card-header card-success card-header-text">
-					<div class="card-text">
-				  		<h4 class="card-title">Libretas Bancarias</h4>
-					</div>
-			  	</div>
-
-			  	<div class="card-body ">
-					<div class="row">				
-						<div class="col-sm-4">
-							<div class="form-group">								
-								<a class="btn btn-primary" href="reporte_verif_reportes_libretas_relacion.php">				                
-				                    <span class="sidebar-normal"> libretas vs facturas (fechas)</span>
-				                </a>
-							</div>
-				  		</div>  	
-					</div>
-
-					
-			  	</div>
-			</div> -->
-
+		
 		</div>
 	</div>
 </div>

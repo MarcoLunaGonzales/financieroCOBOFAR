@@ -26,7 +26,7 @@ if($cod_responsabledesde <> -100){
 }
 $cod_autorizaactivofijo=obtenerValorConfiguracion(100);
 try{
-    $sqlActivos="SELECT c.fechaasignacion, c.codigo,a.codigoactivo,a.activo,
+    $sqlActivos="SELECT c.fechaasignacion, c.codigo,a.codigoactivo,a.otrodato,
 (SELECT cod_unidadorganizacional from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion desc limit 1)as unidad_origen,
 (SELECT cod_area from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion desc limit 1)as area_origen,
 (SELECT cod_personal from activofijos_asignaciones where codigo!=c.codigo and cod_activosfijos=c.cod_activosfijos order by fechaasignacion desc limit 1)as personal_origen 
@@ -79,7 +79,7 @@ and c.cod_personal=$cod_responsable and c.cod_unidadorganizacional=$cod_unidador
       <table class="table">
         <tr class="bg-celeste">
             <td class="s3 text-center">N°</td>
-            <td class="s3 text-center">CÓDIGO</td>
+            <td class="s3 text-center">CODIGO</td>
              <td class="s3 text-center">FECHA</td>
             <td class="s3 text-center" width="70%">DESCRIPCION</td>
 
@@ -87,14 +87,14 @@ and c.cod_personal=$cod_responsable and c.cod_unidadorganizacional=$cod_unidador
         $index=1;
         while ($row = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
           $codActivo=$row['codigoactivo'];
-          $activo=$row['activo'];
+          $activo=$row['otrodato'];
           $fecha=$row['fechaasignacion'];
            ?>
         <tr>
             <td class="s3 text-center" width="4%"><?=$index?></td>
-            <td class="s3 text-center"><?=$codActivo?></td>
+            <td class="s3 text-left"><?=$codActivo?></td>
             <td class="s3 text-center"><?=strftime('%d/ %m/ %Y',strtotime($fecha))?></td>
-            <td class="s3 text-center"><?=$activo?></td>           
+            <td class="s3 text-left"><?=$activo?></td>           
         </tr> 
         <?php  
         $index++; 

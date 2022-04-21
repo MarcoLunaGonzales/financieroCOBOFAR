@@ -29,15 +29,31 @@ $fechaActual=date('Y-m-d');
               </div>
             </div>
           </div>
-           <div class="row">
-            <label class="col-sm-2 col-form-label">Sucursal</label>
+          
+          <div class="row">
+            <label class="col-sm-2 col-form-label">Sucursal Origen</label>
             <div class="col-sm-4">
               <div class="form-group">
-                <select class="selectpicker form-control" title="Seleccione una opcion" name="sucursal[]" id="sucursal" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
+                <select class="selectpicker form-control" title="Seleccione una opcion" name="sucursal_origen[]" id="sucursal_origen" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
                   <?php 
                     $queryUO1 = "SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select a.abreviatura from areas a where a.codigo=cod_area) as abrev_area
                       FROM areas_organizacion
-                      where cod_estadoreferencial=1 and cod_unidad=2 order by nombre_area";
+                      where cod_estadoreferencial=1 and cod_unidad=2  or cod_area in (512,513) order by nombre_area";
+                    $stmt = $dbh->query($queryUO1);
+                    while ($row = $stmt->fetch()){ ?>
+                      <option value="<?=$row['cod_area'];?>"><?=$row["nombre_area"];?></option>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+            <label class="col-sm-1 col-form-label">Sucursal Destino</label>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <select class="selectpicker form-control" title="Seleccione una opcion" name="sucursal_destino[]" id="sucursal_destino" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
+                  <?php 
+                    $queryUO1 = "SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select a.abreviatura from areas a where a.codigo=cod_area) as abrev_area
+                      FROM areas_organizacion
+                      where cod_estadoreferencial=1 and cod_unidad=2 or cod_area in (512,513) order by nombre_area";
                     $stmt = $dbh->query($queryUO1);
                     while ($row = $stmt->fetch()){ ?>
                       <option value="<?=$row['cod_area'];?>"><?=$row["nombre_area"];?></option>
@@ -46,6 +62,7 @@ $fechaActual=date('Y-m-d');
               </div>
             </div>
           </div>
+
        
 
           <div class="row">

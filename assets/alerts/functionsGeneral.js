@@ -5285,12 +5285,12 @@ function agregaformEditEva(datos){
   document.getElementById("codigo_contratoEv").value=d[1];
   document.getElementById("fecha_EvaluacionEv").value=d[3];
 }
-function agregaformRetiroPersonal(datos,indice){
+function agregaformRetiroPersonal(datos){
   //console.log("datos: "+datos);
   var d=datos.split('/');
   document.getElementById("codigo_personalR").value=d[0];
   document.getElementById("codigo_contratoR").value=d[1];
-  document.getElementById("indiceR").value=indice;
+  // document.getElementById("indiceR").value=indice;
 
   // document.getElementById("cod_areaE").value=d[2];
   // document.getElementById("porcentajeE").value=d[3];
@@ -5373,10 +5373,6 @@ function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones,
         }else{
           alerts.showSwal('success-message','index.php?opcion=personalLista');
         }
-        
-        
-
-        
       }else{
         if(r==2){
           // alerts.showSwal('error-message6','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
@@ -12692,9 +12688,9 @@ function AjaxGestionFechaHasta(cod_gestion){
   contenedor = document.getElementById('div_contenedor_fechaH');
   ajax=nuevoAjax();
   if($("#reporteEgreso").length>0||$("#reporteIngreso").length>0){
-    ajax.open('GET', '../reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);
+    ajax.open('GET', '../reportes/GestionHastaAjax.php?cod_gestion='+cod_gestion,true);
   }else{
-    ajax.open('GET', 'reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);
+    ajax.open('GET', 'reportes/GestionHastaAjax.php?cod_gestion='+cod_gestion,true);
   }
   
   ajax.onreadystatechange=function() {
@@ -12727,7 +12723,7 @@ function AjaxGestionFechaHastaMes(cod_gestion){
   var contenedor; 
   contenedor = document.getElementById('div_contenedor_fechaH');
   ajax=nuevoAjax();
-  ajax.open('GET', 'reportes/GestionhastaAjaxMes.php?cod_gestion='+cod_gestion,true);
+  ajax.open('GET', 'reportes/GestionHastaAjaxMes.php?cod_gestion='+cod_gestion,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
@@ -19854,12 +19850,12 @@ function abrir_detalle_modal(codigo,cod_sucursal){
 }
 
 function redireccionarIngresosAlmacenAnt(cod_personal){
-  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
+  // window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php', '_blank'); 
   //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/filtro.php?p='+cod_personal, '_blank'); 
 }
 
 function pendientes_ingreso_almacen_ant(){
-  window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php', '_blank'); 
+  // window.open('http://localhost/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php', '_blank'); 
   //window.open('http://10.10.1.23/financieroCOBOFAR/ingresos_almacen_antiguo/rpt_facturas_pendientes_from.php?', '_blank'); 
 }
 function redireccionarIngresosAlmacen_nuevo(cod_personal){ 
@@ -20043,8 +20039,71 @@ function guardar_edit_plantilla_sueldos(codigo_e,cod_gestion_e,cod_mes_e,dias_tr
         alerts.showSwal('success-message','plantilla_sueldos_editar.php');
         // Swal.fire("Se procedió con el cambio!", "Por favor actualizar Página.", "success");        
       }else{
-        Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
+        Swal.fire("A ocurrido un error!", "No se pudo Editar la plantilla.", "warning");        
       }
     }
   });
 }
+
+function agregardatosModal_configuracionComercial(datos){  
+  var d=datos.split('/');
+ 
+  document.getElementById("cod_ciudad").value=d[0];
+  document.getElementById("nombre").value=d[1];
+  document.getElementById("nombre_cuenta").value=d[2];
+  document.getElementById("nombre_cuenta2").value=d[3];
+}
+
+function guardar_edit_configuracionComercial(cod_ciudad,cod_cuentaBancaria,cod_cuentaBancaria2){
+  $.ajax({
+    type:"POST",
+    data:"cod_ciudad="+cod_ciudad+"&cod_cuentaBancaria="+cod_cuentaBancaria+"&cod_cuentaBancaria2="+cod_cuentaBancaria2,
+    url:"ingresos_sucursales/configuraciones_cuentas_save.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=rpt_configuraciones_comercial');
+      }else{
+        Swal.fire("A ocurrido un error!", "No se pudo editar la cuenta Bancaria.", "warning");        
+      }
+    }
+  });
+}
+
+
+//vacaciones
+function agregaformVacaciones(datos){
+  // console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personal_modal").value=d[0];
+  document.getElementById("gestion_modal").value=d[1];
+  document.getElementById("dias_vacacion").value=d[2];
+  document.getElementById("saldo_modal").value=d[2];
+  document.getElementById("ing_planilla").value=d[3];
+  document.getElementById("fecha_actual").value=d[4];
+  // document.getElementById("nombre_personal_modal").value=d[5];
+  var datos_cabecera="Gestión : "+d[1]+" Total días disponibles : "+d[2];
+  // alert(datos_cabecera);
+  document.getElementById("datos_cabecera").value=datos_cabecera;
+  // var b = document.getElementById("dias_vacacion");
+
+  // b.setAttribute("min", "5");
+  // b.setAttribute("max", d[2]);
+}
+
+function RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,observaciones_modal,ing_planilla,fecha_actual){
+  $.ajax({
+    type:"POST",
+    data:"codigo_personal_modal="+codigo_personal_modal+"&gestion_modal="+gestion_modal+"&dias_vacacion="+dias_vacacion+"&fecha_inicio_modal="+fecha_inicio_modal+"&fecha_final_modal="+fecha_final_modal+"&observaciones_modal="+observaciones_modal,
+    url:"vacaciones_permisos/vacaciones_save.php",
+    success:function(r){
+      // console.log(r);
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=vacaciones_detalle&codigo='+codigo_personal_modal+'&ing_planilla='+ing_planilla+'&fecha_actual='+fecha_actual);
+      }else{
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+      } 
+    }
+  });
+}
+
+

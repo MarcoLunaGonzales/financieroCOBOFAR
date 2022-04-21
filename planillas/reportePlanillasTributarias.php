@@ -29,8 +29,9 @@ $fechaActual=date("Y-m-d");
     (Select i.abreviatura from tipos_identificacion_personal i where i.codigo=p.cod_tipo_identificacion) as tipo_identificacion,p.tipo_identificacion_otro,
     p.identificacion
     from planillas_tributarias_personal_mes_2 pt
-    join personal p on p.codigo=pt.cod_personal
-    where pt.cod_planillatributaria=$codPlanilla";
+    join personal p on p.codigo=pt.cod_personal join areas a on p.cod_area=a.codigo
+    where pt.cod_planillatributaria=$codPlanilla
+     order by p.cod_unidadorganizacional,a.nombre,p.turno,p.paterno";
 
   $stmtPersonal = $dbh->prepare($sql);
   $stmtPersonal->execute(); 
@@ -57,7 +58,7 @@ $html.='<body>'.
       '}'.
     '</script>';
 $html.=  '<header class="header">'.            
-            '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
+            '<img class="imagen-logo-izq" src="../assets/img/marca.png">'.
             '<div id="header_titulo_texto">PLANILLA TRIBUTARIA</div>'.
             
             '<div id="info_izq">

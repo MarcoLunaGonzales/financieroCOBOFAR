@@ -33,8 +33,6 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
   $array_escalas[$i]=$anios_inicio.",".$anios_final.",".$dias_vacacion;
   $i++;
 }    
-
-
 ?>
 
 <div class="content">
@@ -42,7 +40,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <div class="card-header <?= $colorCard; ?> card-header-icon">
+          <div class="card-header card-header-rose card-header-icon">
             <div class="card-icon">
               <i class="material-icons"><?= $iconCard; ?></i>
             </div>
@@ -52,7 +50,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
             <div class="table-responsive">
               <table id="tablePaginator100" class="table table-condensed table-bordered">
                 <thead>
-                  <tr>
+                  <tr  class='bg-dark text-white'>
                     <th class="text-left">#</th>
                     <th class="text-center">Area/Sucursal</th>
                     <th class="text-center">Personal</th>
@@ -60,6 +58,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                     <th class="text-center">Días V.</th>
                     <th class="text-center">Días Ut.</th>
                     <th class="text-center">Saldo</th>
+                    <th class="text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -83,8 +82,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                       $total_dias_vacacion=$datos_array[0];
                       $diferencia_mes_sobrante=$datos_array[1];
                       $diferencia_dias_sobrante=$datos_array[2];
-                      
-                      $dias_uzadas=obtenerDiasVacacionUzadas($codigo);
+                      $dias_uzadas=obtenerDiasVacacionUzadas($codigo,-100);
                       $saldo_vacacion=$total_dias_vacacion-$dias_uzadas;
                      ?>
                     <tr>
@@ -95,6 +93,11 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                       <td class="text-center"><?=$total_dias_vacacion;?></td>
                       <td class="text-center"><?=$dias_uzadas; ?></td>
                       <td class="text-center"><?=$saldo_vacacion; ?></td>
+                      <td class="td-actions">
+                        <a href='index.php?opcion=vacaciones_detalle&codigo=<?=$codigo;?>&ing_planilla=<?=$ing_planilla?>&fecha_actual=<?=$fecha_actual?>'  rel="tooltip" class="btn btn-info btn-sm">
+                            <i class="material-icons" style="color:black">visibility</i>
+                          </a>
+                      </td>
                     </tr>
                   <?php
                     $index++;
@@ -106,10 +109,10 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
           </div>
         </div>
         <?php if ($globalAdmin == 1) { ?>
-          <div class="card-footer fixed-bottom">
+          <!-- <div class="card-footer fixed-bottom">
             <button class="btn btn-success" onClick="location.href='index.php?opcion=vacacionesPersonalForm'">Registrar Permiso x Vacación</button>
             <a class="btn btn-warning" href="vacaciones_permisos/vacaciones_historico.php" target="_blank">Histórico Permiso x Vacación</a>
-          </div>
+          </div> -->
         <?php } ?>
       </div>
     </div>

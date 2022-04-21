@@ -219,7 +219,7 @@ $statementtipos_afp = $dbh->query($querytipos_afp);
 $querytipos_aporteafp = "SELECT codigo,nombre from tipos_aporteafp where cod_estadoreferencial=1";
 $statementtipos_aporteafp = $dbh->query($querytipos_aporteafp);
 
-$queryestados_personal = "SELECT codigo,nombre from estados_personal where cod_estadoreferencial=1";
+$queryestados_personal = "SELECT codigo,nombre from estados_personal where cod_estadoreferencial=1 and codigo<>3";
 $statementestados_personal = $dbh->query($queryestados_personal);
 
 

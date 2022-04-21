@@ -20,7 +20,9 @@ require_once '../functionsGeneral.php';
   $mes=strtoupper(nombreMes($cod_mes));
   $gestion=nameGestion($cod_gestion);
 
-
+$fecha_x=$gestion.'-'.$cod_mes.'-01';
+$fecha_cns=date("Y-m-t",strtotime($fecha_x."+ 1 month")); 
+$datos_fecha=explode("-", $fecha_cns);
 
 $porcentaje_aport_afp=obtenerValorConfiguracionPlanillas(12);
 $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
@@ -45,9 +47,8 @@ $html.='<body>'.
 $html.=  '<header class="header">'.            
             '<table width="100%">
               <tr>
-              <td width="25%"><p>CORPORACION BOLIVIANA DE FARMACIAS S.A.<br>NIT:1022039027<br>Av.Landaeta Nro. 836<br>La Paz - Bolivia<br>N° Patronal C.N.S. 01 - 652 - 00289</p></td>
-              <td><center><span style="font-size: 13px"><b>PLANILLA CORRESPONDIENTE AL MES DE '.$mes.' '.$gestion.'<br><b>EXPRESADO EN BOLIVIANOS<BR>S.S. LARGO PLAZO<BR>TELF.: 2 - 413051</b></center></td>
-              <td width="25%"><center></center></td>
+              <td width="50%"><span style="font-size: 15px;">CORPORACION BOLIVIANA DE FARMACIAS S.A.</span><br>NIT:1022039027<br>Av.Landaeta Nro. 836<br>La Paz - Bolivia<br>N° Patronal C.N.S. 01 - 652 - 00289</td>
+              <td><span style="font-size: 15px">PLANILLA CORRESPONDIENTE AL MES DE '.$mes.' '.$gestion.'</span><br>EXPRESADO EN BOLIVIANOS<BR>S.S. LARGO PLAZO<BR>TELF.: 2 - 413051</td>
               </tr>
             </table>'.
          '</header>';
@@ -59,15 +60,15 @@ $html.='
         <tr class="table-title bold text-center">                 
         <td><small>N°</small></td> 
         <td><small>CI</small></td>
-        <td><small>EXT</small></td>
+        <td><small>Lugar de Emision</small></td>
         <td><small>PATERNO</small></td>
         <td><small>MATERNO</small></td>
         <td><small>NOMBRE</small></td>
-        <td><small>NACIONALIDAD</small></td>
+        <td><small>NACION<br>ALIDAD</small></td>
         <td><small>FECHA NAC.</small></td>
         <td><small>DIAS TRAB</small></td>
         <td><small>CARGO</small></td>
-        <td><small>FEC INGRESO</small></td>
+        <td><small>FECHA ING R.A. INASES 129/2016</small></td>
         <td><small>HABER BASICO DIAS TRAB</small></td>
         <td><small>OTROS INGRESOS</small></td>
         <td><small>BONO ANT</small></td>
@@ -76,11 +77,18 @@ $html.='
         <td><small>OTROS DESCTS.</small></td>
         <td><small>TOTAL DESCTO</small></td>
         <td><small>LIQUIDO PAG</small></td>
-        <td><small>FIRMA</small></td>
       </tr>                                  
     </thead>
     <tbody>';
-      
+      $total_haber_basico=0;
+      $total_bonos_otros=0;
+      $total_bono_antiguedad=0;
+      $total_total_ganado=0;
+      $total_aporte_caja=0;
+      $total_descuentos_otros=0;
+      $total_total_descuentos=0;
+      $total_liquido_pagable=0;
+
       $index=1;
       $sql = "SELECT a.nombre,p.identificacion,( select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision)as lugar_emision,p.fecha_nacimiento,p.paterno,p.materno,p.primer_nombre,
       (select c.nombre from cargos c where c.codigo=p.cod_cargo)as cargo,p.ing_planilla,ppm.dias_trabajados,ppm.haber_basico,ppm.haber_basico_pactado,ppm.bono_antiguedad,ppm.total_ganado,ppm.afp_1,ppm.afp_2,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,pp.rc_iva,ppm.liquido_pagable,pp.riesgo_profesional,ppm.bonos_otros,ppm.descuentos_otros,monto_descuentos
@@ -124,6 +132,14 @@ $html.='
           $total_descuentos=$monto_descuentos;
           $ComAFP=$total_ganado*$porcentaje_aport_afp/100;
           $aposol=$total_ganado*$porcentaje_aport_sol/100;
+          $total_haber_basico+=$haber_basico;
+          $total_bonos_otros+=$bonos_otros;
+          $total_bono_antiguedad+=$bono_antiguedad;
+          $total_total_ganado+=$total_ganado;
+          $total_aporte_caja+=$aporte_caja;
+          $total_descuentos_otros+=$descuentos_otros;
+          $total_total_descuentos+=$total_descuentos;
+          $total_liquido_pagable+=$liquido_pagable;
           
           $html.='<tr>
             <td class="small"><small>'.$index.'</small></td> 
@@ -133,25 +149,49 @@ $html.='
             <td class="small"><small>'.$materno.'</small></td>
             <td class="small"><small>'.$primer_nombre.'</small></td>
             <td class="small"><small>BOLIVIANA</small></td>
-            <td class="small">'.strftime("%d/%m/%Y",strtotime($fecha_nacimiento)).'</td>
-            <td class="small"><small>'.formatNumberDec($dias_trabajados).'</small></td>
+            <td class="text-center small"><small>'.strftime("%d/%m/%Y",strtotime($fecha_nacimiento)).'</small></td>
+            <td class="text-center small"><small>'.$dias_trabajados.'</small></td>
             <td class="small"><small>'.$cargo.'</small></td>
-            <td class="small">'.strftime("%d/%m/%Y",strtotime($ing_planilla)).'</td>
-            <td class="small"><small>'.formatNumberDec($haber_basico).'</small></td>
-            <td class="small"><small>'.formatNumberDec($bonos_otros).'</small></td>
-            <td class="small"><small>'.formatNumberDec($bono_antiguedad).'</small></td>
-            <td class="small"><small>'.formatNumberDec($total_ganado).'</small></td>
-            <td class="small"><small>'.formatNumberDec($aporte_caja).'</small></td>
-            <td class="small"><small>'.formatNumberDec($descuentos_otros).'</small></td>
-            <td class="small"><small>'.formatNumberDec($total_descuentos).'</small></td>
-            <td class="small"><small>'.formatNumberDec($liquido_pagable).'</small></td>
-            <td class="small"><small></small></td>
+            <td class="text-center small"><small>'.strftime("%d/%m/%Y",strtotime($ing_planilla)).'</small></td>
+            <td class="text-right small"><small>'.formatNumberDec($haber_basico).'</small></td>
+            <td class="text-right small"><small>'.formatNumberDec($bonos_otros).'</small></td>
+            <td class="text-right small"><small>'.formatNumberDec($bono_antiguedad).'</small></td>
+            <td class="text-right small"><small>'.formatNumberDec($total_ganado).'</small></td>
+            <td class="text-right small"><small>'.formatNumberDec($aporte_caja).'</small></td>
+            <td class="text-right small"><small>'.formatNumberDec($descuentos_otros).'</small></td>
+            <td class="text-right small"><small>'.formatNumberDec($total_descuentos).'</small></td>
+            <td class="text-right small"><small>'.formatNumberDec($liquido_pagable).'</small></td>
             </tr>';
               $index+=1;
           }
+
+
+          $html.='<tr>
+            <td colspan="11" class="small text-center"><small><b>TOTAL</b></small></td> 
+            
+            <td class="text-right small"><small><b>'.formatNumberDec($total_haber_basico).'</b></small></td>
+            <td class="text-right small"><small><b>'.formatNumberDec($total_bonos_otros).'</b></small></td>
+            <td class="text-right small"><small><b>'.formatNumberDec($total_bono_antiguedad).'</b></small></td>
+            <td class="text-right small"><small><b>'.formatNumberDec($total_total_ganado).'</b></small></td>
+            <td class="text-right small"><small><b>'.formatNumberDec($total_aporte_caja).'</b></small></td>
+            <td class="text-right small"><small><b>'.formatNumberDec($total_descuentos_otros).'</b></small></td>
+            <td class="text-right small"><small><b>'.formatNumberDec($total_total_descuentos).'</b></small></td>
+            <td class="text-right small"><small><b>'.formatNumberDec($total_liquido_pagable).'</b></small></td>
+            </tr>';
+
              $html.='
               </tbody>
-            </table>';
+            </table><br><br><br><br><br><br><br><br><br><br><br><br>';
+
+
+$html.='<table width="100%">
+  <tr >
+  <td width="25%"><center><p>______________________________<BR>'.obtenerValorConfiguracionPlanillas(25).'<BR>REPRESENTANTE LEGAL COBOFAR S.A.</p></center></td>
+  <td><center><p>SELLO</p></center></td>
+  <td width="25%"><center><p>LA PAZ, '.$datos_fecha[2].' DE '.strtoupper(nombreMes($datos_fecha[1])).' DE '.$datos_fecha[0].'</p></center></td>
+  </tr>
+</table>';
+
 //echo $html;
 descargarPDFHorizontal("Planilla_CNS_".$mes.'_'.$gestion,$html);
 

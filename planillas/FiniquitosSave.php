@@ -11,10 +11,14 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar err
 
 try {
     $codigo = $_POST["codigo"];
-    $cod_personal = $_POST["cod_personal"];
+    
     $anios_trabajados_pagados = $_POST["anios_trabajados_pagados"];
-    $codigo_contrato = $_POST["codigo_contrato"];
+    // $codigo_contrato = $_POST["codigo_contrato"];
     $cod_tiporetiro = $_POST["cod_tiporetiro"];
+    
+    $datos_personal = explode('##', $_POST["cod_personal"]);
+    $cod_personal =$datos_personal[0]; 
+    $codigo_contrato=$datos_personal[1];
 
     $vacaciones_pagar = $_POST["vacaciones_pagar"];
     $duodecimas = $_POST["duodecimas"];

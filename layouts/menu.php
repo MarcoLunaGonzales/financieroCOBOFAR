@@ -223,18 +223,24 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Vacaciones</span>
                     </a>
                 </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=permisosPersonalLista">
+                      <span class="sidebar-mini"> P </span>
+                      <span class="sidebar-normal"> Permisos</span>
+                    </a>
+                </li>
                 <!-- <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listDotacion">
                       <span class="sidebar-mini"> D </span>
                       <span class="sidebar-normal"> Dotaciones </span>
                     </a>
                 </li> -->
-                <!-- <li class="nav-item ">
+                <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listRcivaPersonalMes">
                       <span class="sidebar-mini"> F110 </span>
                       <span class="sidebar-normal"> Formulario 110</span>
                     </a>
-                </li> -->
+                </li>
                 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=planillasSueldoPersonal" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
@@ -517,12 +523,13 @@ if($menuModulo==0){
                     <span class="sidebar-normal">Distribucion Gastos Oficina</span>
                   </a>
                 </li>
-                <!-- <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listDosificaciones">
+              
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:8090/cobofar_comercial/navegador_dosificaciones_main.php?cod_personal=<?=$globalUserX?>" target="_blank" style="background:rgba(9, 98, 143 ,0.6); color:#cd6155;font-weight:bold;">
                     <span class="sidebar-mini"> D </span>
                     <span class="sidebar-normal"> Dosificaciones</span>
                   </a>
-                </li>  --> 
+                </li> -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listEntidades">
                     <span class="sidebar-mini">E</span>

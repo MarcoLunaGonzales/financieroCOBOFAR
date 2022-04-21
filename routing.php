@@ -1169,18 +1169,37 @@
 		if ($_GET['opcion']=='vacacionesPersonalLista') {
 			require_once('vacaciones_permisos/vacaciones_list.php'); //ok
 		}
+		if ($_GET['opcion']=='vacaciones_detalle') {
+			// $codigo=$_GET['codigo'];
+			require_once('vacaciones_permisos/vacaciones_detalle.php');
+		}
 		if ($_GET['opcion']=='vacacionesPersonalForm') {
-			$codigo=$_GET['codigo'];
-			require_once('vacaciones_permisos/vacaciones_list.php');
+			// $codigo=$_GET['codigo'];
+			require_once('vacaciones_permisos/vacaciones_from.php');
 		}
 		if ($_GET['opcion']=='vacacionesPersonalSave') {
-			require_once('vacaciones_permisos/vacaciones_list.php');
+			require_once('vacaciones_permisos/vacaciones_save.php');
 		}
 		if ($_GET['opcion']=='vacacionesdeletepersonal') {
 			$codigo=$_GET['codigo'];
-			require_once('vacaciones_permisos/vacaciones_list.php');
+			require_once('vacaciones_permisos/vacaciones_save_delete.php');
 		}
-		
+
+		//PERMISOS PERSONAL
+		if ($_GET['opcion']=='permisosPersonalLista') {
+			require_once('vacaciones_permisos/permisos_list.php'); //ok
+		}
+		if ($_GET['opcion']=='permisos_detalle') {
+			// $codigo=$_GET['codigo'];
+			require_once('vacaciones_permisos/permisos_detalle.php');
+		}
+		if ($_GET['opcion']=='permisosPersonalForm') {
+			// $codigo=$_GET['codigo'];
+			require_once('vacaciones_permisos/permisos_from.php');
+		}
+		if ($_GET['opcion']=='permisosPersonalSave') {
+			require_once('vacaciones_permisos/permisos_save.php');
+		}
 		
 		
 		
@@ -1973,6 +1992,9 @@
 		}
 		if ($_GET['opcion']=='auditoria_sucursales_from') {			
 			require_once('auditorias_traspasos/auditoria_sucursales_from.php');
+		}
+		if ($_GET['opcion']=='rpt_configuraciones_comercial') {			
+			require_once('ingresos_sucursales/configuraciones_cuentas_list.php');
 		}
 
 		//*****pago proveedores

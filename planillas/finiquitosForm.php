@@ -50,21 +50,30 @@ $stmtTipoContrato->execute();
 $resultTipoContrato = $stmtTipoContrato->fetch();
 $cod_tipocontrato = $resultTipoContrato['cod_tipocontrato'];
 
-if($cod_tipocontrato!=1){
-  $sw_contratoidefinido=0;  
-    $sqlpersonal="SELECT  c.codigo,c.cod_personal,p.primer_nombre,p.paterno,p.materno, DATE_FORMAT(c.fecha_iniciocontrato,'%d/%m/%Y')as ing_contr, DATE_FORMAT(c.fecha_fincontrato,'%d/%m/%Y')as fecha_retiro, DATEDIFF(c.fecha_fincontrato,c.fecha_iniciocontrato) as dias
-      FROM personal p,personal_contratos c
-      WHERE c.cod_personal=p.codigo and c.codigo=$codigo_contrato";
-}else{//indefinido
+if($codigo_contrato==0 && $codigo==0){
   $sw_contratoidefinido=1;  
-  $sqlpersonal="SELECT  c.codigo,c.cod_personal,p.primer_nombre,p.paterno,p.materno, DATE_FORMAT(c.fecha_iniciocontrato,'%d/%m/%Y')as ing_contr, DATE_FORMAT(pr.fecha_retiro,'%d/%m/%Y')as fecha_retiro, DATEDIFF(pr.fecha_retiro,c.fecha_iniciocontrato) as dias
-  FROM personal p,personal_contratos c,personal_retiros pr
-  WHERE c.cod_personal=p.codigo and pr.cod_personal=p.codigo and c.codigo=$codigo_contrato ORDER BY pr.codigo desc limit 1";
+    $sqlpersonal="SELECT  c.codigo,c.cod_personal,p.primer_nombre,p.paterno,p.materno, DATE_FORMAT(c.fecha_iniciocontrato,'%d/%m/%Y')as ing_contr, DATE_FORMAT(pr.fecha_retiro,'%d/%m/%Y')as fecha_retiro, DATEDIFF(pr.fecha_retiro,c.fecha_iniciocontrato) as dias
+    FROM personal p join personal_contratos c on c.cod_personal=p.codigo join personal_retiros pr on pr.cod_personal=p.codigo 
+    where p.codigo not in ( select cod_personal from finiquitos where cod_estadoreferencial=1)
+    ORDER BY pr.codigo desc ";
+}else{
+    if($cod_tipocontrato!=1){
+    $sw_contratoidefinido=0;  
+      $sqlpersonal="SELECT  c.codigo,c.cod_personal,p.primer_nombre,p.paterno,p.materno, DATE_FORMAT(c.fecha_iniciocontrato,'%d/%m/%Y')as ing_contr, DATE_FORMAT(c.fecha_fincontrato,'%d/%m/%Y')as fecha_retiro, DATEDIFF(c.fecha_fincontrato,c.fecha_iniciocontrato) as dias
+        FROM personal p,personal_contratos c
+        WHERE c.cod_personal=p.codigo and c.codigo=$codigo_contrato";
+  }else{//indefinido
+    $sw_contratoidefinido=1;  
+    $sqlpersonal="SELECT  c.codigo,c.cod_personal,p.primer_nombre,p.paterno,p.materno, DATE_FORMAT(c.fecha_iniciocontrato,'%d/%m/%Y')as ing_contr, DATE_FORMAT(pr.fecha_retiro,'%d/%m/%Y')as fecha_retiro, DATEDIFF(pr.fecha_retiro,c.fecha_iniciocontrato) as dias
+    FROM personal p,personal_contratos c,personal_retiros pr
+    WHERE c.cod_personal=p.codigo and pr.cod_personal=p.codigo and c.codigo=$codigo_contrato ORDER BY pr.codigo desc limit 1";
+  }
 }
-// echo $sqlpersonal;
+
+
+ // echo "<br><br><br>".$sqlpersonal;
 $stmtpersonal = $dbh->prepare($sqlpersonal);
 $stmtpersonal->execute();
-
 ?>
 
 <div class="content">
@@ -81,7 +90,7 @@ $stmtpersonal->execute();
                   </div>
                   <!-- <h4 align="center"> Seleccione al personal Retirado Por favor.</h4> -->
                   <div class="card-body ">
-                    <input type="hidden" name="codigo_contrato" id="codigo_contrato" value="<?=$codigo_contrato?>">
+                    
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Personal</label>
                         <div class="col-sm-8">
@@ -93,7 +102,7 @@ $stmtpersonal->execute();
                                         $dias=$row['dias'];                                        
                                         ?>
 
-                                       <option  <?=($dias<89)?"disabled":"";?> data-subtext="FI:<?=$row["ing_contr"];?> FF:<?=$row["fecha_retiro"];?> (<?=$row["dias"];?> días)"  value="<?=$row["cod_personal"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?> </option>
+                                       <option  <?=($dias<89)?"disabled":"";?> data-subtext="FI:<?=$row["ing_contr"];?> FF:<?=$row["fecha_retiro"];?> (<?=$row["dias"];?> días)"  value="<?=$row["cod_personal"].'##'.$row["codigo"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?> </option>
                                    <?php } ?>
                             </select>
                           </div>

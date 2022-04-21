@@ -8,8 +8,8 @@ $cod_tiposalida_efectivo=1001;
 $sql="SELECT s.cod_almacen,s.fecha,s.cod_chofer
 from salida_almacenes s 
 where s.`cod_tiposalida`= $cod_tiposalida_efectivo and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
-where a.`cod_ciudad`='$cod_ciudad' and cod_tipoalmacen=1) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha 00:00:00' and '$fecha 23:59:59' and s.cod_tipopago=1 
-GROUP BY s.cod_chofer,s.cod_tipopago,s.fecha order by s.fecha,s.cod_chofer";
+where a.`cod_ciudad`='$cod_ciudad' and cod_tipoalmacen=1) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fecha 00:00:00' and '$fecha 23:59:59'  
+GROUP BY s.cod_chofer,s.fecha order by s.fecha,s.cod_chofer";
  // echo "<br><br><br>".$sql;
 $index=1;
 $totalEfectivo=0;

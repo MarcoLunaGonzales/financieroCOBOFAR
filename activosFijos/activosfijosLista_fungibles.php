@@ -5,7 +5,7 @@ require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalGestion=$_SESSION["globalNombreGestion"];
 $dbh = new Conexion();
 
 $sqlX="SET NAMES 'utf8'";

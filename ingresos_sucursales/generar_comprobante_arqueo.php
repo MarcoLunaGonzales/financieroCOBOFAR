@@ -93,7 +93,7 @@ $cod_plancuenta_transfer=$array_configuracion[11];
 
 $sql="SELECT s.cod_almacen,(select a.nombre_almacen from almacenes a where a.cod_almacen=s.cod_almacen)as nombre_almacen,s.fecha,(select a.cod_ciudad from almacenes a where a.cod_almacen=s.cod_almacen)as cod_ciudad,(select c.cod_plancuenta from ciudades c where c.cod_ciudad in (select a.cod_ciudad from almacenes a where a.cod_almacen=s.cod_almacen))as cod_plancuenta,(SELECT c.cod_area from ciudades c where c.cod_ciudad in (select a.cod_ciudad from almacenes a where a.cod_almacen=s.cod_almacen))as cod_area 
   from salida_almacenes s 
-  where s.`cod_tiposalida`= $cod_tiposalida_efectivo  and s.`cod_almacen` in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' and s.cod_tipopago=1 GROUP BY s.cod_almacen,s.fecha order by s.fecha,2";
+  where s.`cod_tiposalida`= $cod_tiposalida_efectivo  and s.`cod_almacen` in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59'  GROUP BY s.cod_almacen,s.fecha order by s.fecha,2";
   // echo $sql;
 $contador_comprobantes=1;
 require("../conexion_comercial.php");
@@ -125,7 +125,14 @@ while($row=mysqli_fetch_array($resp)){
     $nroCorrelativo=numeroCorrelativoComprobante($cod_gestion,$globalUnidad,$tipoComprobante,$globalMes);
     $glosa="VENTAS SUC. ".$nombre_almacen." DE FECHA ".$fechaVenta;
     $fechaHoraActual=$fechaVenta;
-    $codigo_comprobante=obtenerCodigoComprobante();
+    
+    $sw_comprobante=0;
+    while ($sw_comprobante==0) {
+        $codigo_comprobante=obtenerCodigoComprobante();
+        if(verificarExistenciaComprobante($codigo_comprobante)==0){
+            $sw_comprobante=1;
+        }
+    }
     $cod_uo_cc=1;//oficina central por defecto
     // $cod_area_cc=obtenerCodigoAreaciduad_comercial($cod_ciudad);
     $sqlInsert="INSERT INTO comprobantes (codigo,cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) 
@@ -145,11 +152,12 @@ while($row=mysqli_fetch_array($resp)){
         <td align='right'><?=$fechaVenta?></td>
         <td align='left'><?=$nombre_almacen?></td>
       </tr><?php
+
       //primera parte detalle comprobante
       $sql="SELECT s.cod_chofer,( SELECT (select cb.cod_plancuenta from cuentas_bancarias cb where cb.codigo=rd.cod_cuenta and cb.estado=1) as cuenta FROM registro_depositos rd where rd.cod_funcionario=s.cod_chofer and rd.fecha='$fechaVenta' and rd.cod_estadoreferencial=1 limit 1) as cod_plancuenta
       from `salida_almacenes` s where s.`cod_tiposalida`= 1001 and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
-      where a.`cod_ciudad`='$cod_ciudad' and cod_tipoalmacen=1) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechaVenta 00:00:00' and '$fechaVenta 23:59:59' and s.cod_tipopago=1 
-      GROUP BY s.cod_chofer,s.cod_tipopago,s.fecha order by s.fecha,s.cod_chofer";
+      where a.`cod_ciudad`='$cod_ciudad' and cod_tipoalmacen=1) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechaVenta 00:00:00' and '$fechaVenta 23:59:59'   
+      GROUP BY s.cod_chofer,s.fecha order by s.fecha,s.cod_chofer";
        //echo "<br><br>".$sql."</br></br>";
       
       $DBB=0;

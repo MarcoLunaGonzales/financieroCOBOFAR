@@ -62,7 +62,7 @@ require_once '../functionsReportes.php';
                     $dias_trabajados_por_defecto=30;
                     $sql = "SELECT (select tip.abreviatura from tipos_identificacion_personal tip where tip.codigo=pad.cod_tipo_identificacion) as tipo_identificacion,pad.identificacion,pad.paterno,pad.materno,pad.apellido_casada,pad.primer_nombre,pad.nua_cua_asignado,ppm.dias_trabajados,ppm.total_ganado
                     from planillas_personal_mes ppm,personal pad
-                    where ppm.cod_personalcargo=pad.codigo and cod_planilla=$cod_planilla and pad.cod_estadoreferencial=1 and pad.cod_estadopersonal=1 and pad.cod_tipoafp=2
+                    where ppm.cod_personalcargo=pad.codigo and cod_planilla=$cod_planilla and pad.cod_tipoafp=2
                     order by pad.paterno";
                          //echo $sql."<br><br>";
                       $stmtPersonal = $dbh->prepare($sql);
@@ -80,6 +80,16 @@ require_once '../functionsReportes.php';
                       {  
                         $primer_nombre.=" ";
                         $array_nombre=explode(' ', $primer_nombre);
+                        $segundo_nombre=$array_nombre[1];
+                        if(isset($array_nombre[2])){
+                          $segundo_nombre.="  ".$array_nombre[2];
+                        }
+                        if(isset($array_nombre[3])){
+                          $segundo_nombre.="  ".$array_nombre[3];
+                        }
+                        if(isset($array_nombre[4])){
+                          $segundo_nombre.="  ".$array_nombre[4];
+                        }
                         
                         ?>
                         <tr>
@@ -91,7 +101,7 @@ require_once '../functionsReportes.php';
                           <td class="text-left small"><?=$materno?></td>
                           <td class="text-left small"><?=$apellido_casada?></td>
                           <td class="text-left small"><?=$array_nombre[0]?></td>
-                          <td class="text-left small"><?=$array_nombre[1]?></td>
+                          <td class="text-left small"><?=$segundo_nombre?></td>
                           <td class="text-left small"></td>
                           <td class="text-left small"></td>
                           <td class="text-right small"><?=$dias_trabajados?></td>

@@ -48,19 +48,17 @@ require_once '../functionsReportes.php';
         <td class="small">(A) 1er. APELLIDO (PATERNO)</td>
         <td class="small">(B) 2do. APELLIDO (MATERNO)</td>
         <td class="small">(C) APELLIDO CASADA</td>
-        <td class="small">(D)  PRIMER NOMBRE</td>
+        <td class="small">(D) PRIMER NOMBRE</td>
         <td class="small">(E) SEGUNDO NOMBRE</td>
-
         <td class="small">(F) DEPARTAMENTO</td>
         <td class="small">(17) NOVEDAD I/R/L/S</td>
         <td class="small">(18) FECHA NOVEDAD dd/mm/aaaa</td>
         <td class="small">(19) DIAS COTIZADOS</td>
         <td class="small">(20) TIPO DE ASEGURADO (M/C/E)</td>
-        <td class="small">(21)  TOTAL GANADO DEPENDIENTE < 65 AÑOS O ASEGURADO CON PENSION DEL SIP < 65 AÑOS QUE DECIDE APORTAR AL SIP</td>
+        <td class="small">(21) TOTAL GANADO DEPENDIENTE < 65 AÑOS O ASEGURADO CON PENSION DEL SIP < 65 AÑOS QUE DECIDE APORTAR AL SIP</td>
         <td class="small">(22) TOTAL GANADO DEPENDIENTE > 65 AÑOS O ASEGURADO CON PENSION DEL SIP > 65 AÑOS QUE DECIDE APORTAR AL SIP</td>
-
         <td class="small">(23) TOTAL GANADO ASEGURADO CON PENSION DEL SIP < 65 AÑOS QUE DECIDE NO APORTAR AL SIP</td>
-        <td class="small">(24)  TOTAL GANADO ASEGURADO CON PENSION AL SIP > 65 AÑOS QUE DECIDE NO APORTAR AL SIP</td>
+        <td class="small">(24) TOTAL GANADO ASEGURADO CON PENSION AL SIP > 65 AÑOS QUE DECIDE NO APORTAR AL SIP</td>
         <td class="small">(25) COTIZACION ADICIONAL</td>
         <td class="small">(26) TOTAL GANADO FONDO DE VIVIENDA</td>
         <td class="small">(27) TOTAL GANADO FONDO SOLIDARIO</td>
@@ -76,7 +74,7 @@ require_once '../functionsReportes.php';
       ( select pd.abreviatura from personal_departamentos pd where pd.codigo=pad.cod_lugar_emision)as lugar_emision,
       pad.identificacion,pad.paterno,pad.materno,pad.apellido_casada,pad.primer_nombre,pad.nua_cua_asignado,ppm.dias_trabajados,ppm.total_ganado
       from planillas_personal_mes ppm,personal pad
-      where ppm.cod_personalcargo=pad.codigo and cod_planilla=$cod_planilla and pad.cod_estadoreferencial=1 and pad.cod_estadopersonal=1 and pad.cod_tipoafp=1
+      where ppm.cod_personalcargo=pad.codigo and cod_planilla=$cod_planilla and pad.cod_tipoafp=1
       order by pad.paterno";
            //echo $sql."<br><br>";
         $stmtPersonal = $dbh->prepare($sql);
@@ -95,6 +93,17 @@ require_once '../functionsReportes.php';
         {  
           $primer_nombre.=" ";
           $array_nombre=explode(' ', $primer_nombre);
+
+          $segundo_nombre=$array_nombre[1];
+          if(isset($array_nombre[2])){
+            $segundo_nombre.="  ".$array_nombre[2];
+          }
+          if(isset($array_nombre[3])){
+            $segundo_nombre.="  ".$array_nombre[3];
+          }
+          if(isset($array_nombre[4])){
+            $segundo_nombre.="  ".$array_nombre[4];
+          }
           
           ?>
           <tr>
@@ -107,7 +116,7 @@ require_once '../functionsReportes.php';
             <td class="text-left small"><?=$materno?></td>
             <td class="text-left small"><?=$apellido_casada?></td>
             <td class="text-left small"><?=$array_nombre[0]?></td>
-            <td class="text-left small"><?=$array_nombre[1]?></td>
+            <td class="text-left small"><?=$segundo_nombre?></td>
             <td class="text-left small"></td>
             <td class="text-left small"></td>
             <td class="text-left small"></td>

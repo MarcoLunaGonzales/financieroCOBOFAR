@@ -39,7 +39,7 @@ $sucursalgString=trim($sucursalgString,",");
 $cod_tiposalida_efectivo=1001;
 $sql="SELECT s.cod_almacen,a.cod_ciudad,a.nombre_almacen,s.fecha,s.cod_chofer,(select CONCAT_WS(' ',f.nombres,f.paterno,f.materno) from funcionarios f where f.codigo_funcionario=s.cod_chofer) as personal 
 from salida_almacenes s join almacenes a on s.cod_almacen=a.cod_almacen 
-where s.`cod_tiposalida`= $cod_tiposalida_efectivo and a.cod_ciudad in ($sucursalgString) and s.fecha between '$fechai' and '$fechaf' and s.cod_tipopago=1 GROUP BY s.cod_chofer,s.cod_tipopago,s.fecha 
+where s.`cod_tiposalida`= $cod_tiposalida_efectivo and a.cod_ciudad in ($sucursalgString) and s.fecha between '$fechai' and '$fechaf'  GROUP BY s.cod_chofer,s.fecha 
 order by s.fecha,s.cod_almacen,s.cod_chofer";
 // echo "<br><br><br>".$sql;
 $index=1;

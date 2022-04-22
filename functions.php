@@ -12669,9 +12669,10 @@ function obtenerQuinquenioPagadoPersonal($cod_personal){
     $costo=[];
     $costo_ant=[];
     $cod_mes_ant=$cod_mes-1;
-    $cod_gestion_ant=$cod_gestion-1;
+    $cod_gestion_ant=$cod_gestion;//
     if($cod_mes==1){
-      $cod_mes_ant=12;      
+      $cod_mes_ant=12; 
+      $cod_gestion_ant=$cod_gestion-1;     //
     }
     $sql="SELECT m.codigo_material,m.descripcion_material,m.cantidad_presentacion,(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes and c.cod_gestion=$cod_gestion and c.cod_almacen=$cod_almacen limit 1)as costo,(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes_ant and c.cod_gestion=$cod_gestion_ant and c.cod_almacen=$cod_almacen limit 1)as costo_ant
       from material_apoyo m 

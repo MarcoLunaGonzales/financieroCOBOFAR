@@ -74,6 +74,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
           $nombre_almacen=$row['nombre_almacen'];
           ?><script>document.getElementById('nombre_sucursal').innerHTML='Sucursal: <?=$nombre_almacen?>';</script><?php
           $informacion=cargarValoresVentasYSaldosProductosArray_prodrotacionProducto($cod_almacen,$fechai,$fechaf,$stringProductos);
+          // $informacion=cargarValoresVentasYSaldosProductosArray_prodrotacionProductoPromedio($cod_almacen,$fechai,$fechaf,$stringProductos);
           $datosSucursal[$cod_almacen]=$informacion;
           $string_sucursales.=$cod_almacen.",";
         }

@@ -70,6 +70,7 @@ $totalTraspasosVenValGen=0;
           $cod_almacen=$row['cod_almacen'];
           $nombre_almacen=$row['nombre_almacen'];          
           $informacion=cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($cod_almacen,$fechai,$fechaf,$stringProveedor);
+          // $informacion=cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($cod_almacen,$fechai,$fechaf,$stringProveedor);
           $datosSucursal[$cod_almacen]=$informacion;
           $string_sucursales.=$cod_almacen.",";
           $array_sucursales_nombres[$cod_almacen]=$nombre_almacen;

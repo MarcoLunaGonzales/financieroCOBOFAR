@@ -5,16 +5,16 @@ require_once 'styles.php';
 require_once 'functionsGeneral.php';
 require_once 'rrhh/configModule.php';
 
-$globalAdmin=$_SESSION["globalAdmin"];
+$globalUser=$_SESSION["globalUser"];
 $globalCodUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
-
+// echo $globalUser;
 $dbh = new Conexion();
   $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,
   (select m.nombre from meses m where m.codigo=cod_mes)as mes,
   (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
   (select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as nombre_estadoplanilla
-  from planillas_indemnizaciones order by cod_gestion desc,cod_mes desc");
+  from planillas_indemnizaciones order by cod_gestion,cod_mes desc");
   $stmtAdmnin->execute();
   $stmtAdmnin->bindColumn('codigo', $codigo_planilla);
   $stmtAdmnin->bindColumn('gestion', $gestion);
@@ -90,7 +90,7 @@ $dbh = new Conexion();
                         if($cod_estadoplanilla==2 || $cod_estadoplanilla==3){?>
                         <div class="dropdown">
                           <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla Aguinaldos">remove_red_eye</i>                        
+                            <i class="material-icons" title="Ver Planilla Indemnizaciones">remove_red_eye</i>                        
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">

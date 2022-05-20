@@ -162,15 +162,52 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
       }else{
         $dias_trabajados_mes=$dias_trabajados_mes_x;
       }
-      
       // $dias_trabajados_mes=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
-
       if($cod_unidadorganizacional!=1){
         if($turno==1){
           $areas=$areas." TM";
         }else{
           $areas=$areas." TT";
         }
+        $datosAsistencia=obtenerDatosAsistenciaPersonal_planilla($cod_mes,$nombreGestion,$codigo);
+        $faltas=$datosAsistencia[0];
+        $permisos_sin_desc=$datosAsistencia[1];
+        $dias_vacacion=$datosAsistencia[2];
+        $domingos_normal=$datosAsistencia[3];
+        $feriado_normal=$datosAsistencia[4];
+        $noche_normal=$datosAsistencia[6];
+        $domingo_reemplazo=0;
+        $feriado_reemplazo=0;
+        $ordinario_reemplazo=0;
+        $hxdomingo_extras=0;
+        $hxferiado_extras=0;
+        $hxdnnormal_extras=$datosAsistencia[5];
+        $reintegro=0;
+        $reintegro_obs="";
+        $anticipos=0;
+      }else{//oficina central
+        // $datosAsistencia=obtenerDatosAsistenciaPersonal_planilla($cod_mes,$nombreGestion,$codigo);
+        // $faltas=$datosAsistencia[0];
+        // $permisos_sin_desc=$datosAsistencia[1];
+        // $dias_vacacion=$datosAsistencia[2];
+        // $domingos_normal=$datosAsistencia[3];
+        // $feriado_normal=$datosAsistencia[4];
+        // $noche_normal=$datosAsistencia[6];
+        $faltas=0;
+        $permisos_sin_desc=0;
+        $dias_vacacion=0;
+        $domingos_normal=0;
+        $feriado_normal=0;
+        $noche_normal=0;
+        $domingo_reemplazo=0;
+        $feriado_reemplazo=0;
+        $ordinario_reemplazo=0;
+        $hxdomingo_extras=0;
+        $hxferiado_extras=0;
+        $hxdnnormal_extras=0;
+        $reintegro=0;
+        $reintegro_obs="";
+        $anticipos=0;
       }
       ?>
       <tr>
@@ -178,22 +215,22 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
         <td class="text text-left"><small><?=$identificacion?></small></td>
         <td class="text text-left"><small><?=$personal?></small></td>
         <td class="text text-left"><small><?=$areas?></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
+        <td class="text text-left"><small><?=$faltas?></small></td>
+        <td class="text text-left"><small><?=$permisos_sin_desc?></small></td>
+        <td class="text text-left"><small><?=$dias_vacacion?></small></td>
         <td class="text text-left"><small><?=$dias_trabajados_mes?></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td>
-        <td class="text text-left"><small></small></td><?php
+        <td class="text text-left"><small><?=$domingos_normal?></small></td>
+        <td class="text text-left"><small><?=$feriado_normal?></small></td>
+        <td class="text text-left"><small><?=$noche_normal?></small></td>
+        <td class="text text-left"><small><?=$domingo_reemplazo?></small></td>
+        <td class="text text-left"><small><?=$feriado_reemplazo?></small></td>
+        <td class="text text-left"><small><?=$ordinario_reemplazo?></small></td>
+        <td class="text text-left"><small><?=$hxdomingo_extras?></small></td>
+        <td class="text text-left"><small><?=$hxferiado_extras?></small></td>
+        <td class="text text-left"><small><?=$hxdnnormal_extras?></small></td>
+        <td class="text text-left"><small><?=$reintegro?></small></td>
+        <td class="text text-left"><small><?=$reintegro_obs?></small></td>
+        <td class="text text-left"><small><?=$anticipos?></small></td><?php
         for ($x=0; $x <$contador ; $x++) { ?>
           <td class="text text-left"><small></small></td>
         <?php }

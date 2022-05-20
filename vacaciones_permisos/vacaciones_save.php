@@ -4,8 +4,8 @@ require_once '../conexion.php';
 // require_once '../functionsGeneral.php';
 $dbh = new Conexion();
 // session_start();
-// $globalUser=$_SESSION["globalUser"];
-$globalUser=-100;
+ $globalUser=$_SESSION["globalUser"];
+//$globalUser=-100;
 
 $personal=$_POST["codigo_personal_modal"];
 $fecha_inicio=$_POST["fecha_inicio_modal"];

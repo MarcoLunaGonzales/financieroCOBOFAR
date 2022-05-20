@@ -9,16 +9,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 
-$stmt = $dbh->prepare("sELECT p.codigo as cod_personal,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) as personal,p.identificacion,(select le.abreviatura from personal_departamentos le where le.codigo=p.cod_lugar_emision) as cod_lugar_emision,
+$stmt = $dbh->prepare("SELECT p.codigo as cod_personal,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) as personal,p.identificacion,(select le.abreviatura from personal_departamentos le where le.codigo=p.cod_lugar_emision) as cod_lugar_emision,
  (select r.nombre from tipos_retiro_personal r where r.codigo=pr.cod_tiporetiro) as cod_tiporetiro,p.ing_contr,pr.fecha_retiro,pr.observaciones
  from personal_retiros pr,personal p
  where pr.cod_personal=p.codigo and pr.cod_estadoreferencial=1
-
-  
-  UNION
- 
- select codigo as cod_personal,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.identificacion,(select le.abreviatura from personal_departamentos le where le.codigo=p.cod_lugar_emision) as cod_lugar_emision,'SIN REGISTRO' as cod_tiporetiro,p.ing_contr,'' as fecha_retiro, 'SE RETIRO DESDE EL KARDEX DEL PERSONAL' as observaciones
- from personal p where p.cod_estadopersonal=3 and p.cod_estadoreferencial=1
  
   order by personal");
 //ejecutamos
@@ -59,7 +53,6 @@ $stmt->bindColumn('observaciones', $observaciones);
                         <th>F.Retiro</th>
                         <th>Tipo Retiro</th>
                         <th>Observaciones</th>                        
-                        <th></th>
                         <th></th>                        
                       </tr>
                   </thead>
@@ -74,18 +67,7 @@ $stmt->bindColumn('observaciones', $observaciones);
                         <td><?=$fecha_ingreso;?></td>
                         <td><?=$fecha_retiro;?></td>
                         <td><?=$cod_tiporetiro;?></td>
-                        <td><?=$observaciones;?></td>                        
-                        <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1 ){
-                          ?>
-                            <!-- <a href='<?=$urlFormPersonalContratos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                              <i class="material-icons" title="Contratos">assignment</i>
-                            </a> -->
-                            <?php
-                              }?>
-                        </td>
-                          
+                        <td><?=$observaciones;?></td>
                         <td class="td-actions text-right">
                           <?php
                             if($globalAdmin==1){

@@ -1208,6 +1208,7 @@
                 title:'Reporte Libro Mayor',
 
                 orientation: 'landscape',
+                pageSize: 'LEGAL',
                 exportOptions: {
                     columns: ':visible'
                 },

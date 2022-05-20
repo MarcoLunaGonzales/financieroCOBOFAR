@@ -39,7 +39,7 @@ if($sw==0){
       } 
     }
     $tipoComprobante=3;
-    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,$tipoComprobante,$globalMes);
+    
     $glosa=obtenerGlosaIngresoAlmacen($codigo);
     // $userSolicitud=$globalUser;
     $unidadSol=$globalUnidad;
@@ -52,6 +52,7 @@ if($sw==0){
             $sw_comprobante=1;
         }
     }
+    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,$tipoComprobante,$globalMes);
     $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) 
     VALUES ('$codComprobante', '1', '$globalUnidad', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fecha_pago', '$globalUser')";
     $stmtInsert = $dbh_cabecera->prepare($sqlInsert);
@@ -85,8 +86,9 @@ if($sw==0){
     $debe=$total_monto_ingreso*0.87;
     $glosaDetalle=nameCuenta($cuenta);
     
+    
+    $glosaDetalle=$glosa." - 87 %";
     $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-    $glosaDetalle=$glosa." - 87 %";;
     $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
     VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$indexCompro')";
     //echo $sqlDetalle."RRRR"; 
@@ -110,8 +112,9 @@ if($sw==0){
     $haber=0;
     $debe=$total_monto_ingreso*0.13;
     $glosaDetalle=nameCuenta($cuenta);    
-    $codComprobanteDetalle_iva=obtenerCodigoComprobanteDetalle();
+    
     $glosaDetalle=$glosa." - 13 %";
+    $codComprobanteDetalle_iva=obtenerCodigoComprobanteDetalle();
     $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
     VALUES ('$codComprobanteDetalle_iva','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$indexCompro')";
     //echo $sqlDetalle."RRRR"; 
@@ -145,11 +148,12 @@ if($sw==0){
             $area=$unidadarea[1];
         }
         $glosaDetalle=$glosa." - F:".$factura;
-        $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+        
         $haber=$monto_factura;
         $debe=0;
         // $total_monto_debe+=$debe;
         // $total_monto_haber+=$haber;
+        $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cod_plancuenta_proveedores', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$indexCompro')";
         //echo $sqlDet."DDDDD";
         $stmtDet = $dbh_detalle->prepare($sqlDet);

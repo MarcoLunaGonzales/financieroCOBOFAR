@@ -109,7 +109,7 @@ if($cod_estadoreferencial==1){//insertar
 	$flagsucces=$stmtU->execute();	
 }elseif ($cod_estadoreferencial==5) {//retirar personal y finalizar contrato
 	//echo "personal:".$cod_personal."- fecha :".$fecha_inicio."-cod_tipocontrato :".$cod_tipocontrato."-ober:".$observaciones;
-	// $cod_estadoreferencial=1;
+	$cod_estadoreferencial=1;
 	// $cod_estadoreferencialPersonal=2;
 	// $cod_estadopersonal=3;
 	$cod_estadocontrato=2;//**nuevo

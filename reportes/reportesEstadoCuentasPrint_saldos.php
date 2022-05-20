@@ -145,29 +145,47 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                         $haberD=0;
                                         while ($row_d = $stmt_d->fetch()) {
                                             $monto_ecD=$row_d['monto_ec'];
+                                            $haberD=$row_d['haber'];
+                                            $debeD=$row_d['debe'];
                                             // $tipoDebeHaberD=$row_d['tipoDebeHaber'];
                                         }
                                         
                                         if($tipoDebeHaberX==2){//proveedor
-                                            $totalCredito=$totalCredito+$monto_ecX;
-                                            $totalDebito=$totalDebito+$monto_ecD;
-                                            $saldo_X=$monto_ecX-$monto_ecD;
+                                            $totalCredito=$totalCredito+$haberX;
+                                            $totalDebito=$totalDebito+$debeD;
+                                            $saldo_X=$haberX-$debeD;
+                                            $errorX="";
+                                            if($haberX<>$monto_ecX){
+                                                $errorX="(*ERROR*)";
+                                            }
+                                            $errorD="";
+                                            if($debeD<>$monto_ecD){
+                                                $errorD="(*ERROR*)";
+                                            }
                                             $html.='<tr class="bg-white" >
                                                 <td class="text-center small">'.$index.'</td>
                                                 <td class="text-left small">'.$nombreX.'</td>
-                                                <td class="text-right small">'.formatNumberDec($monto_ecD).'</td>
-                                                <td class="text-right small">'.formatNumberDec($monto_ecX).'</td>
+                                                <td class="text-right small">'.formatNumberDec($debeD).' '.$errorD.'</td>
+                                                <td class="text-right small">'.formatNumberDec($haberX).' '.$errorX.'</td>
                                                 <td class="text-right small">'.formatNumberDec($saldo_X).'</td>
                                             </tr>'; 
                                         }else{
-                                            $totalCredito=$totalCredito+$monto_ecD;
-                                            $totalDebito=$totalDebito+$monto_ecX;
-                                            $saldo_X=$monto_ecX-$monto_ecD;
+                                            $totalCredito=$totalCredito+$haberD;
+                                            $totalDebito=$totalDebito+$debeX;
+                                            $saldo_X=$debeX-$haberD;
+                                            $errorX="";
+                                            if($debeX<>$monto_ecX){
+                                                $errorX="(*ERROR*)";
+                                            }
+                                            $errorD="";
+                                            if($haberD<>$monto_ecD){
+                                                $errorD="(*ERROR*)";
+                                            }
                                             $html.='<tr class="bg-white" >
                                                 <td class="text-center small">'.$index.'</td>
                                                 <td class="text-left small">'.$nombreX.'</td>
-                                                <td class="text-right small">'.formatNumberDec($monto_ecX).'</td>
-                                                <td class="text-right small">'.formatNumberDec($monto_ecD).'</td>
+                                                <td class="text-right small">'.formatNumberDec($debeX).' '.$errorX.'</td>
+                                                <td class="text-right small">'.formatNumberDec($haberD).' '.$errorD.'</td>
                                                 <td class="text-right small">'.formatNumberDec($saldo_X).'</td>
                                             </tr>'; 
                                         }

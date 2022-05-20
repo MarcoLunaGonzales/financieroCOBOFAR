@@ -37,7 +37,7 @@
               '<th width="5%">Of/Area</th>'.
               '<th width="5%">Cbte</th>'.
               '<th width="7%">Fecha</th>'.
-              '<th width="60%">Concepto</th>'.
+              '<th width="50%">Concepto</th>'.
               '<th width="3%">t/c</th>'.
               // '<th>Debe</th>'.
               // '<th>Haber</th>'.
@@ -147,6 +147,12 @@ for ($xx=0; $xx < cantidadF($codcuentaAux); $xx++) {
           $glosaX=substr($glosaX,0,obtenerValorConfiguracion(72))."...";
       }
     }
+
+     $cuenta_glosa_add="";
+        if($cuenta_glosa==1){     
+          $cuenta_glosa_add="[".$cuenta_auxiliarX."] - ";
+        }
+
     $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
     if($tc==0){$tc=1;}
 
@@ -165,7 +171,7 @@ for ($xx=0; $xx < cantidadF($codcuentaAux); $xx++) {
                       '<td class="font-weight-bold small">'.$unidadX.'-'.$areaX.'</td>'.
                       '<td class="font-weight-bold small">'.$nombreComprobanteX.'</td>'.
                       '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
-                      '<td class="text-left small">['.$cuenta_auxiliarX."] - ".$glosaX.'</td>'.
+                      '<td class="text-left small">'.$cuenta_glosa_add."".$glosaX.'</td>'.
                       '<td class="font-weight-bold small">'.$tc.'</td>';
                       
                        $html.='<td class="text-right font-weight-bold small">'.formatNumberDec($debeX/$tc).'</td>'.

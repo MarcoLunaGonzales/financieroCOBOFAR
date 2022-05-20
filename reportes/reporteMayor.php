@@ -51,6 +51,20 @@ $unidad=$_POST['unidad'];
 $gestion= $_POST["gestion"];
 $entidad = $_POST["entidad"];
 
+$sql_add_aux="";
+if(isset($_POST["cuentas_auxiliares_select"])){
+  $cuentas_auxiliares_select=$_POST["cuentas_auxiliares_select"];
+  $string_cuentas_auxliares="";
+  foreach ($cuentas_auxiliares_select as $cuentas_auxliares ) {
+    $string_cuentas_auxliares.=$cuentas_auxliares.",";
+  }
+  $string_cuentas_auxliares=trim($string_cuentas_auxliares,",");
+  // print_r($cuentas_auxiliares_select);
+  $sql_add_aux=" and codigo in ($string_cuentas_auxliares)";
+}
+
+
+
 //PONEMOS LAS VARIABLES PARA CUANDO LLAMEMOS AL REPORTE DESDE LOS MAYORES
 if($gestion==null){
   $gestion=$globalGestion;
@@ -67,6 +81,13 @@ if(isset($_POST['glosa_len'])){
 }else{
   $glosaLen=0;
 }
+
+if(isset($_POST['cuenta_glosa'])){
+ $cuenta_glosa=1; 
+}else{
+  $cuenta_glosa=0;
+}
+
 if(isset($_POST['cuentas_auxiliares'])){
  $cuentas_auxiliares=1; 
 }else{
@@ -141,7 +162,7 @@ z-index: 20;
                    for ($cta=0; $cta < cantidadF($codcuentaMayor); $cta++) { 
                      $porcionesCuenta = explode("@", $codcuentaMayor[$cta]);
                      $cuentaCta=$porcionesCuenta[0];
-                     $sql="SELECT * from cuentas_auxiliares where cod_cuenta=$cuentaCta and cod_estadoreferencial=1 ";
+                     $sql="SELECT * from cuentas_auxiliares where cod_cuenta=$cuentaCta and cod_estadoreferencial=1 $sql_add_aux ";
                      // $sql="SELECT * from cuentas_auxiliares where cod_cuenta=$cuentaCta and cod_estadoreferencial=1 and codigo in (451,428,977,446,438,633,442,431,510,527,538)";
                      $stmtAux = $dbh->prepare($sql);
                      $stmtAux->execute();

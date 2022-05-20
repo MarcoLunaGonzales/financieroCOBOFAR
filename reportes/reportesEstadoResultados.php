@@ -160,7 +160,8 @@ $fechaHasta=$y."-12-31";
                       <option value="1">PDF </option>
                       <option value="2">EXCEL</option>
 
-                      <option value="3">EXCEL FORMATO 2</option>
+                      <option value="3">EXCEL (Formato Vertical)</option>
+                      <option value="4">EXCEL (Formato Horizontal)</option>
                   </select>
                 </div>
               </div>

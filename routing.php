@@ -1149,6 +1149,14 @@
 			require_once('planillas/generarPlanillaIndemnizaciones.php'); //ok
 		}
 
+		//planilla retroactivo
+		if ($_GET['opcion']=='planillasRetroactivoPersonal') {
+			require_once('planillas/planillasRetroactivosList.php'); //ok
+		}
+		if ($_GET['opcion']=='planillasRetroactivoPersonal_save') {
+			require_once('planillas/planillasRetroactivosSave.php'); //ok
+		}
+
 		
 		//finiquitos
 		if ($_GET['opcion']=='finiquitos_list') {
@@ -1200,8 +1208,31 @@
 		if ($_GET['opcion']=='permisosPersonalSave') {
 			require_once('vacaciones_permisos/permisos_save.php');
 		}
-		
-		
+		if ($_GET['opcion']=='permisosPersonalSaveDelete') {
+			$codigo=$_GET['codigo'];
+			require_once('vacaciones_permisos/permisos_save_delete.php');
+		}
+		if ($_GET['opcion']=='permisosPersonalSaveSW') {
+			$codigo=$_GET['codigo'];
+			require_once('vacaciones_permisos/permisos_cambiarestado.php');
+		}
+		if ($_GET['opcion']=='permisosPersonalListaADM') {
+			require_once('vacaciones_permisos/permisos_list_admin.php'); //admin
+		}
+		if ($_GET['opcion']=='permisosPersonalListaRRHH') {
+			require_once('vacaciones_permisos/permisos_list_rrhh.php'); //admin
+		}
+		//ASISTENCIA PERSONAL
+		if ($_GET['opcion']=='asistenciaPersonalLista') {
+			require_once('asistencia/asistencia_list.php'); //ok
+		}
+		if ($_GET['opcion']=='asistenciaPersonalListaRRHH') {
+			require_once('asistencia/asistencia_list_admin.php'); //ok
+		}
+		//incremento Salarial & retroactivos
+		if ($_GET['opcion']=='incremento_salarial') {
+			require_once('incremento_salarial/main.php'); //ok
+		}
 		
 		//tipo aporte afp
 		if ($_GET['opcion']=='tipos_aporteafpLista') {

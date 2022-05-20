@@ -50,6 +50,7 @@ try {
     $nro_seguro = $_POST["nro_seguro"];
     $cod_estadopersonal = $_POST["cod_estadopersonal"];
     $persona_contacto = $_POST["persona_contacto"];
+    $celular_contacto = $_POST["celular_contacto"];
     $grado_academico=$_POST['grado_academico'];
     $ing_contr=$_POST['ing_contr'];
     $ing_planilla=$_POST['ing_contr'];
@@ -87,12 +88,10 @@ try {
     $fecha_fincontrato="INDEFINIDO";
     $fecha_evaluacioncontrato_x= date("Y-m-d",strtotime($ing_planilla."+ ".$val_conf_meses_alerta_indef." month")); 
     $fecha_evaluacioncontrato = date("Y-m-d",strtotime($fecha_evaluacioncontrato_x."- 1 days")); 
-
-
     $porcentaje=100;
     if($codigo==0){
         $codigo=obtenerCodigoPersonal();
-        $sql="INSERT into personal(codigo,cod_tipo_identificacion,tipo_identificacion_otro,identificacion,cod_lugar_emision,lugar_emision_otro,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,direccion,cod_tipoafp,cod_tipoaporteafp,nro_seguro,cod_estadopersonal,telefono,celular,email,persona_contacto,created_by,modified_by,created_at,modified_at,cod_estadoreferencial,cod_nacionalidad,cod_estadocivil,cod_pais,cod_departamento,cod_ciudad,ciudad_otro,cod_grado_academico,ing_contr,ing_planilla,email_empresa,bandera,personal_confianza,cuenta_bancaria,turno,tipo_trabajo,cod_cajasalud)  values ($codigo,'$cod_tipoIdentificacion','$tipo_identificacionOtro','$identificacion','$cod_lugar_emision','$lugar_emisionOtro','$fecha_nacimiento','$cod_cargo','$cod_unidadorganizacional','$cod_area','$jubilado','$cod_genero','$cod_tipopersonal','$haber_basico','$paterno','$materno','$apellido_casada','$primer_nombre','$otros_nombres','$nua_cua_asignado','$direccion','$cod_tipoafp','$cod_tipoaporteafp','$nro_seguro','$cod_estadopersonal','$telefono','$celular','$email','$persona_contacto','$created_by','$modified_by',NOW(),NOW(),'$cod_estadoreferencial','$cod_nacionalidad','$cod_estadocivil','$cod_pais','$cod_departamento','$cod_ciudad','$ciudadOtro','$grado_academico','$ing_contr','$ing_planilla','$email_empresa','$bandera','$personal_confianza','$cuenta_bancaria','$turno','$tipo_trabajo','$cod_cajasalud')";
+        $sql="INSERT into personal(codigo,cod_tipo_identificacion,tipo_identificacion_otro,identificacion,cod_lugar_emision,lugar_emision_otro,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,direccion,cod_tipoafp,cod_tipoaporteafp,nro_seguro,cod_estadopersonal,telefono,celular,email,persona_contacto,celular_contacto,created_by,modified_by,created_at,modified_at,cod_estadoreferencial,cod_nacionalidad,cod_estadocivil,cod_pais,cod_departamento,cod_ciudad,ciudad_otro,cod_grado_academico,ing_contr,ing_planilla,email_empresa,bandera,personal_confianza,cuenta_bancaria,turno,tipo_trabajo,cod_cajasalud)  values ($codigo,'$cod_tipoIdentificacion','$tipo_identificacionOtro','$identificacion','$cod_lugar_emision','$lugar_emisionOtro','$fecha_nacimiento','$cod_cargo','$cod_unidadorganizacional','$cod_area','$jubilado','$cod_genero','$cod_tipopersonal','$haber_basico','$paterno','$materno','$apellido_casada','$primer_nombre','$otros_nombres','$nua_cua_asignado','$direccion','$cod_tipoafp','$cod_tipoaporteafp','$nro_seguro','$cod_estadopersonal','$telefono','$celular','$email','$persona_contacto','$celular_contacto','$created_by','$modified_by',NOW(),NOW(),'$cod_estadoreferencial','$cod_nacionalidad','$cod_estadocivil','$cod_pais','$cod_departamento','$cod_ciudad','$ciudadOtro','$grado_academico','$ing_contr','$ing_planilla','$email_empresa','$bandera','$personal_confianza','$cuenta_bancaria','$turno','$tipo_trabajo','$cod_cajasalud')";
         //echo $sql;
         $stmt = $dbh->prepare($sql);
         $flagSuccess=$stmt->execute();
@@ -113,7 +112,6 @@ try {
         $stmtDiscapacitado = $dbh->prepare("INSERT INTO personal_discapacitado(codigo,tipo_persona_discapacitado,nro_carnet_discapacidad,fecha_nac_persona_dis,cod_estadoreferencial)
                                             values($codigo,$tipo_persona_discapacitado,'$nro_carnet_discapacidad','$fecha_nac_persona_dis',$cod_estadoreferencial)");
         $flagSuccess=$stmtDiscapacitado->execute();
-
         //montos Pactados
         $sqlMontosPactados="INSERT INTO bonos_personal_pactados(cod_bono,cod_personal,monto,cod_estadoreferencial,tipo_bono_desc) values (11,$codigo,'$noche_pactado',1,1)";
         $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
@@ -169,10 +167,10 @@ try {
 
             $flagSuccess=$stmt3->execute();
         }
-        showAlertSuccessError($flagSuccess,$urlListPersonal);
+        // showAlertSuccessError($flagSuccess,$urlListPersonal);
 
     }else{
-        $sqlUpdate="UPDATE personal set cod_tipo_identificacion='$cod_tipoIdentificacion',tipo_identificacion_otro='$tipo_identificacionOtro',identificacion='$identificacion',cod_lugar_emision='$cod_lugar_emision',lugar_emision_otro='$lugar_emisionOtro',fecha_nacimiento='$fecha_nacimiento',cod_cargo='$cod_cargo',cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',jubilado='$jubilado',cod_genero='$cod_genero',cod_tipopersonal='$cod_tipopersonal',haber_basico='$haber_basico',paterno='$paterno',materno='$materno',apellido_casada='$apellido_casada',primer_nombre='$primer_nombre',otros_nombres='$otros_nombres',nua_cua_asignado='$nua_cua_asignado',direccion='$direccion',cod_tipoafp='$cod_tipoafp',cod_tipoaporteafp='$cod_tipoaporteafp',nro_seguro='$nro_seguro',cod_estadopersonal='$cod_estadopersonal',telefono='$telefono',celular='$celular',email='$email',persona_contacto='$persona_contacto',modified_by='$modified_by',modified_at=NOW(),cod_nacionalidad='$cod_nacionalidad',cod_estadocivil='$cod_estadocivil',cod_pais='$cod_pais',cod_departamento='$cod_departamento',cod_ciudad='$cod_ciudad',ciudad_otro='$ciudadOtro',cod_grado_academico='$grado_academico',ing_contr='$ing_contr',ing_planilla='$ing_planilla',email_empresa='$email_empresa',bandera='$bandera',personal_confianza='$personal_confianza',cuenta_bancaria='$cuenta_bancaria',turno='$turno',tipo_trabajo='$tipo_trabajo',cod_cajasalud='$cod_cajasalud' where codigo=$codigo";
+        $sqlUpdate="UPDATE personal set cod_tipo_identificacion='$cod_tipoIdentificacion',tipo_identificacion_otro='$tipo_identificacionOtro',identificacion='$identificacion',cod_lugar_emision='$cod_lugar_emision',lugar_emision_otro='$lugar_emisionOtro',fecha_nacimiento='$fecha_nacimiento',cod_cargo='$cod_cargo',cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',jubilado='$jubilado',cod_genero='$cod_genero',cod_tipopersonal='$cod_tipopersonal',haber_basico='$haber_basico',paterno='$paterno',materno='$materno',apellido_casada='$apellido_casada',primer_nombre='$primer_nombre',otros_nombres='$otros_nombres',nua_cua_asignado='$nua_cua_asignado',direccion='$direccion',cod_tipoafp='$cod_tipoafp',cod_tipoaporteafp='$cod_tipoaporteafp',nro_seguro='$nro_seguro',cod_estadopersonal='$cod_estadopersonal',telefono='$telefono',celular='$celular',email='$email',persona_contacto='$persona_contacto',celular_contacto='$celular_contacto',modified_by='$modified_by',modified_at=NOW(),cod_nacionalidad='$cod_nacionalidad',cod_estadocivil='$cod_estadocivil',cod_pais='$cod_pais',cod_departamento='$cod_departamento',cod_ciudad='$cod_ciudad',ciudad_otro='$ciudadOtro',cod_grado_academico='$grado_academico',ing_contr='$ing_contr',ing_planilla='$ing_planilla',email_empresa='$email_empresa',bandera='$bandera',personal_confianza='$personal_confianza',cuenta_bancaria='$cuenta_bancaria',turno='$turno',tipo_trabajo='$tipo_trabajo',cod_cajasalud='$cod_cajasalud' where codigo=$codigo";
         $stmt = $dbh->prepare($sqlUpdate);
         $flagSuccess=$stmt->execute();
         //sacamos el id de area distribucion area distribucion
@@ -255,7 +253,11 @@ try {
         $stmtANT->execute();
         $resultANT = $stmtANT->fetch();
         //$codigo = $result['codigo'];
-        $imagenANT = $resultANT['imagen'];
+        $imagenANT = "";
+        if(isset($resultANT['imagen'])){
+            $imagenANT = $resultANT['imagen'];
+        }
+        
         if ($imagenANT != $_FILES['image']['name'] AND strlen($_FILES['image']['name']) > 1){//solo si es diferente actualizar
             $results = $dbh->query("SELECT * from personalimagen where codigo = ".$codigo)->fetchAll(PDO::FETCH_ASSOC);
             if(count($results))     
@@ -276,8 +278,50 @@ try {
 
             $flagSuccess=$stmt3->execute();
         }
-        showAlertSuccessError($flagSuccess,$urlListPersonal);
+        // showAlertSuccessError($flagSuccess,$urlListPersonal);
     }
+
+    echo "<br><br>";
+    if($cod_estadopersonal==3){//estado retirado
+        
+        $fecha_retiro=date('Y-m-d');
+        $cod_tiporetiro=1;
+        if(isset($_POST['fecha_retiro'])){
+            echo "*";
+            $fecha_retiro=$_POST['fecha_retiro'];
+        }
+        if(isset($_POST['cod_tiporetiro'])){
+            echo "*";
+            $cod_tiporetiro=$_POST['cod_tiporetiro'];
+        }
+        $observaciones="";
+        $cod_personal=$codigo;
+        $cod_estadocontrato=2;//**nuevo
+        //verificamos si todos sus contratos estan fina,izados
+        $sqlControlador="SELECT codigo,cod_estadocontrato from personal_contratos where cod_personal=$cod_personal and cod_estadoreferencial=1 ORDER BY codigo desc limit 1";
+        $stmtControlador = $dbh->prepare($sqlControlador);
+        $stmtControlador->execute();
+        $resultControlador=$stmtControlador->fetch();
+        $cod_contrato_aux=$resultControlador['codigo'];
+        $cod_estadocontrato_aux=$resultControlador['cod_estadocontrato'];
+        if($cod_estadocontrato_aux==1){
+            //finalizamos contrato
+            $cod_estadocontrato=2;
+            $fecha_finalizado=date("Y-m-d H:i:s");
+            $sql="UPDATE personal_contratos set cod_estadocontrato=$cod_estadocontrato,fecha_finalizado='$fecha_finalizado' where codigo=$cod_contrato_aux";
+            $stmtContrato = $dbh->prepare($sql);
+            $stmtContrato->execute();
+            /**INSERTAMOS EN PERSONAL RETIROS*/
+            $sql="INSERT INTO personal_retiros(cod_personal,cod_tiporetiro,fecha_retiro,observaciones,cod_estadoreferencial) values($cod_personal,$cod_tiporetiro,'$fecha_retiro','$observaciones',1)";
+            $stmtRetiros = $dbh->prepare($sql);
+            $flagsucces=$stmtRetiros->execute();
+            /**cambiamos de estado a personal*/
+            $sqlpersonal="UPDATE personal set cod_estadopersonal=3 where codigo=$cod_personal";
+            $stmtUP = $dbh->prepare($sqlpersonal);
+            $stmtUP->execute();
+        }
+    }
+    showAlertSuccessError($flagSuccess,$urlListPersonal);
     
 } catch(PDOException $ex){
     //manejar error

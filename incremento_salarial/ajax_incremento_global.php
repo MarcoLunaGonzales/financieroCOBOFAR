@@ -55,7 +55,7 @@ while ($rowNoAdmitidos = $stmtNoAdmitidos->fetch(PDO::FETCH_BOUND)) {
                           </div>
                           <div class="col-sm-3">
                              <div class="form-group has-primary">
-                              <label class="control-label" for="inputSuccess">% SMN</label>
+                              <label class="control-label" for="inputSuccess">% HB</label>
                               <input type="text" class="form-control" name="incremento_hb_g" id="incremento_hb_g"   style="background:white;font-size: 18px;color:#566573;" readonly="true" value="<?=$porcentaje_hb?>" >
                             </div>
                           </div>
@@ -201,9 +201,10 @@ while ($rowNoAdmitidos = $stmtNoAdmitidos->fetch(PDO::FETCH_BOUND)) {
         </div> 
      </div>
   </div>
-</form>
-<div class=" fixed-bottom">
+  <div class=" fixed-bottom">
 <button type="submit" class="<?=$buttonCeleste;?>">Guardar</button>
 <a href="index.php?opcion=incremento_salarial" class="<?=$buttonCancel;?>"> Cancelar</a>
 </div>
+</form>
+
 

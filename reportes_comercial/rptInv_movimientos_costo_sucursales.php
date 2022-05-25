@@ -34,7 +34,7 @@ $totalTraspasosVenValGen=0;
             <div class="card-icon bg-blanco">
               <img class="" width="50" height="40" src="../assets/img/favicon.png">
             </div>
-             <h4 class="card-title text-center">REPORTE MOVIENTOS  COSTOS - SUCURSAL</h4>
+             <h4 class="card-title text-center">REPORTE MOVIMIENTOS  COSTOS - SUCURSAL</h4>
           </div>
           <div class="card-body">
             <h6 class="card-title" id="nombre_sucursal">Sucursal:</h6>  
@@ -43,7 +43,7 @@ $totalTraspasosVenValGen=0;
 
 <table class="table table-bordered table-condensed" id="tablePaginator1001">
   <thead>
-    <tr><th></th><th></th><th colspan="20" align="center"><b>REPORTE MOVIENTOS DE PRODUCTOS - COSTOS</b></th></tr>
+    <tr><th></th><th></th><th colspan="20" align="center"><b>REPORTE MOVIMIENTOS  COSTOS - SUCURSAL</b></th></tr>
     <tr style="border:1px;">
       <th>CODIGO</th>
       <th>SUCURSAL</th>
@@ -54,9 +54,14 @@ $totalTraspasosVenValGen=0;
       <th>Ventas</th>
       <th>Saldo Final</th>
       <?php
+      if($_POST['tipo_cerrada']==0){
+        $stringBusqueda=" a.estado_pedidos=1  and cod_almacen in ($sucursal)";
+      }else{
+        $stringBusqueda=" (a.estado_pedidos!=1 or a.estado_pedidos is null  or cod_almacen in ($sucursal)) and cod_tipoalmacen=1 and c.cod_impuestos>0";
+      }
         $sql_listsucursales="SELECT a.cod_almacen,a.nombre_almacen
           from almacenes a join ciudades c on a.cod_ciudad=c.cod_ciudad 
-          where a.estado_pedidos=1  and cod_almacen in ($sucursal)
+          where $stringBusqueda
           order by a.nombre_almacen";
         $resp=mysqli_query($dbh,$sql_listsucursales);
         $string_sucursales="";
@@ -65,6 +70,7 @@ $totalTraspasosVenValGen=0;
           $cod_almacen=$row['cod_almacen'];
           $nombre_almacen=$row['nombre_almacen'];          
           $informacion=cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($cod_almacen,$fechai,$fechaf,$stringProveedor);
+          // $informacion=cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($cod_almacen,$fechai,$fechaf,$stringProveedor);
           $datosSucursal[$cod_almacen]=$informacion;
           $string_sucursales.=$cod_almacen.",";
           $array_sucursales_nombres[$cod_almacen]=$nombre_almacen;

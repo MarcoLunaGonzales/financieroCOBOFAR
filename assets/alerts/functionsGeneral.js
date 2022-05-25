@@ -20275,17 +20275,17 @@ function boton_incremento_salarial_main(index){
         
       }else{
         if(index==3){//incremento por persona
-            Swal.fire("ADVERTENCIA", "En este momento estamos trabajando en esta opción y esperemos habilitar en breve. Disculpa las molestias.", "warning");
+            //Swal.fire("ADVERTENCIA", "En este momento estamos trabajando en esta opción y esperemos habilitar en breve. Disculpa las molestias.", "warning");
 
-          // var porcentaje_smn = $("#incremento_smn_p").val();
-          // var porcentaje_hb = $("#incremento_hb_p").val();
-          // if(porcentaje_smn=="" || porcentaje_hb==""){
-          //   $("#incremento_smn_p").focus();
-          //   Swal.fire("ADVERTENCIA", "Es Necesario que ingreses los porcentajes correspondientes al SALARIO MINIMO NACIONAL(SMN) y al HABER BASICO (HB).", "warning");
-          // }else{
-          //   ajax.open('GET', 'incremento_salarial/ajax_incremento_porpersona.php?porcentaje_smn='+porcentaje_smn+'&porcentaje_hb='+porcentaje_hb,true);
-          //   sw=1;
-          // }
+          var porcentaje_smn = $("#incremento_smn_p").val();
+          var porcentaje_hb = $("#incremento_hb_p").val();
+          if(porcentaje_smn=="" || porcentaje_hb==""){
+            $("#incremento_smn_p").focus();
+            Swal.fire("ADVERTENCIA", "Es Necesario que ingreses los porcentajes correspondientes al SALARIO MINIMO NACIONAL(SMN) y al HABER BASICO (HB).", "warning");
+          }else{
+            ajax.open('GET', 'incremento_salarial/ajax_incremento_porpersona.php?porcentaje_smn='+porcentaje_smn+'&porcentaje_hb='+porcentaje_hb,true);
+            sw=1;
+          }
           
         }
       }
@@ -20299,6 +20299,16 @@ function boton_incremento_salarial_main(index){
       }
       ajax.send(null);  
     }   
+}
+function activar_input_incremento_salarial_personal(index){
+
+    var check=document.getElementById("personal_seleccionado_x"+index);
+    if(check.checked){//activado
+      document.getElementById("personal_seleccionado"+index).value=1;
+    }else{
+      document.getElementById("personal_seleccionado"+index).value=0;
+    }
+  
 }
 
 function activar_input_incremento_salarial_cargos(index){

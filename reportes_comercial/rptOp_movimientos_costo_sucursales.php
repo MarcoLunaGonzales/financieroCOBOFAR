@@ -35,6 +35,18 @@ require("../conexion_comercial.php");
 	                </div>
 
               </div>
+              <div class="row">
+                <label class="col-sm-2 col-form-label">Sucursales Cerradas</label>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <select name="tipo_cerrada" id="tipo_cerrada" class="selectpicker form-control form-control-sm" data-style="btn btn-warning"  data-show-subtext="true" required="true">
+                          <option value="1">SI</option>
+                          <option value="0" selected>NO</option>
+                      </select>
+                    </div>
+                  </div>
+
+              </div>
              	<div class="row">
                 <label class="col-sm-2 col-form-label">Fecha Inicio</label>
                 <div class="col-sm-4">

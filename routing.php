@@ -28,7 +28,6 @@
 		}
 
 
-
 		if ($_GET['opcion']=='listCuentasAux') {
 			$codigo=$_GET['codigo'];
 			require_once('cuentas_auxiliares/list2.php');
@@ -1232,6 +1231,10 @@
 		//incremento Salarial & retroactivos
 		if ($_GET['opcion']=='incremento_salarial') {
 			require_once('incremento_salarial/main.php'); //ok
+		}
+
+		if ($_GET['opcion']=='incremento_salarial_edit') {
+			require_once('incremento_salarial/edit_incremento.php'); //ok
 		}
 		
 		//tipo aporte afp

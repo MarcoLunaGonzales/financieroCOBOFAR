@@ -3,8 +3,8 @@
 require_once '../conexion.php';
 // require_once '../functionsGeneral.php';
 $dbh = new Conexion();
-// session_start();
- $globalUser=$_SESSION["globalUser"];
+session_start();
+$globalUser=$_SESSION["globalUser"];
 //$globalUser=-100;
 
 $personal=$_POST["codigo_personal_modal"];
@@ -19,7 +19,7 @@ $dias_vacacion=$_POST["dias_vacacion"];
 $gestion=$_POST["gestion_modal"];
 $cod_estadoreferencial=1;
 // Prepare
-$sql="INSERT INTO personal_vacaciones (cod_personal, fecha_inicial,hora_inicial,fecha_final,hora_final,observaciones,cod_estadoreferencial,dias_vacacion,created_at,created_by,gestion) VALUES ($personal, '$fecha_inicio','$hora_inicio','$fecha_final','$hora_final','$observaciones','$cod_estadoreferencial','$dias_vacacion',NOW(),'$globalUser','$gestion')";
+$sql="INSERT INTO personal_vacaciones (cod_personal, fecha_inicial,hora_inicial,fecha_final,hora_final,observaciones,cod_estadoreferencial,dias_vacacion,created_at,created_by,gestion,modulo) VALUES ($personal, '$fecha_inicio','$hora_inicio','$fecha_final','$hora_final','$observaciones','$cod_estadoreferencial','$dias_vacacion',NOW(),'$globalUser','$gestion',1)";
 // echo $sql;
 $stmt = $dbh->prepare($sql);
 $flagSuccess=$stmt->execute();

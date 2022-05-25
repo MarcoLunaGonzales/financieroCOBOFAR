@@ -29,7 +29,6 @@ $fecha_actual=date('Y-m-d');
 	<div class="container-fluid">
 		<div class="col-md-12">
 		  <form id="form1" class="form-horizontal" action="vacaciones_permisos/permisos_save.php" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
-
 			<input type="hidden" id="cod_personal" name="cod_personal" value="<?=$cod_personal_q?>">
 			<input type="hidden" id="cod_sucursal" name="cod_sucursal" value="<?=$cod_sucursal?>">
 		  	<input type="hidden" id="q" name="q" value="<?=$q?>">
@@ -42,7 +41,7 @@ $fecha_actual=date('Y-m-d');
 					</div>				
 			  </div>
 			  <div class="card-body ">
-				<center><span style="font-size: 17px;">Solicitante :</span><b><span style="color:black;font-size: 17px;"> <?=namePersonalCompleto($cod_personal_q)?></span></b></center>
+				<center><span style="color:black;font-size: 17px;">Solicitante : <b><?=namePersonalCompleto($cod_personal_q)?></b> - Sucursal : <b><?=nameArea($cod_sucursal)?></span></b></center>
 				<div class="row">
 					<label class="col-sm-2 col-form-label" style="color:black;">Motivo *</label>
 					<div class="col-sm-4">
@@ -69,7 +68,6 @@ $fecha_actual=date('Y-m-d');
 						</div>
 					</div>
 				</div> 
-				
 				<div id="div_rangofechas_permisos">
 					<div class="row" >
 					  <label class="col-sm-2 col-form-label" style="color:black;">Inicio *</label>
@@ -83,7 +81,6 @@ $fecha_actual=date('Y-m-d');
 						  <input  type='time' class='form-control'  id='hora_inicio' name='hora_inicio' value="06:00" required>
 						</div>
 					  </div>
-
 					  <label class="col-sm-1 col-form-label" style="color:black;">Fin *</label>
 					  <div class="col-sm-2">
 						<div class="form-group">
@@ -107,7 +104,6 @@ $fecha_actual=date('Y-m-d');
 						</div>
 					  </div>
 					</div>
-
 				</div>
 				<div class="row">
 				  <label class="col-sm-2 col-form-label" style="color:black;">Observaciones</label>

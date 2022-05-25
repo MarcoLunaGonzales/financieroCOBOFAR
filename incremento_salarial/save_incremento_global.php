@@ -18,11 +18,18 @@ $created_by=$_SESSION['globalUser'];
 $incremento_smn_g=$_POST['incremento_smn_g'];
 $incremento_hb_g=$_POST['incremento_hb_g'];
 $incremento_smn_monto=$_POST['incremento_smn_monto'];
-
+$minimo_salarial_anterior=obtenerValorConfiguracionPlanillas(1);
 
 $array_codPesonal=$_POST['codigo_persona'];//array de codigos de personal
 $haber_basico_nuevo=$_POST['hbn'];//array de nuevo haber basico
 $haber_basico_ant=$_POST['hba'];//array de nuevo haber basico
+
+if(isset($_POST['bandera_edit'])){
+  $bandera_nuevo=false;
+}else{
+  $bandera_nuevo=true;
+}
+
 $index=0;
 // var_dump($haber_basico_ant);
 foreach($array_codPesonal as $key => $cod_personal) {
@@ -48,21 +55,17 @@ foreach($array_codPesonal as $key => $cod_personal) {
   $index++;
 }
 
-if($flagSuccess){
-  $id_configuracion_smn=1;
-  $id_configuracion_gestion=29;
-  // $minimo_salarial_config=obtenerValorConfiguracionPlanillas($id_configuracion_smn);
-  // $salario_minimo_nacional_nuevo=floor($minimo_salarial_config+$minimo_salarial_config*$incremento_smn_g/100);
+if($bandera_nuevo){  
   $salario_minimo_nacional_nuevo=$incremento_smn_monto;
-
-  $stmtUpdateConf = $dbh->prepare("UPDATE configuraciones_planillas set valor_configuracion=:valor_configuracion where id_configuracion = :id_configuracion");
-  $stmtUpdateConf->bindParam(':id_configuracion', $id_configuracion_smn);
-  $stmtUpdateConf->bindParam(':valor_configuracion', $salario_minimo_nacional_nuevo);
-  $stmtUpdateConf->execute();     
-
-  $stmtUpdateConf = $dbh->prepare("UPDATE configuraciones_planillas set valor_configuracion=:valor_configuracion where id_configuracion = :id_configuracion");
-  $stmtUpdateConf->bindParam(':id_configuracion', $id_configuracion_gestion);
-  $stmtUpdateConf->bindParam(':valor_configuracion', $gestion);
+  $stmtUpdateConf = $dbh->prepare("UPDATE configuraciones_planillas set valor_configuracion='$salario_minimo_nacional_nuevo' where id_configuracion = '1'");//salario minimo nacional nuevo
+  $stmtUpdateConf->execute();
+  $stmtUpdateConf = $dbh->prepare("UPDATE configuraciones_planillas set valor_configuracion='$gestion' where id_configuracion = '29'");  //gestion procesada
+  $stmtUpdateConf->execute();
+  $stmtUpdateConf = $dbh->prepare("UPDATE configuraciones_planillas set valor_configuracion='$minimo_salarial_anterior' where id_configuracion = '31'");  //salario minimo nacional anterior
+  $stmtUpdateConf->execute();
+  $stmtUpdateConf = $dbh->prepare("UPDATE configuraciones_planillas set valor_configuracion='$incremento_smn_g' where id_configuracion = '32'");   //% incremento Salario minimo nacional
+  $stmtUpdateConf->execute();
+  $stmtUpdateConf = $dbh->prepare("UPDATE configuraciones_planillas set valor_configuracion='$incremento_hb_g' where id_configuracion = '33'");   //% incremento Haber basico
   $stmtUpdateConf->execute();
 
   //creamos la planilla de retroactivos

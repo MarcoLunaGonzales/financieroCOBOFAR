@@ -113,7 +113,6 @@ order by a.ordenar";
     $iconoSubMenu=$row_submenu['icono'];
     $txtNuevaVentana=$row_submenu['txtNuevaVentana'];
     if($codigoSubMenu==105){
-
       ?>
       <li class="nav-item ">
         <a class="nav-link" href="<?=$paginaSubMenu;?>?cod_personal=<?=$globalUserX?>" <?=$txtNuevaVentana;?> >

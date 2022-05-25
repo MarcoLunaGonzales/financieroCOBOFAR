@@ -231,7 +231,7 @@ if($menuModulo==0){
                 </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=permisosPersonalLista">
-                      <span class="sidebar-mini"> SP </span>
+                      <span class="sidebar-mini"> PSA </span>
                       <span class="sidebar-normal">Permisos (Sol & Aut)</span>
                     </a>
                 </li>
@@ -296,7 +296,7 @@ if($menuModulo==0){
 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=planillasRetroactivoPersonal">
-                    <span class="sidebar-mini"> PI </span>
+                    <span class="sidebar-mini"> PR </span>
                     <span class="sidebar-normal"> Planilla de Retroactivos</span>
                   </a>
                 </li>

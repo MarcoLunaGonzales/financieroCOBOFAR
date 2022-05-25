@@ -23,7 +23,6 @@ $resultDatosPlanilla =  $stmtDatosPlanilla->fetch();
 $gestion_x = $resultDatosPlanilla['gestion'];
 $cod_gestion_x = $resultDatosPlanilla['cod_gestion'];
 
-
 $fecha_planilla_1_aux=$gestion_x."-01-01";//primer dia de enero
 $fecha_planilla_2_aux=$gestion_x."-02-01";
 $fecha_planilla_3_aux=$gestion_x."-03-01";
@@ -128,8 +127,6 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$bono_antiguedad_nuevo_abril=obtenerBonoAntiguedad($minimo_salarial,$ing_planilla,$fecha_planilla_4);//ok
 
 
-		
-
 		if($haber_basico1>0){
 			$haber_basico_nuevo1=$haber_basico_nuevo*$dias_trabajados1/$dias_del_mes;
 			$retroactivo_enero=$haber_basico_nuevo1-$haber_basico1;
@@ -137,6 +134,9 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		}
 		if($haber_basico2>0){
 			$haber_basico_nuevo2=$haber_basico_nuevo*$dias_trabajados2/$dias_del_mes;
+
+			$haber_basico_x=$haber_basico*$dias_trabajados_asistencia/$dias_del_mes;
+
 			$retroactivo_febrero=$haber_basico_nuevo2-$haber_basico2;
 			$antiguedad_febrero=$bono_antiguedad_nuevo_febrero-$bono_antiguedad2;
 		}
@@ -153,6 +153,7 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$bono_antiguedad_anterior=$bono_antiguedad4;
 		$bono_antiguedad_nuevo=$bono_antiguedad_nuevo_abril;
 		$total_ganado=$retroactivo_enero+$retroactivo_febrero+$retroactivo_marzo+$retroactivo_abril+$antiguedad_enero+$antiguedad_febrero+$antiguedad_marzo+$antiguedad_abril;
+		
 		$ap_vejez=$total_ganado*10/100;//10%
 		$riesgo_prof=$total_ganado*1.71/100;//1.7%
 		$com_afp=$total_ganado*0.5/100;//0.5%

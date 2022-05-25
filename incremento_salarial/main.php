@@ -41,7 +41,7 @@ if($gestion_porocesada_incremento<>$anio){//todavia no se procesó
                               </div>
                               <div class="col-sm-6">
                                     <div class="form-group has-primary">
-                                     <label class="control-label" for="inputSuccess">% SMN</label>
+                                     <label class="control-label" for="inputSuccess">% HB</label>
                                      <input type="text" class="form-control" name="incremento_hb_g" id="incremento_hb_g" >
                                    </div>
                               </div>
@@ -72,7 +72,7 @@ if($gestion_porocesada_incremento<>$anio){//todavia no se procesó
                               </div>
                               <div class="col-sm-6">
                                  <div class="form-group has-primary">
-                                  <label class="control-label" for="inputSuccess">% SMN</label>
+                                  <label class="control-label" for="inputSuccess">% HB</label>
                                  <input type="text" class="form-control" name="incremento_hb_c" id="incremento_hb_c">
                                 </div>
                               </div>
@@ -103,7 +103,7 @@ if($gestion_porocesada_incremento<>$anio){//todavia no se procesó
                               </div>
                               <div class="col-sm-6">
                                     <div class="form-group has-primary">
-                                     <label class="control-label" for="inputSuccess">% SMN</label>
+                                     <label class="control-label" for="inputSuccess">% HB</label>
                                      <input type="text" class="form-control" name="incremento_hb_p" id="incremento_hb_p">
                                    </div>
                               </div>
@@ -251,9 +251,9 @@ if($gestion_porocesada_incremento<>$anio){//todavia no se procesó
 
 }else{ // ya se procesó el incremento
  echo "<script type='text/javascript'>
-  swal('Informativo!', 'El incremento salarial para la gestion ".$anio.", YA FUE PROCESADA.', 'error')
+  swal('El incremento salarial de la gestion ".$anio.", YA FUE PROCESADA. ¿Deseas editar?', '', 'warning')
           .then((value) => {
-          location.href='index.php?opcion=planillasRetroactivoPersonal';
+          location.href='index.php?opcion=incremento_salarial_edit';
       });
 </script>";
 }

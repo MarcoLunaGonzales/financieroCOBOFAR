@@ -23,6 +23,16 @@ require_once '../functionsGeneral.php';
 $fecha_x=$gestion.'-'.$cod_mes.'-01';
 $fecha_cns=date("Y-m-t",strtotime($fecha_x."+ 1 month")); 
 $datos_fecha=explode("-", $fecha_cns);
+//sacamos el ultimo día habil
+$dia_ultimo=$datos_fecha[2];
+$dia_semana=date("N",strtotime($fecha_cns)); 
+if ($dia_semana == 7) {
+    $dia_ultimo=$dia_ultimo-2;
+}
+if ($dia_semana == 6) {
+    $dia_ultimo=$dia_ultimo-1;
+}
+
 
 $porcentaje_aport_afp=obtenerValorConfiguracionPlanillas(12);
 $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
@@ -188,7 +198,7 @@ $html.='<table width="100%">
   <tr >
   <td width="25%"><center><p>______________________________<BR>'.obtenerValorConfiguracionPlanillas(25).'<BR>REPRESENTANTE LEGAL COBOFAR S.A.</p></center></td>
   <td><center><p>SELLO</p></center></td>
-  <td width="25%"><center><p>LA PAZ, '.$datos_fecha[2].' DE '.strtoupper(nombreMes($datos_fecha[1])).' DE '.$datos_fecha[0].'</p></center></td>
+  <td width="25%"><center><p>LA PAZ, '.$dia_ultimo.' DE '.strtoupper(nombreMes($datos_fecha[1])).' DE '.$datos_fecha[0].'</p></center></td>
   </tr>
 </table>';
 

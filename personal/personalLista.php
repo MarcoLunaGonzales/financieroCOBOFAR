@@ -55,8 +55,6 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                 <i class="material-icons" title="Lista Personal Retirado">rowing</i>
               </a>  
               </h4>
-              
-
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -72,7 +70,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                         <th>Tipo Personal</th>                                                
                         <th>F.Ingreso</th>
                         <th>Estado</th>
-                        <th></th>
+                        
                         <th></th>
                         <th></th>
                       </tr>
@@ -101,25 +99,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                         <td><?=$xcod_tipopersonal;?></td>                                              
                         <td><?=$fecha_ingreso;?></td>
                         <td><?=$labelestadoPersonal.$xestado."</span>";?></td>
-                        <td class="td-actions text-right">
-                          <?php
-                            if( $cod_estadopersonal!=3){
-                          ?>
-                            <a href='<?=$urlFormPersonalContratos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                              <i class="material-icons" title="Contratos">assignment</i>
-                            </a>
-                            <a href='<?=$urlFormPersonalAreaDistribucion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">            
-                              <i class="material-icons" title="Area-Distribución" style="color:black;">call_split</i>
-                            </a>
-                            <?php
-                              }else{?>
-                                  <a href='<?=$urlFormPersonalContratos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                                <i class="material-icons" title="Contratos">assignment</i>
-                            </a>
-                              <?php }
-                            ?>        
-                        </td>
-                          
+
                         <td class="td-actions text-right">
                           <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                             <i class="material-icons"><?=$iconEdit;?></i>

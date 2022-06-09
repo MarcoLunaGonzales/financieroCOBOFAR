@@ -664,7 +664,7 @@
 
   function namePersonalCompleto($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',primer_nombre,materno,paterno)as nombre FROM personal where codigo=:codigo");
+     $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',primer_nombre,paterno,materno)as nombre FROM personal where codigo=:codigo");
      $stmt->bindParam(':codigo',$codigo);
      $stmt->execute();
      $nombreX="";
@@ -3662,8 +3662,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtener_id_planilla($cod_gestion,$cod_mes){
     $dbh = new Conexion();
-    $stmt = $dbh->prepare("SELECT codigo from planillas
-    where cod_gestion=$cod_gestion and cod_mes=$cod_mes");
+    $sql="SELECT codigo from planillas
+    where cod_gestion=$cod_gestion and cod_mes=$cod_mes";
+    $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $result=$stmt->fetch();
     $codigo=$result['codigo'];
@@ -3688,19 +3689,27 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
 
    function obtenerdatos_planilla($cod_personal,$cod_planilla){
-    $dbh = new Conexion();
-    set_time_limit(0);
-    $stmt = $dbh->prepare("SELECT haber_basico,bono_antiguedad,bonos_otros,total_ganado from planillas_personal_mes
-    where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal");
-   $stmt->execute();
-   $result=$stmt->fetch();
-   $haber_basico=$result['haber_basico'];
-   $bono_antiguedad=$result['bono_antiguedad'];
-   $bonos_otros=$result['bonos_otros'];
-   $total_ganado=$result['total_ganado'];
-    $dbh = null;
-    $stmt = null;
-    return ($haber_basico."@@@".$bono_antiguedad."@@@".$bonos_otros."@@@".$total_ganado);
+      $dbh = new Conexion();
+      set_time_limit(0);
+      $valor_haber_basico=0;
+      $valor_bono_antiguedad=0;
+      $valor_bonos_otros=0;
+      $valor_total_ganado=0;
+      $valor_dias_trabajados=0;
+      $valor_dias_trabajados=0;
+      $stmt = $dbh->prepare("SELECT haber_basico,dias_trabajados,bono_antiguedad,bonos_otros,total_ganado from planillas_personal_mes
+      where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal");
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $valor_haber_basico=$row['haber_basico'];
+         $valor_dias_trabajados=$row['dias_trabajados'];
+         $valor_bono_antiguedad=$row['bono_antiguedad'];
+         $valor_bonos_otros=$row['bonos_otros'];
+         $valor_total_ganado=$row['total_ganado'];
+      }
+      $dbh = null;
+      $stmt = null;
+      return ($valor_haber_basico."@@@".$valor_bono_antiguedad."@@@".$valor_bonos_otros."@@@".$valor_total_ganado."@@@".$valor_dias_trabajados);
   }
     
 
@@ -4017,7 +4026,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
                   $canvas->page_text($x, $y, "pie de pagina en la ultima hoja".$numero.$numeroF, $font, $size);
               }
           }*/
-    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+         
+
+    $canvas->page_text(500, 25, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));
     $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
@@ -12380,18 +12391,17 @@ function verificarComporbanteCojo($codigo){
 }
 
 function reprocesar_costoventas_sucursales($fecha,$rpt_territorio){
-   $sql="SELECT sum(sad.costo_almacen*sad.cantidad_unitaria) as costo_venta
+   $sql="
+   SELECT sum((select ct.costo from costoscobofar.costo_promedio_mes ct where ct.cod_mes=1 and ct.cod_gestion=2022 and ct.cod_material=sad.cod_material and ct.cod_almacen=sa.cod_almacen)*sad.cantidad_unitaria) as costo_venta
       from salida_almacenes sa INNER JOIN salida_detalle_almacenes sad on sad.cod_salida_almacen=sa.cod_salida_almacenes
       where sa.fecha = '$fecha' and sa.cod_tiposalida=1001 and sa.salida_anulada=0 and sa.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
     where a.`cod_ciudad`='$rpt_territorio' and a.cod_tipoalmacen=1)";  
-
     //echo $sql;
    $valor=0;
    require("conexion_comercial.php");
    $resp=mysqli_query($dbh,$sql);
    while($row=mysqli_fetch_array($resp)){ 
       $monto=number_format($row['costo_venta'],1,'.','');
-      
       $valor+=$monto;
    } 
    mysqli_close($dbh);
@@ -12669,10 +12679,9 @@ function obtenerQuinquenioPagadoPersonal($cod_personal){
     $costo=[];
     $costo_ant=[];
     $cod_mes_ant=$cod_mes-1;
-    $cod_gestion_ant=$cod_gestion;//
+    $cod_gestion_ant=$cod_gestion-1;
     if($cod_mes==1){
-      $cod_mes_ant=12; 
-      $cod_gestion_ant=$cod_gestion-1;     //
+      $cod_mes_ant=12;      
     }
     $sql="SELECT m.codigo_material,m.descripcion_material,m.cantidad_presentacion,(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes and c.cod_gestion=$cod_gestion and c.cod_almacen=$cod_almacen limit 1)as costo,(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes_ant and c.cod_gestion=$cod_gestion_ant and c.cod_almacen=$cod_almacen limit 1)as costo_ant
       from material_apoyo m 
@@ -12821,15 +12830,14 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
 }
 
 
-  function obtenerDiasVacacionUzadas($cod_personal,$gestion){
-    if($gestion==-100){
-      $sql="SELECT sum(dias_vacacion)as uzadas from personal_vacaciones  where cod_personal=$cod_personal and cod_estadoreferencial=1";
-    }else{
-      $sql="SELECT sum(dias_vacacion)as uzadas from personal_vacaciones  where cod_personal=$cod_personal and gestion=$gestion and cod_estadoreferencial=1";
-    }
-    
+function obtenerDiasVacacionUzadas($cod_personal,$gestion){
    $dbh = new Conexion();
-   $valor=0;
+   $valor=0;   
+   if($gestion==-100){
+      $sql="SELECT sum(dias_vacacion)as uzadas from personal_vacaciones where cod_personal=$cod_personal and cod_estadoreferencial=1";
+   }else{
+      $sql="SELECT sum(dias_vacacion)as uzadas from personal_vacaciones where cod_personal=$cod_personal and gestion=$gestion and cod_estadoreferencial=1";
+   }
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -12838,10 +12846,9 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
    if($valor=="" || $valor==null){
       $valor=0;
    }
-   // $dbh=null;
-   // $stmt=null;
+   
    return $valor;
-  }
+}
 
 function obtenerValorInicialDepreciacionGestion($cod_depreciaciones_rubros,$gestion,$unidadOrgString){
 
@@ -13364,7 +13371,7 @@ function obtenerVentasTotales_nuevo($cod_dosificacion,$fechai,$fechaf){
       return($valor);
    }
 
-
+   
 function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($almacen,$fecha_ini,$fecha_fin,$proveedores){
     set_time_limit(0);
     $estilosVenta=1;
@@ -13464,7 +13471,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
   }
 
 
-function cargarValoresVentasYSaldosProductosArray_prodrotacionProductoPromedio($almacen,$fecha_ini,$fecha_fin,$productos){
+  function cargarValoresVentasYSaldosProductosArray_prodrotacionProductoPromedio($almacen,$fecha_ini,$fecha_fin,$productos){
     set_time_limit(0);
     $estilosVenta=1;
     require("conexion_comercial2.php");     
@@ -13543,4 +13550,97 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacionProductoPromedio($
     return array($ingresos,$ingresos_unidad,$salida,$salida_unidad,$ventas,$ventas_unidad,$ingresos_ant,$ingresos_unidad_ant,$salida_ant,$salida_unidad_ant);
 }
 
+   function obtenerAreasAdmin_permisos($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_area from personal_permisos_admin where cod_personal=$codigo and cod_estadoreferencial=1");
+      $stmt->execute();
+      $valor="";
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_area'];
+      }
+      return($valor);
+   }
+
+   function obtenerDatosAsistenciaPersonal($codigo,$cod_personal,$dias_trabajado){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT faltas,fecha_faltas,baja_medicas,dias_vacacion,domingos,fecha_domingos,feriados,fecha_feriados,horas_extras,noches,observaciones from asistencia_personal_detalle where cod_asistenciapersonal=$codigo and cod_personal=$cod_personal");
+      $stmt->execute();
+      $dias_normales=$dias_trabajado;
+      $faltas=0;
+      $fecha_faltas="";
+      $baja_medicas=0;
+      $dias_vacacion=0;
+      $domingos=0;
+      $fecha_domingos="";
+      $feriados=0;
+      $fecha_feriados="";
+      $horas_extras=0;
+      $noches=0;
+      $observaciones="";
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // $dias_normales=$row['dias_normales'];
+        $faltas=$row['faltas'];
+        $fecha_faltas=$row['fecha_faltas'];
+        $baja_medicas=$row['baja_medicas'];
+        $dias_vacacion=$row['dias_vacacion'];
+        $domingos=$row['domingos'];
+        $fecha_domingos=$row['fecha_domingos'];
+        $feriados=$row['feriados'];
+        $fecha_feriados=$row['fecha_feriados'];
+        $horas_extras=$row['horas_extras'];
+        $noches=$row['noches'];
+        $observaciones=$row['observaciones'];
+
+      }
+      return array($dias_normales,$faltas,$fecha_faltas,$baja_medicas,$dias_vacacion,$domingos,$fecha_domingos,$feriados,$fecha_feriados,$horas_extras,$noches,$observaciones);
+   }
+
+   function obtenerDatosAsistenciaPersonal_planilla($cod_mes,$cod_gestion,$cod_personal){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT apd.faltas,baja_medicas,dias_vacacion,domingos,feriados,horas_extras,noches
+         from  asistencia_personal ap join asistencia_personal_detalle apd on ap.codigo=apd.cod_asistenciapersonal
+         where ap.cod_mes=$cod_mes and ap.cod_gestion=$cod_gestion and ap.cod_estadoreferencial=1 and ap.cod_estado=3
+         and apd.cod_personal=$cod_personal");
+      $stmt->execute();
+      
+      $faltas=0;
+      $baja_medicas=0;
+      $dias_vacacion=0;
+      $domingos=0;
+      $feriados=0;
+      $horas_extras=0;
+      $noches=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $faltas=$row['faltas'];
+        $baja_medicas=$row['baja_medicas'];
+        $dias_vacacion=$row['dias_vacacion'];
+        $domingos=$row['domingos'];
+        $feriados=$row['feriados'];
+        $horas_extras=$row['horas_extras'];
+        $noches=$row['noches'];
+      }
+      return array($faltas,$baja_medicas,$dias_vacacion,$domingos,$feriados,$horas_extras,$noches);
+   }
+
+   function obtenerCodigoAsitenciaPersonal(){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT IFNULL(max(a.codigo)+1,1)as codigo from asistencia_personal a");
+      $stmt->execute();
+      $codigo=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $codigo=$row['codigo'];
+      }
+      return($codigo);
+   }
+
+   function datosPDFBoleta($html){
+      ini_set("memory_limit", "128M");
+      require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+      $dompdf = new DOMPDF();
+      $dompdf->set_paper("letter", "portrait");
+      $dompdf->load_html($html);    
+      $dompdf->render();
+      $pdf = $dompdf->output();
+      return array('archivo' => $pdf,'base64'=>base64_encode($pdf));
+  }
 ?>

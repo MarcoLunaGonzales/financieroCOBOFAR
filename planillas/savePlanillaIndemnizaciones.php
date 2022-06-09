@@ -6,8 +6,8 @@ require_once '../functionsGeneral.php';
 
 $result_x=0;
 $dbh = new Conexion();
-session_start();
- $globalUser=$_SESSION["globalUser"];
+// session_start();
+// $globalUser=$_SESSION["globalAdmin"];
 //RECIBIMOS LAS VARIABLES
 $cod_planilla=$_POST['cod_planilla'];
 $cod_estadoplanilla=$_POST['sw'];
@@ -30,8 +30,8 @@ $mes3=$cod_mes_x;
 $mes2 = date("m",strtotime($fecha_planilla."- 1 month"));
 $mes1 = date("m",strtotime($fecha_planilla."- 2 month"));
 
-$created_by=$globalUser;
-$modified_by=$globalUser;
+$created_by=1;
+$modified_by=1;
 
 if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	$cod_planilla_1=obtener_id_planilla($cod_gestion_x,$mes1);

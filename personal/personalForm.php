@@ -46,6 +46,8 @@ if($codigo>0){
     $celular = $result['celular'];
     $email = $result['email'];
     $persona_contacto = $result['persona_contacto'];
+
+    $celular_contacto = $result['celular_contacto'];
     $created_at = $result['created_at'];
     $created_by = $result['created_by'];
     $modified_at = $result['modified_at'];
@@ -71,9 +73,9 @@ if($codigo>0){
     $cod_turno=$result['turno'];
     $cod_tipotrabajo=$result['cod_tipotrabajo'];
     $cod_cajasalud=$result['cod_cajasalud'];
-    
-    
 
+    
+    
 
     //personal discapacitado
     $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo and cod_estadoreferencial=1");
@@ -84,7 +86,7 @@ if($codigo>0){
     $nro_carnet_discapacidad = $resultDiscapacitado['nro_carnet_discapacidad'];
     $fecha_nac_persona_dis = $resultDiscapacitado['fecha_nac_persona_dis'];
 
-    
+
     $stmtMontosPactados = $dbh->query("SELECT cod_bono,monto from bonos_personal_pactados where cod_estadoreferencial=1 and cod_personal =$codigo");
     while ($row = $stmtMontosPactados->fetch()){
         switch ($row['cod_bono']) {
@@ -123,10 +125,14 @@ if($codigo>0){
     $stmtIMG = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");
     $stmtIMG->bindParam(':codigo',$codigo);
     $stmtIMG->execute();
-    $resultIMG = $stmtIMG->fetch();
-    $imagen = $resultIMG['imagen'];
-    //$archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$imagen;//sale mal
-    $archivo = "personal/imagenes/".$imagen;//sale mal
+    $resultIMG = $stmtIMG->fetch();    
+    $archivo="";
+    if(isset($resultIMG['imagen'])){
+        $imagen = $resultIMG['imagen'];
+        //$archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$imagen;//sale mal
+        $archivo = "personal/imagenes/".$imagen;//sale mal
+    }
+
 
 }else{
     $codigo = 0;
@@ -158,6 +164,7 @@ if($codigo>0){
     $celular = "";
     $email = "";
     $persona_contacto = "";
+    $celular_contacto = "";
     $created_at = "";
     $created_by = "";
     $modified_at = "";
@@ -207,8 +214,6 @@ if($codigo>0){
     $aporte_sindicato=0;
 }
 
-
-
 //COMBOS...
 $queryTPersonal = "SELECT codigo,nombre from tipos_personal where cod_estadoreferencial=1";
 $statementTPersonal = $dbh->query($queryTPersonal);
@@ -219,7 +224,7 @@ $statementtipos_afp = $dbh->query($querytipos_afp);
 $querytipos_aporteafp = "SELECT codigo,nombre from tipos_aporteafp where cod_estadoreferencial=1";
 $statementtipos_aporteafp = $dbh->query($querytipos_aporteafp);
 
-$queryestados_personal = "SELECT codigo,nombre from estados_personal where cod_estadoreferencial=1 and codigo<>3";
+$queryestados_personal = "SELECT codigo,nombre from estados_personal where cod_estadoreferencial=1";
 $statementestados_personal = $dbh->query($queryestados_personal);
 
 
@@ -232,7 +237,7 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-                <form id="form1" action="<?=$urlSavePersonal;?>" method="post" enctype="multipart/form-data">                    
+                <form id="form1" action="<?=$urlSavePersonal;?>" method="post" enctype="multipart/form-data">
                     <div class="card">
                         <div class="card-header <?=$colorCard;?> card-header-text">
                             <div class="card-text">
@@ -466,14 +471,30 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                     </div>                    
                                 </div>                        
                             </div><!--fin campo direccion -->
-                            <h3 align="center">DATOS DE LA EMPRESA</h3>                        
+                            <h3 align="center">DATOS DE LA EMPRESA</h3>
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Fecha de Ingreso</label>
-                                <div class="col-sm-4">
+                                <label class="col-sm-2 col-form-label">Estado</label>
+                                <div class="col-sm-1">
                                     <div class="form-group">
-                                        <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" />                               
+                                        <select name="cod_estadopersonal" class="selectpicker form-control form-control-sm " data-style="btn btn-info" required onChange="ajax_personal_estado(this);">
+                                        <?php while ($row = $statementestados_personal->fetch()) { ?>
+                                            <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <?php } ?>
+                                        </select>                  
                                     </div>
                                 </div>
+
+                                <label class="col-sm-1 col-form-label">Fecha de Ingreso</label>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" />
+                                    </div>
+                                </div>
+                                <label class="col-sm-1 col-form-label"></label>
+                                <div class="col-sm-5" id="div_contenedor_fecha_retiro">
+                                    
+                                </div>
+                                
                             </div> <!--fin campo ing contrato y ing planilla-->
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Turno</label>
@@ -678,7 +699,7 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                 <label class="col-sm-2 col-form-label">Nua / Cua Asignado</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="nua_cua_asignado" id="nua_cua_asignado" value="<?=$nua_cua_asignado;?>" required/>
+                                    <input class="form-control" type="text" name="nua_cua_asignado" id="nua_cua_asignado" value="<?=$nua_cua_asignado;?>"/>
                                 </div>
                                 </div>
                             </div><!--fin campo nua_cua_asignado-->
@@ -730,21 +751,17 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                 </div>
                             </div><!--fin campo cod_estadopersonal-->
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Estado</label>
-                                <div class="col-sm-2">
-                                    <div class="form-group">
-                                        <select name="cod_estadopersonal"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
-                                        <?php while ($row = $statementestados_personal->fetch()) { ?>
-                                            <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                        <?php } ?>
-                                        </select>                  
-                                    </div>
-                                </div>
-
-                                <label class="col-sm-2 col-form-label">Persona Contacto</label>
-                                <div class="col-sm-6">
+                                <label class="col-sm-2 col-form-label">Nombre Contacto</label>
+                                <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="persona_contacto" id="persona_contacto" required value="<?=$persona_contacto;?>"/>
+                                </div>
+                                </div> 
+
+                                <label class="col-sm-2 col-form-label">Celular Contacto</label>
+                                <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="celular_contacto" id="celular_contacto" required value="<?=$celular_contacto;?>"/>
                                 </div>
                                 </div>                        
                             </div><!--fin campo persona_contacto -->
@@ -889,15 +906,4 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
     </div>
 </div>
 
-
-<!-- <script type="text/javascript">
-    $(document).ready(function(){
-        $('#tipo_persona_discapacitado').on('change',function(){
-            var selectVar='#div'+$(this).val();            
-            $('#contenedor_padre_discapacidad').children('div').hide();
-            $('#contenedor_padre_discapacidad').children(selectVar).show();
-            $('#contenedor_padre_discapacidad').toggle();        
-        });
-    });
-</script> -->
 

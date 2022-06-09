@@ -212,58 +212,98 @@ if($menuModulo==0){
                     </a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listRefrigerio">
-                      <span class="sidebar-mini"> R </span>
-                      <span class="sidebar-normal"> Refrigerios </span>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=vacacionesPersonalLista">
-                      <span class="sidebar-mini"> V </span>
-                      <span class="sidebar-normal"> Vacaciones</span>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=permisosPersonalLista">
-                      <span class="sidebar-mini"> P </span>
-                      <span class="sidebar-normal"> Permisos</span>
-                    </a>
-                </li>
-                <!-- <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listDotacion">
                       <span class="sidebar-mini"> D </span>
                       <span class="sidebar-normal"> Dotaciones </span>
                     </a>
+                </li>
+               <!--  <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listRefrigerio">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> Refrigerios </span>
+                    </a>
                 </li> -->
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=vacacionesPersonalLista">
+                      <span class="sidebar-mini"> V </span>
+                      <span class="sidebar-normal">Vacaciones</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=permisosPersonalLista">
+                      <span class="sidebar-mini"> PSA </span>
+                      <span class="sidebar-normal">Permisos (Sol & Aut)</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=permisosPersonalListaRRHH"  style="background:#dab6aa; color:#584f4c;font-weight:bold;">
+                      <span class="sidebar-mini"> AP </span>
+                      <span class="sidebar-normal">Aprobación de Permisos</span>
+                    </a>
+                </li>
+                
+              </ul>
+            </div>
+          </li>
+
+          <!--TRANSACCIONES RRHH-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#transaccHHRR_pla">
+              <i class="material-icons">menu</i>
+              <p> Transacciones Planillas
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="transaccHHRR_pla">
+              <ul class="nav">
+                
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=asistenciaPersonalListaRRHH"  style="background:#dab6aa; color:#584f4c;font-weight:bold;">
+                      <span class="sidebar-mini"> AP </span>
+                      <span class="sidebar-normal">Asistencia Sucursales</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=incremento_salarial"  style="background:#dab6aa; color:#584f4c;font-weight:bold;">
+                      <span class="sidebar-mini"> IS </span>
+                      <span class="sidebar-normal">Incremento Salarial</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=finiquitos_list">
+                    <span class="sidebar-mini"> F </span>
+                    <span class="sidebar-normal"> Finiquitos </span>
+                  </a>
+                </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listRcivaPersonalMes">
                       <span class="sidebar-mini"> F110 </span>
                       <span class="sidebar-normal"> Formulario 110</span>
                     </a>
                 </li>
-                
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=planillasSueldoPersonal" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
-                    <span class="sidebar-mini"> PS </span>
-                    <span class="sidebar-normal"> Planilla De Sueldos </span>
-                  </a>
-                </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=planillasAguinaldosPersonal">
                     <span class="sidebar-mini"> PA </span>
-                    <span class="sidebar-normal"> Planilla De Aguinaldos </span>
+                    <span class="sidebar-normal"> Planilla de Aguinaldos</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=planillasIndemnizacionesPersonal">
                     <span class="sidebar-mini"> PI </span>
-                    <span class="sidebar-normal"> Planilla De Indemnizaciones</span>
+                    <span class="sidebar-normal"> Planilla de Indemnizaciones</span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=planillasRetroactivoPersonal">
+                    <span class="sidebar-mini"> PR </span>
+                    <span class="sidebar-normal"> Planilla de Retroactivos</span>
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=finiquitos_list">
-                    <span class="sidebar-mini"> F </span>
-                    <span class="sidebar-normal"> Finiquitos </span>
+                  <a class="nav-link" href="?opcion=planillasSueldoPersonal" style="background:rgba(9, 98, 143 ,0.6); color:#E2AF0F;font-weight:bold;">
+                    <span class="sidebar-mini"> PS </span>
+                    <span class="sidebar-normal"> Planilla de Sueldos</span>
                   </a>
                 </li>
               </ul>

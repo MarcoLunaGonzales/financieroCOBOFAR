@@ -3,68 +3,100 @@ require_once '../conexion.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
 
-$sIde = "facifin";
+$sIde = "bolfincobo";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
-// $Objeto_detalle = new stdClass();
-// $Objeto_detalle->suscripcionId = 0;
-// $Objeto_detalle->pagoCursoId = 123;
-// $Objeto_detalle->detalle = "Alimentos en Grano";
-// $Objeto_detalle->precioUnitario = 162;
-// $Objeto_detalle->cantidad = 1;
 
-// $Objeto_detalle2 = new stdClass();
-// $Objeto_detalle2->suscripcionId = 815;
-// $Objeto_detalle2->pagoCursoId = 0;
-// $Objeto_detalle2->detalle = "NB/ISO 10075-3:2006";
-// $Objeto_detalle2->precioUnitario = 101.00;
-// $Objeto_detalle2->cantidad = 1;
-
-// $Objeto_detalle3 = new stdClass();
-// $Objeto_detalle3->suscripcionId = 815;
-// $Objeto_detalle3->pagoCursoId = 0;
-// $Objeto_detalle3->detalle = "NB/ISO 22000:2018";
-// $Objeto_detalle3->precioUnitario = 214.00;
-// $Objeto_detalle3->cantidad = 1;
-
-$Objeto_detalle4 = new stdClass();
-$Objeto_detalle4->suscripcionId = 0;
-$Objeto_detalle4->pagoCursoId = 3434;
-$Objeto_detalle4->detalle = "Curso OV-PSST-CO-G2-2020 , Mu00f3dulo 2 elaboracion de programas de seguridad y salud en el trabajo - psst";
-$Objeto_detalle4->precioUnitario = "0";
-$Objeto_detalle4->cantidad = 1;
-
-$Array= array($Objeto_detalle4);
+// $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+$direccion="localhost:8090/financieroCOBOFAR/wsifin/";
 
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
-              "accion"=>"GenerarFactura", //nombre de la accion
-              "sucursalId"=>1, // ID Sucursal
-              "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2020-10-17', // fecha de la factura
-              "nitciCliente"=>'1712164', //nit o ci de cliente
-              "razonSocial"=>'Santiago Mole', //razon social
-              "importeTotal"=>"480", //importe total
-              "tipoPago"=>4, // array con el detalle    
-              "codLibretaDetalle"=>'0', // array con el detalle
-              "items"=>$Array // array con el detalle    
-              );
-$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
-// $direccion="200.105.199.164:8008/ifinanciero/wsifin/";
-    $parametros=json_encode($parametros);
-    // abrimos la sesiรณn cURL
-    $ch = curl_init();
+    "accion"=>"listPlanillasSueldos", 
+    "codPersonal"=>32);
+$parametros=json_encode($parametros);
+// abrimos la sesiรณn cURL
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL,$direccion."ws_list_planillas.php");
+// indicamos el tipo de peticiรณn: POST
+curl_setopt($ch, CURLOPT_POST, TRUE);
+// definimos cada uno de los parรกmetros
+curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+// recibimos la respuesta y la guardamos en una variable
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$remote_server_output = curl_exec ($ch);
+curl_close ($ch);
+
+$respuesta=json_decode($remote_server_output);
+// imprimir en formato JSON
+header('Content-type: application/json');   
+print_r($remote_server_output);  
+
+
+//*******pdf base 64
+
+// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+//     "accion"=>"ObtenerBoletaRetroactivo", 
+//     "codPersonal"=>32,"codPlanilla"=>4,"codGestion"=>3585);
+// $parametros=json_encode($parametros);
+// // abrimos la sesiรณn cURL
+// $ch = curl_init();
+// curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_boletas.php");
+// // indicamos el tipo de peticion: POST
+// curl_setopt($ch, CURLOPT_POST, TRUE);
+// // definimos cada uno de los parรกmetros
+// curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+// // recibimos la respuesta y la guardamos en una variable
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// $remote_server_output = curl_exec ($ch);
+// curl_close ($ch);
+
+// $respuesta=json_decode($remote_server_output);
+// // imprimir en formato JSON
+// // header('Content-type: application/json');   
+// // print_r($remote_server_output); 
+
+
+// $cualquiera=base64_decode($respuesta->boleta64);
+
+// // unlink("test.pdf");
+// $arch = fopen ("test.pdf", "w+") or die ("nada");
+// fwrite($arch,$cualquiera);
+// fclose($arch);
+// header("Content-type:application/pdf");
+// header("Content-Disposition:attachment;filename=test.pdf");
+// //The PDF source is in original.pdf
+// readfile("test.pdf");
+// unlink("test.pdf");
+// // unlink("../blts/boletas_temp/$nombre_archivo_x.pdf");
+
     
-    curl_setopt($ch, CURLOPT_URL,$direccion."ws_generar_factura.php");
-    // indicamos el tipo de peticiรณn: POST
-    curl_setopt($ch, CURLOPT_POST, TRUE);
-    // definimos cada uno de los parรกmetros
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
-    // recibimos la respuesta y la guardamos en una variable
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $remote_server_output = curl_exec ($ch);
-    curl_close ($ch);
-    
-    $respuesta=json_decode($remote_server_output);
-    // imprimir en formato JSON
-    header('Content-type: application/json');   
-    print_r($remote_server_output);   
+
+// //***validador boleta sueldos
+// $codigo_url="32.4.3585.e8d";
+// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+//     "accion"=>"ObtenerValidacionBoletaRetroactivo", 
+//     "codigo_url"=>$codigo_url);
+// $parametros=json_encode($parametros);
+// // abrimos la sesiรณn cURL
+// $ch = curl_init();
+// curl_setopt($ch, CURLOPT_URL,$direccion."ws_validador_boletas.php");
+// // indicamos el tipo de peticiรณn: POST
+// curl_setopt($ch, CURLOPT_POST, TRUE);
+// // definimos cada uno de los parรกmetros
+// curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+// // recibimos la respuesta y la guardamos en una variable
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// $remote_server_output = curl_exec ($ch);
+// curl_close ($ch);
+
+// $respuesta=json_decode($remote_server_output);
+// // imprimir en formato JSON
+// header('Content-type: application/json');   
+// print_r($remote_server_output);  
+
+
+
+
+
+
+
 ?>

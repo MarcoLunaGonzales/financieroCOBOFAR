@@ -29,8 +29,8 @@ $glosa_ingreso=$_POST['glosa_ingreso'];//total de intems
 $flagSuccess=false;
 $cod_ingresoalmacen=0;
 while ($cod_ingresoalmacen==0) {
-  $nro_correlativo=obtenerCorrelativoingresoAlmacen();
   $cod_estado=1;
+  $nro_correlativo=obtenerCorrelativoingresoAlmacen();
   $sqlInsert="INSERT into ingresos_almacen(fecha,nro_correlativo,glosa,cod_estado,created_at,created_by) values(NOW(),$nro_correlativo,'$glosa_ingreso',$cod_estado,NOW(),'$globalUser')";
   $stmtInsert = $dbh_cabecera->prepare($sqlInsert);
   $flagSuccess=$stmtInsert->execute();

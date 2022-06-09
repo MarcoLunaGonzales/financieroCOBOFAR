@@ -3,6 +3,8 @@
 $formato=$_POST['formato'];
 if($formato==3){
   include 'reporteEstadosResultados_all.php';
+}elseif($formato==4){
+  include 'reporteEstadosResultados_all_horizontal.php';
 }else{
 
 if($formato==2){ ?>

@@ -34,7 +34,7 @@
               '<th width="5%">Proveedor</th>'.*/
               '<th width="7%">Fecha</th>'.
               '<th width="5%">Centro de Costos</th>'.
-              '<th width="60%">Concepto</th>'.
+              '<th width="50%">Concepto</th>'.
               '<th width="3%">t/c</th>'.
               // '<th>Debe</th>'.
               // '<th>Haber</th>'.
@@ -75,6 +75,8 @@
           join comprobantes c on d.cod_comprobante=c.codigo
           where c.cod_gestion=$NombreGestion and p.codigo=$cuenta and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) and c.cod_unidadorganizacional in ($unidadArray) order by c.fecha";
       }
+      
+
       
       $funcionOnclick='filasPresupuesto('.$cuenta.')';
       //echo $query1;
@@ -176,6 +178,13 @@
             $glosaX=substr($glosaX,0,obtenerValorConfiguracion(72))."...";
           }
         }
+
+        $cuenta_glosa_add="";
+        if($cuenta_glosa==1){     
+          $cuenta_glosa_add="[".$cuenta_auxiliarX."] - ";
+        }
+
+
         if($moneda!=1){
           $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
         }else{
@@ -201,7 +210,7 @@
                 '<td class="font-weight-bold small">'.obtenerCodigoProveedorCuentaAux($codCuentaAuxiliar).'</td>'.*/
                 '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
                 '<td class="font-weight-bold small">'.$unidadX.'-'.$areaX.'</td>'.
-                '<td class="text-left small">['.$cuenta_auxiliarX."] - ".$glosaX.'</td>'.
+                '<td class="text-left small">'.$cuenta_glosa_add."".$glosaX.'</td>'.
                 '<td class="font-weight-bold small">'.$tc.'</td>';
                 
                  $html.='<td class="text-right font-weight-bold small">'.formatNumberDec($debeX/$tc).'</td>'.

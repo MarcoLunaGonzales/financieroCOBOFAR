@@ -15,7 +15,7 @@ $total_1=0;$total_2=0;$total_3=0;$total_4=0;$total_5=0;$total_6=0;$total_7=0;$to
 //datos para el titulo del reporte
 $mesActual=strtoupper(nameMes(date("m")));
 $anioActual=date("Y");
-$nombreUnidad="Reporte IBNORCA";
+$nombreUnidad="Reporte COBOFAR";
 
 
 $fechaActual=date("Y-m-d");
@@ -58,7 +58,7 @@ $html.='<body>'.
       '}'.
     '</script>';
 $html.=  '<header class="header">'.            
-            '<img class="imagen-logo-izq" src="../assets/img/marca.png">'.
+            '<img class="imagen-logo-izq" src="../assets/img/favicon.png">'.
             '<div id="header_titulo_texto">PLANILLA TRIBUTARIA</div>'.
             
             '<div id="info_izq">
@@ -92,7 +92,7 @@ $html.=  '<header class="header">'.
               <td><small>(13%)Sal. Mínimo</small></td>
               <td><small>Impuesto Neto RC-IVA</small></td>
               <td><small>F-110</small></td>
-              <td><small>Saldo Físico</small></td>     
+              <td><small>Saldo Fisco</small></td>     
               <td><small>Saldo Del Dep</small></td>                    
               <td><small>Saldo Del Dep Anterior</small></td>
               <td><small>Mant Saldo Del Dep Anterior</small></td>

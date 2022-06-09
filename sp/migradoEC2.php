@@ -33,10 +33,10 @@ echo "<h6>Hora Inicio Proceso ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
 
 
 
-$codComprobanteOrigen=6140; //COMP
+$codComprobanteOrigen=16737; //COMP
 $tipoEstadoCuenta=1;//proveedor
 
-$sql="SELECT c.codigo, c.cod_comprobante, c.cod_cuenta, c.cod_cuentaauxiliar, c.debe, c.glosa, cc.fecha from comprobantes cc, comprobantes_detalle c where cc.codigo=c.cod_comprobante and   c.cod_comprobante='$codComprobanteOrigen' and cod_cuenta=2035";
+$sql="SELECT c.codigo, c.cod_comprobante, c.cod_cuenta, c.cod_cuentaauxiliar, c.debe,c.haber, c.glosa, cc.fecha from comprobantes cc, comprobantes_detalle c where cc.codigo=c.cod_comprobante and   c.cod_comprobante='$codComprobanteOrigen' and cod_cuenta in (select cod_plancuenta from configuracion_estadocuentas where cod_estadoreferencial=1)";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $nombreX=0;
@@ -46,28 +46,25 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $codComprobanteX=$row['cod_comprobante'];
   $codCuentaX=$row['cod_cuenta'];
   $codCuentaAuxiliarX=$row['cod_cuentaauxiliar'];
-  $haberX=$row['debe'];
+  // $debeX=$row['debe'];
+  // $haberX=$row['haber'];
+  $monto=$row['debe'];
+  if($monto==0){
+    $monto=$row['haber'];
+  }
   $glosaX=$row['glosa'];
   $fechaX=$row['fecha'];
 
-
-  // $array_glosa=explode("***", $glosaX);
-  // $fechaY=$array_glosa[1];
-  // $array_fecha=explode("/",$fechaY);
-  // $fecha_nueva=$array_fecha[2]."-".$array_fecha[1]."-".$array_fecha[0];
-  
     $fecha_nueva=$fechaX;
     $glosaY=$glosaX;
-
     $proveedor=obtenerCodigoProveedorCuentaAux($codCuentaAuxiliarX);
-    echo "$codigoX $codComprobanteX $codCuentaX $codCuentaAuxiliarX $haberX $glosaY /$fecha_nueva/ <br>";
+    echo "$codigoX $codComprobanteX $codCuentaX $codCuentaAuxiliarX $monto $glosaY /$fecha_nueva/ <br>";
 
-    $sqlInsert="INSERT into estados_cuenta(cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) values ('$codigoX','$codCuentaX','$haberX','$proveedor','$fecha_nueva','0','$codCuentaAuxiliarX','0','$tipoEstadoCuenta','$glosaY')";
+    $sqlInsert="INSERT into estados_cuenta(cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) values ('$codigoX','$codCuentaX','$monto','$proveedor','$fecha_nueva','0','$codCuentaAuxiliarX','0','$tipoEstadoCuenta','$glosaY')";
     $stmtInsert = $dbh->prepare($sqlInsert);
     $stmtInsert->execute();
-  
-  
-  $index++
+
+  $index++;
   
 }
 

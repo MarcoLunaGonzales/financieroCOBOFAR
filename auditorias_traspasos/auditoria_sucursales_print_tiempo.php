@@ -35,10 +35,13 @@ if($tipo==3){
 	$fecha_finconsulta=$fechaf;
 
 
-	$sql="SELECT l.*,(select a1.nombre_almacen from almacenes a1 where a1.cod_almacen=l.cod_almacen) as nom_destino,(select a2.nombre_almacen from almacenes a2 where a2.cod_almacen=l.origen)as nom_origen FROM ((select i.cod_ingreso_almacen, CONCAT(i.fecha,' ',i.hora_ingreso) as fecha_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,(SELECT CONCAT(fecha,' ',hora_salida) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen) as fecha_salida,0 as central,(SELECT IFNULL(cod_almacen,0) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen and CONCAT(fecha,' ',hora_salida)>=DATE_SUB(CONCAT(i.fecha,' ',i.hora_ingreso), INTERVAL $periodo_ingreso DAY)) as atiempo,i.cod_almacen,(SELECT IFNULL(cod_almacen,0) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen) as origen,(SELECT cod_salida_almacenes FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen) as cod_salida_almacenes
+	$sql="SELECT l.*,(select a1.nombre_almacen from almacenes a1 where a1.cod_almacen=l.cod_almacen) as nom_destino,(select a2.nombre_almacen from almacenes a2 where a2.cod_almacen=l.origen)as nom_origen 
+
+	FROM ((select i.cod_ingreso_almacen, CONCAT(i.fecha,' ',i.hora_ingreso) as fecha_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,(SELECT CONCAT(fecha,' ',hora_salida) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen) as fecha_salida,0 as central,(SELECT IFNULL(cod_almacen,0) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen and CONCAT(fecha,' ',hora_salida)>=DATE_SUB(CONCAT(i.fecha,' ',i.hora_ingreso), INTERVAL $periodo_ingreso DAY)) as atiempo,i.cod_almacen,(SELECT IFNULL(cod_almacen,0) FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen) as origen,(SELECT cod_salida_almacenes FROM salida_almacenes where cod_salida_almacenes=i.cod_salida_almacen) as cod_salida_almacenes
 		FROM ingreso_almacenes i, tipos_ingreso ti
 		where i.cod_tipoingreso=ti.cod_tipoingreso and i.cod_almacen in (select a.cod_almacen  from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringDestino)) and i.fecha>='$fecha_iniconsulta'
 		and i.fecha<='$fecha_finconsulta' and i.ingreso_anulado=0 and (i.cod_salida_almacen_central=0 or i.cod_salida_almacen_central is null)
+		HAVING origen in (select a.cod_almacen  from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringOrigen))
 		order by i.nro_correlativo)
 		) l  where origen>0 order by l.fecha_ingreso desc;";
 

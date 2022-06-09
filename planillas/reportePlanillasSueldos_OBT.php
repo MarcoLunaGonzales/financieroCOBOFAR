@@ -164,7 +164,7 @@ require_once '../layouts/bodylogin2.php';
               $Persona_discapacidad=0;
               $Tutordiscapacidad=1;
             break;
-            case 3:
+            case 0:
               $Persona_discapacidad=0;
               $Tutordiscapacidad=0;
             break;

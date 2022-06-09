@@ -55,9 +55,9 @@ $d = date_create_from_format('Y-m',$date1);
 $ultimo_dia = date_format($d, 't');
 $fecha_planilla=$nombre_gestion_x."-".$cod_mes_x."-".$ultimo_dia;
 
-$date1 = $nombre_gestion_x.'-'.$cod_mes_x; 
-$d = date_create_from_format('Y-m',$date1); 
-$last_day = date_format($d, 't');
+// $date1 = $nombre_gestion_x.'-'.$cod_mes_x; 
+// $d = date_create_from_format('Y-m',$date1); 
+// $last_day = date_format($d, 't');
 //echo "llega ".$cod_estadoasignacionaf;
 
 if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla	

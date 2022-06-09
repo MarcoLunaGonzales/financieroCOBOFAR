@@ -8,6 +8,13 @@ $cod_personal=$_GET['codigo'];
 
 $ing_planilla=$_GET['ing_planilla'];
 $fecha_actual=$_GET['fecha_actual'];
+$anios_antiguedad=$_GET['anios_antiguedad'];
+
+
+$date1 = new DateTime($ing_planilla);
+$date2 = new DateTime($fecha_actual);
+$diff = $date1->diff($date2);    
+$diferencia_anios=$diff->y;
 
 $nombre_personal=namePersonal($cod_personal);
 
@@ -37,7 +44,8 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
             </div>
             <h4 class="card-title"><b>Información Vacaciones Personal</b></h4>
             <h4 class="card-title"><center><b>Nombre Completo : </b><?=$nombre_personal?></center></h4>
-            <h4 class="card-title"><center><b>Fecha Ingreso : </b><?=date('d/m/Y',strtotime($ing_planilla))?></center></h4>
+            <h4 class="card-title"><center><b>Fecha Ingreso : </b><?=date('d/m/Y',strtotime($ing_planilla))?> - <b> Antiguedad : </b><?=$diferencia_anios?> Años</center></h4>
+            
           </div>
           <div class="card-body">
             <h4 style="color:#212f3d;"><b><i>Días de vacación disponible</i></b></h4>
@@ -75,7 +83,8 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
 
                            if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
                             
-                            $gestion=date('Y', strtotime($fechainicio."- 1 year"));
+                            // $gestion=date('Y', strtotime($fechainicio."- 1 year"));
+                            $gestion=date('Y', strtotime($fechainicio));
                             $dias_utilizadas=obtenerDiasVacacionUzadas($cod_personal,$gestion);
                             $saldo=$dias_vacacion-$dias_utilizadas;
                             if($saldo<=0){
@@ -94,7 +103,6 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                                 <?php if($saldo>0){
                                   $datosModal=$cod_personal."/".$gestion."/".$saldo."/".$ing_planilla."/".$fecha_actual."/".$nombre_personal;
                                   ?>
-                                  
                                   <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalAgregarC" onclick="agregaformVacaciones('<?=$datosModal;?>')">
                                     <i class="material-icons" title="Solicitar Vacaciones">add</i>
                                  </button>
@@ -232,13 +240,18 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
       if(gestion_modal==""){
         Swal.fire('ERROR!','Gestion No Encontrada. :(','error'); 
       }else{
-        if(dias_vacacion=="" || dias_vacacion==0 || dias_vacacion<5 || dias_vacacion>saldo_modal){
-          Swal.fire('ERROR!','Días Vacación no Permitido. :( ','error'); 
+         // alert(saldo_modal+"--"+dias_vacacion);
+        if(dias_vacacion=="" || dias_vacacion==0){//|| dias_vacacion>saldo_modal
+          Swal.fire('ERROR!','Días vacación no permitido. :( ','error'); 
         }else{
-          if(fecha_inicio_modal=="" || fecha_final_modal==""){
-            Swal.fire('ERROR!','Fechas No Admitidas ','error'); 
+          if(dias_vacacion<5){
+            Swal.fire('ERROR!','para las vacaciones menores a 5 días, se debe realizar una solicitud de permiso. GRACIAS.','error'); 
           }else{
-            RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,observaciones_modal,ing_planilla,fecha_actual);    
+            if(fecha_inicio_modal=="" || fecha_final_modal==""){
+              Swal.fire('ERROR!','Fechas no admitidas ','error'); 
+            }else{
+              RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,observaciones_modal,ing_planilla,fecha_actual);    
+            }  
           }
         }
       }

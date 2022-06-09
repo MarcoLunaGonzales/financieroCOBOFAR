@@ -234,23 +234,30 @@ $i=0;
 				      </div>
                   </div><!--div row-->
                   <div class="row">
-      	             <div class="col-sm-6">
-      	             	<div class="row">
-			               <label class="col-sm-4 col-form-label">Cuentas Auxiliares</label>
-                           <div class="col-sm-8">
-			                  <div class="form-group">
-      	             	          <div class="form-check">
-                                    <label class="form-check-label">
-                                      <input class="form-check-input" type="checkbox" id="cuentas_auxiliares" name="cuentas_auxiliares[]" value="1">
-                                      <span class="form-check-sign">
-                                        <span class="check"></span>
-                                      </span>
-                                    </label>
-                                  </div>
-                                </div>  
-                             </div>     
-                        </div>  
-      	             </div>
+      	             <!-- <div class="col-sm-6"> -->
+
+      	             	<!-- <div class="row"> -->
+			               <label class="col-sm-2 col-form-label">Cuentas Auxiliares</label>
+                           <!-- <div class="col-sm-8"> -->
+		                  <div class="form-group col-sm-4">
+             	          <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="cuentas_auxiliares" name="cuentas_auxiliares[]" value="1" onchange="ajax_cuentas_auxiliares_mayor();return false;">
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                      <label class="col-sm-2 col-form-label">Cuentas Auxiliares</label>
+		                  <div class="form-group col-sm-4" id="div_cuetasauxiliares">
+                         <!-- <input class="form-check-input" type="checkbox" id="cuentas_auxiliares" name="cuentas_auxiliares[]" value="1"> -->
+                      </div>
+
+                             <!-- </div>  -->    
+                        <!-- </div> -->
+
+      	             <!-- </div> -->
       	           </div><!--div row-->
       	           <br>
                   <div class="row">
@@ -281,7 +288,7 @@ $i=0;
       	             <div class="col-sm-6">
       	             	<div class="row">
 			               <label class="col-sm-4 col-form-label">Glosa completa</label>
-                           <div class="col-sm-8">
+                       <div class="col-sm-1">
 			                  <div class="form-group">
       	             	          <div class="form-check">
                                     <label class="form-check-label">
@@ -292,7 +299,24 @@ $i=0;
                                     </label>
                                   </div>
                                 </div>  
-                             </div>     
+                             </div>  
+
+                             <label class="col-sm-3 col-form-label">Cuenta aux en glosa</label>
+                           <div class="col-sm-2">
+			                  <div class="form-group">
+      	             	          <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" id="cuenta_glosa" name="cuenta_glosa[]" checked value="1">
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </div>  
+                             </div>  
+
+
+
                         </div>  
       	             </div>
       	           </div><!--div row-->

@@ -12408,7 +12408,7 @@ function reprocesar_costoventas_sucursales($fecha,$rpt_territorio){
    return $valor;
 }
 function reprocesar_costoventas_sucursales_2($fecha,$rpt_territorio){
-   $sql="SELECT sum((select ct.costo_unitario from costoscobofar_2.costo_transaccion ct where ct.cod_material=sad.cod_material and ct.cod_documento=sa.cod_salida_almacenes and ct.cod_tipodocumento=0)*sad.cantidad_unitaria) as costo_venta 
+   $sql="SELECT sum((select ct.costo_unitario from costoscobofar.costo_transaccion ct where ct.cod_material=sad.cod_material and ct.cod_documento=sa.cod_salida_almacenes and ct.cod_tipodocumento=0)*sad.cantidad_unitaria) as costo_venta 
       from salida_almacenes sa INNER JOIN salida_detalle_almacenes sad on sad.cod_salida_almacen=sa.cod_salida_almacenes
       where sa.fecha = '$fecha' and sa.cod_tiposalida=1001 and sa.salida_anulada=0 and sa.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
     where a.`cod_ciudad`='$rpt_territorio' and a.cod_tipoalmacen=1)";  
@@ -12683,7 +12683,7 @@ function obtenerQuinquenioPagadoPersonal($cod_personal){
     if($cod_mes==1){
       $cod_mes_ant=12;      
     }
-    $sql="SELECT m.codigo_material,m.descripcion_material,m.cantidad_presentacion,(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes and c.cod_gestion=$cod_gestion and c.cod_almacen=$cod_almacen limit 1)as costo,(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes_ant and c.cod_gestion=$cod_gestion_ant and c.cod_almacen=$cod_almacen limit 1)as costo_ant
+    $sql="SELECT m.codigo_material,m.descripcion_material,m.cantidad_presentacion,(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes and c.cod_gestion=$cod_gestion and c.cod_almacen=$cod_almacen limit 1)as costo,(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes_ant and c.cod_gestion=$cod_gestion_ant and c.cod_almacen=$cod_almacen limit 1)as costo_ant
       from material_apoyo m 
       where  m.cod_linea_proveedor in ($strin_slinea) order by m.descripcion_material ";
       //echo $sql;
@@ -13071,7 +13071,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     $fecha_ant = date("Y-m-d", strtotime("-1 month", strtotime($fecha_ini)));
 
     //ingresos
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ant') and c.cod_gestion=YEAR('$fecha_ant') and c.cod_almacen=$almacen limit 1)),2),0)INGRESO_COSTO 
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ant') and c.cod_gestion=YEAR('$fecha_ant') and c.cod_almacen=$almacen limit 1)),2),0)INGRESO_COSTO 
     from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m,proveedores_lineas pl
       where i.cod_ingreso_almacen=id.cod_ingreso_almacen and m.codigo_material=id.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and i.fecha<'$fecha_ini' and i.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and i.ingreso_anulado=0
@@ -13083,7 +13083,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
        $ingresos_unidad_ant[$row['cod_proveedor']]=$row['INGRESO_COSTO'];       
     }
     //salidas
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ant') and c.cod_gestion=YEAR('$fecha_ant') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO  from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ant') and c.cod_gestion=YEAR('$fecha_ant') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO  from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
       where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha<'$fecha_ini' and s.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0
       GROUP BY pl.cod_proveedor";
@@ -13094,7 +13094,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     }
     //para saldo actual
     //ingresos
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar_2.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=i.cod_ingreso_almacen and c.cod_tipodocumento=1 limit 1)),2),0)INGRESO_COSTO 
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=i.cod_ingreso_almacen and c.cod_tipodocumento=1 limit 1)),2),0)INGRESO_COSTO 
      from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m,proveedores_lineas pl
       where i.cod_ingreso_almacen=id.cod_ingreso_almacen and m.codigo_material=id.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and i.fecha>='$fecha_ini' and i.fecha<='$fecha_fin' and i.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and i.ingreso_anulado=0
@@ -13106,7 +13106,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
        $ingresos_unidad[$row['cod_proveedor']]=$row['INGRESO_COSTO'];       
     }
     //salidas
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar_2.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
       where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and (s.almacen_destino<>1078 or s.almacen_destino is null)
       GROUP BY pl.cod_proveedor";
@@ -13117,7 +13117,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     }
 
     //salidas vencidos
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar_2.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
       where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and s.almacen_destino=1078
       GROUP BY pl.cod_proveedor";
@@ -13129,7 +13129,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
 
     //VENTAS
     $tipoPago="1,2,3,4";
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)VENTAS,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar_2.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)VENTAS_COSTO FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen join material_apoyo m on m.codigo_material=sd.cod_material join proveedores_lineas pl on pl.cod_linea_proveedor=m.cod_linea_proveedor
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)VENTAS,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)VENTAS_COSTO FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen join material_apoyo m on m.codigo_material=sd.cod_material join proveedores_lineas pl on pl.cod_linea_proveedor=m.cod_linea_proveedor
      where sd.cod_salida_almacen=s.cod_salida_almacenes and pl.cod_proveedor in ($proveedores) and s.`cod_tiposalida`=1001 and s.`cod_almacen` in ($almacen) and s.salida_anulada=0 and s.cod_tipopago in ($tipoPago) and s.`fecha` BETWEEN '$fecha_ini' and '$fecha_fin' GROUP BY pl.cod_proveedor";
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){    
@@ -13221,7 +13221,7 @@ function obtenerProveedor_presentacionAlmacen_nuevo(){
     }
     //para saldo actual
     //ingresos
-    $sql="select id.cod_material,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar_2.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=i.cod_ingreso_almacen and c.cod_tipodocumento=1 limit 1)),2),0)INGRESO_COSTO from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m
+    $sql="select id.cod_material,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=i.cod_ingreso_almacen and c.cod_tipodocumento=1 limit 1)),2),0)INGRESO_COSTO from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m
       where i.cod_ingreso_almacen=id.cod_ingreso_almacen and m.codigo_material=id.cod_material and i.fecha>='$fecha_ini' and i.fecha<='$fecha_fin' and i.cod_almacen='$almacen'
       and id.cod_material in ($productos) and i.ingreso_anulado=0
       GROUP BY id.cod_material";
@@ -13232,7 +13232,7 @@ function obtenerProveedor_presentacionAlmacen_nuevo(){
        $ingresos_unidad[$row['cod_material']]=$row['INGRESO_COSTO'];       
     }
     //salidas
-    $sql="select sd.cod_material,IFNULL(ROUND(sum(sd.cantidad_envase),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar_2.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)SALIDA_COSTO
+    $sql="select sd.cod_material,IFNULL(ROUND(sum(sd.cantidad_envase),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)SALIDA_COSTO
     from salida_almacenes s, salida_detalle_almacenes sd, material_apoyo m
       where s.cod_salida_almacenes=sd.cod_salida_almacen and sd.cod_material=m.codigo_material and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
       and sd.cod_material in ($productos) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001
@@ -13246,7 +13246,7 @@ function obtenerProveedor_presentacionAlmacen_nuevo(){
 
     //VENTAS
     $tipoPago="1,2,3,4";
-    $sql="select sd.cod_material,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)VENTAS,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar_2.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)VENTAS_COSTO  FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen join material_apoyo m on m.codigo_material=sd.cod_material where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($productos) and s.`cod_tiposalida`=1001 and s.`cod_almacen` in ($almacen) and s.salida_anulada=0 and s.cod_tipopago in ($tipoPago) and s.`fecha` BETWEEN '$fecha_ini' and '$fecha_fin' GROUP BY sd.cod_material";
+    $sql="select sd.cod_material,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)VENTAS,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)VENTAS_COSTO  FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen join material_apoyo m on m.codigo_material=sd.cod_material where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($productos) and s.`cod_tiposalida`=1001 and s.`cod_almacen` in ($almacen) and s.salida_anulada=0 and s.cod_tipopago in ($tipoPago) and s.`fecha` BETWEEN '$fecha_ini' and '$fecha_fin' GROUP BY sd.cod_material";
     //echo $sql;
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){    
@@ -13400,7 +13400,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
     $fecha_ant = date("Y-m-d", strtotime("-1 month", strtotime($fecha_ini)));
 
     //ingresos
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ant') and c.cod_gestion=YEAR('$fecha_ant') and c.cod_almacen=$almacen limit 1)),2),0)INGRESO_COSTO 
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ant') and c.cod_gestion=YEAR('$fecha_ant') and c.cod_almacen=$almacen limit 1)),2),0)INGRESO_COSTO 
     from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m,proveedores_lineas pl
       where i.cod_ingreso_almacen=id.cod_ingreso_almacen and m.codigo_material=id.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and i.fecha<'$fecha_ini' and i.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and i.ingreso_anulado=0
@@ -13412,7 +13412,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
        $ingresos_unidad_ant[$row['cod_proveedor']]=$row['INGRESO_COSTO'];       
     }
     //salidas
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ant') and c.cod_gestion=YEAR('$fecha_ant') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO  from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ant') and c.cod_gestion=YEAR('$fecha_ant') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO  from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
       where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha<'$fecha_ini' and s.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0
       GROUP BY pl.cod_proveedor";
@@ -13423,7 +13423,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
     }
     //para saldo actual
     //ingresos
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)INGRESO_COSTO 
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)INGRESO_COSTO 
      from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m,proveedores_lineas pl
       where i.cod_ingreso_almacen=id.cod_ingreso_almacen and m.codigo_material=id.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and i.fecha>='$fecha_ini' and i.fecha<='$fecha_fin' and i.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and i.ingreso_anulado=0
@@ -13435,7 +13435,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
        $ingresos_unidad[$row['cod_proveedor']]=$row['INGRESO_COSTO'];       
     }
     //salidas
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
       where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and (s.almacen_destino<>1078 or s.almacen_destino is null)
       GROUP BY pl.cod_proveedor";
@@ -13446,7 +13446,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
     }
 
     //salidas vencidos
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
       where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
       and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and s.almacen_destino=1078
       GROUP BY pl.cod_proveedor";
@@ -13458,7 +13458,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
 
     //VENTAS
     $tipoPago="1,2,3,4";
-    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)VENTAS,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)VENTAS_COSTO FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen join material_apoyo m on m.codigo_material=sd.cod_material join proveedores_lineas pl on pl.cod_linea_proveedor=m.cod_linea_proveedor
+    $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)VENTAS,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)VENTAS_COSTO FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen join material_apoyo m on m.codigo_material=sd.cod_material join proveedores_lineas pl on pl.cod_linea_proveedor=m.cod_linea_proveedor
      where sd.cod_salida_almacen=s.cod_salida_almacenes and pl.cod_proveedor in ($proveedores) and s.`cod_tiposalida`=1001 and s.`cod_almacen` in ($almacen) and s.salida_anulada=0 and s.cod_tipopago in ($tipoPago) and s.`fecha` BETWEEN '$fecha_ini' and '$fecha_fin' GROUP BY pl.cod_proveedor";
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){    
@@ -13513,7 +13513,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
     }
     //para saldo actual
     //ingresos
-    $sql="select id.cod_material,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)INGRESO_COSTO from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m
+    $sql="select id.cod_material,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)INGRESO_COSTO from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m
       where i.cod_ingreso_almacen=id.cod_ingreso_almacen and m.codigo_material=id.cod_material and i.fecha>='$fecha_ini' and i.fecha<='$fecha_fin' and i.cod_almacen='$almacen'
       and id.cod_material in ($productos) and i.ingreso_anulado=0
       GROUP BY id.cod_material";
@@ -13524,7 +13524,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
        $ingresos_unidad[$row['cod_material']]=$row['INGRESO_COSTO'];       
     }
     //salidas
-    $sql="select sd.cod_material,IFNULL(ROUND(sum(sd.cantidad_envase),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO
+    $sql="select sd.cod_material,IFNULL(ROUND(sum(sd.cantidad_envase),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO
     from salida_almacenes s, salida_detalle_almacenes sd, material_apoyo m
       where s.cod_salida_almacenes=sd.cod_salida_almacen and sd.cod_material=m.codigo_material and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
       and sd.cod_material in ($productos) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001
@@ -13538,7 +13538,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
 
     //VENTAS
     $tipoPago="1,2,3,4";
-    $sql="select sd.cod_material,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)VENTAS,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar_2.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)VENTAS_COSTO  FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen join material_apoyo m on m.codigo_material=sd.cod_material where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($productos) and s.`cod_tiposalida`=1001 and s.`cod_almacen` in ($almacen) and s.salida_anulada=0 and s.cod_tipopago in ($tipoPago) and s.`fecha` BETWEEN '$fecha_ini' and '$fecha_fin' GROUP BY sd.cod_material";
+    $sql="select sd.cod_material,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)VENTAS,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)VENTAS_COSTO  FROM salida_detalle_almacenes sd join salida_almacenes s on s.cod_salida_almacenes=sd.cod_salida_almacen join material_apoyo m on m.codigo_material=sd.cod_material where sd.cod_salida_almacen=s.cod_salida_almacenes and sd.cod_material in ($productos) and s.`cod_tiposalida`=1001 and s.`cod_almacen` in ($almacen) and s.salida_anulada=0 and s.cod_tipopago in ($tipoPago) and s.`fecha` BETWEEN '$fecha_ini' and '$fecha_fin' GROUP BY sd.cod_material";
     //echo $sql;
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){    

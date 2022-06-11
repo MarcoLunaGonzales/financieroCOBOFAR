@@ -12655,7 +12655,7 @@ function obtenerQuinquenioPagadoPersonal($cod_personal){
     // $codigo=[];
     // $divisibilidad=[];
     // $i=0;
-    $sql="SELECT codigo_material,descripcion_material,cantidad_presentacion from material_apoyo where cod_linea_proveedor in ($strin_slinea) and estado=1 order by descripcion_material";
+    $sql="SELECT codigo_material,descripcion_material,cantidad_presentacion from material_apoyo where cod_linea_proveedor in ($strin_slinea) order by descripcion_material";
     require("conexion_comercial.php");
     $resp=mysqli_query($dbh,$sql);
     while($row=mysqli_fetch_array($resp)){ 
@@ -12685,7 +12685,7 @@ function obtenerQuinquenioPagadoPersonal($cod_personal){
     }
     $sql="SELECT m.codigo_material,m.descripcion_material,m.cantidad_presentacion,(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes and c.cod_gestion=$cod_gestion and c.cod_almacen=$cod_almacen limit 1)as costo,(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=$cod_mes_ant and c.cod_gestion=$cod_gestion_ant and c.cod_almacen=$cod_almacen limit 1)as costo_ant
       from material_apoyo m 
-      where m.estado=1 and m.cod_linea_proveedor in ($strin_slinea) order by m.descripcion_material ";
+      where  m.cod_linea_proveedor in ($strin_slinea) order by m.descripcion_material ";
       //echo $sql;
     require("conexion_comercial2.php");
     $resp=mysqli_query($enlaceCon,$sql);
@@ -13108,7 +13108,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     //salidas
     $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=s.cod_salida_almacenes and c.cod_tipodocumento=0 limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
       where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
-      and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and s.almacen_destino<>1078
+      and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and (s.almacen_destino<>1078 or s.almacen_destino is null)
       GROUP BY pl.cod_proveedor";
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){  
@@ -13437,7 +13437,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
     //salidas
     $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0)),0),0)SALIDA,IFNULL(ROUND(sum(((IFNULL(sd.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(sd.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ini') and c.cod_gestion=YEAR('$fecha_ini') and c.cod_almacen=$almacen limit 1)),2),0)SALIDA_COSTO from salida_almacenes s, salida_detalle_almacenes sd,material_apoyo m,proveedores_lineas pl
       where s.cod_salida_almacenes=sd.cod_salida_almacen and m.codigo_material=sd.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and s.fecha>='$fecha_ini' and s.fecha<='$fecha_fin' and s.cod_almacen='$almacen'
-      and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and s.almacen_destino<>1078
+      and pl.cod_proveedor in ($proveedores) and s.salida_anulada=0 AND s.`cod_tiposalida`<>1001 and (s.almacen_destino<>1078 or s.almacen_destino is null)
       GROUP BY pl.cod_proveedor";
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){  

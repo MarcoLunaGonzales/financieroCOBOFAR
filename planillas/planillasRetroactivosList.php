@@ -109,8 +109,13 @@ $dbh = new Conexion();
                             <li role="presentation" ><a role="item" href="planillas/planillasRetroactivosPrint.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1" target="_blank"><i class="material-icons text-warning">assignment_turned_in</i><small>PLANILLA GRAL. PDF</small></a></li>
                             <li role="presentation" ><a role="item" href="planillas/planillasRetroactivosPrint.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=2" target="_blank"><i class="material-icons text-success">assignment_turned_in</i><small>PLANILLA GRAL. EXCEL</small></a></li>
                             <li role="presentation"><a role="item" href="boletas/boletas_retroactivo_print.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>" target="_blank"><i class="material-icons text-rose">class</i><small>BOLETAS</small></a></li>
-                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_depositoBanco.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1" target="_blank"><i class="material-icons text-success">verified_user</i><small>CON CUENTA</small></a></li>
-                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_depositoBanco.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=2" target="_blank"><i class="material-icons text-danger">unpublished</i><small>SIN CUENTA</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/planillasRetroactivos_concuenta.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1" target="_blank"><i class="material-icons text-success">verified_user</i><small>CON CUENTA</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/planillasRetroactivos_concuenta.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=2" target="_blank"><i class="material-icons text-danger">unpublished</i><small>SIN CUENTA</small></a></li>
+
+                            <?php if($cod_estadoplanilla==3){?>
+                            <li role="presentation"><a role="item" href="planillas/planillasRetroactivos_concuenta_trasnfer.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-success">local_atm</i><small>TRANFER BANCO</small></a></li>
+                            <?php }?>
+
                           </ul>
                         </div>
                          <div class="dropdown <?=$clase_boton_ver?>">

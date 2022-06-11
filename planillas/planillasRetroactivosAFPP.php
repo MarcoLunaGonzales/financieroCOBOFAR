@@ -58,7 +58,7 @@ require_once '../functionsReportes.php';
 
                     $sql="SELECT prd.correlativo_planilla,(select tip.abreviatura from tipos_identificacion_personal tip where tip.codigo=p.cod_tipo_identificacion) as tipo_identificacion,p.identificacion,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision)as lugar_emision,p.paterno,p.materno,p.apellido_casada,p.primer_nombre,prd.ing_planilla,prd.retiro_planilla,p.nua_cua_asignado,prd.retroactivo_enero,prd.retroactivo_febrero,prd.retroactivo_marzo,prd.retroactivo_abril,prd.antiguedad_enero,prd.antiguedad_febrero,prd.antiguedad_marzo,prd.antiguedad_abril,prd.dias_trabajados_enero,prd.dias_trabajados_febrero,prd.dias_trabajados_marzo,prd.dias_trabajados_abril
                       from  personal p join planillas_retroactivos_detalle prd on p.codigo=prd.cod_personal join areas a on prd.cod_area=a.codigo
-                      where prd.cod_planilla=$cod_planilla
+                      where prd.cod_planilla=$cod_planilla and p.cod_tipoafp=2
                       order by correlativo_planilla";
                        //echo $sql."<br><br>";
                     $stmtPersonal = $dbh->prepare($sql);

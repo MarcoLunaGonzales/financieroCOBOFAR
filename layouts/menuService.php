@@ -42,7 +42,6 @@ if($menuModulo==0){
 <?php
 }
 ?>
-
 <div class="sidebar" data-color="purple" data-background-color="<?=$estiloMenu?>" data-image="assets/img/scz.jpg">
   <div class="logo">
     <a href="" class="simple-text logo-mini">
@@ -68,11 +67,8 @@ if($menuModulo==0){
     </div>
     <ul class="nav">
 <?php
-
-
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT codigo,nombre,url,icono,txtNuevaVentana from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1
-order by ordenar");
+  $stmt = $dbh->prepare("SELECT codigo,nombre,url,icono,txtNuevaVentana from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1 order by ordenar");
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$row['codigo'];
@@ -80,14 +76,6 @@ order by ordenar");
     $paginaX=$row['url'];
     $iconoX=$row['icono'];
     $txtNuevaVentanaX=$row['txtNuevaVentana'];
-
-  // $id=$objDet->id;
-  // $actividad=$objDet->actividad;
-  // $actividad=ucwords(strtolower($actividad));
-  // $pagina=$objDet->pagina;
-  // $icono=$objDet->icono;
-  // $moduloWS=$objDet->modulo;
-  //echo $id." ".$actividad." ".$pagina."<br>";
 ?>
     <li class="nav-item ">
       <a class="nav-link" data-toggle="collapse" href="#<?=$paginaX;?>">
@@ -101,7 +89,7 @@ order by ordenar");
   <?php 
   $sql="select DISTINCT a.codigo,a.nombre,a.url,a.icono,a.txtNuevaVentana 
 from acceso_modulos_sistema_url a join acceso_modulos_sistema_perfiles_url b on a.codigo=b.cod_url
-where a.cod_padre=$codigoX and b.cod_perfil in (select perfil from personal_datosadicionales where cod_personal=$globalUserX)
+where a.cod_padre=$codigoX and b.cod_perfil in ($globalPerfilX)
 order by a.ordenar";
   // echo $sql;
   $stmt_submenu = $dbh->prepare($sql);

@@ -1,23 +1,30 @@
 <?php //ESTADO FINALIZADO
-
-require_once 'conexion.php';
-require_once 'functions.php';
-require_once 'functionsGeneral.php';
-require_once 'rrhh/configModule.php';
+session_start();
+require_once '../conexion.php';
+require_once '../functions.php';
+// require_once 'functionsGeneral.php';
+// require_once 'rrhh/configModule.php';
 
 
 
 $dbh = new Conexion();
+$cod_mes_gestion=$_POST['cod_mes_gestion'];
+$datos_planilla=explode("_", $cod_mes_gestion);
+
 
 $globalCodUnidad=$_SESSION["globalUnidad"];
 $globalUser=$_SESSION["globalUser"];
-$mes_actual=$_SESSION['globalMes'];
-$anio_actual=$_SESSION['globalNombreGestion'];
+// $mes_actual=$_SESSION['globalMes'];
+// $anio_actual=$_SESSION['globalNombreGestion'];
+
+$mes_actual=$datos_planilla['1'];
+$cod_gestion=$datos_planilla['0'];
+
 //obteniendo codigo de gestion para el registro de planilla
-$stmt = $dbh->prepare("SELECT codigo from gestiones where nombre=$anio_actual");
-$stmt->execute();
-$result= $stmt->fetch();
-$cod_gestion=$result['codigo'];
+// $stmt = $dbh->prepare("SELECT codigo from gestiones where nombre=$anio_actual");
+// $stmt->execute();
+// $result= $stmt->fetch();
+// $cod_gestion=$result['codigo'];
 
 $cod_mes=(integer)$mes_actual;
 $cod_estadoplanilla=1;
@@ -43,16 +50,23 @@ if($cont==0){//insert - cuando no existe planilla
   $stmtInsert->bindParam(':created_by',$created_by);
   $stmtInsert->bindParam(':modified_by',$modified_by);
   $flagSuccess=$stmtInsert->execute();
+  if($flagSuccess){
+    echo 1;
+  }else{
+      echo 2;
+  }
+  
 }else{
-  $flagSuccess=0;//alerta indicando que ya existe planilla del mes
+ echo 0; 
 }
+
 $dbh=null;
 
 $stmt=null;
 $stmtPlanillas=null;
 $stmtInsert=null;
 
-showAlertSuccessError3($flagSuccess,'index.php?opcion=planillasIndemnizacionesPersonal');
+// showAlertSuccessError3($flagSuccess,'index.php?opcion=planillasIndemnizacionesPersonal');
 
 
 

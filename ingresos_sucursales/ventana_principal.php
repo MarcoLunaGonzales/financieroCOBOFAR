@@ -26,66 +26,102 @@ $fecha_actualización=date("d/m/Y h:i:s", strtotime(obtenerFechaActualizacionCom
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons"><?=$iconCard;?></i>
-                  </div>
+                  
                 </div>
                 <div class="card-body">
-                  <h4 class="text-center" style="color:blue;">INGRESOS SUCURSALES</h4>
-                  <h4 class="text-center" style="color:red;">Última Actualización : <?=$fecha_actualización?><br>Se recomienda trabajar hasta un día antes :)</h4>
+                  <h4 class="text-center" style="color:#3b6675;"><b>INGRESOS SUCURSALES</b></h4>
+                  <h4 class="text-center" style="color:red;">Fecha Actualización : <?=$fecha_actualización?></h4>
                   <!-- <a href="index.php?opcion=principal_CajaChica_historico" target="_blank" class="btn btn-primary btn-sm float-right" style="background-color:#707B7C;">Ir Al Histórico</a> -->
                   <div class="row div-center text-center">
 
-                     <div class="card text-white mx-auto" style="background-color:#d35400; width: 18rem;">
-                       <a href="?opcion=cierrecaja_from" >
-                          <div class="card-body ">
-                             <h5 class="card-title" style="color:#ffffff;">GENERAR COMPROBANTE</h5>
-                             <p class="card-text text-small" style="color:#ffffff">***<br>Ingresos Sucursales</p>
-                             <i class="material-icons" style="color:#37474f">home_work</i>
-                          </div>
-                       </a>
-                     </div>
-                     <div class="card text-white mx-auto" style="background-color: #d98880; width: 18rem;">
-                       <a href="?opcion=rpt_bajadepositos_from" >
-                          <div class="card-body ">
-                             <h5 class="card-title" style="color:#ffffff;">BAJA DE DEPOSITOS</h5>
-                             <p class="card-text text-small" style="color:#ffffff">***<br>Reportes</p>
-                             <i class="material-icons" style="color:#37474f">home_work</i>
-                          </div>
-                       </a>
+  
+                     <div class="card text-white mx-auto" style="background-color:#73c6b6; width: 18rem;">
+                        <div class="row">
+                           <div class="col-md-4">
+                              <center><i class="material-icons" style="color: #fff;font-size:60px;" >assignment_turned_in</i></center>
+                           </div>
+                           <div class="col-sm-8">
+                              <a href="?opcion=cierrecaja_from" >
+                                <h5 class="card-title" style="color:#ffffff;"><b>GENERAR COMPROBANTE</b></h5>
+                                <p class="card-text text-small" style="color:#ffffff">Ingresos</p>
+                              </a>  
+                           </div>
+                        </div>
                      </div>
 
-                    <div class="card text-white mx-auto" style="background-color:#CD5C5C; width: 18rem;">
-                       <a href="?opcion=rpt_facturasgeneradas_comercial_from" >
-                          <div class="card-body ">
-                             <h5 class="card-title" style="color:#ffffff;">FACTURAS</h5>
-                             <p class="card-text text-small" style="color:#ffffff">***<br>Reportes</p>
-                             <i class="material-icons" style="color:#37474f">home_work</i>
-                          </div>
-                       </a>
+                     <div class="card text-white mx-auto" style="background-color: #38a598; width: 18rem;">
+                        <div class="row">
+                           <div class="col-md-4">
+                              <center><i class="material-icons" style="color: #fff;font-size:60px;" >archive</i></center>
+                           </div>
+                           <div class="col-sm-8">
+                              <a href="?opcion=rpt_bajadepositos_from" >
+                                <h5 class="card-title" style="color:#ffffff;"><b>ARQUEO DE CAJA</b></h5>
+                                <p class="card-text text-small" style="color:#ffffff">Reportes</p>
+                              </a>  
+                           </div>
+                        </div>
                      </div>
+                     <div class="card text-white mx-auto" style="background-color: #38797e; width: 18rem;">
+                        <div class="row">
+                           <div class="col-md-4">
+                              <center><i class="material-icons" style="color: #fff;font-size:60px;" >description</i></center>
+                           </div>
+                           <div class="col-sm-8">
+                              <a href="?opcion=rpt_facturasgeneradas_comercial_from" >
+                                <h5 class="card-title" style="color:#ffffff;"><b>FACTURAS</b></h5>
+                                <p class="card-text text-small" style="color:#ffffff">Reportes</p>
+                              </a>  
+                           </div>
+                        </div>
+                     </div>
+
+
                      <?php if($sw_personal_audi){
                         ?>
-                     <div class="card text-white mx-auto" style="background-color:#727289; width: 18rem;">
-                       <a href="?opcion=auditoria_sucursales_from" >
-                          <div class="card-body ">
-                             <h5 class="card-title" style="color:#ffffff;">AUDITORÍA</h5>
-                             <p class="card-text text-small" style="color:#ffffff">***<br>Traspaso Entre Sucursales</p>
-                             <i class="material-icons" style="color:#37474f">pending_actions</i>
-                          </div>
-                       </a>
+   
+                     <div class="card text-white mx-auto" style="background-color: #3b6675; width: 18rem;">
+                        <div class="row">
+                           <div class="col-md-4">
+                              <center><i class="material-icons" style="color: #fff;font-size:60px;" >pending_actions</i></center>
+                           </div>
+                           <div class="col-sm-8">
+                              <a href="?opcion=auditoria_sucursales_from" >
+                                <h5 class="card-title" style="color:#ffffff;"><b>AUDITORÍA</b></h5>
+                                <p class="card-text text-small" style="color:#ffffff">Traspasos</p>
+                              </a>  
+                           </div>
+                        </div>
                      </div>
                  <?php }?>
-
-                    <div class="card text-white mx-auto" style="background-color:#1f618d; width: 18rem;">
-                       <a href="?opcion=rpt_configuraciones_comercial" >
-                          <div class="card-body ">
-                             <h5 class="card-title" style="color:#ffffff;">CONFIGURACIONES</h5>
-                             <p class="card-text text-small" style="color:#ffffff">***<br>Cuentas de Sucursales</p>
-                             <i class="material-icons" style="color:#37474f">settings</i>
-                          </div>
-                       </a>
+                     <div class="card text-white mx-auto" style="background-color: #1f618d; width: 18rem;">
+                        <div class="row">
+                           <div class="col-md-4">
+                              <center><i class="material-icons" style="color: #fff;font-size:60px;" >settings</i></center>
+                           </div>
+                           <div class="col-sm-8">
+                              <a href="?opcion=rpt_configuraciones_comercial" >
+                                <h5 class="card-title" style="color:#ffffff;"><b>CONFIGURACIÓN</b></h5>
+                                <p class="card-text text-small" style="color:#ffffff">Cuentas de Sucursales</p>
+                              </a>  
+                           </div>
+                        </div>
                      </div>
+
+                     <div class="card text-white mx-auto" style="background-color: #3b6675; width: 18rem;">
+                        <div class="row">
+                           <div class="col-md-4">
+                              <center><i class="material-icons" style="color: #fff;font-size:60px;" >assignment_late</i></center>
+                           </div>
+                           <div class="col-sm-8">
+                              <a href="?opcion=rpt_depositosnodescargados" >
+                                <h5 class="card-title" style="color:#ffffff;"><b>REGISTRO DE DEPOSITOS</b></h5>
+                                <p class="card-text text-small" style="color:#ffffff">Reportes</p>
+                              </a>  
+                           </div>
+                        </div>
+                     </div>
+
                    </div>
                 </div>
               </div>

@@ -212,10 +212,10 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
             </select>
           </div>     
           <div class="form-group col-sm-3">
-            <input class="form-control input-sm" type="date" name="fechaBusquedaInicio" id="fechaBusquedaInicio" value="<?=$globalGestion?>-01-01" min="<?=$globalGestion?>-01-01" max="<?=$globalGestion?>-12-31" title="Fecha Inicio">
+            <input class="form-control input-sm" type="date" name="fechaBusquedaInicio" id="fechaBusquedaInicio" value="2021-01-01" title="Fecha Inicio">
           </div>
           <div class="form-group col-sm-3">
-            <input class="form-control input-sm" type="date" name="fechaBusquedaFin" id="fechaBusquedaFin" value="<?=$globalGestion?>-12-31" min="<?=$globalGestion?>-01-01" max="<?=$globalGestion?>-12-31"  title="Fecha Fin">
+            <input class="form-control input-sm" type="date" name="fechaBusquedaFin" id="fechaBusquedaFin" value="<?=$globalGestion?>-12-31"  title="Fecha Fin">
           </div>
                    
         </div> 

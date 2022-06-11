@@ -866,7 +866,14 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=configuracion_edit_sf">
                     <span class="sidebar-mini"> CESF </span>
-                    <span class="sidebar-normal"> Configuración Edición SF</span>
+                    <span class="sidebar-normal"> Configuración Pago Proveedores</span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reporteComprobantes">
+                    <span class="sidebar-mini"> RC </span>
+                    <span class="sidebar-normal">Reporte de Comprobantes</span>
                   </a>
                 </li>
               </ul>

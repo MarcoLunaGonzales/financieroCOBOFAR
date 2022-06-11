@@ -280,7 +280,7 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                 <label class="col-sm-2 col-form-label">Nro. Identificación</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="identificacion" id="identificacion" value="<?=$identificacion;?>" required="true">
+                                        <input class="form-control" type="text" name="identificacion" id="identificacion" value="<?=$identificacion;?>" required="true" onChange="verificarExistenviaCI(<?=$codigo?>)" >
                                     </div>
                                 </div>
 

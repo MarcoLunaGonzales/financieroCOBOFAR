@@ -11,7 +11,7 @@ $fechaActual=date('Y-m-d');
       <div class="card">
         <div class="card-header <?=$colorCard;?> card-header-text">
           <div class="card-text">
-            <h4 class="card-title">Baja De Depósitos</h4>
+            <h4 class="card-title">Arqueo de Caja</h4>
           </div>
         </div>
         <div class="card-body">

@@ -2031,9 +2031,17 @@
 			require_once('ingresos_sucursales/configuraciones_cuentas_list.php');
 		}
 
+		if ($_GET['opcion']=='rpt_depositosnodescargados') {			
+			require_once('ingresos_sucursales/rpt_depositosnodescargados_from.php');
+		}
+
 		//*****pago proveedores
 		if ($_GET['opcion']=='reportePagoProveedores') {
 			require_once('reportes_solicitud_recursos/reportePagoProveedores_from.php');
+		}
+		//reporte de comprobantes
+		if ($_GET['opcion']=='reporteComprobantes') {
+			require_once('reportes/reporteComprobantes_from.php');
 		}
 	}else{
 		//require("paginaprincipal.php");

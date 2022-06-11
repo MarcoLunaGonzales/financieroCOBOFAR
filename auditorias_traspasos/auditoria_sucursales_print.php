@@ -28,7 +28,7 @@ if($sw_excel==1){
   require_once '../layouts/bodylogin2.php';
 }
 require_once '../functions.php';
-require("../conexion_comercial.php");
+require("../conexion_comercial_oficial.php");
 // require("../conexion_comercial2.php");
 
 $fechai=$_POST['fechainicio'];
@@ -64,7 +64,7 @@ $sql="SELECT s.cod_salida_almacenes,s.cod_almacen, s.fecha, ts.nombre_tiposalida
   FROM salida_almacenes s, tipos_salida ts, almacenes a 
   where s.fecha between '$fechai' and '$fechaf' and s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringDestino)) and s.cod_almacen in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringOrigen)) and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null) ORDER BY s.fecha desc, s.nro_correlativo desc ";
 
-// echo "<br><br><br>".$sql;
+ // echo "<br><br><br>".$sql;
 
 $index=1;
 $totalEfectivo=0;
@@ -95,13 +95,13 @@ if($sw_excel==1){?>
             <table class="table table-condensed table-bordered">
               <thead>
                 <tr>
-                  <th><b>SUC. Origen</b></th>
+                  <th><b>Suc. Origen</b></th>
                   <th><b>Responsable</b></th>
                   <th><b>Tipo de Salida(Origen)</b></th>
                   <th><b>Fecha Despacho</b></th>
                   <th><b>Nota de Remision(Origen)</b></th>
-                  <th><b>GLOSA</b></th>
-                  <th><b>SUC. Dstino</b></th>
+                  <th><b>Glosa</b></th>
+                  <th><b>Suc. Destino</b></th>
                   <th><b>Monto</b></th>
                   <th><b></b></th>
                 </tr>

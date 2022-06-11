@@ -61,7 +61,7 @@
                         $level = 'M'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                         $frameSize = 1; //marco de qr
                         // $codigo_generado2 = md5($codigo_generado);
-                        $contenido = '186.121.247.102:8888/cobofar_catalogo/blts/vb.php?ws='.$codigo_generado;
+                        $contenido = 'farmaciasbolivia.com.bo/icobofar/blts/vb.php?ws='.$codigo_generado;
                         QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                         $html.='<img src="'.$fileName.'"/>';
 

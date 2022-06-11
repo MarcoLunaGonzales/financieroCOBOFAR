@@ -14,7 +14,7 @@ $stmt->execute();
 //resultados
 $result = $stmt->fetch();
 
-$queryestados_personal = "SELECT codigo,nombre from estados_personal where cod_estadoreferencial=1";
+$queryestados_personal = "SELECT codigo,nombre from estados_personal where cod_estadoreferencial=1 and codigo <>3";
 $statementestados_personal = $dbh->query($queryestados_personal);
 
 ?>
@@ -32,35 +32,39 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                         </div>                        
                         <div class="card-body">                    
                             <div class="row">
-                                <label class="col-sm-3 col-form-label">Código Personal</label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-2 col-form-label">Código Personal</label>
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <input class="form-control" name="codigo" id="codigo" value="<?=$result['codigo'];?>" readonly="readonly"/>
                                     </div>
                                 </div>                            
-                            </div><!--fin campo codigo --> 
-                            <div class="row">
-                                <label class="col-sm-3 col-form-label">Nombre Personal</label>
-                                <div class="col-sm-8">
+                            
+                                <label class="col-sm-1 col-form-label">Nombre Personal</label>
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <input class="form-control" name="nombre_personal" id="nombre_personal" value="<?=$result['nombre_personal'];?>" readonly="readonly"/>
                                     </div>
                                 </div>                            
-                            </div><!--fin campo codigo --> 
+                            </div><!--fin campo codigo-->
                
                             <div class="row">
-                                <label class="col-sm-3 col-form-label">Estado</label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-2 col-form-label">Estado</label>
+                                <div class="col-sm-4">
                                 <div class="form-group">
                                 <select name="cod_estadopersonal"  class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
                                 <?php while ($row = $statementestados_personal->fetch()) { ?>
                                     <option <?php if($result['cod_estadopersonal'] == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                 <?php } ?>
-                                </select>                  
+                                </select>
                                 </div>
+                                </div>
+                                <label class="col-sm-1 col-form-label">Fecha de Ingreso</label>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" />
+                                    </div>
                                 </div>
                             </div><!--fin campo cod_tipoaporteafp-->
-                            
                         </div>
                         <div class="card-footer ml-auto mr-auto">
                             <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

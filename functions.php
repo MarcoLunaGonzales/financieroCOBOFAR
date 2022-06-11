@@ -12291,7 +12291,7 @@ function obtenerIngresoPendienteDatos($codIngreso){
 
    function listaDetalleIngresosAlmacen($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_proveedor,factura,fecha_factura,nit,autorizacion,codigo_control,monto_factura,desc_total,dcto_almacen  from ingresos_almacen_detalle where cod_ingresoalmacen=$codigo");
+     $stmt = $dbh->prepare("SELECT cod_proveedor,factura,fecha_factura,nit,autorizacion,codigo_control,monto_factura,desc_total,dcto_almacen,fecha_vencimiento  from ingresos_almacen_detalle where cod_ingresoalmacen=$codigo");
      $stmt->execute();
      return $stmt;
   }

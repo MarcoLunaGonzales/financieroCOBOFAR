@@ -79,24 +79,36 @@ try{
     $tipo_trabajo=obtenerNombreTipoTrabajo($tipo_trabajo);
     //====================================
     //personal discapacitado
-    $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
+    $stmtDiscapacitado = $dbh->prepare("SELECT tipo_persona_discapacitado FROM personal_discapacitado where codigo =:codigo");
     $stmtDiscapacitado->bindParam(':codigo',$codigo);
     $stmtDiscapacitado->execute();
     $resultDiscapacitado = $stmtDiscapacitado->fetch();
-    $discapacitado = $resultDiscapacitado['discapacitado'];
-    $tutor_discapacitado = $resultDiscapacitado['tutor_discapacitado'];
-    $celular_tutor = $resultDiscapacitado['celular_tutor'];
-    $parentesco = $resultDiscapacitado['parentesco'];
+    // var_dump($resultDiscapacitado);
+    if(count($resultDiscapacitado)>0){
+        $discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
+        $tutor_discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
+        $celular_tutor = "";
+        $parentesco = "";
+    }else{
+        $discapacitado = '';
+        $tutor_discapacitado = '';
+        $celular_tutor = '';
+        $parentesco = '';
+    }
 
 
         //==================================================================================================================
     //imagen
-    $stmtIM = $dbh->prepare("SELECT * FROM personalimagen  where codigo =:codigo");
+    $stmtIM = $dbh->prepare("SELECT imagen FROM personalimagen  where codigo =:codigo");
     $stmtIM->bindParam(':codigo',$codigo);
     $stmtIM->execute();
     $resultIM = $stmtIM->fetch();
-    //$codigo = $result['codigo'];
-    $imagen = $resultIM['imagen'];
+    if (isset($resultIM['imagen'])) {
+        $imagen = $resultIM['imagen'];        
+    }else{
+        $imagen = "";
+    }    
+    
     
 
 
@@ -153,12 +165,12 @@ $html.=  '<header class="header">'.
                     '<tr>'.
                         '<td>Tipo De identificación</td>'.
                         '<td align="center">:</td>'.
-                        '<td>'.obtenerNombreIdentificacionPersona($cod_tipoIdentificacion,1).' '.obtenerNombreIdentificacionPersona($tipo_identificacionOtro,2).'</td>'.
+                        '<td>'.$cod_tipoIdentificacion.' '.$tipo_identificacionOtro.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Identificación</td>'.
                         '<td align="center">:</td>'.
-                        '<td>'.$identificacion.' - '.obtenerlugarEmision($cod_lugar_emision,1).' '.obtenerlugarEmision($lugar_emisionOtro,1).'</td>'.
+                        '<td>'.$identificacion.' - '.obtenerlugarEmision($cod_lugar_emision,1).' '.$lugar_emisionOtro.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Grado Académico</td>'.
@@ -217,7 +229,7 @@ $html.=  '<header class="header">'.
                     '<tr>'.
                         '<td>Otra Ciudad</td>'.
                         '<td align="center">:</td>'.
-                        '<td colspan=2>'.obtenerNombreCiudadPersona($ciudadOtro).'</td>'.
+                        '<td colspan=2>'.$ciudadOtro.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td colspan="4"><br></td>           '.
@@ -305,7 +317,7 @@ $html.=  '<header class="header">'.
                         '<td>Personal discapacitado</td>'.
                         '<td align="center">:</td>'.
                         '<td colspan=2>';
-                        if($discapacitado==0) $nombreAux="NO";
+                        if($discapacitado<>1) $nombreAux="NO";
                         else $nombreAux="SI";                        
                         $html.=$nombreAux.'</td>'.
                     '</tr>'.
@@ -313,7 +325,7 @@ $html.=  '<header class="header">'.
                         '<td>Tutor De discapacitado</td>'.
                         '<td align="center">:</td>'.
                         '<td colspan=2>';
-                        if($tutor_discapacitado==0) $nombreAux1="NO";
+                        if($tutor_discapacitado<>2) $nombreAux1="NO";
                         else $nombreAux1="SI";                        
                         $html.=$nombreAux1.'</td>'.
                     '</tr>'.
@@ -332,7 +344,8 @@ $html.=  '<header class="header">'.
             '</header>'.
         '</body>'.
       '</html>';           
-descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+//echo $html;
+ descargarPDF("COBOFAR PERSONAL ",$html);
 
 ?>
 

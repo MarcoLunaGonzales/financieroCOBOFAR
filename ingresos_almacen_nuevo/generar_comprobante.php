@@ -134,6 +134,7 @@ if($sw==0){
         $monto_factura=$row['monto_factura'];  
         $monto_descuento=$row['desc_total'];  
         $dcto_almacen=$row['dcto_almacen'];  
+        $fecha_vencimiento=$row['fecha_vencimiento'];  
         $razon_social=nameProveedor($cod_proveedor);
         $cod_plancuenta_proveedores=obtenerValorConfiguracion(36);//proveedores
         $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedor,$cod_plancuenta_proveedores);
@@ -164,8 +165,8 @@ if($sw==0){
         $stmtDetalleFacturas = $dbh_detalle->prepare($sqlDetalleCompra);
         $stmtDetalleFacturas->execute();
         //INGRESAMOS ESTADOS DE CUENTA
-        $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
-          VALUES ('$codComprobanteDetalle', '$cod_plancuenta_proveedores', '$haber', '$cod_proveedor', '$fechaHoraActual','0','$cuentaAuxiliar','$glosaDetalle')";
+        $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar,fecha_vencimiento,fecha_factura) 
+          VALUES ('$codComprobanteDetalle', '$cod_plancuenta_proveedores', '$haber', '$cod_proveedor', '$fechaHoraActual','0','$cuentaAuxiliar','$glosaDetalle','$fecha_vencimiento','$fecha_factura')";
         $stmtDetalleEstadoCuenta = $dbh_detalle->prepare($sqlDetalleEstadoCuenta);
         $stmtDetalleEstadoCuenta->execute();
         //actualizamos datos comercial

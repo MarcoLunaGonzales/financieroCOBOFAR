@@ -5,7 +5,6 @@ require_once 'styles.php';
 
 
 $cod_personal=$_GET['codigo'];
-
 $ing_planilla=$_GET['ing_planilla'];
 $fecha_actual=$_GET['fecha_actual'];
 $anios_antiguedad=$_GET['anios_antiguedad'];
@@ -70,6 +69,8 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                       $total_dias_vacacion_saldo=0;
                       $diferencia_mes_sobrante=0;
                       $diferencia_dias_sobrante=0;
+                      $array_datos=[];
+                      $index_x=0;
                       while($fechainicio<=$fecha_actual){
                         $date1 = new DateTime($fechainicio_x);
                         $date2 = new DateTime($fechainicio);
@@ -80,9 +81,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                            $anios_inicio=$datos[0];
                            $anios_final=$datos[1];
                            $dias_vacacion=$datos[2];
-
                            if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
-                            
                             // $gestion=date('Y', strtotime($fechainicio."- 1 year"));
                             $gestion=date('Y', strtotime($fechainicio));
                             $dias_utilizadas=obtenerDiasVacacionUzadas($cod_personal,$gestion);
@@ -92,6 +91,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                             }else{
                               $estado='<span class="badge badge-success">disponible';
                             }
+                            $array_datos[$index_x]=$gestion.",".$dias_vacacion.",".$dias_utilizadas.",".$saldo;
                             ?>
                             <tr>
                               <td class="text-center"><?=date('d/m/Y', strtotime($fechainicio."- 1 year"));?> - <?=date('d/m/Y', strtotime($fechainicio));?>  <b>( <?=$gestion?>)</b></td>
@@ -111,11 +111,11 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                                 ?>
                               </td>
                             </tr>
-
                               <?php
                               $total_dias_vacacion += $dias_vacacion;
                               $total_dias_vacacion_uzadas+=$dias_utilizadas;
                               $total_dias_vacacion_saldo+=$saldo;
+                              $index_x++;
                               break;
                               
                            }
@@ -132,6 +132,9 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                       // $diff = $date1->diff($date2);    
                       // $diferencia_mes_sobrante=$diff->m;
                       // $diferencia_dias_sobrante=$diff->d;
+                      // var_dump($array_datos);
+                      $array_datos = serialize($array_datos);
+                      $array_datos = urlencode($array_datos);
                   ?>
                   <tr class='bg-dark text-white'>
                     <td class="text-center">TOTAL</td>
@@ -148,7 +151,8 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
           </div>
           <div class="card-footer ml-auto mr-auto ">
             
-            <a href="index.php?opcion=vacacionesPersonalLista" class="<?=$buttonCancel;?>"> <-- Volver </a>
+            <a href="index.php?opcion=vacacionesPersonalLista" class="btn btn-sm btn-danger"> <-- Volver </a>
+              <a href="vacaciones_permisos/vacaciones_pdf.php?cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>&aa=<?=$anios_antiguedad?>&datos=<?=$array_datos?>" target="_blank" class="btn btn-sm btn-warning"><i class="material-icons">print</i> Imprimir </a>
           </div>
         </div>
        

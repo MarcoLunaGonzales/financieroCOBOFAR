@@ -186,7 +186,7 @@ try {
         $stmtDistribucion = $dbh->prepare($sql);
         $stmtDistribucion->execute();
         
-        //actualizamos contrato
+        //actualizamos contrato activo
         $sql="SELECT codigo 
                 from personal_contratos 
                 where cod_personal=$codigo and cod_estadoreferencial=1 and cod_estadocontrato=1";
@@ -212,8 +212,6 @@ try {
         $stmtDiscapacitado->bindParam(':fecha_nac_persona_dis', $fecha_nac_persona_dis);
         $stmtDiscapacitado->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
         $flagSuccess=$stmtDiscapacitado->execute();
-
-
         // MONTOS PACTADOS
          $sqlMontosPactados="UPDATE bonos_personal_pactados set monto='$noche_pactado' where cod_personal=$codigo and cod_bono=11 and cod_estadoreferencial=1";
         $stmtMontoPactado = $dbh->prepare($sqlMontosPactados);
@@ -283,7 +281,6 @@ try {
 
     echo "<br><br>";
     if($cod_estadopersonal==3){//estado retirado
-        
         $fecha_retiro=date('Y-m-d');
         $cod_tiporetiro=1;
         if(isset($_POST['fecha_retiro'])){
@@ -298,7 +295,7 @@ try {
         $cod_personal=$codigo;
         $cod_estadocontrato=2;//**nuevo
         //verificamos si todos sus contratos estan fina,izados
-        $sqlControlador="SELECT codigo,cod_estadocontrato from personal_contratos where cod_personal=$cod_personal and cod_estadoreferencial=1 ORDER BY codigo desc limit 1";
+        $sqlControlador="SELECT codigo,cod_estadocontrato from personal_contratos where cod_personal=$cod_personal and cod_estadoreferencial=1 and cod_estadocontrato=1 ORDER BY codigo desc limit 1";
         $stmtControlador = $dbh->prepare($sqlControlador);
         $stmtControlador->execute();
         $resultControlador=$stmtControlador->fetch();

@@ -1291,8 +1291,8 @@
                 titleAttr: 'Pdf',
                 title:'Reporte Libro Mayor',
 
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
+                // orientation: 'landscape',
+                // pageSize: 'LEGAL',
                 exportOptions: {
                     columns: ':visible'
                 },
@@ -1306,6 +1306,7 @@
                          margin: [10, 5]
                         }
                    });
+                   doc.defaultStyle.fontSize = 6;
                 doc.content.splice( 1, 0, {
                     margin: [ 0, -100, 0, 50 ],
                     alignment: 'left',
@@ -1397,19 +1398,21 @@
                          margin: [10, 5]
                         }
                    });
+                doc.defaultStyle.fontSize = 6;
                 doc.content.splice( 1, 0, {
                     margin: [ 0, -80, 0, 12 ],
                     alignment: 'left',
                     image: imageLogo,
                     width:50,
                     height:50, 
+                    fontSize: 7
                 } );
                 doc.content.splice( 1, 0, {
                     margin: [ 100, 0, 0, 12 ],
                     text: [{
-                      text: 'Unidad: '+unidad_reporte_diario+' \n Fecha: '+fecha_reporte_diario+' \n Tipo: '+tipo_reporte_diario,
+                      // text: 'Unidad: '+unidad_reporte_diario+' \n Fecha: '+fecha_reporte_diario+' \n Tipo: '+tipo_reporte_diario,
                       bold: true,
-                      fontSize: 9,
+                      fontSize: 7,
                       alignment: 'right'
                    }]        
                 } );

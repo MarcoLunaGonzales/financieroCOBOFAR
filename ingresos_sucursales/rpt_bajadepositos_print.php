@@ -36,6 +36,25 @@ foreach ($sucursal as $sucursali) {
 }
 $sucursalgString=trim($sucursalgString,",");
 
+//query de anulaciones
+$array_anulaciones=[];
+$sql="SELECT sum(round(CAST(s.monto_final as DECIMAL(9,2)),1)) as monto,s.cod_chofer_anulacion,DATE_FORMAT(s.fecha_anulacion,'%Y-%m-%d')as fecha,a.cod_ciudad
+from `salida_almacenes` s join almacenes a on s.cod_almacen=a.cod_almacen
+where s.`cod_tiposalida`=1001 and s.salida_anulada!=0 
+and s.fecha_anulacion BETWEEN '$fechai 06:00:00' and '$fechaf 23:59:59' and s.cod_tipopago=1 and a.cod_ciudad in ($sucursalgString)
+group by 3,s.cod_chofer_anulacion,s.cod_almacen";  
+
+// echo $sql;
+$resp=mysqli_query($dbh,$sql);
+while($row=mysqli_fetch_array($resp)){   
+  $monto=$row['monto'];
+  $cod_chofer_anulacion=$row['cod_chofer_anulacion'];
+  $fecha_anulacion=$row['fecha'];
+  $cod_ciudad=$row['cod_ciudad'];
+  $codigonuevo=$cod_chofer_anulacion."-".$fecha_anulacion."-".$cod_ciudad;
+  $array_anulaciones[$codigonuevo]=$monto;
+}  
+
 $cod_tiposalida_efectivo=1001;
 $sql="SELECT s.cod_almacen,a.cod_ciudad,a.nombre_almacen,s.fecha,s.cod_chofer,(select CONCAT_WS(' ',f.nombres,f.paterno,f.materno) from funcionarios f where f.codigo_funcionario=s.cod_chofer) as personal 
 from salida_almacenes s join almacenes a on s.cod_almacen=a.cod_almacen 
@@ -61,7 +80,7 @@ if($sw_excel==1){?>
           <div class="float-right col-sm-2">
             <!-- <h6 class="card-title">Exportar como:</h6> -->
           </div>
-          <h4 class="card-title"> <img  class="card-img-top"  src="../assets/img/favicon.png" style="width:100%; max-width:50px;">Ingresos Sucursales</h4>
+          <h4 class="card-title"> <img  class="card-img-top"  src="../assets/img/favicon.png" style="width:100%; max-width:50px;">Arqueo de Caja</h4>
           <h6 class="card-title">Fecha inicio: <?=$fechai?> - Fecha Fin: <?=$fechaf?></h6>
         </div>
         <div class="card-body ">
@@ -116,7 +135,9 @@ if($sw_excel==1){?>
                     $monto_dolar=$montosArray[3];
                     $monto_dolar_bs=$montosArray[4];
 
-                    $montoAnulada=obtenerMontoAnuladas_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);//anulada efectivo
+                    // $montoAnulada=obtenerMontoAnuladas_ventas_nuevosis($fechaVenta,$cod_ciudad,$cod_personal);//anulada efectivo
+                    $codigonuevo=$cod_personal."-".$fechaVenta."-".$cod_ciudad;
+                    $montoAnulada=$array_anulaciones[$codigonuevo];
                     
                     // $monto_depositado=obtenerMontodepositado_nuevosis($fechaVenta,$cod_personal);
                     // $monto_depositado_dolar=obtenerMontodepositado_dolar_nuevosis($fechaVenta,$cod_personal);
@@ -167,7 +188,7 @@ if($sw_excel==1){?>
                       <td style="background:#f1948a;" class="text text-right"><small><?=$nro_deposito?></small></td>
                       <td align='right'><small><?=number_format($monto_venta,2,".",",");?></small></td>
                       <td  class="td-actions text-right"><?php if($sw_excel==1){?>
-                        <a  target='_blank' href='http://10.10.1.10/cobofar_comercialplus/rptArqueoDiarioPDF.php?rpt_territorio=<?=$cod_ciudad?>&fecha_ini=<?=$fechaVenta?>&fecha_fin=<?=$fechaVenta?>&hora_ini=00:00&hora_fin=23:59&variableAdmin=1&rpt_funcionario=<?=$cod_personal?>'  class="btn btn-dark"  >
+                        <a  target='_blank' href='http://172.16.0.5/cobofar_comercialplus/rptArqueoDiarioPDF.php?rpt_territorio=<?=$cod_ciudad?>&fecha_ini=<?=$fechaVenta?>&fecha_fin=<?=$fechaVenta?>&hora_ini=00:00&hora_fin=23:59&variableAdmin=1&rpt_funcionario=<?=$cod_personal?>'  class="btn btn-dark"  >
                           <i class="material-icons" title="Ver Detalle">list</i>
                         </a>
                         <?php } ?>

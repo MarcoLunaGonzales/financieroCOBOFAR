@@ -26,7 +26,7 @@ if (isset($_GET['datos'])) {
 
 // var_dump($datos);
 try{
-    $stmtPersonal = $dbh->prepare("SELECT p.paterno,p.materno,p.primer_nombre,c.nombre as cargo,a.nombre as area,DATE_FORMAT(p.ing_planilla,'%d/%m/%Y')as ing_planilla_x,DATE_FORMAT(p.fecha_validacion_vacaciones,'%d/%m/%Y')as fecha_validacion_x
+    $stmtPersonal = $dbh->prepare("SELECT p.paterno,p.materno,p.primer_nombre,c.nombre as cargo,a.nombre as area,DATE_FORMAT(ing_planilla,'%d/%m/%Y')as ing_planilla_x
     from personal p join cargos c on p.cod_cargo=c.codigo join areas a on p.cod_area=a.codigo
     WHERE p.codigo=$cod_personal");
     $stmtPersonal->execute();
@@ -37,9 +37,6 @@ try{
     $cargo = $result['cargo'];
     $area = $result['area'];
     $ing_planilla=$result['ing_planilla_x'];
-    $fecha_validacion=$result['fecha_validacion_x'];
-
-    
 
 
 $html = '';
@@ -47,7 +44,7 @@ $html.='<html>'.
             '<head>'.
                 '<!-- CSS Files -->'.
                 '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
-                '<link href="../assets/libraries/plantillaPDFBalance.css" rel="stylesheet" />'.
+                '<link href="../assets/libraries/plantillaPDFFActura.css" rel="stylesheet" />'.
            '</head>';
 $html.='<body>'.
         '<script type="text/php">'.
@@ -65,24 +62,23 @@ $html.='<body>'.
 $html.=  '<header class="header">'.
             // '<img class="imagen-logo-izq" src="../assets/img/icono_sm_cobofar.jpg">'.
             '<div id="header_titulo_texto">Vacaciones del Personal</div>'.
-            // '<h4><b>'.$primer_nombre.' '.$paterno.' '.$materno.'</b><br>'.$cargo.' <br>'.$area.'<br>Fecha de Ingreso:'.$ing_planilla.'</h4>';
-            '<table class="table" align="center" style="width: 100%;border-collapse: collapse;">
-                    <tr>'.
+            '</header>'.
+
+            '<table class="table"align="center" style="width: 100%;border-collapse: collapse;">'.
+                '<tbody style=" font-family: Times New Roman;font-size: 11px;">';
+                    $html.='<tr>'.
                         '<td class="td-border-none" width="25%"><img  src="../assets/img/icono_sm_cobofar.jpg" style="padding-left: 50px;padding-top: -25px;left: 0px;width:50px;height:50px;"></td>'.
                         '<td colspan="2" align="center" class="td-border-none">'.
-                            '<b>'.$primer_nombre.' '.$paterno.' '.$materno.'</b>'.
+                            '<h2><b>'.$primer_nombre.' '.$paterno.' '.$materno.'</b><br></h2>'.
                             $cargo.' <br>'.
                             $area.'<br>Fecha de Ingreso:'.$ing_planilla.
-                            '<br>Fecha de Validación:'.$fecha_validacion.
                         '</td >
                         <td class="td-border-none" width="25%"><center>Fecha Imp.: '.date('d/m/Y').'</center></td>'.
-                    '</tr>
-
+                    '</tr></tbody>
             </table>';
-            $html.='</header>';
 
-                    $html.='<table class="table"><thead>
-                        <tr style="background:#45b39d;color:black;"><td></td><td align="center">F.INICIO</td><td align="center">F.FIN</td><td align="center">TOTAL DIAS</td><td align="center">OBSERVACIONES</td><td align="center">SALDO</td></tr></thead><tbody>';
+                    $html.='<table class="table"><tbody>
+                    <tr style="background:#45b39d;color:black;"><td></td><td align="center">F.INICIO</td><td align="center">F.FIN</td><td align="center">TOTAL DIAS</td><td align="center">OBSERVACIONES</td><td align="center">SALDO</td></tr>';
                     $saldo_total=0;
                     $contador_items=count($datos);
                     for ($i=0; $i <$contador_items; $i++) { 

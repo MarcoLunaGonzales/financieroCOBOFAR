@@ -20092,10 +20092,10 @@ function agregaformVacaciones(datos){
   // b.setAttribute("max", d[2]);
 }
 
-function RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,observaciones_modal,ing_planilla,fecha_actual){
+function RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,tipo_vacacion,ing_planilla,fecha_actual){
   $.ajax({
     type:"POST",
-    data:"codigo_personal_modal="+codigo_personal_modal+"&gestion_modal="+gestion_modal+"&dias_vacacion="+dias_vacacion+"&fecha_inicio_modal="+fecha_inicio_modal+"&fecha_final_modal="+fecha_final_modal+"&observaciones_modal="+observaciones_modal,
+    data:"codigo_personal_modal="+codigo_personal_modal+"&gestion_modal="+gestion_modal+"&dias_vacacion="+dias_vacacion+"&fecha_inicio_modal="+fecha_inicio_modal+"&fecha_final_modal="+fecha_final_modal+"&tipo_vacacion="+tipo_vacacion,
     url:"vacaciones_permisos/vacaciones_save.php",
     success:function(r){
       // console.log(r);
@@ -20516,8 +20516,79 @@ function verificarExistenviaCI(codigo){
         }
       }
     });
-    
-
   }
 }
 
+
+function AgregarDescuentosPersonalConta(obj) {
+    if($("#add_boton").length){
+      $("#add_boton").attr("disabled",true);
+    }
+    numFilas++;
+    // cantidadItems++;
+    filaActiva=numFilas;
+    document.getElementById("cantidad_filas").value=numFilas;
+    // console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+    fi = document.getElementById('fiel');
+    contenedor = document.createElement('div');
+    contenedor.id = 'div'+numFilas;  
+    fi.type="style";
+    fi.appendChild(contenedor);
+    var divDetalle;
+    divDetalle=$("#div"+numFilas);
+    //document.getElementById('nro_cuenta').focus();
+    ajax=nuevoAjax();
+    ajax.open("GET","ajax_descuentosdetalle.php?idFila="+numFilas,true);
+    ajax.onreadystatechange=function(){
+      if (ajax.readyState==4) {
+        divDetalle.html(ajax.responseText);
+        divDetalle.bootstrapMaterialDesign();
+        // $('#modal_editservicio').val("");
+        // $('#cantidad_servicios').val("");
+        // $('#modal_montoserv').val("");
+        $('.selectpicker').selectpicker("refresh");
+        if($("#add_boton").length){
+          $("#add_boton").removeAttr("disabled");
+        }
+        return false;
+     }
+    }   
+    ajax.send(null);
+}
+
+
+function borrarItemDescuentoPersonalConta(idF){ 
+  var elem = document.getElementById('div'+idF);
+  elem.parentNode.removeChild(elem);
+  if(idF<numFilas){
+    for (var i = parseInt(idF); i < (numFilas+1); i++) {
+      var nuevoId=i+1;
+      $("#div"+nuevoId).attr("id","div"+i);
+      $("#cod_personal"+nuevoId).attr("name","cod_personal"+i);
+      $("#cod_personal"+nuevoId).attr("id","cod_personal"+i);
+      $("#cod_tipodescuento"+nuevoId).attr("name","cod_tipodescuento"+i);
+      $("#cod_tipodescuento"+nuevoId).attr("id","cod_tipodescuento"+i);
+
+      $("#cod_contracuenta"+nuevoId).attr("name","cod_contracuenta"+i);
+      $("#cod_contracuenta"+nuevoId).attr("id","cod_contracuenta"+i);
+      $("#monto_sistema"+nuevoId).attr("name","monto_sistema"+i);
+      $("#monto_sistema"+nuevoId).attr("id","monto_sistema"+i);       
+
+      $("#monto_deposito"+nuevoId).attr("name","monto_deposito"+i);
+      $("#monto_deposito"+nuevoId).attr("id","monto_deposito"+i);       
+
+      $("#monto_diferencia"+nuevoId).attr("name","monto_diferencia"+i);
+      $("#monto_diferencia"+nuevoId).attr("id","monto_diferencia"+i);       
+
+      $("#glosa"+nuevoId).attr("name","glosa"+i);
+      $("#glosa"+nuevoId).attr("id","glosa"+i);       
+    }
+  } 
+  numFilas=numFilas-1;
+  // cantidadItems=cantidadItems-1;
+  // filaActiva=numFilas;
+  document.getElementById("cantidad_filas").value=numFilas;
+  // document.getElementById("totalhab").value=numFilas;
+  // $("#monto_total").val(numFilas);
+  // console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+}

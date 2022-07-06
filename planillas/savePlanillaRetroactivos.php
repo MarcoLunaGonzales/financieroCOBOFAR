@@ -61,11 +61,11 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	$stmtDelete->execute();	
 	
 	//============select del personal
-	$sql="SELECT 1 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno,'' as retiro_planilla
+	$sql="SELECT 1 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_habilitada,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno,'' as retiro_planilla
 	from personal p join areas a on p.cod_area=a.codigo
 	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 and p.ing_planilla <= '$fecha_final'
 	UNION
- 	select 2 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,3 as turno,p.cod_unidadorganizacional,'PERSONAL RETIRADO' as area,p.paterno,pr.fecha_retiro as retiro_planilla
+ 	select 2 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_habilitada,p.cod_area,3 as turno,p.cod_unidadorganizacional,'PERSONAL RETIRADO' as area,p.paterno,pr.fecha_retiro as retiro_planilla
 	from personal p join personal_retiros pr on p.codigo=pr.cod_personal 
 	join areas a on p.cod_area=a.codigo
 	where pr.fecha_retiro BETWEEN '$fecha_inicio' and '$fecha_final' 
@@ -80,7 +80,7 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
 	$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);
 	$stmtPersonal->bindColumn('retiro_planilla', $retiro_planilla);
-	$stmtPersonal->bindColumn('cuenta_bancaria', $cuenta_bancaria);
+	$stmtPersonal->bindColumn('cuenta_habilitada', $cuenta_habilitada);
 	$stmtPersonal->bindColumn('cod_area', $cod_area);
 	$stmtPersonal->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 	$stmtPersonal->bindColumn('turno', $turno);
@@ -88,11 +88,11 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
 
-		if($cuenta_bancaria>0){
-			$cuenta_habilitada=1;
-		}else{
-			$cuenta_habilitada=0;
-		}
+		// if($cuenta_bancaria>0){
+		// 	$cuenta_habilitada=1;
+		// }else{
+		// 	$cuenta_habilitada=0;
+		// }
 
 		// $ing_planilla=$ing_planilla;
 		if($haber_basico_anterior==null || $haber_basico_anterior==""){

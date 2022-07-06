@@ -1192,6 +1192,11 @@
 			require_once('vacaciones_permisos/vacaciones_save_delete.php');
 		}
 
+		if ($_GET['opcion']=='vacacionesValidacion') {
+			require_once('vacaciones_permisos/vacaciones_validacion.php');
+		}
+
+
 		//PERMISOS PERSONAL
 		if ($_GET['opcion']=='permisosPersonalLista') {
 			require_once('vacaciones_permisos/permisos_list.php'); //ok
@@ -1215,6 +1220,14 @@
 			$codigo=$_GET['codigo'];
 			require_once('vacaciones_permisos/permisos_cambiarestado.php');
 		}
+
+		if ($_GET['opcion']=='permisosPersonalListaADMrrhh') {
+			require_once('vacaciones_permisos/permisos_list_admin_rrhh.php'); //admin
+		}
+		if ($_GET['opcion']=='permisosPersonalFromADMrrhh') {
+			require_once('vacaciones_permisos/permisos_from_admin_rrhh.php'); //admin
+		}
+
 		if ($_GET['opcion']=='permisosPersonalListaADM') {
 			require_once('vacaciones_permisos/permisos_list_admin.php'); //admin
 		}
@@ -2015,6 +2028,13 @@
 			require_once('ingresos_sucursales/ventana_principal.php');
 		}
 		
+		if ($_GET['opcion']=='rpt_diferencias_depositos_from') {			
+			require_once('ingresos_sucursales/rpt_diferencias_depositos_from.php');
+		}
+		if ($_GET['opcion']=='rpt_diferencias_depositos_print') {			
+			require_once('ingresos_sucursales/rpt_diferencias_depositos_print.php');
+		}
+
 		if ($_GET['opcion']=='rpt_bajadepositos_from') {			
 			require_once('ingresos_sucursales/rpt_bajadepositos_from.php');
 		}
@@ -2043,6 +2063,18 @@
 		if ($_GET['opcion']=='reporteComprobantes') {
 			require_once('reportes/reporteComprobantes_from.php');
 		}
+
+		//descuentos personal version 2
+		if ($_GET['opcion']=='descuentosContaList') {
+			require_once('descuentos_conta/descuentos_list.php');
+		}
+		if ($_GET['opcion']=='descuentosContaDetalle') {
+			require_once('descuentos_conta/descuentos_detalle.php');
+		}
+		if ($_GET['opcion']=='descuentosContaListadmin') {
+			require_once('descuentos_conta/descuentos_list_admin.php');
+		}
+
 	}else{
 		//require("paginaprincipal.php");
 	}

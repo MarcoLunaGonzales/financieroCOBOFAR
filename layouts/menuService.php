@@ -19,7 +19,6 @@ switch ($menuModulo) {
    $nombreModulo="RRHH";
    // $estiloMenu="rojo";
    $estiloMenu="celestebebe";
-   
   break;
   case 2:
   $nombreModulo="Activos Fijos";
@@ -41,6 +40,47 @@ if($menuModulo==0){
  <script>window.location.href="index.php";</script>
 <?php
 }
+$dbh = new Conexion();
+
+ $stmt = $dbh->prepare("SELECT codigo,nombre,url,icono,txtNuevaVentana from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1 order by ordenar");
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $codigoX=$row['codigo'];
+    $actividadX=$row['nombre'];
+    $paginaX=$row['url'];
+    $iconoX=$row['icono'];
+    // $txtNuevaVentanaX=$row['txtNuevaVentana'];
+    $array_menu[$codigoX]=array($codigoX,$actividadX,$paginaX,$iconoX);
+}
+
+
+$sql="select DISTINCT a.codigo,a.nombre,a.url,a.icono,a.txtNuevaVentana,a.cod_padre
+from acceso_modulos_sistema_url a join acceso_modulos_sistema_perfiles_url b on a.codigo=b.cod_url
+where b.cod_perfil in ($globalPerfilX) AND a.cod_padre in (SELECT codigo from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1 order by ordenar)
+order by a.ordenar";
+ // echo $sql;
+$stmt_submenu = $dbh->prepare($sql);
+$stmt_submenu->execute();
+$array_submenu=[];
+while ($row_submenu = $stmt_submenu->fetch(PDO::FETCH_ASSOC)) {
+  $codigoSubMenu=$row_submenu['codigo'];
+  $nombreSubMenu=$row_submenu['nombre'];
+  $paginaSubMenu=$row_submenu['url'];
+  $iconoSubMenu=$row_submenu['icono'];
+  $txtNuevaVentana=$row_submenu['txtNuevaVentana'];
+  $cod_padre=$row_submenu['cod_padre'];
+
+  $array_submenu_det['codigo']=$codigoSubMenu;
+  $array_submenu_det['nombre']=$nombreSubMenu;
+  $array_submenu_det['url']=$paginaSubMenu;
+  $array_submenu_det['icono']=$iconoSubMenu;
+  $array_submenu_det['txtNuevaVentana']=$txtNuevaVentana;
+  $array_submenu_det['cod_padre']=$cod_padre;
+
+  $array_submenu[$codigoSubMenu]=$array_submenu_det;
+}
+
+var_dump($array_submenu);
 ?>
 <div class="sidebar" data-color="purple" data-background-color="<?=$estiloMenu?>" data-image="assets/img/scz.jpg">
   <div class="logo">
@@ -67,7 +107,7 @@ if($menuModulo==0){
     </div>
     <ul class="nav">
 <?php
-  $dbh = new Conexion();
+  
   $stmt = $dbh->prepare("SELECT codigo,nombre,url,icono,txtNuevaVentana from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1 order by ordenar");
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -87,19 +127,22 @@ if($menuModulo==0){
       <div class="collapse" id="<?=$paginaX;?>">
         <ul class="nav"><!--hasta aqui el menu 1ra parte-->
   <?php 
-  $sql="select DISTINCT a.codigo,a.nombre,a.url,a.icono,a.txtNuevaVentana 
-from acceso_modulos_sistema_url a join acceso_modulos_sistema_perfiles_url b on a.codigo=b.cod_url
-where a.cod_padre=$codigoX and b.cod_perfil in ($globalPerfilX)
-order by a.ordenar";
-  // echo $sql;
-  $stmt_submenu = $dbh->prepare($sql);
-  $stmt_submenu->execute();
-  while ($row_submenu = $stmt_submenu->fetch(PDO::FETCH_ASSOC)) {
-    $codigoSubMenu=$row_submenu['codigo'];
-    $nombreSubMenu=$row_submenu['nombre'];
-    $paginaSubMenu=$row_submenu['url'];
-    $iconoSubMenu=$row_submenu['icono'];
-    $txtNuevaVentana=$row_submenu['txtNuevaVentana'];
+//   $sql="select DISTINCT a.codigo,a.nombre,a.url,a.icono,a.txtNuevaVentana 
+// from acceso_modulos_sistema_url a join acceso_modulos_sistema_perfiles_url b on a.codigo=b.cod_url
+// where a.cod_padre=$codigoX and b.cod_perfil in ($globalPerfilX)
+// order by a.ordenar";
+//   // echo $sql;
+//   $stmt_submenu = $dbh->prepare($sql);
+//   $stmt_submenu->execute();
+//   while ($row_submenu = $stmt_submenu->fetch(PDO::FETCH_ASSOC)) {
+
+  foreach ($array_submenu as $value) 
+  {
+    $codigoSubMenu=$value['codigo'];
+    $nombreSubMenu=$value['nombre'];
+    $paginaSubMenu=$value['url'];
+    $iconoSubMenu=$value['icono'];
+    $txtNuevaVentana=$value['txtNuevaVentana'];
     if($codigoSubMenu==105){
       ?>
       <li class="nav-item ">
@@ -118,7 +161,6 @@ order by a.ordenar";
         </a>
       </li>
       <?php
-
     }
       
   } ?>

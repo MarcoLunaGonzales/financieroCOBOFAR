@@ -86,7 +86,7 @@ $total_feriados_mes=obtenerTotalferiados_fechas($fecha_inicio,$fecha_final);
 // $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional FROM personal p where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1 order by p.cod_unidadorganizacional,2,p.turno,p.paterno";
 $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,p.ing_contr as fecha,1 as tipo
   FROM personal p
-  where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1
+  where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1 and p.ing_planilla<'$fecha_final'
   UNION
   select p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,pr.fecha_retiro as fecha,2
   from personal p join personal_retiros pr on p.codigo=pr.cod_personal

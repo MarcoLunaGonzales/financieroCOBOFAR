@@ -24,7 +24,7 @@ $tipo_registro=$_POST['tipo_registro'];
   <div class='container-fluid'>
     <div class='row'>
     <div class='col-md-12'>
-      <div class='card'>"
+      <div class='card'>
 
 <div class='card-header $colorCard card-header-icon'>
   <h4 class='card-title'> <img  class='card-img-top'  src='../assets/img/favicon.png' style='width:100%; max-width:50px;'>Reporte Registro de Depositos</h4>
@@ -46,7 +46,7 @@ if($tipo_registro==1){
     where rd.fecha BETWEEN '$fechai' and '$fechaf' 
   )
   order by a.nombre_almacen,sa.fecha";
-}else{
+}else{//descargados
 
   $consulta="SELECT sa.fecha,a.cod_almacen,a.nombre_almacen,a.cod_ciudad,f.paterno,f.materno,f.nombres,f.turno,sa.cod_chofer,CONCAT_WS('_',sa.fecha,f.codigo_funcionario,a.cod_ciudad)as codigo_nuevo
   from salida_almacenes sa join almacenes a on sa.cod_almacen=a.cod_almacen join funcionarios f on sa.cod_chofer=f.codigo_funcionario
@@ -83,26 +83,26 @@ while ($dat = mysqli_fetch_array($resp)) {
       break;
   }
   //verificamos deposito
-  $registro=0;
   $fecha_registro="";
-  // $consulta="select fecha_registro from registro_depositos
-  // where fecha = '$fecha' and cod_funcionario=$cod_chofer and cod_ciudad=$cod_ciudad";
-  // $respRegistro = mysqli_query($enlaceCon,$consulta);
-  // while ($dataRegistro = mysqli_fetch_array($respRegistro)) {
-  //   $fecha_registro=$dataRegistro['fecha_registro'];
-  //   $registro=1;
-  // }
+  if($tipo_registro<>1){
+    $consulta="select fecha_registro from registro_depositos
+    where fecha = '$fecha' and cod_funcionario=$cod_chofer and cod_ciudad=$cod_ciudad";
+    $respRegistro = mysqli_query($enlaceCon,$consulta);
+    while ($dataRegistro = mysqli_fetch_array($respRegistro)) {
+      $fecha_registro=$dataRegistro['fecha_registro'];
+    }  
+  }
+  
 
 
   ?>
     <tr>
       <td><?=$index?></td>
       <td><?=$fecha?></td>
-      <td align='left'><?=$nombre_almacen?></td>
-      <td align='left'><?=$nombre_turno?></td>
-      <td align='left'><?=$paterno?> <?=$materno?> <?=$nombres?></td>
-      
-      <td align='right'><?=$fecha_registro?></td>
+      <td class="text-left"><?=$nombre_almacen?></td>
+      <td class="text-left"><?=$nombre_turno?></td>
+      <td class="text-left"><?=$paterno?> <?=$materno?> <?=$nombres?></td>
+      <td><?=$fecha_registro?></td>
     </tr><?php
     $index++;
   

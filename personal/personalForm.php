@@ -46,13 +46,11 @@ if($codigo>0){
     $celular = $result['celular'];
     $email = $result['email'];
     $persona_contacto = $result['persona_contacto'];
-
     $celular_contacto = $result['celular_contacto'];
     $created_at = $result['created_at'];
     $created_by = $result['created_by'];
     $modified_at = $result['modified_at'];
     $modified_by = $result['modified_by'];
-
     $cod_nacionalidad = $result['cod_nacionalidad'];
     $cod_estadocivil = $result['cod_estadocivil'];//-
     $cod_pais = $result['cod_pais'];
@@ -73,7 +71,7 @@ if($codigo>0){
     $cod_turno=$result['turno'];
     $cod_tipotrabajo=$result['cod_tipotrabajo'];
     $cod_cajasalud=$result['cod_cajasalud'];
-
+    $cuenta_habilitada=$result['cuenta_habilitada'];
     
     
 
@@ -187,7 +185,7 @@ if($codigo>0){
     $email_empresa = "";
     $personal_confianza = "";
     $cuenta_bancaria = "";
-
+    $cuenta_habilitada=0;
     $cod_turno="";
     $cod_tipotrabajo="";
     $cod_cajasalud="";
@@ -744,11 +742,23 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                     </div>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Cuenta Bancaria</label>
-                                <div class="col-sm-4">
+                                <div class="col-sm-2">
                                     <div class="form-group">
                                         <input class="form-control" type="number" name="cuenta_bancaria" id="cuenta_bancaria" required value="<?=$cuenta_bancaria;?>"/>
                                     </div>
                                 </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <select name="cuenta_habilitada" id="cuenta_habilitada" class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
+                                            <option value=""></option>
+                                            <option <?php if($cuenta_habilitada == 0) echo "selected"; ?> value="0">NO HABILITADO</option>
+                                            <option <?php if($cuenta_habilitada == 1) echo "selected"; ?> value="1">HABILITADO</option>
+                                        </select> 
+                                    </div>
+                                </div>
+
+
+                                
                             </div><!--fin campo cod_estadopersonal-->
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Nombre Contacto</label>

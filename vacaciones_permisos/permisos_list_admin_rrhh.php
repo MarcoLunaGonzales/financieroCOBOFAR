@@ -6,49 +6,8 @@ require_once 'styles.php';
 // $globalAdmin = $_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
-if(isset($_GET['q'])){
-  if(isset($_GET['s']) && $_GET['s']<>""){
-    $q=$_GET['q'];
-    $a=$_GET['a'];//indicador de admin
-    $s=$_GET['s'];//cod ciudad
-    $cod_personal_q=$q;
-    if($a==1 || $a==30 || $a==31){//1 admin 30 apoyo de regencia 31 regente
-      $a=1; //indicador de admin
-    }else{
-      $a=0;
-    }
-    $admin=$a;;
-    $cod_area=$s;//cod area
-  }else{
-    $cod_personal_q=-100;
-    $cod_area=-100;
-    $admin=0;
-  }
-  $cod_area_x=$cod_area;
-}else{
-  $cod_personal_q=$_SESSION['globalUser'];
-  $cod_area_x=obtenerAreasAdmin_permisos($cod_personal_q);//solo para oficina central
-  if($cod_area_x<>""){
-    $admin=1;//indicador de admin
-  }else{
-    $admin=0;//indicador de admin
-    $cod_area_x=0;
-  }
-  $cod_area=$_SESSION['globalArea'];//cod area
-}
-//contador de permisos pendientes
-$sqlPendiente="SELECT count(*)as contador
-from personal_permisos pp join estados_permisos_personal epp on pp.cod_estado=epp.codigo join tipos_permisos_personal tpp on pp.cod_tipopermiso=tpp.codigo 
- where pp.cod_estado=3 and cod_area in ($cod_area_x) order by pp.created_at";
- // echo  "<br><br><br>".$sqlPendiente;
-$stmtPendiente = $dbh->prepare($sqlPendiente);
-$stmtPendiente->execute();
-$resultPendintes=$stmtPendiente->fetch();
-if(isset($resultPendintes['contador'])){
-  $pendientes_aprobacion=$resultPendintes['contador'];
-}else{
-  $pendientes_aprobacion=0;
-}
+$cod_personal_q=$_SESSION['globalUser'];
+
 
 $sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.cod_personal_autorizado,pp.observaciones_rechazo,pp.created_at,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_autorizado)as nombre_personal_autorizado,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_aprobado)as nombre_personal_aprobado
 from personal_permisos pp join estados_permisos_personal epp on pp.cod_estado=epp.codigo join tipos_permisos_personal tpp on pp.cod_tipopermiso=tpp.codigo
@@ -86,9 +45,7 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
             <div class="card-icon" style="background: #dc7633;">
               <i class="material-icons"><?= $iconCard; ?></i>
             </div>
-            <!-- <h4 class="card-title">Permisos del Personal</h4> -->
-            <h3 style="color:#2c3e50;"><b>Mis Permisos</b></h3>
-            <center><b><span style="color:black;font-size: 17px;"><?=namePersonalCompleto($cod_personal_q)?> -  <?=nameArea($cod_area)?></span></b></center>
+            <h3 style="color:#2c3e50;"><b>Permisos del Personal</b></h3>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -203,23 +160,7 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
           </div>
         </div>
           <div class="card-footer fixed-bottom">
-            <?php if(isset($_GET['q'])){ ?>
-              <button class="btn btn-success btn-sm" onClick="location.href='index.php?opcion=permisosPersonalForm&q=<?=$q?>&a=<?=$a?>&s=<?=$s?>'">Nuevo Permiso</button>
-              <?php 
-              if($admin==1){?>
-                <button class="btn btn-primary btn-sm" onClick="location.href='index.php?opcion=permisosPersonalListaADM&q=<?=$q?>&a=<?=$a?>&s=<?=$s?>'" style="background: #dc7633;">Autorización de Permisos <span class="count bg-warning" style="width:20px;height: 20px;font-size: 12px;" ><b><?=$pendientes_aprobacion?></b></span></button>
-              <?php } ?>
-            <?php }else{?>
-              <button class="btn btn-success btn-sm" onClick="location.href='index.php?opcion=permisosPersonalForm'">Nuevo Permiso</button>
-              <?php 
-              if($admin==1){?>
-                <button class="btn btn-default btn-sm" onClick="location.href='index.php?opcion=permisosPersonalListaADM'" style="background: #dc7633;">Autorización de Permisos <span class="count bg-warning" style="width:20px;height: 20px;font-size: 12px;" ><b><?=$pendientes_aprobacion?></b></span></button>
-              <?php } ?>
-
-            <?php }?>
-
-            <button class="btn btn-info btn-sm" onClick="location.href='index.php?opcion=permisosPersonalListaADMrrhh'">Nuevo Permiso Terceros</button>
-
+            <button class="btn btn-success" onClick="location.href='index.php?opcion=permisosPersonalFromADMrrhh'">Registrar Permiso</button>
           </div>
       </div>
     </div>

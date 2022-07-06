@@ -16,7 +16,9 @@ for ($i=0; $i <count($array_personal_respo_audi) ; $i++) {
     }
 }
 
-$fecha_actualización=date("d/m/Y h:i:s", strtotime(obtenerFechaActualizacionComercial()));
+// $fecha_actualización=date("d/m/Y h:i:s", strtotime(obtenerFechaActualizacionComercial()));
+
+$fecha_actualización=date('d/m/Y');
 
 ?>
 
@@ -34,7 +36,32 @@ $fecha_actualización=date("d/m/Y h:i:s", strtotime(obtenerFechaActualizacionCom
                   <!-- <a href="index.php?opcion=principal_CajaChica_historico" target="_blank" class="btn btn-primary btn-sm float-right" style="background-color:#707B7C;">Ir Al Histórico</a> -->
                   <div class="row div-center text-center">
 
-  
+                     <div class="card text-white mx-auto" style="background-color: #3b6675; width: 18rem;">
+                        <div class="row">
+                           <div class="col-md-4">
+                              <center><i class="material-icons" style="color: #fff;font-size:60px;" >assignment_late</i></center>
+                           </div>
+                           <div class="col-sm-8">
+                              <a href="?opcion=rpt_depositosnodescargados" >
+                                <h5 class="card-title" style="color:#ffffff;"><b>REGISTRO DE DEPOSITOS</b></h5>
+                                <p class="card-text text-small" style="color:#ffffff">Reportes</p>
+                              </a>  
+                           </div>
+                        </div>
+                     </div>
+                     <div class="card text-white mx-auto" style="background-color: #38797e; width: 18rem;">
+                        <div class="row">
+                           <div class="col-md-4">
+                              <center><i class="material-icons" style="color: #fff;font-size:60px;" >archive</i></center>
+                           </div>
+                           <div class="col-sm-8">
+                              <a href="?opcion=rpt_diferencias_depositos_from" >
+                                <h5 class="card-title" style="color:#ffffff;"><b>DIFERENCIA DE DEPOSITOS</b></h5>
+                                <p class="card-text text-small" style="color:#ffffff">Reportes</p>
+                              </a>  
+                           </div>
+                        </div>
+                     </div>
                      <div class="card text-white mx-auto" style="background-color:#73c6b6; width: 18rem;">
                         <div class="row">
                            <div class="col-md-4">
@@ -62,6 +89,8 @@ $fecha_actualización=date("d/m/Y h:i:s", strtotime(obtenerFechaActualizacionCom
                            </div>
                         </div>
                      </div>
+                     
+
                      <div class="card text-white mx-auto" style="background-color: #38797e; width: 18rem;">
                         <div class="row">
                            <div class="col-md-4">
@@ -108,19 +137,7 @@ $fecha_actualización=date("d/m/Y h:i:s", strtotime(obtenerFechaActualizacionCom
                         </div>
                      </div>
 
-                     <div class="card text-white mx-auto" style="background-color: #3b6675; width: 18rem;">
-                        <div class="row">
-                           <div class="col-md-4">
-                              <center><i class="material-icons" style="color: #fff;font-size:60px;" >assignment_late</i></center>
-                           </div>
-                           <div class="col-sm-8">
-                              <a href="?opcion=rpt_depositosnodescargados" >
-                                <h5 class="card-title" style="color:#ffffff;"><b>REGISTRO DE DEPOSITOS</b></h5>
-                                <p class="card-text text-small" style="color:#ffffff">Reportes</p>
-                              </a>  
-                           </div>
-                        </div>
-                     </div>
+                     
 
                    </div>
                 </div>

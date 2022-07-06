@@ -108,12 +108,31 @@ while ($dat = mysqli_fetch_array($resp)) {
     
     echo "<td align='right'>$stikea<b>$montoFactura</b>$stikeb</td>";
     echo "<td class='text-left'>$stikea&nbsp;$razonSocial$stikeb</td><td>$stikea&nbsp;$nitCli$stikeb</td>";
-    $codTarjeta=$dat['cod_tipopago'];
-    if($codTarjeta==2){
-        echo "<td class='text-primary'>$stikea&nbsp;<b>Tarjeta</b></td>";
-    }else{
+    $codTipoPago=$dat['cod_tipopago'];
+    
+    switch ($codTipoPago) {
+      case 1://efectivo
         echo "<td class='text-success'>$stikea&nbsp;<b>Efectivo</b></td>";
-    }  
+        break;
+      case 2://tarjeta
+        echo "<td class='text-primary'>$stikea&nbsp;<b>Tarjeta</b></td>";
+        break;
+      case 3://QR
+        echo "<td class='text-info'>$stikea&nbsp;<b>Pago QR BancoSol</b></td>";
+        break;
+      case 4://Transfer
+        echo "<td class='text-info'>$stikea&nbsp;<b>Transf. MercantilSC</b></td>";
+        break;
+      default:
+        echo "<td class='text-info'>$stikea&nbsp;<b>Otros</b></td>";
+        break;
+    }
+    // if($codTipoPago==2){
+    //     echo "<td class='text-primary'>$stikea&nbsp;<b>Tarjeta</b></td>";
+    // }else{
+    //     echo "<td class='text-success'>$stikea&nbsp;<b>Efectivo</b></td>";
+    // }
+
     echo "<td class='text-success'>$stikea&nbsp;F: $fecha_anulacion /  Caja: $personal_anulacion</td>";
     echo "<td   class='td-actions text-right'> <a href='#' rel='tooltip' class='btn btn-warning' onclick='abrir_detalle_modal($codigo,0);return false;'><i class='material-icons' title='Ver Detalle Factura'>list</i></a></td>";
   echo "</tr>";

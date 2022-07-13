@@ -20409,3 +20409,21 @@ function CerrarPlanillaRetroactivo(cod_planilla){
     }
   });
 }
+
+
+function mostrarTraspasosSucursalesCosteo(cod_personal){ 
+  window.open('costeo_general/filtro.php', '_blank'); 
+}
+
+function seleccionar_traspasos_sucursales_nuevo(){
+  var p= $("#p").val();  
+  var fecha_desde= $("#fecha_desde").val();  
+  var fecha_hasta= $("#fecha_hasta").val();  
+  var glosa= $("#glosa").val();  
+  var id_sucursal= $("#id_sucursal").val();  
+  window.location="../costeo_general/seleccionar.php?fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta+"&glosa="+glosa+"&id_sucursal="+id_sucursal+"&p="+p;
+}
+
+function proceso_costeo_general_sucursales(){
+  window.open('costeo_general/rpt_costeo_pendientes_from.php', '_blank'); 
+}

@@ -8087,9 +8087,13 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
      return($codigo);
   }
 
+
+
+
   function insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser){
      $dbh = new Conexion();
-     $sqlInsertCabecera="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa,created_at,created_by,modified_at,modified_by) values ('$codComprobante','$codEmpresa','$cod_uo_solicitud','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante',NOW(),'$numeroComprobante','$concepto_contabilizacion',NOW(),'$globalUser',NOW(),'$globalUser')";
+     $sqlInsertCabecera="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa,created_at,created_by,modified_at,modified_by) values ('$codComprobante','$codEmpresa','$cod_uo_solicitud','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaActual','$numeroComprobante','$concepto_contabilizacion',NOW(),'$globalUser',NOW(),'$globalUser')";
+     //echo $sqlInsertCabecera;
       $stmtInsertCab = $dbh->prepare($sqlInsertCabecera);
       $flagSuccess=$stmtInsertCab->execute();
      return $flagSuccess;
@@ -8101,6 +8105,9 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
     $flagSuccessDet=$stmtInsertDet->execute();
     return $flagSuccessDet;
   }
+
+
+
   function verificamos_cuentas_tipos_pagos(){
     $dbh = new Conexion();
     $stmtVerif_tipopago = $dbh->prepare("SELECT (select c.cod_cuenta from tipos_pago_contabilizacion c where c.cod_tipopago=t.codigo) as cuenta from tipos_pago t where t.cod_estadoreferencial=1");
@@ -13064,7 +13071,10 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     $devolucion_unidad=[];
     //para saldo  Anterior    
     
-
+    $ingresoString="";
+    if($almacen==1000){
+      $ingresoString=" and i.estado_guardado>0 ";
+    }  
     // if(strtotime($fecha_ini)<strotime("2021-12-01")){
 
     // }
@@ -13074,7 +13084,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo from costoscobofar.costo_promedio_mes c where c.cod_material=m.codigo_material and c.cod_mes=MONTH('$fecha_ant') and c.cod_gestion=YEAR('$fecha_ant') and c.cod_almacen=$almacen limit 1)),2),0)INGRESO_COSTO 
     from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m,proveedores_lineas pl
       where i.cod_ingreso_almacen=id.cod_ingreso_almacen and m.codigo_material=id.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and i.fecha<'$fecha_ini' and i.cod_almacen='$almacen'
-      and pl.cod_proveedor in ($proveedores) and i.ingreso_anulado=0
+      and pl.cod_proveedor in ($proveedores) and i.ingreso_anulado=0 $ingresoString
       GROUP BY pl.cod_proveedor";
       //echo $sql; 
     $resp=mysqli_query($enlaceCon,$sql);
@@ -13097,9 +13107,9 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     $sql="select pl.cod_proveedor,IFNULL(ROUND(sum((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0)),0),0)INGRESO,IFNULL(ROUND(sum(((IFNULL(id.cantidad_envase,0)*m.cantidad_presentacion)+IFNULL(id.cantidad_unitaria,0))*(select c.costo_unitario from costoscobofar.costo_transaccion c where c.cod_material=m.codigo_material and c.cod_documento=i.cod_ingreso_almacen and c.cod_tipodocumento=1 limit 1)),2),0)INGRESO_COSTO 
      from ingreso_almacenes i, ingreso_detalle_almacenes id,material_apoyo m,proveedores_lineas pl
       where i.cod_ingreso_almacen=id.cod_ingreso_almacen and m.codigo_material=id.cod_material and m.cod_linea_proveedor=pl.cod_linea_proveedor and i.fecha>='$fecha_ini' and i.fecha<='$fecha_fin' and i.cod_almacen='$almacen'
-      and pl.cod_proveedor in ($proveedores) and i.ingreso_anulado=0
+      and pl.cod_proveedor in ($proveedores) and i.ingreso_anulado=0 $ingresoString
       GROUP BY pl.cod_proveedor";
-       //echo  $sql."<br>";
+      // echo  $sql."<br>";
     $resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){  
        $ingresos[$row['cod_proveedor']]=$row['INGRESO']; 
@@ -13643,4 +13653,17 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
       $pdf = $dompdf->output();
       return array('archivo' => $pdf,'base64'=>base64_encode($pdf));
   }
+
+
+   function obtenerCuentaAuxiliarInventario($cuenta,$area){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT codigo FROM cuentas_auxiliares where cod_cuenta='$cuenta' and cod_proveedorcliente='$area' limit 1;");
+      $stmt->execute();
+      $codigo=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $codigo=$row['codigo'];
+      }
+      return($codigo);
+   }
+
 ?>

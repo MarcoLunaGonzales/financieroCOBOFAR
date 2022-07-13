@@ -2035,6 +2035,15 @@
 		if ($_GET['opcion']=='reportePagoProveedores') {
 			require_once('reportes_solicitud_recursos/reportePagoProveedores_from.php');
 		}
+
+
+
+
+
+		//COSTEO GENERAL DE SUCURSALES
+		if ($_GET['opcion']=='listCosteoGeneralSucursales') {
+			require_once('costeo_general/list.php');
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}

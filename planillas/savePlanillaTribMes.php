@@ -18,8 +18,8 @@ if($codigo==0){
   else
     echo 0;
 }else{
-  actualizarPlanillaTributaria($codigo);	
-  //procesarPlanillaTributaria($codigo,$codPlan);	
+  actualizarPlanillaTributaria($codigo);  
+  //procesarPlanillaTributaria($codigo,$codPlan); 
   $flagsucess=ReprocesarPlanillaTribNuevo($codigo,$codPlan);
   if($flagsucess)
     echo 1;
@@ -29,7 +29,7 @@ if($codigo==0){
 //actualizar la planilla tributaria el modified at
 function actualizarPlanillaTributaria($codigo){
   $codigoUser=$_SESSION["globalUser"];
-  $fechaActual=date("Y-m-d H:i:s");	
+  $fechaActual=date("Y-m-d H:i:s"); 
   $dbhI = new Conexion();
   $sqlUpdate="UPDATE planillas_tributarias SET modified_by='$codigoUser',modified_at='$fechaActual' where codigo=$codigo";
   $stmtUpdate = $dbhI->prepare($sqlUpdate);
@@ -37,13 +37,13 @@ function actualizarPlanillaTributaria($codigo){
 }
 //insertar nueva planilla tributaria
 function insertarPlanillaTributaria($codigo){
-  $dbh = new Conexion();	
+  $dbh = new Conexion();  
   $stmt = $dbh->prepare("SELECT cod_gestion,cod_mes from planillas where codigo=$codigo");
   $stmt->execute();
   $result= $stmt->fetch();
   $cod_gestion=$result['cod_gestion'];
   $cod_mes=$result['cod_mes'];
-  $cod_estadoplanilla=2;		
+  $cod_estadoplanilla=2;    
   //insertar
   $created_by=$_SESSION["globalUser"];
   $modified_by=$_SESSION["globalUser"];
@@ -71,7 +71,7 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
   $salario_minimo_no_imponible=obtenerSueldoMinimo()*2;
   $impuesto_sueldo_gravado=obtenerValorConfiguracionPlanillas(21);
   //insertamos los datos
-  $planillas="SELECT pl.cod_personalcargo,pl.afp_1,pl.afp_2,pl.total_ganado,p.cod_mes,p.cod_gestion,(select nombre from gestiones where codigo=p.cod_gestion)as gestion,(select monto_iva from rc_ivapersonal where cod_personal=pl.cod_personalcargo) as monto_iva 
+  $planillas="SELECT pl.cod_personalcargo,pl.afp_1,pl.afp_2,pl.total_ganado,p.cod_mes,p.cod_gestion,(select nombre from gestiones where codigo=p.cod_gestion)as gestion,(select rc.monto_iva from rc_ivapersonal rc where rc.cod_personal=pl.cod_personalcargo and rc.cod_mes=p.cod_mes and rc.cod_gestion=p.cod_gestion and rc.cod_estadoreferencial=1) as monto_iva
     FROM planillas_personal_mes pl,planillas p where pl.cod_planilla=p.codigo and pl.cod_planilla=$codPlan";
   //and pl.cod_personalcargo in (84,93,183,195,286,32,176,96,68,16,97)
   $stmtPlanillas=$dbh->prepare($planillas);

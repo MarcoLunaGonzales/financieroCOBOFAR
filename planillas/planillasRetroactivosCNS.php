@@ -22,6 +22,23 @@ if($tipo==1){//CNS
   $sql_add=" and p.cod_cajasalud=2";
 }
 
+  $mes=strtoupper(nombreMes($cod_mes));
+  $gestion=nameGestion($cod_gestion);
+
+$fecha_x=$gestion.'-05-01';
+$fecha_cns=date("Y-m-t",strtotime($fecha_x."+ 1 month")); 
+$datos_fecha=explode("-", $fecha_cns);
+//sacamos el ultimo día habil
+$dia_ultimo=$datos_fecha[2];
+$dia_semana=date("N",strtotime($fecha_cns)); 
+if ($dia_semana == 7) {
+    $dia_ultimo=$dia_ultimo-2;
+}
+if ($dia_semana == 6) {
+    $dia_ultimo=$dia_ultimo-1;
+}
+
+
 
 $html = '';
     $html.='<head>'.
@@ -41,26 +58,32 @@ $html.='<body>'.
     '</script>';
 $html.=  '<header class="header">'.            
             '<table width="100%">
+             
+
               <tr>
-              <td width="25%"><p>CORPORACION BOLIVIANA DE FARMACIAS S.A.<br>Av.Landaeta N° 836<br>La Paz - Bolivia<br>NIT:1022039027<br>N° Empleador Ministerio de Trabajo 1146072502</p></td>
-              <td><center><span style="font-size: 13px"><b>PLANILLA DE RETROACTIVOS</b></span><BR>CORRESPONDIENTES A LOS MESES DE ENERO A ABRIL '.$gestion.'<br><b>EXPRESADO EN BOLIVIANOS</b></center></td>
-              <td width="25%"><center>N° PAT. 651-1-956</center></td>
+              <td width="50%"><span style="font-size: 15px;">CORPORACION BOLIVIANA DE FARMACIAS S.A.</span><br>NIT:1022039027<br>Av.Landaeta Nro. 836<br>La Paz - Bolivia<br>N° Patronal C.N.S. 01 - 652 - 00289</td>
+              <td><span style="font-size: 15px">PLANILLA CORRESPONDIENTE A LOS MESES DE ENERO A ABRIL  '.$gestion.'</span><br>EXPRESADO EN BOLIVIANOS<BR>S.S. LARGO PLAZO<BR>TELF.: 2 - 413051</td>
               </tr>
+
             </table>'.
          '</header>';
           $html.='<table class="table">'.
             '<thead>'.
             '<tr class="table-title bold text-center">'.
               '<td width="1%"><small><small><small>Nro</small></small></small></td>'.
-              '<td width="1%"><small><small><small>Area/Sucursal</small></small></small></td>'.
+              
               '<td width="3%"><small><small><small>CI</small></small></small></td>'.
-              '<td width="1%"><small><small><small>Ex.</small></small></small></td>'.
+              '<td width="1%"><small><small><small>Lugar de Emision</small></small></small></td>'.
+
               '<td><small><small><small>Paterno</small></small></small></td>'.
               '<td><small><small><small>Materno</small></small></small></td>'.
-              '<td><small><small><small>Nombres</small></small></small></td>'.              
+              '<td><small><small><small>Nombres</small></small></small></td>'.     
+              '<td><small><small><small>Nacion<br>alidad</small></small></small></td>'.
+              '<td><small><small><small>Fecha Nac.</small></small></small></td>'.
               '<td><small><small><small>Cargo</small></small></small></td>'.
-              '<td><small><small><small>Fecha de<br>Ingreso</small></small></small></td>'.
-              '<td><small><small><small>Fecha de<br>Retiro</small></small></small></td>'.
+              '<td><small><small><small>Fecha Ing R.A. INASES 129/2016</small></small></small></td>'.
+
+              // '<td><small><small><small>Fecha de<br>Retiro</small></small></small></td>'.
               '<td><small><small><small>Haber Basico Inicial</small></small></small></td>'.
               '<td><small><small><small>Bono Antig Inicial</small></small></small></td>'.
               '<td><small><small><small>Haber Basico Nuevo</small></small></small></td>'.
@@ -109,7 +132,7 @@ $html.=  '<header class="header">'.
             $subtotal_total_descuentos=0;
             $subtotal_liquido_pagable=0;
 
-            $sql="SELECT p.codigo,prd.correlativo_planilla,a.nombre as area,p.identificacion as ci,p.paterno,p.materno,p.primer_nombre,prd.ing_planilla,prd.retiro_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,prd.haber_basico_anterior,prd.haber_basico_nuevo,prd.bono_antiguedad_anterior,prd.bono_antiguedad_nuevo,prd.retroactivo_enero,prd.retroactivo_febrero,prd.retroactivo_marzo,prd.retroactivo_abril,prd.antiguedad_enero,prd.antiguedad_febrero,prd.antiguedad_marzo,prd.antiguedad_abril,prd.total_ganado,prd.ap_vejez,prd.riesgo_prof,prd.com_afp,prd.aporte_sol,prd.total_descuentos,prd.liquido_pagable
+            $sql="SELECT p.codigo,prd.correlativo_planilla,a.nombre as area,p.identificacion as ci,p.paterno,p.materno,p.primer_nombre,p.fecha_nacimiento,prd.ing_planilla,prd.retiro_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,prd.haber_basico_anterior,prd.haber_basico_nuevo,prd.bono_antiguedad_anterior,prd.bono_antiguedad_nuevo,prd.retroactivo_enero,prd.retroactivo_febrero,prd.retroactivo_marzo,prd.retroactivo_abril,prd.antiguedad_enero,prd.antiguedad_febrero,prd.antiguedad_marzo,prd.antiguedad_abril,prd.total_ganado,prd.ap_vejez,prd.riesgo_prof,prd.com_afp,prd.aporte_sol,prd.total_descuentos,prd.liquido_pagable
               from  personal p join planillas_retroactivos_detalle prd on p.codigo=prd.cod_personal join areas a on prd.cod_area=a.codigo
               where prd.cod_planilla=$codPlanilla $sql_add
               order by correlativo_planilla";
@@ -128,16 +151,18 @@ $html.=  '<header class="header">'.
               // }
 
               $html.='<tr>'.
-                '<td class="text-center"><small><small><small><small>'.$row['correlativo_planilla'].'</small></small></small></small></td>'.
-                '<td class="text-left"><small><small><small><small>'.$area.'</small></small></small></small></td>'.
+                '<td class="text-center"><small><small><small><small>'.$index.'</small></small></small></small></td>'.
+                
                 '<td class="text-left"><small><small><small><small>'.$row['ci'].'</small></small></small></small></td>'.
                 '<td class="text-left"><small><small><small><small>'.$row['emision'].'</small></small></small></small></td>'.
                 '<td class="text-left"><small><small><small><small>'.$row['paterno'].'</small></small></small></small></td>'.
                 '<td class="text-left"><small><small><small><small>'.$row['materno'].'</small></small></small></small></td>'.
                 '<td class="text-left"><small><small><small><small>'.$row['primer_nombre'].'</small></small></small></small></td>'.
+                '<td class="text-left"><small><small><small><small>BOLIVIANA</small></small></small></small></td>'.
+                '<td class="text-left"><small><small><small><small>'.strftime("%d/%m/%Y",strtotime($row['fecha_nacimiento'])).'</small></small></small></small></td>'.
                 '<td class="text-left"><small><small><small><small>'.$row['cargo'].'</small></small></small></small></td>'.
-                '<td class="text-left"><small><small><small><small>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</small></small></small></small></td>'.
-                '<td class="text-left"><small><small><small><small>'.$retiro_planilla.'</small></small></small></small></td>'.
+                '<td class="text-center"><small><small><small><small>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</small></small></small></small></td>'.
+                // '<td class="text-left"><small><small><small><small>'.$retiro_planilla.'</small></small></small></small></td>'.
                 
                 '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['haber_basico_anterior']).'</small></small></small></small></td>'.
                 '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bono_antiguedad_anterior']).'</small></small></small></small></td>'.
@@ -211,9 +236,9 @@ $html.='</table><br><br><br>';
 
 $html.='<table width="100%">
   <tr >
-  <td width="25%"><center><p>______________________________<br>'.obtenerValorConfiguracionPlanillas(26).'<BR>JEFE DE RECURSOS HUMANOS COBOFAR S.A.</p></center></td>
-  <td><center><p>______________________________<BR>'.obtenerValorConfiguracionPlanillas(24).'<BR>GERENTE GENERAL COBOFAR S.A.</p></center></td>
   <td width="25%"><center><p>______________________________<BR>'.obtenerValorConfiguracionPlanillas(25).'<BR>REPRESENTANTE LEGAL COBOFAR S.A.</p></center></td>
+  <td><center><p>SELLO</p></center></td>
+  <td width="25%"><center><p>LA PAZ, '.$dia_ultimo.' DE '.strtoupper(nombreMes($datos_fecha[1])).' DE '.$datos_fecha[0].'</p></center></td>
   </tr>
 </table>';
 

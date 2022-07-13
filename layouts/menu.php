@@ -211,6 +211,21 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Descuentos</span>
                     </a>
                 </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=descuentosContaList">
+                      <span class="sidebar-mini"> DC </span>
+                      <span class="sidebar-normal"> Descuentos Conta</span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=descuentosContaListadmin">
+                      <span class="sidebar-mini"> DCA </span>
+                      <span class="sidebar-normal"> Descuentos Conta Admin</span>
+                    </a>
+                </li>
+
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listDotacion">
                       <span class="sidebar-mini"> D </span>
@@ -235,6 +250,13 @@ if($menuModulo==0){
                       <span class="sidebar-normal">Permisos (Sol & Aut)</span>
                     </a>
                 </li>
+                 <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=permisosPersonalListaADMrrhh">
+                      <span class="sidebar-mini"> PSA </span>
+                      <span class="sidebar-normal">Permisos ADM (Sol)</span>
+                    </a>
+                </li>
+                
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=permisosPersonalListaRRHH"  style="background:#dab6aa; color:#584f4c;font-weight:bold;">
                       <span class="sidebar-mini"> AP </span>
@@ -866,7 +888,14 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=configuracion_edit_sf">
                     <span class="sidebar-mini"> CESF </span>
-                    <span class="sidebar-normal"> Configuración Edición SF</span>
+                    <span class="sidebar-normal"> Configuración Pago Proveedores</span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reporteComprobantes">
+                    <span class="sidebar-mini"> RC </span>
+                    <span class="sidebar-normal">Reporte de Comprobantes</span>
                   </a>
                 </li>
               </ul>

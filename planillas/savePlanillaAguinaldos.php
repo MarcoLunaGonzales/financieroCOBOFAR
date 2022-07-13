@@ -51,22 +51,22 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	$modified_by=$globalUser;
 		
 	//============select del personal
-	$sql = "SELECT codigo,ing_planilla,cuenta_bancaria from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
+	$sql = "SELECT codigo,ing_planilla,cuenta_habilitada from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
 
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
 	$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);	
-	$stmtPersonal->bindColumn('cuenta_bancaria', $cuenta_bancaria);	
+	$stmtPersonal->bindColumn('cuenta_habilitada', $cuenta_habilitada);	
 
 	while ($rowC = $stmtPersonal->fetch()) 
 	{	
 
-		if($cuenta_bancaria>0){
-			$cuenta_habilitada=1;
-		}else{
-			$cuenta_habilitada=0;
-		}
+		// if($cuenta_bancaria>0){
+		// 	$cuenta_habilitada=1;
+		// }else{
+		// 	$cuenta_habilitada=0;
+		// }
 		$anio_actual= date('Y');
 		$fecha_fin=obtener_fecha_fin_contrato_personal($codigo_personal);
 		if($fecha_fin=='INDEFINIDO'){

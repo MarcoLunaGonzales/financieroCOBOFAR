@@ -61,11 +61,11 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	$stmtDelete->execute();	
 	
 	//============select del personal
-	$sql="SELECT 1 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno,'' as retiro_planilla
+	$sql="SELECT 1 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_habilitada,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno,'' as retiro_planilla
 	from personal p join areas a on p.cod_area=a.codigo
-	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1
+	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 and p.ing_planilla <= '$fecha_final'
 	UNION
- 	select 2 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,3 as turno,p.cod_unidadorganizacional,'PERSONAL RETIRADO' as area,p.paterno,pr.fecha_retiro as retiro_planilla
+ 	select 2 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_habilitada,p.cod_area,3 as turno,p.cod_unidadorganizacional,'PERSONAL RETIRADO' as area,p.paterno,pr.fecha_retiro as retiro_planilla
 	from personal p join personal_retiros pr on p.codigo=pr.cod_personal 
 	join areas a on p.cod_area=a.codigo
 	where pr.fecha_retiro BETWEEN '$fecha_inicio' and '$fecha_final' 
@@ -80,13 +80,20 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
 	$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);
 	$stmtPersonal->bindColumn('retiro_planilla', $retiro_planilla);
-	$stmtPersonal->bindColumn('cuenta_bancaria', $cuenta_bancaria);
+	$stmtPersonal->bindColumn('cuenta_habilitada', $cuenta_habilitada);
 	$stmtPersonal->bindColumn('cod_area', $cod_area);
 	$stmtPersonal->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 	$stmtPersonal->bindColumn('turno', $turno);
 	$index=1;
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
+
+		// if($cuenta_bancaria>0){
+		// 	$cuenta_habilitada=1;
+		// }else{
+		// 	$cuenta_habilitada=0;
+		// }
+
 		// $ing_planilla=$ing_planilla;
 		if($haber_basico_anterior==null || $haber_basico_anterior==""){
 			$haber_basico_anterior=$haber_basico_nuevo;
@@ -110,6 +117,10 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$dias_trabajados3=$datos_planilla3[4];
 		$dias_trabajados4=$datos_planilla4[4];	
 
+		if($cod_personal==2023){//caso especial gustavo meneses
+			$haber_basico2=2240;	
+			$dias_trabajados2=24;
+		}
 		
 
 		$retroactivo_enero=0;
@@ -134,9 +145,6 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		}
 		if($haber_basico2>0){
 			$haber_basico_nuevo2=$haber_basico_nuevo*$dias_trabajados2/$dias_del_mes;
-
-			$haber_basico_x=$haber_basico*$dias_trabajados_asistencia/$dias_del_mes;
-
 			$retroactivo_febrero=$haber_basico_nuevo2-$haber_basico2;
 			$antiguedad_febrero=$bono_antiguedad_nuevo_febrero-$bono_antiguedad2;
 		}
@@ -163,8 +171,8 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
 		//==== insert de panillas de personal mes
-		$sqlInsertPlanillas="INSERT into planillas_retroactivos_detalle(cod_planilla,cod_personal,cod_area,haber_basico_anterior,haber_basico_nuevo,bono_antiguedad_anterior,bono_antiguedad_nuevo,retroactivo_enero,retroactivo_febrero,retroactivo_marzo,retroactivo_abril,antiguedad_enero,antiguedad_febrero,antiguedad_marzo,antiguedad_abril,total_ganado,ap_vejez,riesgo_prof,com_afp,aporte_sol,total_descuentos,liquido_pagable,correlativo_planilla,ing_planilla,retiro_planilla,dias_trabajados_enero,dias_trabajados_febrero,dias_trabajados_marzo,dias_trabajados_abril)
-		 values('$cod_planilla','$cod_personal','$cod_area','$haber_basico_anterior','$haber_basico_nuevo','$bono_antiguedad_anterior','$bono_antiguedad_nuevo','$retroactivo_enero','$retroactivo_febrero','$retroactivo_marzo','$retroactivo_abril','$antiguedad_enero','$antiguedad_febrero','$antiguedad_marzo','$antiguedad_abril','$total_ganado','$ap_vejez','$riesgo_prof','$com_afp','$aporte_sol','$total_descuentos','$liquido_pagable','$index','$ing_planilla','$retiro_planilla','$dias_trabajados1','$dias_trabajados2','$dias_trabajados3','$dias_trabajados4')";
+		$sqlInsertPlanillas="INSERT into planillas_retroactivos_detalle(cod_planilla,cod_personal,cod_area,haber_basico_anterior,haber_basico_nuevo,bono_antiguedad_anterior,bono_antiguedad_nuevo,retroactivo_enero,retroactivo_febrero,retroactivo_marzo,retroactivo_abril,antiguedad_enero,antiguedad_febrero,antiguedad_marzo,antiguedad_abril,total_ganado,ap_vejez,riesgo_prof,com_afp,aporte_sol,total_descuentos,liquido_pagable,correlativo_planilla,ing_planilla,retiro_planilla,dias_trabajados_enero,dias_trabajados_febrero,dias_trabajados_marzo,dias_trabajados_abril,cuenta_habilitada)
+		 values('$cod_planilla','$cod_personal','$cod_area','$haber_basico_anterior','$haber_basico_nuevo','$bono_antiguedad_anterior','$bono_antiguedad_nuevo','$retroactivo_enero','$retroactivo_febrero','$retroactivo_marzo','$retroactivo_abril','$antiguedad_enero','$antiguedad_febrero','$antiguedad_marzo','$antiguedad_abril','$total_ganado','$ap_vejez','$riesgo_prof','$com_afp','$aporte_sol','$total_descuentos','$liquido_pagable','$index','$ing_planilla','$retiro_planilla','$dias_trabajados1','$dias_trabajados2','$dias_trabajados3','$dias_trabajados4','$cuenta_habilitada')";
 		$stmtInsertPlanillas = $dbh->prepare($sqlInsertPlanillas);
 		$flagSuccessIP=$stmtInsertPlanillas->execute();
 		$index++;

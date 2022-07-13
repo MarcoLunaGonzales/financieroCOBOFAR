@@ -78,7 +78,7 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 	$dbh = new Conexion();
 	$sql_add="";
 	if($cod_personal>0){
-		$sql_add=" and p.codigo=$cod_personal";
+		$sql_add=" and p.codigo in ($cod_personal)";
 	}
 	set_time_limit(0);  
   $porcentaje_aport_afp=obtenerValorConfiguracionPlanillas(12);
@@ -188,9 +188,6 @@ set_time_limit(0);
 	}
 	// $index_planilla++;
 }
-
-
-
 
 	$html.='</body>'.
 	'</html>';

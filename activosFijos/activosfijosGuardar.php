@@ -202,9 +202,9 @@ try {
         //$codigo = $result['codigo'];
         $valorinicial222 = $resultPREVIO['valorinicial'];
         //SI EL VALOR DEL ACTIVO CAMBIA... se actualiza el valor bandera_depreciar a NO
-        $bandera_depreciar = 'SI';
-        if ($valorinicial222 != $valorinicial)
-            $bandera_depreciar = 'NO';//SIGNIFICA FLASH
+        // $bandera_depreciar = 'SI';
+        // if ($valorinicial222 != $valorinicial)
+        //     $bandera_depreciar = 'NO';//SIGNIFICA FLASH
         //preparamos para actualizar
 
         $sql="UPDATE activosfijos set codigoactivo=:codigoactivo,tipoalta=:tipoalta,fechalta=:fechalta,
@@ -213,7 +213,8 @@ try {
         cod_depreciaciones=:cod_depreciaciones,cod_tiposbienes=:cod_tiposbienes,
         vidautilmeses=:vidautilmeses,estadobien=:estadobien,otrodato=:otrodato,cod_empresa=:cod_empresa,activo=:activo,
         vidautilmeses_restante=:vidautilmeses_restante,cod_af_proveedores=:cod_af_proveedores,
-        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion,tipo_af=:cod_tiposactivos,modified_at=:modified_at,modified_by=:modified_by where codigo = :codigo";
+        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion,tipo_af=:cod_tiposactivos,modified_at=:modified_at,modified_by=:modified_by,fecha_iniciodepreciacion=:fechalta,cantidad_meses_depreciacion=:fechalta
+         where codigo = :codigo";
         $stmt = $dbh->prepare($sql);
         //bind
         //created_at=:created_at,created_by=:created_by,modified_at=:modified_at,modified_by=:modified_by,

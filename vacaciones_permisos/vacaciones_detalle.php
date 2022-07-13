@@ -5,7 +5,6 @@ require_once 'styles.php';
 
 
 $cod_personal=$_GET['codigo'];
-
 $ing_planilla=$_GET['ing_planilla'];
 $fecha_actual=$_GET['fecha_actual'];
 $anios_antiguedad=$_GET['anios_antiguedad'];
@@ -70,6 +69,8 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                       $total_dias_vacacion_saldo=0;
                       $diferencia_mes_sobrante=0;
                       $diferencia_dias_sobrante=0;
+                      $array_datos=[];
+                      $index_x=0;
                       while($fechainicio<=$fecha_actual){
                         $date1 = new DateTime($fechainicio_x);
                         $date2 = new DateTime($fechainicio);
@@ -80,18 +81,17 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                            $anios_inicio=$datos[0];
                            $anios_final=$datos[1];
                            $dias_vacacion=$datos[2];
-
                            if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
-                            
                             // $gestion=date('Y', strtotime($fechainicio."- 1 year"));
                             $gestion=date('Y', strtotime($fechainicio));
                             $dias_utilizadas=obtenerDiasVacacionUzadas($cod_personal,$gestion);
                             $saldo=$dias_vacacion-$dias_utilizadas;
                             if($saldo<=0){
-                              $estado='<span class="badge badge-danger ">No disponible';
+                              $estado='<span class="badge badge-danger ">Días Agotados';
                             }else{
                               $estado='<span class="badge badge-success">disponible';
                             }
+                            $array_datos[$index_x]=$gestion.",".$dias_vacacion.",".$dias_utilizadas.",".$saldo;
                             ?>
                             <tr>
                               <td class="text-center"><?=date('d/m/Y', strtotime($fechainicio."- 1 year"));?> - <?=date('d/m/Y', strtotime($fechainicio));?>  <b>( <?=$gestion?>)</b></td>
@@ -99,7 +99,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                               <td class="text-center"><?=$dias_utilizadas;?></td>
                               <td class="text-center"><?=$saldo;?></td>
                               <td class="text-center"><?=$estado;?></span></td>
-                              <td class="td-actions">
+                              <td class="td-actions text-right">
                                 <?php if($saldo>0){
                                   $datosModal=$cod_personal."/".$gestion."/".$saldo."/".$ing_planilla."/".$fecha_actual."/".$nombre_personal;
                                   ?>
@@ -109,13 +109,16 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                                   <?php
                                 }
                                 ?>
+                                <button type="button" class="btn btn-info btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalAgregarC" onclick="agregaformVacaciones('<?=$datosModal;?>')">
+                                    <i class="material-icons" title="Solicitar Vacaciones">visibility</i>
+                                 </button>
                               </td>
                             </tr>
-
                               <?php
                               $total_dias_vacacion += $dias_vacacion;
                               $total_dias_vacacion_uzadas+=$dias_utilizadas;
                               $total_dias_vacacion_saldo+=$saldo;
+                              $index_x++;
                               break;
                               
                            }
@@ -132,6 +135,9 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                       // $diff = $date1->diff($date2);    
                       // $diferencia_mes_sobrante=$diff->m;
                       // $diferencia_dias_sobrante=$diff->d;
+                      // var_dump($array_datos);
+                      $array_datos = serialize($array_datos);
+                      $array_datos = urlencode($array_datos);
                   ?>
                   <tr class='bg-dark text-white'>
                     <td class="text-center">TOTAL</td>
@@ -148,7 +154,9 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
           </div>
           <div class="card-footer ml-auto mr-auto ">
             
-            <a href="index.php?opcion=vacacionesPersonalLista" class="<?=$buttonCancel;?>"> <-- Volver </a>
+            <a href="index.php?opcion=vacacionesPersonalLista" class="btn btn-sm btn-danger"> <-- Volver </a>
+            <a href="vacaciones_permisos/vacaciones_pdf.php?cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>&aa=<?=$anios_antiguedad?>&datos=<?=$array_datos?>" target="_blank" class="btn btn-sm btn-warning"><i class="material-icons">print</i> Imprimir </a>
+            <a href="index.php?opcion=vacacionesValidacion&cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>" class="btn btn-sm btn-info"><i class="material-icons">access_time</i> Capturar Fecha Validación </a>
           </div>
         </div>
        
@@ -203,14 +211,37 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
             </div>
           </div>
         </div>
+
         <div class="row">
+          <label class="col-sm-2 col-form-label">Tipo de Vacación</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+            <select class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-live-search="true" name="tipo_vacacion" id="tipo_vacacion" data-style="<?=$comboColor;?>" required="true">
+              <option value="">SELECCIONE UN ITEM</option>  
+                <?php
+                $stmt = $dbh->prepare("select codigo,nombre from tipos_vacacion_personal where cod_estadoreferencial=1 order by nombre");
+              $stmt->execute();
+              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $codigoX=$row['codigo'];
+                $nombreX=$row['nombre'];
+              ?>
+              <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+              <?php
+                }
+                ?>
+            </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- <div class="row">
           <label class="col-sm-2 col-form-label">Comentarios</label>
           <div class="col-sm-9">
             <div class="form-group">
               <INPUT  type='text' class='form-control'  id='observaciones_modal' name='observaciones_modal' required>
             </div>
           </div>
-        </div>
+        </div> -->
         
       </div>
       <div class="modal-footer">
@@ -236,21 +267,22 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
       fecha_inicio_modal=$('#fecha_inicio_modal').val();
       console.log(fecha_inicio_modal);
       fecha_final_modal=$('#fecha_final_modal').val();
-      observaciones_modal=$('#observaciones_modal').val();
+      tipo_vacacion=$('#tipo_vacacion').val();
       if(gestion_modal==""){
         Swal.fire('ERROR!','Gestion No Encontrada. :(','error'); 
       }else{
          // alert(saldo_modal+"--"+dias_vacacion);
         if(dias_vacacion=="" || dias_vacacion==0){//|| dias_vacacion>saldo_modal
-          Swal.fire('ERROR!','Días vacación no permitido. :( ','error'); 
+          Swal.fire('ERROR!','Los días de vacación debe ser mayor a 0. GRACIAS.','error'); 
         }else{
-          if(dias_vacacion<5){
-            Swal.fire('ERROR!','para las vacaciones menores a 5 días, se debe realizar una solicitud de permiso. GRACIAS.','error'); 
+          if(tipo_vacacion=="" || tipo_vacacion==0){
+            //Swal.fire('ERROR!','Para las vacaciones menores a 5 días, se debe realizar una solicitud de permiso. GRACIAS.','error'); 
+            Swal.fire('ERROR!','Seleccione el tipo de vacación. GRACIAS.','error'); 
           }else{
             if(fecha_inicio_modal=="" || fecha_final_modal==""){
               Swal.fire('ERROR!','Fechas no admitidas ','error'); 
             }else{
-              RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,observaciones_modal,ing_planilla,fecha_actual);    
+              RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,tipo_vacacion,ing_planilla,fecha_actual);    
             }  
           }
         }

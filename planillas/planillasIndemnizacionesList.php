@@ -24,11 +24,7 @@ $dbh = new Conexion();
   $stmtAdmnin->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
   $stmtAdmnin->bindColumn('nombre_estadoplanilla', $nombre_estadoplanilla);
 
-  $stmtAdmninUO = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
-  GROUP BY cod_uo");
-  $stmtAdmninUO->execute();
-  $stmtAdmninUO->bindColumn('cod_uo', $cod_uo_x);
-  $stmtAdmninUO->bindColumn('nombre_uo', $nombre_uo_x);
+
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -66,7 +62,7 @@ $dbh = new Conexion();
                     }                  
                     ?>
                     <tr>                    
-                      <td><?=$gestion?></td>
+                      <td><?=$mes?>/<?=$gestion?></td>
                       <td><?=$label.$nombre_estadoplanilla."</span>";?></td>
                       <td class="td-actions text-right">
                         <?php
@@ -104,24 +100,68 @@ $dbh = new Conexion();
                     </tr>
                   <?php $index++; } 
 
-                  $dbh=null;
-                  $stmtAdmnin=null;
-                  $stmtAdmninUO=null;
-                  $stmtAdmninUOAux=null;
-                  $stmtAdmninUOAux2=null;
+                  // $dbh=null;
+                  // $stmtAdmnin=null;
+                  // $stmtAdmninUO=null;
+                  // $stmtAdmninUOAux=null;
+                  // $stmtAdmninUOAux2=null;
                   ?>
                 </tbody>                                      
               </table>
           </div>
           <div class="card-footer fixed-bottom">
-            <a href='?opcion=planillasIndemnizacionesPersonal_save' rel="tooltip" class="btn btn-success">
+            <!-- <a href='?opcion=planillasIndemnizacionesPersonal_save' rel="tooltip" class="btn btn-success">
               Registrar Planilla 
-            </a>
+            </a> -->
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalGenerarPlanilla">Registrar Planilla</button> 
           </div>  
         </div>
       </div>
     </div>
   </div>
+
+  <!--Generar Planilla-->
+  <div class="modal fade" id="modalGenerarPlanilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Registrar Planilla</h4>
+          
+        </div>
+        <div class="modal-body">
+            <div class="row">
+              <label class="form-group col-sm-12 text-center"><b>Seleccione Mes de planilla</b></label>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-12">
+                   <select name="cod_mes_gestion" id="cod_mes_gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                      <option value=""></option>
+                      <?php 
+                      $queryUO1 = "SELECT p.cod_gestion,p.cod_mes,g.nombre as gestion from  planillas  p join gestiones g on p.cod_gestion=g.codigo  where p.cod_estadoplanilla=3";
+
+                      $stmtMes = $dbh->query($queryUO1);
+                      $stmtMes->bindColumn('cod_mes', $mes_x);
+                      $stmtMes->bindColumn('cod_gestion', $cod_gestion_x);
+                      $stmtMes->bindColumn('gestion', $gestion_x);
+                      while ($rowMes = $stmtMes->fetch(PDO::FETCH_BOUND)) {
+                        $codigo_nuevo=$cod_gestion_x."_".$mes_x;
+                        ?>
+                          <option  value="<?=$codigo_nuevo;?>"><?=$gestion_x;?> - <?=$mes_x;?></option>
+                      <?php } ?>
+                  </select>
+
+              </div>
+            </div>
+        </div>       
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success btn-sm" id="AceptarRegistro" onClick="registrar_planilla_indenminzaciones()">Guardar</button>
+          <button type="button" class="btn btn-danger btn-sm" id="CancelarResgistro" data-dismiss="modal"> Cancelar </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!--modal procesar-->
   <div class="modal fade" id="modalProcesar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-sm" role="document">

@@ -21,34 +21,30 @@ $cod_planilla=$_POST['cod_planilla'];
 $cod_estadoplanilla=$_POST['sw'];
 $sw=$_POST['sw'];
 
-
-$cod_mes=$_SESSION['globalMes'];
-$nombreGestion=$_SESSION['globalNombreGestion'];
-
-$cod_mes = str_pad($cod_mes, 2, "0", STR_PAD_LEFT);//
-$fecha_inicio=$nombreGestion.'-'.$cod_mes.'-01';
-$fecha_final=date('Y-m-t',strtotime($fecha_inicio));
-
-
-
-
 // if($sw==2){
 // 	$nombre_gestion_x=$_SESSION['globalNombreGestion'];
 // 	$cod_mes_x=$_SESSION['globalMes'];
 // 	$cod_gestion_x = $_SESSION['globalGestion'];
 // }else{
-	$stmtDatosPlanilla = $dbh->prepare("SELECT cod_gestion,cod_mes from planillas where codigo=$cod_planilla");
+	$stmtDatosPlanilla = $dbh->prepare("SELECT p.cod_gestion,g.nombre,p.cod_mes 
+	from planillas p join gestiones g on p.cod_gestion=g.codigo
+	where p.codigo=$cod_planilla");
 	$stmtDatosPlanilla->execute();
 	$resultDatosPlanilla =  $stmtDatosPlanilla->fetch();
 	$cod_gestion_x = $resultDatosPlanilla['cod_gestion'];
+	$nombre_gestion_x = $resultDatosPlanilla['nombre'];
 	$cod_mes_x = $resultDatosPlanilla['cod_mes'];
-
-	$sqlGestion = "SELECT nombre from gestiones where codigo=$cod_gestion_x";
-	$stmtGestion = $dbh->prepare($sqlGestion);
-	$stmtGestion->execute();
-	$resultGestion=$stmtGestion->fetch();
-	$nombre_gestion_x = $resultGestion['nombre'];
 // }
+
+// $cod_mes=$_SESSION['globalMes'];
+// $nombreGestion=$_SESSION['globalNombreGestion'];
+$cod_mes=$cod_mes_x;
+$nombreGestion=$nombre_gestion_x;
+
+$cod_mes = str_pad($cod_mes, 2, "0", STR_PAD_LEFT);//
+$fecha_inicio=$nombreGestion.'-'.$cod_mes.'-01';
+$fecha_final=date('Y-m-t',strtotime($fecha_inicio));
+
 
 $date1 = $nombre_gestion_x.'-'.$cod_mes_x; 
 $d = date_create_from_format('Y-m',$date1); 
@@ -129,15 +125,15 @@ if($sw==2 || $sw==1 || $sw==10){//procesar o reporcesar planilla
 
 $sql="SELECT p.identificacion,p.codigo,p.haber_basico,p.cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=p.cod_grado_academico) as p_grado_academico,  
-	p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno
+	p.cod_tipoafp,p.ing_planilla,p.cuenta_habilitada,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno
 	from personal p join areas a on p.cod_area=a.codigo
-	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1
+	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 and p.ing_planilla<'$fecha_final'
 
 	UNION
 	
  	select p.identificacion,p.codigo,p.haber_basico,p.cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=p.cod_grado_academico) as p_grado_academico,  
-	p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno
+	p.cod_tipoafp,p.ing_planilla,p.cuenta_habilitada,p.cod_area,p.turno,p.cod_unidadorganizacional,a.nombre as area,p.paterno
 	from personal p join personal_retiros pr on p.codigo=pr.cod_personal 
 	join areas a on p.cod_area=a.codigo
 	where pr.fecha_retiro BETWEEN '$fecha_inicio' and '$fecha_final' 
@@ -151,17 +147,17 @@ $sql="SELECT p.identificacion,p.codigo,p.haber_basico,p.cod_grado_academico,
 	$stmtPersonal->bindColumn('p_grado_academico', $p_grado_academico);  
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
 	$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);
-	$stmtPersonal->bindColumn('cuenta_bancaria', $cuenta_bancaria);
+	$stmtPersonal->bindColumn('cuenta_habilitada', $cuenta_habilitada);
 
 	$stmtPersonal->bindColumn('cod_area', $cod_area);
 	$stmtPersonal->bindColumn('turno', $turno);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-		if($cuenta_bancaria>0){
-			$cuenta_habilitada=1;
-		}else{
-			$cuenta_habilitada=0;
-		}
+		// if($cuenta_bancaria>0){
+		// 	$cuenta_habilitada=1;
+		// }else{
+		// 	$cuenta_habilitada=0;
+		// }
 		$dias_trabajados_asistencia = obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$dias_trabajados_mes); //por asistencia
 
 		

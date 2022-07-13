@@ -10,35 +10,29 @@ $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["gestion"];
-// $mes2 = $_POST["mes"];
 $unidadOrganizacional=$_POST["unidad_organizacional"];
-// $cod_depreciaciones=$_POST["cod_depreciaciones"];
-
 $unidadOrgString=implode(",", $unidadOrganizacional);
-// $depreciacionesString=implode(",", $cod_depreciaciones);
-
-// echo $areaString;
 $stringUnidades="";
 foreach ($unidadOrganizacional as $valor ) {    
     $stringUnidades.=" ".abrevUnidad($valor)." ";
 }
 
-$mes2=12;//ULTIMA DEPRECIACION
-
+$gestion=nameGestion($gestion);
+//ULTIMA DEPRECIACION
+$sql="select mes from mesdepreciaciones 
+where gestion=$gestion and estado=1 
+ORDER BY mes desc limit 1";
+$stmtmesDepre = $dbh->prepare($sql);
+$stmtmesDepre->execute();
+$stmtmesDepre->bindColumn('mes', $mes2);
+while ($rowMesDepre = $stmtmesDepre->fetch()) {
+    $mes2=$mes2;
+}
+// echo $mes2."**";
 
 $nombre_mes=nombreMes($mes2);
-$gestion=nameGestion($gestion);
 $fechaUltimo=$gestion."-".$mes2."-01";
 $diaUltimo_x=date("t", strtotime($fechaUltimo));
-// $sql="SELECT (select nombre from unidades_organizacionales where codigo=af.cod_unidadorganizacional) as nombre_unidadO,
-// af.cod_unidadorganizacional as cod_unidadorganizacional
-// from activosfijos af
-// where af.cod_unidadorganizacional in ($unidadOrgString)
-// GROUP BY (nombre_unidadO)";
-// $stmtUO = $dbh->prepare($sql);
-// $stmtUO->execute();
-// $stmtUO->bindColumn('nombre_unidadO', $nombre_unidadO);
-// $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 
 $totalValorAnterior=0;
 $total_rubro_actualizacion=0;
@@ -83,7 +77,6 @@ $total_valorNeto=0;
                                 <th>Depreciación<br>Acumulada Anterior</th>
                                 <th>Actualización<br>Depreciación Acumulada</th>
                                 <th>Depreciación Periodo</th>
-                                
                                 <th>Depreciación Acumulada</th>
                                 <th>Valor Neto</th>                                    
                             </tr>
@@ -100,13 +93,14 @@ $total_valorNeto=0;
                                 $total_valorNeto_2=0;
                                 $totalValorAltas_actualizacion=0;
                                 $totalValorBajas_actualizacion=0;
-
-                                $stmt2_total = $dbh->prepare("SELECT af.cod_depreciaciones,sum(md.d8_depreciacionperiodo)deprePeriodo,sum(md.d7_incrementodepreciacionacumulada)actDepAcum,sum(md.d5_incrementoporcentual)actualizacion_porcentual
+                                $sql="SELECT af.cod_depreciaciones,sum(md.d8_depreciacionperiodo)deprePeriodo,sum(md.d7_incrementodepreciacionacumulada)actDepAcum,sum(md.d5_incrementoporcentual)actualizacion_porcentual
                                     from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
                                     WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
                                       and  af.cod_unidadorganizacional in ($unidadOrgString)
                                       and  m.gestion=$gestion 
-                                      GROUP BY af.cod_depreciaciones");
+                                      GROUP BY af.cod_depreciaciones";
+                                      // echo $sql;
+                                $stmt2_total = $dbh->prepare($sql);
                                 $stmt2_total->execute();
                                 $stmt2_total->bindColumn('actualizacion_porcentual', $actualizacion_porcentual_2);
                                 $stmt2_total->bindColumn('actDepAcum', $actDepAcum_2);
@@ -169,7 +163,6 @@ $total_valorNeto=0;
                                         <td><?=formatNumberDec($depreAcumAnt_2); ?></td>
                                         <td><?=formatNumberDec($actDepAcum_2); ?></td>
                                         <td><?=formatNumberDec($deprePeriodo_2); ?></td>
-                                        
                                         <td><?=formatNumberDec($totalDepreAcumu_2); ?></td>
                                         <td><?=formatNumberDec($valorNeto_2); ?></td>
                                         </tr>

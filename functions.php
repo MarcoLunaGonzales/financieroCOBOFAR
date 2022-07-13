@@ -1,6 +1,6 @@
 <?php
   require_once 'conexion.php';
-  require_once 'conexion_externa.php';
+  // require_once 'conexion_externa.php';
   //Enviar correo con funcion Enviar
   require_once 'notificaciones_sistema/PHPMailer/send.php';
   require_once 'notificaciones_sistema/PHPMailer/PHPMailer/src/Exception.php';
@@ -3444,13 +3444,19 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $sql = "select impuesto_rc_iva_retenido 
       from planillas_tributarias p join planillas_tributarias_personal_mes_2 pd on p.codigo=pd.cod_planillatributaria 
       where pd.cod_personal=$codigo_personal and p.cod_gestion=$cod_gestion_x and p.cod_mes=$cod_mes_x ";
+      // echo $sql."<br>";
     $stmtRCIVA = $dbh_t->prepare($sql);
     $stmtRCIVA->execute();
-    $resultRCIVA=$stmtRCIVA->fetch();
-    $total_descuentos_otros = $resultRCIVA['impuesto_rc_iva_retenido'];
-    if($total_descuentos_otros=='' || $total_descuentos_otros==null){
-      $total_descuentos_otros=0;
+    $total_descuentos_otros=0;
+    while ($resultRCIVA = $stmtRCIVA->fetch(PDO::FETCH_ASSOC)) {
+         $total_descuentos_otros = $resultRCIVA['impuesto_rc_iva_retenido'];
     }
+
+    // $resultRCIVA=$stmtRCIVA->fetch();
+    // $total_descuentos_otros = $resultRCIVA['impuesto_rc_iva_retenido'];
+    // if($total_descuentos_otros=='' || $total_descuentos_otros==null){
+      
+    // }
     $stmtRCIVA = null;
     $dbh_t = null;
     return $total_descuentos_otros;
@@ -11948,11 +11954,11 @@ function obtenerIngresoPendienteDatos($codIngreso){
       if($cod_personal==-1000){//para reporte general
          $sql="SELECT s.`monto_final` as monto,s.cod_tipopago,s.salida_anulada,s.monto_cancelado_usd,s.tipo_cambio from `salida_almacenes` s 
          where s.`cod_tiposalida`=1001  and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
-         where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago in (1,2,3) ";
+         where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora'  ";
       }else{//para reporte x sucursal
          $sql="SELECT s.`monto_final` as monto,s.cod_tipopago,s.salida_anulada,s.monto_cancelado_usd,s.tipo_cambio from `salida_almacenes` s 
          where s.`cod_tiposalida`=1001  and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
-         where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora' and s.cod_tipopago in (1,2,3) and s.cod_chofer=$cod_personal";
+         where a.`cod_ciudad`='$rpt_territorio' and cod_tipoalmacen=1) and s.fecha = '$fecha_iniconsultahora'  and s.cod_chofer=$cod_personal";
       }
       //echo $sql;
       $valor_efectivo=0;
@@ -12298,7 +12304,7 @@ function obtenerIngresoPendienteDatos($codIngreso){
 
    function listaDetalleIngresosAlmacen($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_proveedor,factura,fecha_factura,nit,autorizacion,codigo_control,monto_factura,desc_total,dcto_almacen  from ingresos_almacen_detalle where cod_ingresoalmacen=$codigo");
+     $stmt = $dbh->prepare("SELECT cod_proveedor,factura,fecha_factura,nit,autorizacion,codigo_control,monto_factura,desc_total,dcto_almacen,fecha_vencimiento  from ingresos_almacen_detalle where cod_ingresoalmacen=$codigo");
      $stmt->execute();
      return $stmt;
   }
@@ -12858,21 +12864,24 @@ function obtenerDiasVacacionUzadas($cod_personal,$gestion){
 }
 
 function obtenerValorInicialDepreciacionGestion($cod_depreciaciones_rubros,$gestion,$unidadOrgString){
-
    if($gestion==2021){//inicio del sistema y depreciacion
       $sql="SELECT sum(af.valorinicial)as valorActualizado,sum(af.depreciacionacumulada)as depreciacionacumulada,sum(af.valorresidual)as valorresidual
        from activosfijos af
        WHERE af.cod_proy_financiacion=0 and af.tipo_af=1 and af.fechalta<='2021-01-01' and af.cod_depreciaciones=$cod_depreciaciones_rubros and af.cod_unidadorganizacional in ($unidadOrgString)";
-
-
    }else{//modificar
-      $sql="SELECT sum(af.valorinicial)as valorinicial
-       from activosfijos af
-       WHERE af.cod_proy_financiacion=0 and af.tipo_af=1 and af.fechalta<='2021-01-01' and af.cod_depreciaciones=$cod_depreciaciones_rubros and af.cod_unidadorganizacional in ($unidadOrgString)";
+      $mes=12;
+      $gestion=$gestion-1;
+      $sql="SELECT sum(md.d4_valoractualizado)as valorActualizado,sum(md.d9_depreciacionacumuladaactual)as depreciacionacumulada,sum(md.d2_valorresidual)as valorresidual
+         from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
+         WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+         and  af.cod_unidadorganizacional in ($unidadOrgString)
+         and  m.gestion=$gestion and m.mes=$mes
+         and af.cod_depreciaciones=$cod_depreciaciones_rubros";
    }
-   
+   // echo "<br>".$sql;
    $dbh = new Conexion();
    $valorneto=0;
+   $valorActualizado=0;
    $depreciacionacumulada=0;
    $valorresidual=0;
    $stmt = $dbh->prepare($sql);
@@ -12882,9 +12891,7 @@ function obtenerValorInicialDepreciacionGestion($cod_depreciaciones_rubros,$gest
       $depreciacionacumulada=$row['depreciacionacumulada'];
       $valorresidual=$row['valorresidual'];//valor neto
    }
-    
    return $valorActualizado."###".$depreciacionacumulada."###".$valorresidual;
-
   }
 
   function obtenerValorUltimoDepreciacionGestion($cod_depreciaciones_2,$gestion,$mes2,$unidadOrgString){
@@ -12894,6 +12901,7 @@ function obtenerValorInicialDepreciacionGestion($cod_depreciaciones_rubros,$gest
            and  af.cod_unidadorganizacional in ($unidadOrgString)
            and  m.gestion=$gestion  and m.mes=$mes2
            and af.cod_depreciaciones=$cod_depreciaciones_2";
+           // echo $sql;
       $dbh = new Conexion();
       $valorActualizado=0;
       $totalDepreAcumu=0;
@@ -13655,6 +13663,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
   }
 
 
+
    function obtenerCuentaAuxiliarInventario($cuenta,$area){
       $dbh = new Conexion();
       $stmt = $dbh->prepare("SELECT codigo FROM cuentas_auxiliares where cod_cuenta='$cuenta' and cod_proveedorcliente='$area' limit 1;");
@@ -13665,5 +13674,16 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
       }
       return($codigo);
    }
+
+   function obtenerCodigoDescuentoConta(){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT IFNULL(max(d.codigo)+1,1)as codigo from descuentos_conta d");
+     $stmt->execute();
+     $codigo=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+     }
+     return($codigo);
+  }
 
 ?>

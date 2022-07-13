@@ -108,8 +108,7 @@ $stmt->execute();
               '<th width="30%">Descripción</th>'.
               '<th>Debe</th>'.
               '<th>Haber</th>'.
-              '<th>Debe</th>'.
-              '<th>Haber</th>'.
+              
             '</tr>'.
            '</thead>'.
            '<tbody>'; 
@@ -142,8 +141,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
             '<td class="" colspan="2">Fecha:<b>'.strftime('%d/%m/%Y',strtotime($fechaX)).'</b></td>'.
             '<td style="display: none;"></td>'.
             '<td class="" colspan="3">t/c:<b>'.$tc.'</b></td>'.
-            '<td style="display: none;"></td>'.
-            '<td style="display: none;"></td>'.
+            
             '<td class=" td-border-r">Numero:<b>'.generarNumeroCeros(6,$numeroX).'</b></td>'.
             '</tr>';
     /*$html.='<tr class="bg-plomo">'.
@@ -170,9 +168,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       $tDebeBol+=$row['debe'];$tHaberBol+=$row['haber'];
                       $tDebeTc+=$row['debe']/$tc;$tHaberTc+=$row['haber']/$tc;
                        $html.='<td class="text-right font-weight-bold">'.number_format($row['debe'], 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row['haber'], 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row['debe']/$tc, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row['haber']/$tc, 2, '.', ',').'</td>';        
+                      '<td class="text-right font-weight-bold">'.number_format($row['haber'], 2, '.', ',').'</td>';        
                       
                     $html.='</tr>';
               }
@@ -190,8 +186,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   '<td style="display: none;"></td>'.
                   '<td class="text-right font-weight-bold">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
                   '<td class="text-right font-weight-bold">'.number_format($tHaberBol, 2, '.', ',').'</td>'. 
-                  '<td class="text-right font-weight-bold">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
-                  '<td class="text-right font-weight-bold">'.number_format($tHaberTc, 2, '.', ',').'</td>'.       
+                         
               '</tr>';
 
     $totalSumasHaber=$totalSumasHaber+$tHaberBol;
@@ -208,8 +203,7 @@ $html.='<tr class="bg-secondary text-white">'.
                   '<td style="display: none;"></td>'.
                   '<td class="text-right font-weight-bold">'.number_format($totalSumasDebe, 2, '.', ',').'</td>'.
                   '<td class="text-right font-weight-bold">'.number_format($totalSumasHaber, 2, '.', ',').'</td>'. 
-                  '<td class="text-right font-weight-bold">'.number_format($totalSumasDebeTc, 2, '.', ',').'</td>'. 
-                  '<td class="text-right font-weight-bold">'.number_format($totalSumasHaberTc, 2, '.', ',').'</td>'.       
+                       
               '</tr>';
 $html.=    '</tbody></table>';
 /*$html.='<p class=">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>';*/

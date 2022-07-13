@@ -190,9 +190,9 @@ require_once '../layouts/bodylogin2.php';
                                 <td><?=$haber_basico_anterior?></td>
                                 <td><?=$salario_incremento?></td>
                                 <td><?=round($retroactivo_enero+$antiguedad_enero,2)?></td>
-                                <td><?=round($retroactivo_febrero+$antiguedad_enero,2)?></td>
-                                <td><?=round($retroactivo_marzo+$antiguedad_enero,2)?></td>
-                                <td><?=round($retroactivo_abril+$antiguedad_enero,2)?></td>
+                                <td><?=round($retroactivo_febrero+$antiguedad_febrero,2)?></td>
+                                <td><?=round($retroactivo_marzo+$antiguedad_marzo,2)?></td>
+                                <td><?=round($retroactivo_abril+$antiguedad_abril,2)?></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

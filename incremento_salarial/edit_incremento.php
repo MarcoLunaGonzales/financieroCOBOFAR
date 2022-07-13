@@ -18,7 +18,7 @@ $porcentaje_hb=$porcentaje_hb_config;
 
 
 $minimo_salarial_config=obtenerValorConfiguracionPlanillas(31);
-$minimo_salarial_nuevo=floor($minimo_salarial_config+$minimo_salarial_config*$porcentaje_smn/100);
+$minimo_salarial_nuevo=$minimo_salarial_config+$minimo_salarial_config*$porcentaje_smn/100;
 
 // echo  $minimo_salarial_nuevo;
 
@@ -127,7 +127,7 @@ $fecha_fin=$anio."-12-31";
                            $porcentaje_inc=$porcentaje_smn;
                            $estilo="style='background:#d4e6f1;'";
                         }else{
-                          $haber_basico_nuevo=floor($haber_basico_ant+$haber_basico_ant*$porcentaje_hb/100);
+                          $haber_basico_nuevo=$haber_basico_ant+$haber_basico_ant*$porcentaje_hb/100;
                           $porcentaje_inc=$porcentaje_hb;
                           $estilo="";  
                         }
@@ -183,7 +183,7 @@ $fecha_fin=$anio."-12-31";
                            $porcentaje_inc=$porcentaje_smn;
                            $estilo="style='background:#d4e6f1;'";
                         }else{
-                          $haber_basico_nuevo_retirado=floor($haber_basico_ant_retirado+$haber_basico_ant_retirado*$porcentaje_hb/100);
+                          $haber_basico_nuevo_retirado=$haber_basico_ant_retirado+$haber_basico_ant_retirado*$porcentaje_hb/100;
                           $porcentaje_inc=$porcentaje_hb;
                           $estilo="";  
                         }

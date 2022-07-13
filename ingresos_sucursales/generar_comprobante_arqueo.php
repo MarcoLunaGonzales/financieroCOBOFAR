@@ -155,8 +155,8 @@ while($row=mysqli_fetch_array($resp)){
 
       //primera parte detalle comprobante
       $sql="SELECT s.cod_chofer,( SELECT (select cb.cod_plancuenta from cuentas_bancarias cb where cb.codigo=rd.cod_cuenta and cb.estado=1) as cuenta FROM registro_depositos rd where rd.cod_funcionario=s.cod_chofer and rd.fecha='$fechaVenta' and rd.cod_estadoreferencial=1 limit 1) as cod_plancuenta
-      from `salida_almacenes` s where s.`cod_tiposalida`= 1001 and s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a
-      where a.`cod_ciudad`='$cod_ciudad' and cod_tipoalmacen=1) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechaVenta 00:00:00' and '$fechaVenta 23:59:59'   
+      from `salida_almacenes` s join almacenes a on s.cod_almacen=a.cod_almacen
+      where s.`cod_tiposalida`= 1001 and a.cod_ciudad='$cod_ciudad' and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechaVenta 00:00:00' and '$fechaVenta 23:59:59'   
       GROUP BY s.cod_chofer,s.fecha order by s.fecha,s.cod_chofer";
        //echo "<br><br>".$sql."</br></br>";
       

@@ -13,7 +13,6 @@ $stmt = $dbh->prepare("SELECT p.codigo as cod_personal,CONCAT_WS(' ',p.paterno,p
  (select r.nombre from tipos_retiro_personal r where r.codigo=pr.cod_tiporetiro) as cod_tiporetiro,p.ing_contr,pr.fecha_retiro,pr.observaciones
  from personal_retiros pr,personal p
  where pr.cod_personal=p.codigo and pr.cod_estadoreferencial=1
- 
   order by personal");
 //ejecutamos
 $stmt->execute();

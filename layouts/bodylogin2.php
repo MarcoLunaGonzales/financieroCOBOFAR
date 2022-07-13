@@ -104,7 +104,91 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+            var table_afxU=$('#tablePaginatorFixed_personal').DataTable({
+                "paging":   false,
+                  "info":     false,
+                  "language": {
+                      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                  },
+                  "order": false,
+                  "searching": false,
+                  fixedHeader: {
+                    header: true,
+                    footer: true
+                  },                  
+                  dom: 'Bfrtip',
+                  buttons:[
 
+                  {
+                      extend: 'copy',
+                      text:      '<i class="material-icons">file_copy</i>',
+                      titleAttr: 'Copiar',
+                      title: 'Reporte Del Personal',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },
+                  {
+                      extend: 'csv',
+                      text:      '<i class="material-icons">list_alt</i>',
+                      titleAttr: 'CSV',
+                      title: 'Reporte Del Personal',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },
+                  {
+                      extend: 'excel',
+                      text:      '<i class="material-icons">assessment</i>',
+                      titleAttr: 'Excel',
+                      title: 'Reporte Del Personal',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  },
+                  {
+                      extend: 'pdf',
+                      text:      '<i class="material-icons">picture_as_pdf</i>',
+                      titleAttr: 'Pdf',
+                      title: 'Reporte Del Personal',
+                      orientation: 'landscape',
+                      pageSize: 'LEGAL',
+                      //messageTop:'Reporte Libro Diario',
+                      exportOptions: {
+                              columns: ':visible'
+                      },
+                    customize: function ( doc) {
+                         doc['footer']=(function(page, pages) { return {
+                               columns: ['IBNORCA - REPORTES',{alignment: 'right',text: [{ 
+                                    text: page.toString(), italics: true 
+                                   },' de ',
+                                   { text: pages.toString(), italics: true }]
+                                }],
+                               margin: [10, 5]                              
+                              }
+                         });
+                      doc.content.splice( 1, 0, {
+                          margin: [ 0, -50, 0, 12 ],
+                          alignment: 'left',
+                          image: imageLogo,
+                          width:50,
+                          height:50
+                      } );
+                    }
+                  },
+                  {
+                      extend: 'print',
+                      text:      '<i class="material-icons">print</i>',
+                      titleAttr: 'Imprimir',
+                      title: 'Reporte Del Personal',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  }
+                ]
+              });
+
+        
        var table_diario=$('#tablePaginatorReport_facturasgeneradas').DataTable({
           "paging":   false,
             "info":     false,
@@ -1207,8 +1291,8 @@
                 titleAttr: 'Pdf',
                 title:'Reporte Libro Mayor',
 
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
+                // orientation: 'landscape',
+                // pageSize: 'LEGAL',
                 exportOptions: {
                     columns: ':visible'
                 },
@@ -1222,6 +1306,7 @@
                          margin: [10, 5]
                         }
                    });
+                   doc.defaultStyle.fontSize = 6;
                 doc.content.splice( 1, 0, {
                     margin: [ 0, -100, 0, 50 ],
                     alignment: 'left',
@@ -1313,19 +1398,21 @@
                          margin: [10, 5]
                         }
                    });
+                doc.defaultStyle.fontSize = 6;
                 doc.content.splice( 1, 0, {
                     margin: [ 0, -80, 0, 12 ],
                     alignment: 'left',
                     image: imageLogo,
                     width:50,
                     height:50, 
+                    fontSize: 7
                 } );
                 doc.content.splice( 1, 0, {
                     margin: [ 100, 0, 0, 12 ],
                     text: [{
-                      text: 'Unidad: '+unidad_reporte_diario+' \n Fecha: '+fecha_reporte_diario+' \n Tipo: '+tipo_reporte_diario,
+                      // text: 'Unidad: '+unidad_reporte_diario+' \n Fecha: '+fecha_reporte_diario+' \n Tipo: '+tipo_reporte_diario,
                       bold: true,
-                      fontSize: 9,
+                      fontSize: 7,
                       alignment: 'right'
                    }]        
                 } );

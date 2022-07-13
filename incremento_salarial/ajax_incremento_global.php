@@ -124,11 +124,13 @@ while ($rowNoAdmitidos = $stmtNoAdmitidos->fetch(PDO::FETCH_BOUND)) {
                     $stmt->bindColumn('haber_basico', $haber_basico_ant);
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                         if($haber_basico_ant<=$minimo_salarial_config){//para salario por debajo o igual al salario minimo nacional
-                          $haber_basico_nuevo=floor($haber_basico_ant+$haber_basico_ant*$porcentaje_smn/100);
+                          // $haber_basico_nuevo=floor($haber_basico_ant+$haber_basico_ant*$porcentaje_smn/100);
+                           $haber_basico_nuevo=$haber_basico_ant+$haber_basico_ant*$porcentaje_smn/100;
                           $porcentaje_inc=$porcentaje_smn;
                           $estilo="style='background:#d4e6f1;'";
                         }else{
-                          $haber_basico_nuevo=floor($haber_basico_ant+$haber_basico_ant*$porcentaje_hb/100);
+                          // $haber_basico_nuevo=floor($haber_basico_ant+$haber_basico_ant*$porcentaje_hb/100);
+                          $haber_basico_nuevo=$haber_basico_ant+$haber_basico_ant*$porcentaje_hb/100;
                           $porcentaje_inc=$porcentaje_hb;
                           $estilo="";  
                         }
@@ -170,11 +172,12 @@ while ($rowNoAdmitidos = $stmtNoAdmitidos->fetch(PDO::FETCH_BOUND)) {
                      $stmtRetirados->bindColumn('haber_basico', $haber_basico_ant_retirado);
                      while ($rowRetirados = $stmtRetirados->fetch(PDO::FETCH_BOUND)) {
                         if($haber_basico_ant_retirado<=$minimo_salarial_config){//para salario por debajo o igual al salario minimo nacional
-                          $haber_basico_nuevo_retirado=floor($haber_basico_ant_retirado+$haber_basico_ant_retirado*$porcentaje_smn/100);
+                          // $haber_basico_nuevo_retirado=floor($haber_basico_ant_retirado+$haber_basico_ant_retirado*$porcentaje_smn/100);
+                           $haber_basico_nuevo_retirado=$haber_basico_ant_retirado+$haber_basico_ant_retirado*$porcentaje_smn/100;
                           $porcentaje_inc=$porcentaje_smn;
                           $estilo="style='background:#d4e6f1;'";
                         }else{
-                          $haber_basico_nuevo_retirado=floor($haber_basico_ant_retirado+$haber_basico_ant_retirado*$porcentaje_hb/100);
+                          $haber_basico_nuevo_retirado=$haber_basico_ant_retirado+$haber_basico_ant_retirado*$porcentaje_hb/100;
                           $porcentaje_inc=$porcentaje_hb;
                           $estilo="";  
                         }

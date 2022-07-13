@@ -81,7 +81,7 @@ function addCuentaContable(obj) {
   }
   var glosa_det=$("#glosa").val();
   var tipoComprobante=document.getElementById("tipo_comprobante").value;
-  console.log("tipocomprobante: "+tipoComprobante);
+  // console.log("tipocomprobante: "+tipoComprobante);
   if(tipoComprobante>0){
       numFilas++;
       cantidadItems++;
@@ -91,7 +91,7 @@ function addCuentaContable(obj) {
       itemFacturas.push(nfac);
       itemEstadosCuentas.push(nfac);
       document.getElementById("cantidad_filas").value=numFilas;
-      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+      // console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
       fi = document.getElementById('fiel');
       contenedor = document.createElement('div');
       contenedor.id = 'div'+numFilas;  
@@ -430,8 +430,8 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       $("#tipo_proveedorcliente"+fila).val(estado_cuentas[i].tipo_estado_cuenta);
       $("#tipo_estadocuentas_casoespecial"+fila).val(estado_cuentas[i].cod_cuentaaux);
 
-      console.log("tipo: "+estado_cuentas[i].tipo);
-      console.log("ProvCliente: "+estado_cuentas[i].tipo_estado_cuenta);
+      // console.log("tipo: "+estado_cuentas[i].tipo);
+      // console.log("ProvCliente: "+estado_cuentas[i].tipo_estado_cuenta);
 
       contador++;   
       break;  
@@ -7525,7 +7525,7 @@ function verEstadosCuentas(fila,cuenta){
   var banderaContinuar=1;
   var banderaCerrarEC=0;
 
-  console.log("debe:"+debeX+" haber:"+haberX);
+  // console.log("debe:"+debeX+" haber:"+haberX);
   if( debeX==0 && haberX==0 ){
     $('#msgError').html("<p>Debe existir un Monto Válido ya sea en el Debe o en el Haber.</p>");
     $("#modalAlert").modal("show");
@@ -7541,7 +7541,7 @@ function verEstadosCuentas(fila,cuenta){
       banderaCerrarEC=1;
       $("#monto_estadocuenta").val(haberX);
     }
-    console.log("CERRAR EC: "+banderaCerrarEC);
+    // console.log("CERRAR EC: "+banderaCerrarEC);
 
     var cod_cuenta=$("#cuenta"+fila).val();
     var cod_cuenta_auxiliar=$("#cuenta_auxiliar"+fila).val();
@@ -20092,10 +20092,10 @@ function agregaformVacaciones(datos){
   // b.setAttribute("max", d[2]);
 }
 
-function RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,observaciones_modal,ing_planilla,fecha_actual){
+function RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,tipo_vacacion,ing_planilla,fecha_actual){
   $.ajax({
     type:"POST",
-    data:"codigo_personal_modal="+codigo_personal_modal+"&gestion_modal="+gestion_modal+"&dias_vacacion="+dias_vacacion+"&fecha_inicio_modal="+fecha_inicio_modal+"&fecha_final_modal="+fecha_final_modal+"&observaciones_modal="+observaciones_modal,
+    data:"codigo_personal_modal="+codigo_personal_modal+"&gestion_modal="+gestion_modal+"&dias_vacacion="+dias_vacacion+"&fecha_inicio_modal="+fecha_inicio_modal+"&fecha_final_modal="+fecha_final_modal+"&tipo_vacacion="+tipo_vacacion,
     url:"vacaciones_permisos/vacaciones_save.php",
     success:function(r){
       // console.log(r);
@@ -20411,6 +20411,7 @@ function CerrarPlanillaRetroactivo(cod_planilla){
 }
 
 
+
 function mostrarTraspasosSucursalesCosteo(cod_personal){ 
   window.open('costeo_general/filtro.php', '_blank'); 
 }
@@ -20426,4 +20427,186 @@ function seleccionar_traspasos_sucursales_nuevo(){
 
 function proceso_costeo_general_sucursales(){
   window.open('costeo_general/rpt_costeo_pendientes_from.php', '_blank'); 
+}
+
+function registrar_planilla_indenminzaciones(){
+  var cod_mes_gestion=document.getElementById("cod_mes_gestion").value; 
+  if(cod_mes_gestion==0 || cod_mes_gestion=="" || cod_mes_gestion==" "){
+    document.getElementById('cod_mes_gestion').focus();
+    //Swal.fire("Informativo", "Por favor, introduzca días trabajados de Lunes a Sabado", "warning");  
+  }else{
+    $.ajax({
+      type:"POST",
+      data:"cod_mes_gestion="+cod_mes_gestion,
+      url:"planillas/generarPlanillaIndemnizaciones.php", 
+      success:function(r){
+        detectarCargaAjax();
+        if(r==1){              
+          alerts.showSwal('success-message','index.php?opcion=planillasIndemnizacionesPersonal');
+        }else{
+          if(r==0){
+            Swal.fire("Informativo", "La planilla ya se encuentra registrada. Gracias..", "warning");
+            $('#modalGenerarPlanilla').modal('hide');
+          }else{
+            Swal.fire("Ocurrió un error! :(", "Contáctese con el administrador.", "warning");  
+            $('#modalGenerarPlanilla').modal('hide');
+          }
+        }
+      }
+    });
+  }
+}
+
+
+
+function cargarCuentasxCobrarPeriodo(){
+  var cuentas_auxiliares = $("#cuentas_auxiliares").val();
+  var unidad_costo = $("#unidad_costo").val();
+  var area_costo = $("#area_costo").val();
+
+  var unidades_x = $("#unidades_x").val();
+  var gestion_x = $("#gestion_x").val();
+  var desde_x = $("#desde_x").val();
+  var hasta_x = $("#hasta_x").val();
+  var cuentai_x = $("#cuentai_x").val();
+  var cierre_anterior = $("#cierre_anterior").val(); 
+  
+  if(cuentas_auxiliares!="" || unidad_costo !="" || area_costo !=""){
+    
+    var url ="ajax_contenedor_facturasxpagar.php";
+
+    if(cierre_anterior==1){
+      var parametros={"unidades":unidades_x,"gestion":gestion_x,"desde":desde_x,"hasta":hasta_x,"cuentai":cuentai_x,"cuentas_auxiliares":cuentas_auxiliares,"unidad_costo":unidad_costo,"area_costo":area_costo,"cierre_anterior":cierre_anterior};
+    }else{
+      var parametros={"unidades":unidades_x,"gestion":gestion_x,"desde":desde_x,"hasta":hasta_x,"cuentai":cuentai_x,"cuentas_auxiliares":cuentas_auxiliares,"unidad_costo":unidad_costo,"area_costo":area_costo};
+    }
+    
+    $.ajax({
+      type: "POST",
+      dataType: 'html',
+      url: url,
+      data: parametros,
+      beforeSend: function () {
+      $("#texto_ajax_titulo").html("Listando Cuentas por Cobrar..."); 
+        iniciarCargaAjax();
+      },        
+      success:  function (resp) {
+        detectarCargaAjax();
+         $("#texto_ajax_titulo").html("Procesando Datos...");
+         //$("#data_pagosproveedores").append(resp);
+         $("#data_cuentasxcobrar").html(resp);
+         $('.selectpicker').selectpicker("refresh");
+      }
+    });
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar todos los campos.", "warning");
+  }
+}
+
+
+function verificarExistenviaCI(codigo){
+  if(codigo==0){
+    var identificacion=document.getElementById("identificacion").value; 
+    $.ajax({
+      type:"POST",
+      data:"identificacion="+identificacion,
+      url:"personal/ajax_buscaridentificacion.php", 
+      success:function(r){
+        var respuesta=r.split('@');
+        estado = respuesta[0];
+        nombre = respuesta[1];
+        if(estado==1){
+          document.getElementById("identificacion").value="";
+          document.getElementById('identificacion').focus();
+          Swal.fire("Informativo", "Este numero de identificación ya se encuentra en nuestra Base de datos (Personal: "+nombre+" -> Estado: Activo)", "warning");
+        }else{
+          if(estado==2){
+            document.getElementById("identificacion").value="";
+            document.getElementById('identificacion').focus();
+            Swal.fire("Informativo", "Este numero de identificación ya se encuentra en nuestra Base de datos (Personal: "+nombre+" -> Estado: Inactivo)", "warning");
+          }else{
+            if(estado==3){
+              document.getElementById("identificacion").value="";
+              document.getElementById('identificacion').focus();
+              Swal.fire("Informativo", "Este numero de identificación ya se encuentra en nuestra Base de datos (Personal: "+nombre+" -> Estado: Retirado)", "warning");
+            }
+          }
+        }
+      }
+    });
+  }
+}
+
+
+function AgregarDescuentosPersonalConta(obj) {
+    if($("#add_boton").length){
+      $("#add_boton").attr("disabled",true);
+    }
+    numFilas++;
+    // cantidadItems++;
+    filaActiva=numFilas;
+    document.getElementById("cantidad_filas").value=numFilas;
+    // console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+    fi = document.getElementById('fiel');
+    contenedor = document.createElement('div');
+    contenedor.id = 'div'+numFilas;  
+    fi.type="style";
+    fi.appendChild(contenedor);
+    var divDetalle;
+    divDetalle=$("#div"+numFilas);
+    //document.getElementById('nro_cuenta').focus();
+    ajax=nuevoAjax();
+    ajax.open("GET","ajax_descuentosdetalle.php?idFila="+numFilas,true);
+    ajax.onreadystatechange=function(){
+      if (ajax.readyState==4) {
+        divDetalle.html(ajax.responseText);
+        divDetalle.bootstrapMaterialDesign();
+        // $('#modal_editservicio').val("");
+        // $('#cantidad_servicios').val("");
+        // $('#modal_montoserv').val("");
+        $('.selectpicker').selectpicker("refresh");
+        if($("#add_boton").length){
+          $("#add_boton").removeAttr("disabled");
+        }
+        return false;
+     }
+    }   
+    ajax.send(null);
+}
+
+
+function borrarItemDescuentoPersonalConta(idF){ 
+  var elem = document.getElementById('div'+idF);
+  elem.parentNode.removeChild(elem);
+  if(idF<numFilas){
+    for (var i = parseInt(idF); i < (numFilas+1); i++) {
+      var nuevoId=i+1;
+      $("#div"+nuevoId).attr("id","div"+i);
+      $("#cod_personal"+nuevoId).attr("name","cod_personal"+i);
+      $("#cod_personal"+nuevoId).attr("id","cod_personal"+i);
+      $("#cod_tipodescuento"+nuevoId).attr("name","cod_tipodescuento"+i);
+      $("#cod_tipodescuento"+nuevoId).attr("id","cod_tipodescuento"+i);
+
+      $("#cod_contracuenta"+nuevoId).attr("name","cod_contracuenta"+i);
+      $("#cod_contracuenta"+nuevoId).attr("id","cod_contracuenta"+i);
+      $("#monto_sistema"+nuevoId).attr("name","monto_sistema"+i);
+      $("#monto_sistema"+nuevoId).attr("id","monto_sistema"+i);       
+
+      $("#monto_deposito"+nuevoId).attr("name","monto_deposito"+i);
+      $("#monto_deposito"+nuevoId).attr("id","monto_deposito"+i);       
+
+      $("#monto_diferencia"+nuevoId).attr("name","monto_diferencia"+i);
+      $("#monto_diferencia"+nuevoId).attr("id","monto_diferencia"+i);       
+
+      $("#glosa"+nuevoId).attr("name","glosa"+i);
+      $("#glosa"+nuevoId).attr("id","glosa"+i);       
+    }
+  } 
+  numFilas=numFilas-1;
+  // cantidadItems=cantidadItems-1;
+  // filaActiva=numFilas;
+  document.getElementById("cantidad_filas").value=numFilas;
+  // document.getElementById("totalhab").value=numFilas;
+  // $("#monto_total").val(numFilas);
+  // console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
 }

@@ -87,8 +87,8 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
               <i class="material-icons"><?= $iconCard; ?></i>
             </div>
             <!-- <h4 class="card-title">Permisos del Personal</h4> -->
-            <h3 style="color:#2c3e50;"><b>Permisos del Personal</b></h3>
-            <center><b><span style="color:black;font-size: 17px;">Solicitante : <?=namePersonalCompleto($cod_personal_q)?> - Sucursal : <?=nameArea($cod_area)?></span></b></center>
+            <h3 style="color:#2c3e50;"><b>Mis Permisos</b></h3>
+            <center><b><span style="color:black;font-size: 17px;"><?=namePersonalCompleto($cod_personal_q)?> -  <?=nameArea($cod_area)?></span></b></center>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -204,19 +204,22 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
         </div>
           <div class="card-footer fixed-bottom">
             <?php if(isset($_GET['q'])){ ?>
-              <button class="btn btn-success" onClick="location.href='index.php?opcion=permisosPersonalForm&q=<?=$q?>&a=<?=$a?>&s=<?=$s?>'">Registrar Permiso</button>
+              <button class="btn btn-success btn-sm" onClick="location.href='index.php?opcion=permisosPersonalForm&q=<?=$q?>&a=<?=$a?>&s=<?=$s?>'">Nuevo Permiso</button>
               <?php 
               if($admin==1){?>
-                <button class="btn btn-primary" onClick="location.href='index.php?opcion=permisosPersonalListaADM&q=<?=$q?>&a=<?=$a?>&s=<?=$s?>'" style="background: #dc7633;">Autorización de Permisos <span class="count bg-warning" style="width:20px;height: 20px;font-size: 12px;" ><b><?=$pendientes_aprobacion?></b></span></button>
+                <button class="btn btn-primary btn-sm" onClick="location.href='index.php?opcion=permisosPersonalListaADM&q=<?=$q?>&a=<?=$a?>&s=<?=$s?>'" style="background: #dc7633;">Autorización de Permisos <span class="count bg-warning" style="width:20px;height: 20px;font-size: 12px;" ><b><?=$pendientes_aprobacion?></b></span></button>
               <?php } ?>
             <?php }else{?>
-              <button class="btn btn-success" onClick="location.href='index.php?opcion=permisosPersonalForm'">Registrar Permiso</button>
+              <button class="btn btn-success btn-sm" onClick="location.href='index.php?opcion=permisosPersonalForm'">Nuevo Permiso</button>
               <?php 
               if($admin==1){?>
-                <button class="btn btn-default" onClick="location.href='index.php?opcion=permisosPersonalListaADM'" style="background: #dc7633;">Autorización de Permisos <span class="count bg-warning" style="width:20px;height: 20px;font-size: 12px;" ><b><?=$pendientes_aprobacion?></b></span></button>
+                <button class="btn btn-default btn-sm" onClick="location.href='index.php?opcion=permisosPersonalListaADM'" style="background: #dc7633;">Autorización de Permisos <span class="count bg-warning" style="width:20px;height: 20px;font-size: 12px;" ><b><?=$pendientes_aprobacion?></b></span></button>
               <?php } ?>
 
             <?php }?>
+
+            <button class="btn btn-info btn-sm" onClick="location.href='index.php?opcion=permisosPersonalListaADMrrhh'">Nuevo Permiso Terceros</button>
+
           </div>
       </div>
     </div>

@@ -38,13 +38,11 @@ foreach ($areas as $valor ) {
 }
 
 
-$sql="SELECT codigo,cod_tipo_identificacion,identificacion,cod_lugar_emision,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,haber_basico,CONCAT_WS(' ',paterno,materno,primer_nombre)as personal,cod_tipoafp,celular,telefono,email,email_empresa,ing_planilla from personal  where cod_estadopersonal=1 and cod_estadoreferencial=1 and cod_area in ($areaString) and cod_unidadorganizacional in ($unidadOrgString) order by paterno ";  
+$sql="SELECT codigo,cod_tipo_identificacion,identificacion,cod_lugar_emision,DATE_FORMAT(fecha_nacimiento,'%d/%m/%Y') as fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,haber_basico,CONCAT_WS(' ',paterno,materno,primer_nombre)as personal,cod_tipoafp,celular,telefono,email,email_empresa,DATE_FORMAT(ing_planilla,'%d/%m/%Y') as ing_planilla,turno from personal  where cod_estadopersonal=1 and cod_estadoreferencial=1 and cod_area in ($areaString) and cod_unidadorganizacional in ($unidadOrgString) order by paterno ";  
 
 //echo $sql;
-
 $stmtActivos = $dbh->prepare($sql);
 $stmtActivos->execute();
-
 // bindColumn
 $stmtActivos->bindColumn('codigo', $codigo);
 $stmtActivos->bindColumn('cod_tipo_identificacion', $cod_tipo_identificacion);
@@ -62,6 +60,7 @@ $stmtActivos->bindColumn('email', $email);
 $stmtActivos->bindColumn('email_empresa', $email_empresa);
 $stmtActivos->bindColumn('ing_planilla', $ing_planilla);
 $stmtActivos->bindColumn('cod_tipoafp', $cod_tipoafp);
+$stmtActivos->bindColumn('turno', $turno);
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -73,8 +72,8 @@ $stmtActivos->bindColumn('cod_tipoafp', $cod_tipoafp);
                     <h6 class="card-title">Exportar como:</h6>
                   </div>
                   <h4 class="card-title"> 
-                    <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
-                      Personal 
+                    <img  class="card-img-top"  src="../marca.png" style="width:50px;height: 50px;">
+                      Reporte del Personal 
                   </h4>
                   <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                        
                   <h6 class="card-title">Areas: <?=$stringAreas;?></h6>
@@ -89,19 +88,27 @@ $stmtActivos->bindColumn('cod_tipoafp', $cod_tipoafp);
                           '<th class="font-weight-bold">Personal</th>'.
                           '<th class="font-weight-bold">C.I.</th>'.
                           '<th class="font-weight-bold">Of/Area</th>'.
-                          
+                          '<th class="font-weight-bold">Turno</th>'.
+                          '<th class="font-weight-bold">F. Nac.</th>'.
                           '<th class="font-weight-bold">F. Ing.</th>'.
                           '<th class="font-weight-bold">Cargo</th>'.
-                          '<th class="font-weight-bold">Básico</th>'.
+                          '<th class="font-weight-bold">H.Básico</th>'.
                           '<th class="font-weight-bold">Afp</th>'.
-                          '<th class="font-weight-bold">Tel.</th>'.
-                          '<th class="font-weight-bold">Email</th>'.                          
                         '</tr>'.
                       '</thead>'.
                       '<tbody>';
                         //<?php  
                         $contador = 0;
                         while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
+                          $nombre_turno="";
+                          switch ($turno) {
+                            case 1:
+                              $nombre_turno="TM";
+                              break;
+                            case 2:
+                              $nombre_turno="TT";
+                              break;                            
+                          }
                           if($identificacion=="")$identificacion=0;
                           $contador++;   
                           $html.='<tr>'.
@@ -109,13 +116,12 @@ $stmtActivos->bindColumn('cod_tipoafp', $cod_tipoafp);
                             '<td class="text-left small">'.$personal.'</td>'.
                             '<td class="text-left small">'.obtenerNombreIdentificacionPersona($cod_tipo_identificacion,1).' '.$identificacion.' '.obtenerlugarEmision($cod_lugar_emision,1).'</td>'.
                             '<td class="text-left small">'.abrevUnidad_solo($cod_unidadorganizacional).'/'.abrevArea_solo($cod_area).'</td>'.
-                            
+                            '<td class="text-left small">'.$nombre_turno.'</td>'.
+                            '<td class="text-right small">'.$fecha_nacimiento.'</td>'.
                             '<td class="text-right small">'.$ing_planilla.'</td>'.
                             '<td class="text-left small">'.nameCargo($cod_cargo).'</td>'.
                             '<td class="text-center small">'.formatNumberDec($haber_basico).'</td>'.
                             '<td class="text-left small">'.obtenerNameAfp($cod_tipoafp,1).'</td>'.
-                            '<td class="text-left small">'.trim($telefono.' - '.$celular,' - ').'</td>'.
-                            '<td class="text-left small">'.trim($email.' - '.$email_empresa,' - ').'</td>'.
                           '</tr>';
                         } 
                       $html.='</tbody>'.

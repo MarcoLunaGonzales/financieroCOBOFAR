@@ -18,7 +18,7 @@ $string_cargos=$_GET['string_cargos'];
 $string_cargos=trim($string_cargos,",");
 
 $minimo_salarial_config=obtenerValorConfiguracionPlanillas(1);
-$minimo_salarial_nuevo=floor($minimo_salarial_config+$minimo_salarial_config*$porcentaje_smn/100);
+$minimo_salarial_nuevo=$minimo_salarial_config+$minimo_salarial_config*$porcentaje_smn/100;
 
 // $cod_cargo_gerencia="2,3";
 $anio=date('Y');
@@ -138,7 +138,7 @@ while ($rowNoAdmitidos = $stmtNoAdmitidos->fetch(PDO::FETCH_BOUND)) {
                            $porcentaje_inc=$porcentaje_smn;
                            $estilo="style='background:#d4e6f1;'";
                         }else{
-                          $haber_basico_nuevo=floor($haber_basico_ant+$haber_basico_ant*$porcentaje_hb/100);
+                          $haber_basico_nuevo=$haber_basico_ant+$haber_basico_ant*$porcentaje_hb/100;
                           $porcentaje_inc=$porcentaje_hb;
                           $estilo="";  
                         }
@@ -186,7 +186,7 @@ while ($rowNoAdmitidos = $stmtNoAdmitidos->fetch(PDO::FETCH_BOUND)) {
                            $porcentaje_inc=$porcentaje_smn;
                            $estilo="style='background:#d4e6f1;'";
                         }else{
-                          $haber_basico_nuevo_retirado=floor($haber_basico_ant_retirado+$haber_basico_ant_retirado*$porcentaje_hb/100);
+                          $haber_basico_nuevo_retirado=$haber_basico_ant_retirado+$haber_basico_ant_retirado*$porcentaje_hb/100;
                           $porcentaje_inc=$porcentaje_hb;
                           $estilo="";  
                         }

@@ -21,15 +21,15 @@ $tipo_cp=$_POST["tipo_cp"];
 $ver_saldo=$_POST["ver_saldo"];
 
 if($ver_saldo==3){//saldos Generales
-   
    include "reportesEstadoCuentasPrint_saldos.php";
+}elseif($ver_saldo==4){//moras facturas
+    include "reportesFacturasMora.php";
 }else{
 $proveedoresString=implode(",", $proveedores);
 $proveedoresStringAux="and e.cod_cuentaaux in ($proveedoresString)";
 if(count($proveedores)==(int)$_POST["numero_proveedores"]){
   $proveedoresStringAux="";
 }
-
 $StringCuenta=implode(",", $cuenta);
 $StringUnidades=implode(",", $unidad);
 

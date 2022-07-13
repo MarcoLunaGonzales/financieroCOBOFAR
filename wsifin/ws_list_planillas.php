@@ -85,7 +85,7 @@ function ListPlanillaRetroactivos($codigo_personal){
     // Preparamos
     $sql="SELECT p.codigo,p.cod_gestion,(select g.nombre from gestiones g where g.codigo=p.cod_gestion) as nombre_gestion
     from planillas_retroactivos p join planillas_retroactivos_detalle pd on p.codigo=pd.cod_planilla
-    where p.cod_estadoplanilla=3 and pd.cod_personal=$codigo_personal and p.cod_gestion>=3585";
+    where p.cod_estadoplanilla=3 and pd.cod_personal=$codigo_personal and p.cod_gestion>=3585";//solo mostrar mayor a 2022
     $stmt = $dbh->prepare($sql);
     $resp = false;
     $filas = array();
@@ -105,7 +105,7 @@ function ListPlanillaSuedos($codigo_personal){
     // Preparamos
     $sql="SELECT p.codigo,p.cod_gestion,p.cod_mes,(select m.nombre from meses m where m.codigo=p.cod_mes) as nombre_mes,(select g.nombre from gestiones g where g.codigo=p.cod_gestion) as nombre_gestion
         from planillas p join planillas_personal_mes pd on p.codigo=pd.cod_planilla
-        where p.cod_estadoplanilla=3 and pd.cod_personalcargo=$codigo_personal and p.cod_gestion>=3585";
+        where p.cod_estadoplanilla=3 and pd.cod_personalcargo=$codigo_personal and p.cod_gestion>=3585";//solo mostrar mayor a 2022
     $stmt = $dbh->prepare($sql);
     $resp = false;
     $filas = array();

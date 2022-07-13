@@ -23,7 +23,7 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 setlocale(LC_TIME, "Spanish");
-$fechaActual=date("Y-m-d");
+$fechaActual=date("Y-m-t");
 $mes=strToUpper(strftime('%B',strtotime($fechaActual)));
 $d=strftime('%d',strtotime($fechaActual));
 $m=strftime('%m',strtotime($fechaActual));
@@ -194,7 +194,7 @@ $data->bindColumn('cod_estadoreferencial', $codEstRef);
 		                    	</table>
 		                    	</div>
 		                    </div>
-		                   <input type="text" name="cantidad_filas" id="cantidad_filas" value="<?=$count?>">		            
+		                   <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$count?>">		            
 		              </fieldset>
 		            </div>
 				  	<div class="card-footer fixed-bottom">

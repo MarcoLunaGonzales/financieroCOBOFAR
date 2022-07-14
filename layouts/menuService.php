@@ -80,7 +80,7 @@ while ($row_submenu = $stmt_submenu->fetch(PDO::FETCH_ASSOC)) {
   $array_submenu[$codigoSubMenu]=$array_submenu_det;
 }
 
-var_dump($array_submenu);
+//var_dump($array_submenu);
 ?>
 <div class="sidebar" data-color="purple" data-background-color="<?=$estiloMenu?>" data-image="assets/img/scz.jpg">
   <div class="logo">

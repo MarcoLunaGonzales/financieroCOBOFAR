@@ -48,6 +48,11 @@ $stmt->bindColumn('estado_comprobante', $cod_estadocomprobante);
               <a class="btn btn-warning text-white" target="blank" style="background: #A00C75;height: 100px;padding-top: 25px;" onClick="proceso_costeo_general_sucursales()"><i class="material-icons" style="font-size: 60px;">price_change</i><br><br>
               <br>PROCESO DE COSTEO</a>
               <a class="btn btn-info" target="blank" style="background: #08B8BA;height: 100px;padding-top: 25px;" href="http://10.10.1.23/financieroCobofar/reportes_comercial/rptOp_movimientos_costo_sucursales.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>REPORTE VALORADO SUCURSALES</a>
+              <a class="btn btn-info" target="blank" style="background: #828282;height: 100px;padding-top: 25px;" href="http://10.10.1.23/financieroCobofar/reportes_comercial/rptOp_movimientos_costo_proveedor.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>REPORTE VALORADO SUCURSAL - PROVEEDORES</a>
+              <a class="btn btn-info" target="blank" style="background: #828282;height: 100px;padding-top: 25px;" href="http://10.10.1.23/financieroCobofar/reportes_comercial/rptOp_movimientos_costo.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>REPORTE VALORADO SUCURSAL - PRODUCTOS</a>
+              <a class="btn btn-info" target="blank" style="background: #828282;height: 100px;padding-top: 25px;" href="http://10.10.1.23/financieroCobofar/reportes_comercial/rptOp_ingresos_costo_cero.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>INGRESO COSTO CERO</a>
+              <a class="btn btn-info" target="blank" style="background: #828282;height: 100px;padding-top: 25px;" href="http://10.10.1.23/financieroCobofar/reportes_comercial/rptOp_salidas_costo_cero.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>SALIDA COSTO CERO</a>
+              <!-- <a class="btn btn-info" target="blank" style="background: #828282;height: 100px;padding-top: 25px;" href="http://10.10.1.23/financieroCobofar/reportes_comercial/rptOp_costo_vs_venta.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>COSTO MAYOR AL PRECIO</a> -->
 
             <?php
             }

@@ -4,7 +4,8 @@ require_once 'conexion.php';
 require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
-$globalGestion=$_SESSION["globalNombreGestion"];
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
+
 
 $dbh = new Conexion();
 
@@ -74,6 +75,7 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
                       $btn_enviar="";
                       $label="<span>";
                       $nombre_estado="";
+                      $titulo_icono="";
                       switch ($cod_estado) {
                         case 1://registro
                             $label="<span class='badge badge-default'>";
@@ -96,8 +98,8 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
                           case 3://revision
                             $btn_edit="d-none";
                             //$btn_printd="d-none";
-                            $btn_printc="d-none";
-                            // $btn_enviar="d-none";
+                            // $btn_printc="d-none";
+                            $btn_enviar="d-none";
                             $label="<span class='badge badge-warning'>";
                             $nombre_estado="En revisión";
                           break;
@@ -130,8 +132,9 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
                             <a href="comprobantes/imp.php?comp=<?=$cod_contabilizado;?>&mon=1" target="_blank" class="btn btn-danger <?=$btn_printc?>">
                               <i class="material-icons" title="Imprimir Comprobante" >print</i>
                             </a> 
-                            <a href="#" target="_blank" class="btn btn-info <?=$btn_enviar?>" > 
-                              <i class="material-icons" title="<?=$titulo_icono?>">send</i>
+                          
+                            <a href='index.php?opcion=descuentosCambiarEstado&codigo=<?=$codigo?>&sw=<?=$sw?>' rel="tooltip" class="btn btn-info btn-sm <?=$btn_enviar?>">
+                              <i class="material-icons" style="color:black"  title="<?=$titulo_icono?>">send</i>
                             </a>
                           </td>
                       </tr>
@@ -144,7 +147,8 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
         </div>
         
         <div class="card-footer fixed-bottom">
-          <a class="<?=$buttonNormal;?>" href="descuentos_conta/descuentos_detalle.php?codigo=0" target="_blank">Registrar</a>
+          <a class="<?=$buttonNormal;?> btn-sm" href="descuentos_conta/descuentos_detalle.php?codigo=0" target="_blank">Registrar</a>
+          <a class="btn btn-success btn-sm" href="descuentos_conta/descuentos_detalle_consolidado.php?codigo=0" target="_blank">Consolidar</a>
         </div>
         
       </div>

@@ -18,8 +18,7 @@ if($codigo>0){
     $result = $stmt->fetch();
     $glosa_cabecera = $result['glosa'];
     $fecha_cabecera = $result['fecha'];
-
-
+    
     $sql="select count(*) as contador from descuentos_conta_detalle d  where d.cod_descuento=$codigo";
     $stmtContador = $dbh->prepare($sql);
     $stmtContador->execute();
@@ -33,10 +32,6 @@ if($codigo>0){
 
     $contadorRegistros=0;
 }
-
-
-
-
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -204,12 +199,12 @@ if($codigo>0){
                                                         </div>
                                                         <div class="col-sm-1">
                                                           <div class="form-group">
-                                                            <input type="number" step="0.01" min="0" id="monto_deposito<?=$idFila;?>" name="monto_deposito<?=$idFila;?>" class="form-control text-primary text-right" value="<?=$monto_deposito?>" required="true">
+                                                            <input type="number" step="0.01" min="0" id="monto_deposito<?=$idFila;?>" name="monto_deposito<?=$idFila;?>" class="form-control text-primary text-right" value="<?=$monto_deposito?>" required="true" onchange="diferencia_descuento_personal(<?=$idFila?>)">
                                                           </div>
                                                         </div>
                                                         <div class="col-sm-1">
                                                           <div class="form-group">
-                                                              <input type="number" step="0.01" min="0" id="monto_diferencia<?=$idFila;?>" name="monto_diferencia<?=$idFila;?>" class="form-control text-primary text-right" value="<?=$monto_diferencia?>" required="true">
+                                                              <input type="number" step="0.01" min="0" id="monto_diferencia<?=$idFila;?>" name="monto_diferencia<?=$idFila;?>" class="form-control text-primary text-right" value="<?=$monto_diferencia?>" required="true" readonly style="background:#f2d7d5;">
                                                           </div>
                                                         </div>
                                                         <div class="col-sm-3">

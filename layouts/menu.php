@@ -219,12 +219,12 @@ if($menuModulo==0){
                     </a>
                 </li>
 
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                     <a class="nav-link" href="?opcion=descuentosContaListadmin">
                       <span class="sidebar-mini"> DCA </span>
                       <span class="sidebar-normal"> Descuentos Conta Admin</span>
                     </a>
-                </li>
+                </li> -->
 
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listDotacion">

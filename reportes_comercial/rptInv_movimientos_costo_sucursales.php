@@ -55,7 +55,7 @@ $totalTraspasosVenValGen=0;
       <th>Saldo Final</th>
       <?php
       if($_POST['tipo_cerrada']==0){
-        $stringBusqueda=" a.estado_pedidos=1  and cod_almacen in ($sucursal)";
+        $stringBusqueda=" cod_almacen in ($sucursal)";
       }else{
         $stringBusqueda=" (a.estado_pedidos!=1 or a.estado_pedidos is null  or cod_almacen in ($sucursal)) and cod_tipoalmacen=1 and c.cod_impuestos>0";
       }
@@ -63,6 +63,7 @@ $totalTraspasosVenValGen=0;
           from almacenes a join ciudades c on a.cod_ciudad=c.cod_ciudad 
           where $stringBusqueda
           order by a.nombre_almacen";
+          //echo $sql_listsucursales;
         $resp=mysqli_query($dbh,$sql_listsucursales);
         $string_sucursales="";
         $array_sucursales_nombres=[];

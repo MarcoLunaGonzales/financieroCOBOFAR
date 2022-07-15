@@ -49,21 +49,16 @@ if($flagSuccess){
         $monto_deposito=$_POST["monto_deposito".$i]; 
         $monto_diferencia=$_POST["monto_diferencia".$i]; 
         $glosa=$_POST["glosa".$i];
-
         $codigoDetalle=obtenerCodigoDescuentoDetalle();
         $sql="INSERT INTO descuentos_conta_detalle(codigo,cod_descuento,cod_area,fecha,cod_personal,cod_tipodescuento,cod_contracuenta,monto_sistema,monto_depositado,diferencia,glosa)
         values ('$codigoDetalle','$codigo','$cod_sucursal','$fecha','$cod_personal','$cod_tipodescuento','$cod_contracuenta','$monto_sistema','$monto_deposito','$monto_diferencia','$glosa')";
         $stmt = $dbh->prepare($sql);                
         $flagSuccess=$stmt->execute();
         
-        $sql="INSERT INTO descuentos_conta_detalle_mes(cod_descuento_detalle,mes,gestion,monto,cod_comprobante_detalle)
-        values ('$codigoDetalle','$mes','$gestion','$monto_diferencia',0)";
+        $sql="INSERT INTO descuentos_conta_detalle_mes(cod_descuento_detalle,mes,gestion,monto,cod_comprobante_detalle,cod_estado)
+        values ('$codigoDetalle','$mes','$gestion','$monto_diferencia',0,1)";
         $stmtDesMes = $dbh->prepare($sql);                
         $flagSuccess=$stmtDesMes->execute();
-
-        
-
-
     }    
     //subir archivos al servidor
     if(isset($_POST["cantidad_archivosadjuntos"])){

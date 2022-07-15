@@ -117,26 +117,25 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
                      ?>
                       <tr>
                         <td  class="td-actions text-right"><?=$index?></td>
-                          <td class="text-center small"><small><?=$fecha;?></small></td>
-                          <td class="text-left small"><small><?=$primer_nombre?> <?=$paterno?> <?=$materno?></small></td>
-                          <td class="text-left small"><small><?=$glosa;?></small></td>
-                          <td class="text-left small" ><small><?=$label.$nombre_estado?></span></small></td>
-                          <td class="text-center small"><small><?=$nombre_contabilizado;?></small></td>
-                          <td class="td-actions text-center">
-                            <a href="descuentos_conta/descuentos_detalle.php?codigo=<?=$codigo?>" target="_blank" class="btn btn-success <?=$btn_edit?>">
-                              <i class="material-icons" title="Editar Descuentos" >edit</i>
-                            </a>
-                            <a href="descuentos_conta/descuentos_detalle_print.php?codigo=<?=$codigo?>" target="_blank" class="btn btn-primary <?=$btn_printd?>" >
-                              <i class="material-icons" title="Imprimir Descuentos">print</i>
-                            </a> 
-                            <a href="comprobantes/imp.php?comp=<?=$cod_contabilizado;?>&mon=1" target="_blank" class="btn btn-danger <?=$btn_printc?>">
-                              <i class="material-icons" title="Imprimir Comprobante" >print</i>
-                            </a> 
-                          
-                            <a href='index.php?opcion=descuentosCambiarEstado&codigo=<?=$codigo?>&sw=<?=$sw?>' rel="tooltip" class="btn btn-info btn-sm <?=$btn_enviar?>">
-                              <i class="material-icons" style="color:black"  title="<?=$titulo_icono?>">send</i>
-                            </a>
-                          </td>
+                        <td class="text-center small"><small><?=$fecha;?></small></td>
+                        <td class="text-left small"><small><?=$primer_nombre?> <?=$paterno?> <?=$materno?></small></td>
+                        <td class="text-left small"><small><?=$glosa;?></small></td>
+                        <td class="text-left small" ><small><?=$label.$nombre_estado?></span></small></td>
+                        <td class="text-center small"><small><?=$nombre_contabilizado;?></small></td>
+                        <td class="td-actions text-center">
+                          <a href="descuentos_conta/descuentos_detalle.php?codigo=<?=$codigo?>" target="_blank" class="btn btn-success <?=$btn_edit?>">
+                            <i class="material-icons" title="Editar Descuentos" >edit</i>
+                          </a>
+                          <a href="descuentos_conta/descuentos_detalle_print.php?codigo=<?=$codigo?>" target="_blank" class="btn btn-primary <?=$btn_printd?>" >
+                            <i class="material-icons" title="Imprimir Descuentos">print</i>
+                          </a> 
+                          <a href="comprobantes/imp.php?comp=<?=$cod_contabilizado;?>&mon=1" target="_blank" class="btn btn-danger <?=$btn_printc?>">
+                            <i class="material-icons" title="Imprimir Comprobante" >print</i>
+                          </a>
+                          <a href='index.php?opcion=descuentosCambiarEstado&codigo=<?=$codigo?>&sw=<?=$sw?>' rel="tooltip" class="btn btn-info btn-sm <?=$btn_enviar?>">
+                            <i class="material-icons" style="color:black"  title="<?=$titulo_icono?>">send</i>
+                          </a>
+                        </td>
                       </tr>
                     <?php $index++; } ?>
                   </tbody>
@@ -148,7 +147,6 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
         
         <div class="card-footer fixed-bottom">
           <a class="<?=$buttonNormal;?> btn-sm" href="descuentos_conta/descuentos_detalle.php?codigo=0" target="_blank">Registrar</a>
-          <a class="btn btn-success btn-sm" href="descuentos_conta/descuentos_detalle_consolidado.php?codigo=0" target="_blank">Consolidar</a>
         </div>
         
       </div>

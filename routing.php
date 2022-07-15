@@ -2059,6 +2059,7 @@
 		if ($_GET['opcion']=='reportePagoProveedores') {
 			require_once('reportes_solicitud_recursos/reportePagoProveedores_from.php');
 		}
+
 		//reporte de comprobantes
 		if ($_GET['opcion']=='reporteComprobantes') {
 			require_once('reportes/reporteComprobantes_from.php');
@@ -2074,9 +2075,16 @@
 		if ($_GET['opcion']=='descuentosCambiarEstado') {
 			require_once('descuentos_conta/cambiar_estado.php');
 		}
-		// if ($_GET['opcion']=='descuentosContaListadmin') {
-		// 	require_once('descuentos_conta/descuentos_list_admin.php');
-		// }
+		//Descuentos Consolidado
+		if ($_GET['opcion']=='descuentosConsolidados_list') {
+			require_once('descuentos_conta/descuentos_consolidado_list.php');
+		}
+
+		//COSTEO GENERAL DE SUCURSALES
+		if ($_GET['opcion']=='listCosteoGeneralSucursales') {
+			require_once('costeo_general/list.php');
+		}
+
 
 	}else{
 		//require("paginaprincipal.php");

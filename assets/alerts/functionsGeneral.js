@@ -20411,6 +20411,24 @@ function CerrarPlanillaRetroactivo(cod_planilla){
 }
 
 
+
+function mostrarTraspasosSucursalesCosteo(cod_personal){ 
+  window.open('costeo_general/filtro.php', '_blank'); 
+}
+
+function seleccionar_traspasos_sucursales_nuevo(){
+  var p= $("#p").val();  
+  var fecha_desde= $("#fecha_desde").val();  
+  var fecha_hasta= $("#fecha_hasta").val();  
+  var glosa= $("#glosa").val();  
+  var id_sucursal= $("#id_sucursal").val();  
+  window.location="../costeo_general/seleccionar.php?fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta+"&glosa="+glosa+"&id_sucursal="+id_sucursal+"&p="+p;
+}
+
+function proceso_costeo_general_sucursales(){
+  window.open('costeo_general/rpt_costeo_pendientes_from.php', '_blank'); 
+}
+
 function registrar_planilla_indenminzaciones(){
   var cod_mes_gestion=document.getElementById("cod_mes_gestion").value; 
   if(cod_mes_gestion==0 || cod_mes_gestion=="" || cod_mes_gestion==" "){
@@ -20682,7 +20700,6 @@ function ajaxDetalleDescuentosUpdate(codigo_detalle){
 }
 
 function cambiarMesDescuentoPersonal(){
-
   var codigo_detalle=document.getElementById("codigo_detalle").value;
   var gestion=document.getElementById("gestionCab").value;
   var monto_descuento_detalle=document.getElementById("monto_descuento_detalle").value;
@@ -20701,7 +20718,6 @@ function cambiarMesDescuentoPersonal(){
   array_meses[10]=document.getElementById("monto_mesdescuento_11").value;  
   array_meses[11]=document.getElementById("monto_mesdescuento_12").value;
   array_meses[12]=document.getElementById("monto_mesdescuento_13").value; //enero siguiente anio
-
   var sumaDescuentos=document.getElementById("sumaDescuentos_detallemes").value;
   if(monto_descuento_detalle==sumaDescuentos){
     swal({
@@ -20745,29 +20761,47 @@ function sumaDescuentosDetalleMes(){
   var total= 13;
   for (var i=1;i<=total;i++){          
     var monto_mesdescuento=$("#monto_mesdescuento_"+i).val();
-    
-
     if(monto_mesdescuento>0){    
       sumal=sumal+parseFloat(monto_mesdescuento);
     }
   }
   document.getElementById("sumaDescuentos_detallemes").value=sumal;
+}
 
-  //   var monto_sistema=$("#monto_sistema"+id).val();
-  //   var monto_deposito=$("#monto_deposito"+id).val();
-
-  //   if(monto_sistema<0 || monto_sistema==0 || monto_sistema==null){
-  //     // Swal.fire("Informativo!", "El monto del sistema NO debe ser 0 o número negativo!", "warning");
-  //   }else{
-  //     if(monto_deposito<0 || monto_deposito==0 || monto_deposito==null){
-  //       // Swal.fire("Informativo!", "El monto depositado NO debe ser 0 o número negativo!", "warning");
-  //     }else{
-  //       var monto_descuento=parseFloat(monto_sistema)-parseFloat(monto_deposito);
-  //       monto_descuento=Math.round((monto_descuento + Number.EPSILON) * 100) / 100;//redondeamos a dos decimales
-  //        //agregamos al total      
-  //       $("#monto_diferencia"+id).val(monto_descuento);//irá en hidden 
-  //       // $("#modal_importe_dos_add"+id).val(number_format(monto_descuento,2));//para mostrar con formato
-  //     }
-  //   }  
+function GuardarConsolidadoDescuentos(mes,gestion,nombrePer,cod_personal){
+  // var codigo_detalle=document.getElementById("codigo_detalle").value;
+  // if(monto_descuento_detalle==sumaDescuentos){
+    swal({
+      title: '¿Estás Segur@ '+nombrePer+'?',
+      text: "¡No podrás revertir el proceso!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Si, Continuar!',
+      cancelButtonText: 'No, Cancelar!',
+      buttonsStyling: false
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          type:"POST",
+          data:"gestion="+gestion+"&mes="+mes+"&cod_personal="+cod_personal,
+          url:"procesar_descuento_consolidado.php",
+          success:function(r){
+            if(r==1){
+              alerts.showSwal('success-message','../index.php?opcion=descuentosConsolidados_list');
+              // Swal.fire("A ocurrido un error!", "No se pudo guardar los cambios.", "success");
+            }else{
+              Swal.fire("A ocurrido un error!", "No se pudo guardar los cambios.", "warning");
+            }
+          }
+        });
+        return(true);
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        return(false);
+      }
+    });
+  // }else{
+  //   Swal.fire("ERROR!", "La suma de los meses difiere del TOTAL ("+monto_descuento_detalle+"<>"+sumaDescuentos+")", "warning");
   // }
 }

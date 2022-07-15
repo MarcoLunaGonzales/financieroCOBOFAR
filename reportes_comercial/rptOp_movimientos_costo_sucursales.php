@@ -25,7 +25,7 @@ require("../conexion_comercial.php");
 	                	<div class="form-group">
 	                		<select name="sucursal[]" id="sucursal" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true" multiple data-actions-box="true">
                           <?php 
-                          $queryUO1 = "SELECT cod_almacen,nombre_almacen from almacenes where estado_pedidos=1 order by nombre_almacen";
+                          $queryUO1 = "SELECT cod_almacen,nombre_almacen from almacenes where estado_pedidos=1 or cod_almacen=1000 order by nombre_almacen";
                                 $resp=mysqli_query($dbh,$queryUO1);
                                 while($row=mysqli_fetch_array($resp)){  ?>
                               <option value="<?=$row['cod_almacen'];?>"><?=$row["nombre_almacen"];?></option>

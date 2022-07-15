@@ -8,7 +8,7 @@ require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 session_start();
-$dbh = new Conexion();
+//$dbh = new Conexion();
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
@@ -59,6 +59,7 @@ $cod_area_solicitud=522;
 
 
 $flagSuccess=false;
+$tipoComprobante="";$codComprobante=0;
 for ($i=1; $i <= (int)$items ; $i++) { 
   if($_POST["diferencia".$i]==0&&$_POST["cod_comprobante".$i]==""){ //crear solo si no hay diferencia
       $cuenta_salida=$_POST["cuenta_salida".$i]; 
@@ -70,13 +71,18 @@ for ($i=1; $i <= (int)$items ; $i++) {
       $cod_traspasos=$_POST["cod_traspasos".$i];    
       $nombreTraspaso=$_POST["nombre_traspasos".$i];    
       $concepto_contabilizacion=$glosa_ingreso." ".$nombreTraspaso;
-      $numeroComprobante =numeroCorrelativoComprobante($globalGestion,$cod_uo_solicitud,$tipoComprobante,$codMesActiva);
-      $codComprobante=obtenerCodigoComprobante();
-      $flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser);
+
+      if($tipoComprobante!=$_POST["tipo_comprobante".$i]){
+      }      
+
+        $numeroComprobante =numeroCorrelativoComprobante($globalGestion,$cod_uo_solicitud,$tipoComprobante,$codMesActiva);
+        $codComprobante=obtenerCodigoComprobante();
+        $flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser);        
+        $tipoComprobante=$_POST["tipo_comprobante".$i];
       if($flagSuccess!=false){
-        $sql="UPDATE salida_almacenes set costeo_cod_comprobante='$codComprobante' where cod_salida_almacenes in ($cod_traspasos);";
-        mysqli_query($enlaceCon,$sql);    
-        //mysqli_query($dbh,$sql);
+          $sql="UPDATE salida_almacenes set costeo_cod_comprobante='$codComprobante' where cod_salida_almacenes in ($cod_traspasos);";
+          mysqli_query($enlaceCon,$sql);    
+          //mysqli_query($dbh,$sql);
       }
       //detalle del comprobante
       $insDet=insertarDetalleComprobante($codComprobante,$cuenta_ingreso,$cuenta_ingreso_aux,$cod_uo_solicitud,$cod_area_solicitud,$debe,0,$concepto_contabilizacion,1);

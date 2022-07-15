@@ -19,9 +19,27 @@ $fechahastaTitulo= explode("-",$fechahasta);
 $hasta=$fechahastaTitulo[2].'/'.$fechahastaTitulo[1].'/'.$fechahastaTitulo[0];
 $fechaTitulo="De ".$desde." a ".$hasta;
 
+
+$existe=0;
+$sql="SELECT count(*) as conteo from costoscobofar.costo_promedio_mes where cod_gestion=YEAR('$fechaDesde') and cod_mes=MONTH('$fechaDesde');";
+$resp=mysqli_query($enlaceCon,$sql);
+
+while($dat=mysqli_fetch_array($resp)){ 
+   $existe=$dat[0];
+}
+
+$estiloMostrarExiste="d-none";
+$estiloMostrar="";
+if($existe>0){
+   $estiloMostrar="d-nonde"; 
+   $estiloMostrarExiste="d-none";
+ ?>
+ <?php 
+}
+
 ?>
 
-<div id="cargando_datos" class="">
+<div id="cargando_datos" class="<?=$estiloMostrar?>">
 <div  style="z-index: 9999;position: fixed;width: 100%;top:0;background: rgba(255, 255, 255);height: 100vh;color:#0A7576;padding: 50px;">
   <center>    
   <img src="../assets/img/clientes.jpg" width="200px">
@@ -36,7 +54,7 @@ $fechaTitulo="De ".$desde." a ".$hasta;
 <?php 
 
 ?>
-<div class="content">
+<div class="content" id="mensaje_ok" class="<?=$estiloMostrar?>">
   <div class="container-fluid">
         <div class="col-md-12">
           <div class="card">
@@ -57,19 +75,46 @@ $fechaTitulo="De ".$desde." a ".$hasta;
     </div>         
   </div>
 </div>
+
+<div class="content" id="mensaje_existen" class="<?=$estiloMostrarExiste?>">
+  <div class="container-fluid">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header <?=$colorCard;?> card-header-icon">
+              <div class="card-icon">
+                <i class="material-icons"><?=$iconCard;?></i>
+              </div>
+              <h4 class="card-title">Proceso Costeo Sucursales</h4>
+            </div>
+            <div class="card-body">
+              <div class="row"><i class="material-icons">check</i> <p>El proceso de costeo a finalizado: <b id="tiempo_costeo"></b> Tiempo Duración</p>                
+              </div>
+           </div>
+            <div class="card-footer">
+              <a href="rpt_costeo_pendientes_from.php" class="btn btn-success text-white">Regresar al formulario</a>
+            </div>
+          </div>    
+    </div>         
+  </div>
+</div>
+
+
+
+
+
 <script type="text/javascript">  
-  var parametros={"fecha_desde":"<?=$fechaDesde?>","fecha_hasta":"<?=$fechahasta?>"};
-  $.ajax({
-        type: "GET",
-        dataType: 'html',
-        url: "costeo_general.php",
-        data: parametros,
-        success:  function (resp) {
-          var r = resp.split("#####");
-          $("#tiempo_costeo").html(r[1]);
-          $("#cargando_datos").addClass("d-none");     
-        }
-  });
+  // var parametros={"fecha_desde":"<?=$fechaDesde?>","fecha_hasta":"<?=$fechahasta?>"};
+  // $.ajax({
+  //       type: "GET",
+  //       dataType: 'html',
+  //       url: "costeo_general.php",
+  //       data: parametros,
+  //       success:  function (resp) {
+  //         var r = resp.split("#####");
+  //         $("#tiempo_costeo").html(r[1]);
+  //         $("#cargando_datos").addClass("d-none");     
+  //       }
+  // });
 </script>
 
 

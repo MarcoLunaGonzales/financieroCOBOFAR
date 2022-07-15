@@ -8382,7 +8382,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
       $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
     }
     return $concepto_contabilizacion;
-  }
+  }  
   function obtenerDetalleFactura($codigo){
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT nombre FROM tipos_pago where codigo=$codigo");

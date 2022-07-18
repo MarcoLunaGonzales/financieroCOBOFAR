@@ -2081,6 +2081,20 @@
 			require_once('costeo_general/list.php');
 		}
 
+		if ($_GET['opcion']=='listCierreDiarioTesoreria') {
+			require_once('cierre_diario_tesoreria/list.php');
+		}
+		if ($_GET['opcion']=='registrarMovimientoTesoreria') {			
+			require_once('cierre_diario_tesoreria/registro.php');
+		}
+		if ($_GET['opcion']=='borrarMovimientoTesoreria') {
+			require_once('cierre_diario_tesoreria/saveDelete.php');
+		}
+		
+		if ($_GET['opcion']=='reporteMovimientoTesoreria') {
+			require_once('cierre_diario_tesoreria/reporte_diario.php');
+		}
+
 
 	}else{
 		//require("paginaprincipal.php");

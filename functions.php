@@ -13684,6 +13684,25 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
         $codigo=$row['codigo'];
      }
      return($codigo);
-  }
+   }
+
+   function obtenerSaldoCierreTesoreria($fecha){
+     $dbh = new Conexion();
+     $stmtIngresos = $dbh->prepare("SELECT SUM(ROUND(c.importe,2)) as importe FROM cierre_tesoreria c where c.estado=1 and c.fecha<'$fecha' and c.cod_tipocierre=1;");
+     $stmtIngresos->execute();
+     $ingresos=0;
+     while ($rowIngresos = $stmtIngresos->fetch(PDO::FETCH_ASSOC)) {
+        $ingresos=$rowIngresos['importe'];
+     }
+
+     $stmtSalidas = $dbh->prepare("SELECT SUM(ROUND(c.importe,2)) as importe FROM cierre_tesoreria c where c.estado=1 and c.fecha<'$fecha' and c.cod_tipocierre=2;");
+     $stmtSalidas->execute();
+     $salidas=0;
+     while ($rowSalidas = $stmtSalidas->fetch(PDO::FETCH_ASSOC)) {
+        $salidas=$rowSalidas['importe'];
+     }
+     return ($ingresos-$salidas);
+   }
+
 
 ?>

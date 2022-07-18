@@ -11,9 +11,7 @@ $globalNombreUnidadX=$_SESSION['globalNombreUnidad'];
 $globalNombreAreaX=$_SESSION['globalNombreArea'];
 // $obj=$_SESSION['globalMenuJson'];
 $menuModulo=$_SESSION['modulo'];
-
 $nombreModulo="";
-
 switch ($menuModulo) {
   case 1:
    $nombreModulo="RRHH";
@@ -34,7 +32,6 @@ switch ($menuModulo) {
   break;
 }
 
-
 if($menuModulo==0){
 ?>
  <script>window.location.href="index.php";</script>
@@ -44,17 +41,22 @@ $dbh = new Conexion();
 
  $stmt = $dbh->prepare("SELECT codigo,nombre,url,icono,txtNuevaVentana from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1 order by ordenar");
   $stmt->execute();
+  $i=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $codigoX=$row['codigo'];
-    $actividadX=$row['nombre'];
-    $paginaX=$row['url'];
-    $iconoX=$row['icono'];
+    // $codigoX=$row['codigo'];
+    // $actividadX=$row['nombre'];
+    // $paginaX=$row['url'];
+    // $iconoX=$row['icono'];
     // $txtNuevaVentanaX=$row['txtNuevaVentana'];
-    $array_menu[$codigoX]=array($codigoX,$actividadX,$paginaX,$iconoX);
+    $array_submenu['codigo']=$row['codigo'];
+    $array_submenu['nombre']=$row['nombre'];
+    $array_submenu['url']=$row['url'];
+    $array_submenu['icono']=$row['icono'];
+    $array_menu[$i]=$array_submenu;
+    $i++;
 }
 
-
-$sql="select DISTINCT a.codigo,a.nombre,a.url,a.icono,a.txtNuevaVentana,a.cod_padre
+$sql="SELECT DISTINCT a.codigo,a.nombre,a.url,a.icono,a.txtNuevaVentana,a.cod_padre
 from acceso_modulos_sistema_url a join acceso_modulos_sistema_perfiles_url b on a.codigo=b.cod_url
 where b.cod_perfil in ($globalPerfilX) AND a.cod_padre in (SELECT codigo from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1 order by ordenar)
 order by a.ordenar";
@@ -80,7 +82,6 @@ while ($row_submenu = $stmt_submenu->fetch(PDO::FETCH_ASSOC)) {
   $array_submenu[$codigoSubMenu]=$array_submenu_det;
 }
 
-//var_dump($array_submenu);
 ?>
 <div class="sidebar" data-color="purple" data-background-color="<?=$estiloMenu?>" data-image="assets/img/scz.jpg">
   <div class="logo">
@@ -108,14 +109,23 @@ while ($row_submenu = $stmt_submenu->fetch(PDO::FETCH_ASSOC)) {
     <ul class="nav">
 <?php
   
-  $stmt = $dbh->prepare("SELECT codigo,nombre,url,icono,txtNuevaVentana from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1 order by ordenar");
-  $stmt->execute();
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $codigoX=$row['codigo'];
-    $actividadX=$row['nombre'];
-    $paginaX=$row['url'];
-    $iconoX=$row['icono'];
-    $txtNuevaVentanaX=$row['txtNuevaVentana'];
+  // $stmt = $dbh->prepare("SELECT codigo,nombre,url,icono,txtNuevaVentana from acceso_modulos_sistema_url where cod_submodulo=$menuModulo and padre=1 order by ordenar");
+  // $stmt->execute();
+  // while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  //   $codigoX=$row['codigo'];
+  //   $actividadX=$row['nombre'];
+  //   $paginaX=$row['url'];
+  //   $iconoX=$row['icono'];
+  //   $txtNuevaVentanaX=$row['txtNuevaVentana'];
+
+  foreach ($array_menu as $valuex) 
+  {
+
+    $codigoX=$valuex['codigo'];
+    $actividadX=$valuex['nombre'];
+    $paginaX=$valuex['url'];
+    $iconoX=$valuex['icono'];
+    $txtNuevaVentanaX="";
 ?>
     <li class="nav-item ">
       <a class="nav-link" data-toggle="collapse" href="#<?=$paginaX;?>">
@@ -143,26 +153,29 @@ while ($row_submenu = $stmt_submenu->fetch(PDO::FETCH_ASSOC)) {
     $paginaSubMenu=$value['url'];
     $iconoSubMenu=$value['icono'];
     $txtNuevaVentana=$value['txtNuevaVentana'];
-    if($codigoSubMenu==105){
-      ?>
-      <li class="nav-item ">
-        <a class="nav-link" href="<?=$paginaSubMenu;?>?cod_personal=<?=$globalUserX?>" <?=$txtNuevaVentana;?> >
-          <span class="sidebar-mini"> <?=$iconoSubMenu;?> </span>
-          <span class="sidebar-normal"> <?=$nombreSubMenu; ?> </span>
-        </a>
-      </li>
-      <?php
-    }else{
-      ?>
-      <li class="nav-item ">
-        <a class="nav-link" href="<?=$paginaSubMenu;?>" <?=$txtNuevaVentana;?> >
-          <span class="sidebar-mini"> <?=$iconoSubMenu;?> </span>
-          <span class="sidebar-normal"> <?=$nombreSubMenu; ?> </span>
-        </a>
-      </li>
-      <?php
+    $cod_padreSubMenu=$value['cod_padre'];
+    if($codigoX==$cod_padreSubMenu){
+      if($codigoSubMenu==105){
+        ?>
+        <li class="nav-item ">
+          <a class="nav-link" href="<?=$paginaSubMenu;?>?cod_personal=<?=$globalUserX?>" <?=$txtNuevaVentana;?> >
+            <span class="sidebar-mini"> <?=$iconoSubMenu;?> </span>
+            <span class="sidebar-normal"> <?=$nombreSubMenu; ?> </span>
+          </a>
+        </li>
+        <?php
+      }else{
+        ?>
+        <li class="nav-item ">
+          <a class="nav-link" href="<?=$paginaSubMenu;?>" <?=$txtNuevaVentana;?> >
+            <span class="sidebar-mini"> <?=$iconoSubMenu;?> </span>
+            <span class="sidebar-normal"> <?=$nombreSubMenu; ?> </span>
+          </a>
+        </li>
+        <?php
+      }
     }
-      
+    
   } ?>
 
     <!--PARTE FINAL DE CADA MENU-->  

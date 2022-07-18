@@ -121,8 +121,8 @@ while($row=mysqli_fetch_array($resp)){
     $cod_gestion=codigoGestion($globalGestion);
     $globalMes=$array_fechaIngreso[1];
     $globalMes=str_pad($globalMes, 2, "0", STR_PAD_LEFT);
-
-    $nroCorrelativo=numeroCorrelativoComprobante($cod_gestion,$globalUnidad,$tipoComprobante,$globalMes);
+    $cod_uo_cc=1;//oficina central por defecto
+    
     $glosa="VENTAS SUC. ".$nombre_almacen." DE FECHA ".$fechaVenta;
     $fechaHoraActual=$fechaVenta;
     
@@ -133,8 +133,8 @@ while($row=mysqli_fetch_array($resp)){
             $sw_comprobante=1;
         }
     }
-    $cod_uo_cc=1;//oficina central por defecto
     // $cod_area_cc=obtenerCodigoAreaciduad_comercial($cod_ciudad);
+    $nroCorrelativo=numeroCorrelativoComprobante($cod_gestion,$globalUnidad,$tipoComprobante,$globalMes);
     $sqlInsert="INSERT INTO comprobantes (codigo,cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) 
     VALUES ($codigo_comprobante,'1', '$globalUnidad', '$globalGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fecha_comprobante', '$globalUser')";
     // echo $sqlInsert;

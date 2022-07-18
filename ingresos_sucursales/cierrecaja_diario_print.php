@@ -23,13 +23,10 @@ foreach ($sucursal as $sucursali) {
 $sucursalgString=trim($sucursalgString,",");
 
 $cod_tiposalida_efectivo=1001;
-$sql="SELECT s.cod_almacen,(select a.nombre_almacen from almacenes a where a.cod_almacen=s.cod_almacen)as nombre_almacen,s.fecha 
-  from salida_almacenes s 
-  where s.`cod_tiposalida`= $cod_tiposalida_efectivo  and s.`cod_almacen` in (select a.cod_almacen 
-from almacenes a, ciudades c
-where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgString)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' 
+$sql="SELECT s.cod_almacen,a.nombre_almacen,s.fecha,a.cod_ciudad
+  from salida_almacenes s join almacenes a on s.cod_almacen=a.cod_almacen
+  where s.`cod_tiposalida`= $cod_tiposalida_efectivo  and a.`cod_ciudad` in (select c.cod_ciudad from ciudades c where c.cod_area in ($sucursalgString)) and CONCAT(s.fecha,' ',s.hora_salida) BETWEEN '$fechai 00:00:00' and '$fechaf 23:59:59' 
  GROUP BY s.cod_almacen,s.fecha 
- 
  order by s.fecha,2";
 // echo $sql;
 ?>
@@ -77,18 +74,35 @@ where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucu
                 while($row=mysqli_fetch_array($resp)){ 
                   $fechaVenta=$row['fecha'];
                   $cod_almacen_x=$row['cod_almacen'];
-                  $cod_ciudad=obtener_codciudad_almacen_nuevosis($cod_almacen_x,1);
+                  $cod_ciudad=$row['cod_ciudad'];
+                  
+                  // $cod_ciudad=obtener_codciudad_almacen_nuevosis($cod_almacen_x,1);
                   $nombre_almacen=$row['nombre_almacen'];
-                  $montoefectivo=obtenerMonto_ventas_nuevosis($fechaVenta,$cod_ciudad,-1000);
-                  // echo "<br>****".$montoefectivo."***<br>";
-                  $montoTarjeta=obtenerMontoTarjeta_ventas_nuevosis($fechaVenta,$cod_ciudad,-1000);
-                  $montodolarstring=obtenerMontodolares_ventas_nuevosis($fechaVenta,$cod_ciudad,-1000);
-                  $montodolarArray=explode("###",$montodolarstring);
-                  $monto_dolar=$montodolarArray[0];
-                  $monto_dolar_bs=$montodolarArray[1];
+                  // $montoefectivo=obtenerMonto_ventas_nuevosis($fechaVenta,$cod_ciudad,-1000);
+                  // // echo "<br>****".$montoefectivo."***<br>";
+                  // $montoTarjeta=obtenerMontoTarjeta_ventas_nuevosis($fechaVenta,$cod_ciudad,-1000);
+                  // $montodolarstring=obtenerMontodolares_ventas_nuevosis($fechaVenta,$cod_ciudad,-1000);
+                  // $montodolarArray=explode("###",$montodolarstring);
+                  // $monto_dolar=$montodolarArray[0];
+                  // $monto_dolar_bs=$montodolarArray[1];
+
+
+                  $srting_montos=obtenerMonto_ventas_nuevosis_neto($fechaVenta,$cod_ciudad,-1000);
+                  $montosArray=explode("###",$srting_montos);
+                  $montoefectivo=$montosArray[0];
+                  $montoTarjeta=$montosArray[1];
+                  $montoTrasferencia=$montosArray[2];
+                  $montoQr=$montosArray[5];
+                  $monto_dolar=$montosArray[3];
+                  $monto_dolar_bs=$montosArray[4];
+                  
+
+
                   $montoAnulada=obtenerMontoAnuladas_ventas_nuevosis($fechaVenta,$cod_ciudad,-1000);
                   $monto_depositado=obtenerMontodepositado_general_nuevosis2($fechaVenta,$cod_ciudad);
                   $monto_depositado_dolar=obtenerMontodepositado_dolar_general_nuevosis2($fechaVenta,$cod_ciudad);
+
+
                   $monto_venta=$montoefectivo+$montoTarjeta-$montoAnulada-$monto_dolar_bs;
                   $monto_depositar=$montoefectivo-$montoAnulada-$monto_dolar_bs;
                   $totalEfectivo+=$montoefectivo; 
@@ -122,9 +136,7 @@ where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucu
                     <td <?=$label_style_bs?> class="text-right"><small><?=number_format($monto_depositado,2,".",",");?></small></td>
                     <td <?=$label_style_usd?> class="text-right"><small><?=number_format($monto_depositado_dolar,2,".",",");?></small></td>
                     <td class="text-right"><small><?=number_format($monto_venta,2,".",",");?></small></td>
-                    <td  class="td-actions text-right"><!-- <a href='#' rel="tooltip" class="btn btn-success" onclick="abrir_detalle_modal_cierres('<?=$fechaVenta?>','<?=$cod_ciudad?>');return false;" >
-                          <i class="material-icons" title="Ver Detalle">list</i>
-                        </a> -->
+                    <td  class="td-actions text-right">
                       </td>
                   </tr><?php 
                 } 

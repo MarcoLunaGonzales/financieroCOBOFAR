@@ -208,21 +208,21 @@ if($menuModulo==0){
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listDescuentos">
                       <span class="sidebar-mini"> D </span>
-                      <span class="sidebar-normal"> Descuentos</span>
+                      <span class="sidebar-normal">Tipos de Descuentos</span>
                     </a>
                 </li>
 
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=descuentosContaList">
                       <span class="sidebar-mini"> DC </span>
-                      <span class="sidebar-normal"> Descuentos Conta</span>
+                      <span class="sidebar-normal">Descuentos</span>
                     </a>
                 </li>
 
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=descuentosContaListadmin">
+                    <a class="nav-link" href="?opcion=descuentosConsolidados_list">
                       <span class="sidebar-mini"> DCA </span>
-                      <span class="sidebar-normal"> Descuentos Conta Admin</span>
+                      <span class="sidebar-normal"> Descuentos Consolidado</span>
                     </a>
                 </li>
 

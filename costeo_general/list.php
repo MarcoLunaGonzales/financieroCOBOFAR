@@ -52,7 +52,7 @@ $stmt->bindColumn('estado_comprobante', $cod_estadocomprobante);
               <a class="btn btn-info" target="blank" style="background: #828282;height: 100px;padding-top: 25px;" href="reportes_comercial/rptOp_movimientos_costo.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>REPORTE VALORADO SUCURSAL - PRODUCTOS</a>
               <a class="btn btn-info" target="blank" style="background: #828282;height: 100px;padding-top: 25px;" href="reportes_comercial/rptOp_ingresos_costo_cero.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>INGRESO COSTO CERO</a>
               <a class="btn btn-info" target="blank" style="background: #828282;height: 100px;padding-top: 25px;" href="reportes_comercial/rptOp_salidas_costo_cero.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>SALIDA COSTO CERO</a>
-              <!-- <a class="btn btn-info" target="blank" style="background: #828282;height: 100px;padding-top: 25px;" href="reportes_comercial/rptOp_costo_vs_venta.php"><i class="material-icons" style="font-size: 60px;">query_stats</i><br><br><br>COSTO MAYOR AL PRECIO</a> -->
+
 
             <?php
             }

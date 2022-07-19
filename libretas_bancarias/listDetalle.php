@@ -164,12 +164,12 @@ $stmtb->bindColumn('nombre', $nombre);
                           <td style="background:#B91E0B;">Saldo del Registro</td>
                           <td>Nro Doc / Nro Ref</td>
 
-                          <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
+                          <!-- <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
                           <th class="small bg-success" width="4%"><small>N° Fac.</small></th>      
                           <th class="small bg-success" width="7%"><small>Nit Fac.</small></th>
                           <th class="small bg-success" width="7%"><small>Razón Social Fac.</small></th>
-                          <th class="small bg-success" width="5%"><small>Monto Fac.</small></th>                          
-                          <td class="text-right">*</td>
+                          <th class="small bg-success" width="5%"><small>Monto Fac.</small></th> -->                          
+                          <!-- <td class="text-right">*</td> -->
                           <td class="text-right">Acciones</td>
                         </tr>
                       </thead>
@@ -272,8 +272,8 @@ $stmtb->bindColumn('nombre', $nombre);
                                   $facturaRazonSocial[$filaFac].="<br>".$facturaDetalle[$filaFac];
                                 }
                                 ?>
-                                <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></small></td>
-                                <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></small></td>
+                                <!-- <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></small></td> -->
+                                <!-- <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></small></td>
                                 <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNit)?></small></td>
                                 <td class="text-left" style="vertical-align: top;"><small><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaRazonSocial)?></small></small></td>                      
                                 <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaMonto)?></small>
@@ -287,7 +287,7 @@ $stmtb->bindColumn('nombre', $nombre);
                                   <?php }                                   
                                   ?>
                                   </small>
-                                </td>
+                                </td> -->
 
                             <td class="td-actions text-right">
                             <?php
@@ -332,12 +332,24 @@ $stmtb->bindColumn('nombre', $nombre);
                       <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Cargar Libreta desde Excel
                       </button>
-                      <div class="dropdown-menu menu-fixed">
-                        <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato BISA'); return false;"  class="dropdown-item">
+                      <div class="dropdown-menu">
+                        <a href="#" onclick="ponerHtmlElemento('<?=$nombre?>','titulo_excel');ponerVariableInput(<?=$codigoLibreta?>,'codigo');subirArchivoExcelLibretaBancariaMultiple(1,'Formato BISA'); return false;"  class="dropdown-item">
                                    <i class="material-icons">keyboard_arrow_right</i>Formato BISA
                         </a>
-                        <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato UNION'); return false;"  class="dropdown-item">
-                                   <i class="material-icons">keyboard_arrow_right</i>Formato UNION
+                        <a href="#" onclick="ponerHtmlElemento('<?=$nombre?>','titulo_excel');ponerVariableInput(<?=$codigoLibreta?>,'codigo');subirArchivoExcelLibretaBancariaMultiple(2,'Formato UNION'); return false;"  class="dropdown-item">
+                           <i class="material-icons">keyboard_arrow_right</i>Formato UNION
+                        </a>
+                        <a href="#" onclick="ponerHtmlElemento('<?=$nombre?>','titulo_excel');ponerVariableInput(<?=$codigoLibreta?>,'codigo');subirArchivoExcelLibretaBancariaMultiple(3,'Formato MERCANTIL'); return false;"  class="dropdown-item">
+                           <i class="material-icons">keyboard_arrow_right</i>Formato MERCANTIL
+                        </a>
+                        <a href="#" onclick="ponerHtmlElemento('<?=$nombre?>','titulo_excel');ponerVariableInput(<?=$codigoLibreta?>,'codigo');subirArchivoExcelLibretaBancariaMultiple(4,'Formato BNB'); return false;"  class="dropdown-item">
+                           <i class="material-icons">keyboard_arrow_right</i>Formato BNB
+                        </a>
+                        <a href="#" onclick="ponerHtmlElemento('<?=$nombre?>','titulo_excel');ponerVariableInput(<?=$codigoLibreta?>,'codigo');subirArchivoExcelLibretaBancariaMultiple(5,'Formato FIE'); return false;"  class="dropdown-item">
+                           <i class="material-icons">keyboard_arrow_right</i>Formato FIE
+                        </a>
+                        <a href="#" onclick="ponerHtmlElemento('<?=$nombre?>','titulo_excel');ponerVariableInput(<?=$codigoLibreta?>,'codigo');subirArchivoExcelLibretaBancariaMultiple(6,'Formato FASSIL'); return false;"  class="dropdown-item">
+                           <i class="material-icons">keyboard_arrow_right</i>Formato FASSIL
                         </a>
                       </div>
                   </div>
@@ -421,7 +433,7 @@ $stmtb->bindColumn('nombre', $nombre);
           </div>
           <br><br>
           <center><h4 id="tipo_formato_titulo2" class="font-weight-bold"></h4></center>
-          <div id="tabla_muestra_formato_a">
+          <div id="tabla_muestra_formato_1" class="d-none formato_tabla">
             <table class="table table-bordered small table-condensed">
               <thead>
                <tr style="background:#F9D820; color:#262C7B;">
@@ -455,7 +467,7 @@ $stmtb->bindColumn('nombre', $nombre);
               </tbody>
             </table>  
           </div>
-          <div id="tabla_muestra_formato_b" class="d-none">
+          <div id="tabla_muestra_formato_2" class="d-none formato_tabla">
             <table class="table table-bordered table-condensed">
                <thead>
                  <tr style="background:#223BC8; color:#F3F300;">
@@ -470,6 +482,112 @@ $stmtb->bindColumn('nombre', $nombre);
                <tbody>
                  <tr style="background:#F37200; color:#fff;">
                    <td>dd-mm-aaaa</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                 </tr>
+               </tbody>
+            </table>  
+          </div>
+          <div id="tabla_muestra_formato_3" class="d-none formato_tabla">
+            <table class="table table-bordered table-condensed">
+               <thead>
+                 <tr style="background:#0C4318; color:#fff; font-size: 10px;">
+                  <td>Fecha</td>  <td>Hora</td> <td>Cod. Bca.</td>  <td>Nro.Cheque</td> <td>Nro/Nom.Plantilla</td>  <td>Cod.Dep.Num</td>  <td>Doc.Depositante</td>  <td>Nombre/Denominación Depositante</td>  <td>Tipo transact</td>  <td>Descripción</td>  <td>Oficina</td>  <td>Banco</td>  <td>Tipo dep</td> <td>Nom.Destinatario</td> <td>Glosa</td>  <td>Originador</td> <td>Originador ACH</td> <td>Ciudad Origen</td>  <td>Débito</td> <td>Crédito</td>  <td>Saldo</td>
+
+
+
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr style="background:#fff; color:#000;font-size: 10px;">
+                   <td>dd-mm-aaaa</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                 </tr>
+               </tbody>
+            </table>  
+          </div>
+          <div id="tabla_muestra_formato_4" class="d-none formato_tabla">
+            <table class="table table-bordered table-condensed">
+               <thead>
+                 <tr style="background:#0EDA1D; color:#fff;font-size: 10px;">
+                  <td>Fecha</td>  <td>Hora</td> <td>Oficina</td>  <td>Descripción</td>  <td>Referencia</td> <td>Código de transacción</td>  <td>ITF</td>  <td>Débitos</td>  <td>Créditos</td> <td>Saldo</td>  <td>Adicionales</td>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr style="background:#fff; color:#000;font-size: 10px;">
+                   <td>dd-mm-aaaa</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                 </tr>
+               </tbody>
+            </table>  
+          </div>
+          <div id="tabla_muestra_formato_5" class="d-none formato_tabla">
+            <table class="table table-bordered table-condensed">
+               <thead>
+                 <tr style="background:#E7085C; color:#fff;font-size: 10px;">
+                  <td>Fecha</td>  <td>Hora</td> <td>Oficina/Canal</td><td>Descripción</td><td>Sucursal</td>  <td>Referencia</td><td>Monto</td><td>Saldo Disponible</td>  
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr style="background:#2046A4; color:#fff;font-size: 10px;">
+                   <td>dd-mm-aaaa</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                 </tr>
+               </tbody>
+            </table>  
+          </div>
+          <div id="tabla_muestra_formato_6" class="d-none formato_tabla">
+            <table class="table table-bordered table-condensed">
+               <thead>
+                 <tr style="background:#1B6B8E; color:#fff;font-size: 10px;">
+                  <td>Fecha</td>  <td>Hora</td> <td>Oficina/Canal</td>  <td>Ciudad</td> <td>Concepto</td> <td>Número de Documento</td>  <td>Débitos</td>  <td>Créditos</td> <td>Saldo</td>  <td>Detalle</td>
+
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr style="background:#28C2AD; color:#fff;font-size: 10px;">
+                   <td>dd-mm-aaaa</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>

@@ -1,7 +1,11 @@
 <?php
+//Antes de modulo descuentos 19/07/2022
+
 session_start();
 require_once '../functions.php';
 require_once("../conexion.php");
+
+
 $dbh = new Conexion();
 
 $codGestionActiva=$_SESSION['globalGestion'];
@@ -53,7 +57,7 @@ if($estado_planilla==0){ // registrar plaanilla mes
           if (result.value) {
             window.close();
             return(false);
-          }
+          } 
       });
      </script>
     <?php
@@ -64,7 +68,7 @@ if($estado_planilla==0){ // registrar plaanilla mes
 header("Pragma: public");
 header("Expires: 0");
 $fecha_actual=date('dmY');
-$filename = "Plantilla_Planilla_".$nombre_mes."_".$nombreGestion.".xls";
+$filename = "Plantilla_Planillas_".$nombre_mes."_".$nombreGestion.".xls";
 header("Content-type: application/x-msdownload");
 header("Content-Disposition: attachment; filename=$filename");
 header("Pragma: no-cache");
@@ -126,6 +130,7 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
       }
       ?>
     </tr>
+    
   </thead>
   <tbody>
     <?php

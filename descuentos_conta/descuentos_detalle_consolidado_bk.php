@@ -80,20 +80,15 @@ $dbh = new Conexion();
                                             }
                                             $nombre_personal=$paterno." ".$materno." ".$primer_nombre;
                                             $datos_modal=$cod_personal."###".$nombre_personal."###".$haber_basico."###".$descuento."###".$globalMes."###".$globalGestion;
-                                            $queryDet ="SELECT sum(dd.diferencia)as descuento_ingreso,(SELECT sum(ddm.monto) from descuentos_conta d2 join descuentos_conta_detalle dd2 on d2.codigo=dd2.cod_descuento join descuentos_conta_detalle_mes ddm on ddm.cod_descuento_detalle=dd2.codigo where d2.cod_estado=3 and dd2.cod_personal=$cod_personal and ddm.cod_estado in (3,4,5))as descontado
-                                                from descuentos_conta d join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento
-                                                where d.cod_estado=3 and dd.cod_personal=$cod_personal
-                                                having descuento_ingreso>descontado";
-                                                // echo $queryDet."<br><br>";
+                                            $queryDet ="SELECT sum(dd.diferencia) as monto_descuento
+                                                from descuentos_conta_detalle dd join descuentos_conta d on d.codigo=dd.cod_descuento
+                                                where  d.cod_estado=3 and dd.cod_personal=$cod_personal";
                                             $stmtDet = $dbh->query($queryDet);  
-                                            $monto_total_descuento=0;
-                                            $monto_descontado=0; 
+                                            $monto_descuento=0;
                                             while ($rowDet = $stmtDet->fetch()){
-                                                $monto_total_descuento=$rowDet["descuento_ingreso"];
-                                                $monto_descontado=$rowDet["descontado"];
-                                                // echo $monto_total_descuento."-".$monto_descontado."**<br>";
+                                                $monto_descuento=$rowDet["monto_descuento"];
                                             }
-                                            $saldo_descuento=$monto_total_descuento-$monto_descontado;
+                                            $saldo_descuento=$monto_descuento-$descuento;
                                             if($saldo_descuento>0){
                                                 $label_saldo="<span style='color:red'>";
                                             }

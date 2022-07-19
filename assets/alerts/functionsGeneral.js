@@ -17466,6 +17466,22 @@ function subirArchivoExcelLibretaBancaria(tipo,nombre_tipo){
 }
 
 
+function subirArchivoExcelLibretaBancariaMultiple(tipo,nombre_tipo){
+  $(".formato_tabla").each(function(){
+    if(!$(this).hasClass("d-none")){
+      $(this).addClass("d-none");
+    }      
+  });  
+  $("#tabla_muestra_formato_"+tipo).removeClass("d-none");
+  
+  $("#tipo_formato").val(tipo);
+  $("#formato_texto").html(nombre_tipo);
+  $("#tipo_formato_titulo2").html(nombre_tipo);
+  $("#modalSubirArchivoExcel").modal("show");
+}
+
+
+
 function abrirLibretaBancaria(datos,direccion,indice){
   // iniciarCargaAjax();
   var d=datos.split('/');

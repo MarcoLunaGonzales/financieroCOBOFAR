@@ -66,20 +66,13 @@ $sqlInserts=[];  $lista_documento=[];
                     	VALUES ($cod_libretabancariaregistro,'$fechaActual','$globalUser','$observaciones',1)";
 
                   $sqlInserts[$index]=$sqlRegistro;   
+                    //$stmtDetalle = $dbh->prepare($sqlRegistro);
+                    //$stmtDetalle->execute();
             	}
                 $index++;
-
-                //LIMPIAR VALORES SI NO EXISTE EL REGISTRO
-                for ($filaXX=0; $filaXX <= 20; $filaXX++) { 
-                    if(!isset($Row[$filaXX])){
-                        $Row[$filaXX]="";
-                    }
-                }                
-
-
-                //CAMPO DE FECHA Y HORA
                 $fecha_hora = "";
                 if(isset($Row[0])) {
+                  //echo ($Row[0]);
                   $fechaFila=$Row[0]."";
                   $fe=explode("-", $fechaFila);
                   if(count($fe)==3){
@@ -114,10 +107,24 @@ $sqlInserts=[];  $lista_documento=[];
                       $fechaFila="";
                     }
                   } 
+                	/*if(verificarFecha(trim($fechaFila))==1){
+                     $fe=explode("-", $fechaFila);
+                     $fecha_hora=$fe[2]."-".$fe[1]."-".$fe[0];
+                	}else{
+                    if(verificarFecha(trim($fechaFila))==2){
+                       $validacionFila=0; 
+                       $fe=explode("/", $fechaFila);
+                       $fecha_hora=$fe[2]."-".$fe[1]."-".$fe[0];
+                    }else{
+                      $validacionFila=0; 
+                       $verSi=1;
+                    }
+                     
+                	}*/
                 }
                 
                 $hora = "";
-                if(isset($Row[1])&&$tipo_formato!=2) { //PARA TODOS MENOS EL UNION
+                if(isset($Row[1])&&$tipo_formato==1) {
                   $hora=explode(":", $Row[1]);
                   if(count($hora)>2){
                     $horaFecha=$Row[1];
@@ -130,87 +137,74 @@ $sqlInserts=[];  $lista_documento=[];
                   }
                 	if(verificarHora($Row[1])==true){
                      $fecha_hora.=" ".$horaFecha;
-                	}else{                     
+                	}else{
+                     $validacionFila=0; 
                      $fecha_hora.=" ".$horaFecha;
                 	}
                 }
+                
+                $nro_cheque = "";
+                if(isset($Row[2])&&$tipo_formato==1) {
+                    $nro_cheque = $Row[2];
+                }
 
-                switch ($tipo_formato) {
-                  case 1: 
-                      $nro_documento=$Row[9];
-                      $descripcion=trim($Row[3]);
-                      $informacion_complementaria=$Row[6];
-                      $agencia=$Row[7];
-                      $monto=$Row[4];
-                      $nro_cheque=$Row[2];                                            
-                      $canal=$Row[8];
-                      $nro_referencia=$Row[9];
-                      $cod_fila=$Row[10];
-                      $saldo=$Row[5];
-                  break;
-                  case 2: 
-                      $nro_documento=$Row[3];
-                      $descripcion=trim($Row[2]);
-                      $informacion_complementaria="";
-                      $agencia=$Row[1];
-                      $monto=$Row[4];
-                      $nro_cheque="";                                            
-                      $canal="";
-                      $nro_referencia="";
-                      $cod_fila="";
-                      $saldo=$Row[5];
-                  break;
-                  case 3: 
-                      $nro_documento=$Row[2];
-                      $descripcion=trim($Row[9]);
-                      $informacion_complementaria=trim($Row[7]);
-                      $agencia=$Row[10];
-                      $monto=$Row[19];
-                      $nro_cheque=$Row[3];                                            
-                      $canal="";
-                      $nro_referencia="";
-                      $cod_fila="";
-                      $saldo=$Row[20];
-                  break;
-                  case 4: 
-                      $nro_documento=$Row[5];
-                      $descripcion=trim($Row[3]);
-                      $informacion_complementaria=trim($Row[10]);
-                      $agencia=$Row[2];
-                      $monto=$Row[8];
-                      $nro_cheque="";                                            
-                      $canal="";
-                      $nro_referencia=$Row[4];
-                      $cod_fila="";
-                      $saldo=$Row[9];
-                  break;
-                  case 5: 
-                      $nro_documento=$Row[5];
-                      $descripcion=trim($Row[3]);
-                      $informacion_complementaria="";
-                      $agencia=$Row[2];
-                      $monto=$Row[6];
-                      $nro_cheque="";                                            
-                      $canal="";
-                      $nro_referencia="";
-                      $cod_fila="";
-                      $saldo=$Row[7];
-                  break;
-                  case 6: 
-                      $nro_documento=$Row[5];
-                      $descripcion=trim($Row[4]);
-                      $informacion_complementaria=trim($Row[9]);
-                      $agencia=$Row[2];
-                      $monto=$Row[7];
-                      $nro_cheque="";                                            
-                      $canal="";
-                      $nro_referencia="";
-                      $cod_fila="";
-                      $saldo=$Row[8];
-                  break;
-                  
-                }                
+                $descripcion = "";
+                if(isset($Row[3])&&$tipo_formato==1) {
+                    $descripcion = trim($Row[3]);
+                }else{
+                  if(isset($Row[2])){
+                    $descripcion = trim($Row[2]); 
+                  }                    
+                }
 
+                $monto = "";
+                if(isset($Row[4])){//&&$tipo_formato==1
+                    $monto = trim($Row[4]);
+                }
+
+                $saldo = "";
+                if(isset($Row[5])) { //&&$tipo_formato==1
+                    $saldo = trim($Row[5]);
+                }
+
+                $informacion_complementaria = "";
+                if(isset($Row[6])&&$tipo_formato==1) {
+                    $informacion_complementaria = $Row[6];
+                }
+
+                $agencia = "";
+                if(isset($Row[7])&&$tipo_formato==1) {
+                    $agencia = $Row[7];
+                }else{
+                  if(isset($Row[1])){
+                    $agencia = $Row[1];
+                  }                    
+                }
+
+                $nro_documento = "";
+                if(isset($Row[3])&&$tipo_formato!=1) {
+                    $nro_documento = $Row[3];
+                }else{
+                  if(isset($Row[9])){
+                   $nro_documento = $Row[9];
+                  }
+                }
+                
+
+                $canal = "";
+                if(isset($Row[8])&&$tipo_formato==1) {
+                    $canal = $Row[8];
+                }
+
+                $nro_referencia = "";
+                /*if(isset($Row[9])&&$tipo_formato==1) {
+                    $nro_referencia = $Row[9];
+                }*/
+
+                $cod_fila = 0;
+                if(isset($Row[10])&&$tipo_formato==1) {
+                    $cod_fila = $Row[10];
+                }
                               
                 if (!empty($fecha_hora) || !empty($descripcion) || !empty($monto)) {
                 	// Prepare
@@ -227,9 +221,18 @@ $sqlInserts=[];  $lista_documento=[];
                    $totalFilasCorrectas++; 
                 	$sql="INSERT INTO libretas_bancariasdetalle (cod_libretabancaria,fecha_hora,nro_documento,descripcion,informacion_complementaria,agencia,monto,nro_cheque,cod_libretabancariaregistro,cod_estadoreferencial,canal,nro_referencia,codigo_fila,saldo) 
                     	VALUES ('$codigoLibreta','$fecha_hora','$nro_documento','$descripcion','$informacion_complementaria','$agencia','$monto','$nro_cheque','$cod_libretabancariaregistro','$cod_estadoreferencial','$canal','$nro_referencia','$cod_fila','$saldo')";
+                   // $stmt = $dbh->prepare($sql);
+                    //$flagSuccess=$stmt->execute();
                     $sqlInserts[$index]=$sql;
                       
                     }
+                    /*if ($flagSuccess==true) {
+                        $type = "success";
+                        $message = "Excel importado correctamente";
+                    } else {
+                        $type = "error";
+                        $message = "Hubo un problema al importar registros";
+                    }*/
                   }else{
                     $listaFilasFechas[$filasErroneasFechas]=$index;
                     $filasErroneas++;

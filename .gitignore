@@ -1,9 +1,12 @@
-#OMITIREMOS EL ARCHIVO DE CONEXION PHP
 
 activosFijos/qr_temp/
+
 conexion.php
 conexion2.php
 conexion3.php
 conexion_comercial.php
 conexion_comercial2.php
 conexion_comercial_oficial.php
+conexion_externa.php
+conexion_sql.php
+

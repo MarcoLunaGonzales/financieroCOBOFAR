@@ -1,5 +1,5 @@
 <?php
-
+//Antes de modulo descuentos 19/07/2022
 require_once '../conexion.php';
 require_once '../styles.php';
 require_once '../functions.php';
@@ -53,6 +53,7 @@ if (isset($_POST["cod_mes"])) {
         // echo $sql;
         $stmtDesDelete = $dbh->prepare($sql);
         $flagSuccessDelete= $stmtDesDelete->execute();
+
         $sqlBonosPactados="SELECT cod_bono,monto from bonos_personal_pactados where cod_personal=$cod_personal and cod_estadoreferencial=1 and tipo_bono_desc=1";
         // echo $sqlBonosPactados;
         $stmtPactados = $dbh->prepare($sqlBonosPactados);
@@ -61,7 +62,7 @@ if (isset($_POST["cod_mes"])) {
         $stmtPactados->bindColumn('monto', $montopactado);
         while ($rowPactados = $stmtPactados->fetch(PDO::FETCH_BOUND)) {
             $monto_bono=$montopactado;
-            //PROCESO DE BONOS
+            //bonos
             switch ($cod_bonopactado) {
                 case 11://NOCHES PACTADOS
                     //$hras_nocturas=($haber_basico/30/8)*2;
@@ -100,15 +101,7 @@ if (isset($_POST["cod_mes"])) {
             $stmtInsert = $dbh->prepare($sqlinsert);
             $flagSuccess=$stmtInsert->execute();
         }
-        // PROCESO DE DESCUENTOS **  los de tipo_descuento 1 ya fueron cargados al cargar la plantilla
-
-        // Aporte al sindicato
-        $aporte_sindicato=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
-        $stmtSindicato=$dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-            VALUES ($cod_descuento_as,$cod_personal,$codGestionActiva,$codMes,$aporte_sindicato,$codEstado)");
-        $flagSuccess=$stmtSindicato->execute();
-
-        // Aporte al sindicato
+        //****Solo descuento de tipo aporte al sindicato
         $aporte_sindicato=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
         $stmtSindicato=$dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
             VALUES ($cod_descuento_as,$cod_personal,$codGestionActiva,$codMes,$aporte_sindicato,$codEstado)");

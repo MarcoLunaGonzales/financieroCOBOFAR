@@ -13760,8 +13760,8 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
 
   function listaDetalleDescuentosPersonal($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT d.cod_area,d.cod_personal,tdc.cod_cuenta,d.cod_contracuenta,d.monto_sistema,d.monto_depositado,d.diferencia,d.glosa,d.fecha
-      from descuentos_conta_detalle d join tipos_descuentos_conta tdc on d.cod_tipodescuento=tdc.codigo
+     $stmt = $dbh->prepare("SELECT d.cod_area,a.nombre as nombreArea,d.cod_personal,tdc.cod_cuenta,d.cod_contracuenta,d.monto_sistema,d.monto_depositado,d.diferencia,d.glosa,d.fecha,tdc.tipo_contabilizacion
+      from descuentos_conta_detalle d join areas a on d.cod_area=a.codigo join tipos_descuentos_conta tdc on d.cod_tipodescuento=tdc.codigo
       where d.cod_descuento=$codigo");
      $stmt->execute();
      return $stmt;
@@ -13788,6 +13788,19 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
       }
       if($valor==null){
          $valor=0;
+      }
+      return($valor);
+   }
+
+   function obtenerDescuentoPersonalMes($cod_personal,$mes,$gestion){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT sum(ddm.monto)as descuento
+                              from descuentos_conta d  join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento join descuentos_conta_detalle_mes  ddm on ddm.cod_descuento_detalle=dd.codigo
+                              where d.cod_estado=3 and ddm.mes=$mes and ddm.gestion=$gestion and dd.cod_personal=$cod_personal");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['descuento'];
       }
       return($valor);
    }

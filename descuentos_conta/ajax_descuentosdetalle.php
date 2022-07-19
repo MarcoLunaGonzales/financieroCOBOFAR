@@ -79,7 +79,7 @@ $idFila=$_GET['idFila'];
         <select class="selectpicker form-control form-control-sm" data-live-search="true" name="cod_contracuenta<?=$idFila;?>" id="cod_contracuenta<?=$idFila;?>" data-style="fondo-boton" required="true">
           <option disabled selected="selected" value="">Contra Cuenta</option>
           <?php                 
-            $sql="SELECT codigo,numero,nombre from plan_cuentas where cod_estadoreferencial=1 and cod_padre=1008";
+            $sql="SELECT codigo,numero,nombre from plan_cuentas where cod_estadoreferencial=1";
             $stmt3 = $dbh->prepare($sql);
             $stmt3->execute();
             while ($rowsuc = $stmt3->fetch(PDO::FETCH_ASSOC)) {

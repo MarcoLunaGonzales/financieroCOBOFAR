@@ -31,7 +31,6 @@ if($codigo==0){
     $flagSuccess=$stmt->execute();
 }
 if($flagSuccess){
-
     //borrar 
     $sqldelte="DELETE from descuentos_conta_detalle where cod_descuento='$codigo'";
     $stmtDelete = $dbh->prepare($sqldelte);

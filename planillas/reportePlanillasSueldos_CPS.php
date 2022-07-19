@@ -184,7 +184,7 @@ $porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
           }
           ?>
               <tr>
-                <td class="small"><small>N°</small></td> 
+                <td class="small"><small><?=$index?></small></td> 
                 <td class="small"><small><?=$nombre?></small></td> 
                 <td class="small"><small><?=$nombreTurno?></small></td> 
                 <td class="small"><small><?=$identificacion?></small></td>

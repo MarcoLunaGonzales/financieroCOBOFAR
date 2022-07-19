@@ -14,7 +14,7 @@ $globalMesActiva=$_SESSION['globalMes'];
 
 $globalUSer=$_SESSION["globalUser"];
 $globalNombrePersonal=solonombrePersonal($globalUSer);
-
+$nombreMes=nombreMes($globalMesActiva);
 $dbh = new Conexion();
 
 // Preparamos
@@ -59,16 +59,20 @@ $cantidad=0;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $label_mes="";
                           $label_estado="";
-                          $titulo_icono="Enviar a Aprobación";
+                          $titulo_icono="Validar $nombreMes";
+                          $sw=3;//Estado Validado
+
                           $btn_detalle="";
+                          $btn_detalle_view="d-none";
                           $btn_print="d-none";
                           $btn_enviar="d-none";
+
+                          $nombreEstado="-";
                           if($globalMesActiva==$codigo){
                             $btn_enviar="";
                             $label_mes="style='color:#633974;font-weight:bold;'";
                             $label_estado="style='color:#633974;font-weight:bold;'";
                           }
-                          $nombreEstado="No Registrado";
                           $stmtEst = $dbh->prepare("SELECT t.codigo,t.nombre
                             from  descuentos_conta_consolidado d join tipos_estado_descuento_consolidado t on d.cod_estado=t.codigo
                             where d.mes=$codigo and d.gestion='$nombreGestion' limit 1");
@@ -78,28 +82,33 @@ $cantidad=0;
                           while ($rowEst = $stmtEst->fetch(PDO::FETCH_BOUND)) {
                             $nombreEstado=$nombreEstado;
                             switch ($codigoEstado) {
-                              case 1://validado
-                              $label_estado="style='color:green;font-weight:bold;'";
+                              case 3://validado
+                              $label_estado="style='color:blue;font-weight:bold;'";
                               $btn_detalle="d-none";
+                              $btn_detalle_view="";
                               $btn_enviar="";
                               $btn_print="";
-                              $sw=3;
+                              $sw=4;
+                              $titulo_icono="Aprobar $nombreMes";
                               break;
                               case 2://anulado
                               $label_estado="style='color:red;font-weight:bold;'";
                               $btn_detalle="d-none";
+                              $btn_detalle_view="d-none";
                               $btn_enviar="d-none";
                               $btn_print="";
                               break;
-                              case 3://aprobado
-                              $label_estado="style='color:blue;font-weight:bold;'";
+                              case 4://aprobado
+                              $label_estado="style='color:green;font-weight:bold;'";
                               $btn_detalle="d-none";
+                              $btn_detalle_view="";
                               $btn_enviar="d-none";
                               $btn_print="";
                               break;
-                              case 4://contabilizado
+                              case 5://contabilizado
                               $label_estado="style='color:orange;font-weight:bold;'";
                               $btn_detalle="d-none";
+                              $btn_detalle_view="";
                               $btn_enviar="d-none";
                               $btn_print="";
                               break;
@@ -114,13 +123,13 @@ $cantidad=0;
                               <a href='descuentos_conta/descuentos_detalle_consolidado.php?cod_mes=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonMorado;?> <?=$btn_detalle?>">
                                 <i class="material-icons" title="Ver Descuentos">playlist_add</i>
                               </a>
-                              <!-- <a href='index.php?opcion=descuentosCambiarEstado&codigo=<?=$codigo?>&sw=<?=$sw?>' rel="tooltip" class="btn btn-info btn-sm <?=$btn_enviar?>">
-                                <i class="material-icons"   title="<?=$titulo_icono?>">send</i>
-                              </a> -->
-                              <button  type="button" onclick="GuardarConsolidadoDescuentos(<?=$codigo?>,<?=$nombreGestion?>,'<?=$globalNombrePersonal?>',<?=$globalUSer?>)" class="btn btn-sm <?=$btn_enviar?>" style="background: #18537e; color:white;"><i class="material-icons"   title="<?=$titulo_icono?>">send</i></button>
-                              <a href="comprobantes/imp.php?comp=<?=$cod_contabilizado;?>&mon=1" target="_blank" class="btn btn-danger <?=$btn_print?>">
-                                <i class="material-icons" title="Imprimir Comprobante" >print</i>
+                              <a href='descuentos_conta/descuentos_detalle_consolidado.php?cod_mes=<?=$codigo;?>&cod_view=1' target="_blank" rel="tooltip" class="btn btn-info <?=$btn_detalle_view?>">
+                                <i class="material-icons" title="Ver Descuentos">playlist_add</i>
                               </a>
+                              <button type="button" onclick="GuardarConsolidadoDescuentos(<?=$codigo?>,<?=$nombreGestion?>,'<?=$globalNombrePersonal?>',<?=$globalUSer?>,<?=$sw?>)" class="btn btn-sm btn-success <?=$btn_enviar?>" ><i class="material-icons" title="<?=$titulo_icono?>">send</i></button>
+                              <!-- <a href="comprobantes/imp.php?comp=<?=$cod_contabilizado;?>&mon=1" target="_blank" class="btn btn-danger <?=$btn_print?>">
+                                <i class="material-icons" title="Imprimir Comprobante" >print</i>
+                              </a> -->
                             </td>
                           </tr>
                         <?php

@@ -59,7 +59,7 @@ if($codigo>0){
                                 </div>
                                 <label class="col-sm-1 col-form-label" >Fecha</label>
                                 <div class="col-sm-2">
-                                    <input type="date" name="fecha_cabecera" id="fecha_cabecera" class="form-control" value="<?=$fecha_cabecera?>" required="true"  readonly>
+                                    <input type="date" name="fecha_cabecera" id="fecha_cabecera" class="form-control"  required="true">
                                 </div>
                                 <div class="col-sm-2">
                                     <center>
@@ -232,7 +232,8 @@ if($codigo>0){
                         </div>
                         <div class="card-footer fixed-bottom">
                             <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                            <a href='' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Cancelar </a>
+                            <!-- <a href='' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Cancelar </a> -->
+                            <button  type="button" onclick="window.close();" class="btn btn-danger" >Cancelar</button>
                         </div>
                         <?php // require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
                     </div>

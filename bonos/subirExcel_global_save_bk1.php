@@ -25,7 +25,6 @@ foreach ($_FILES as $key){
         showAlertSuccessError($alert,$urlList);
     }
 }
-//tipo_descuento=1 descuento no fijo que refleja en plantilla
 $flagSuccess=false;
 $stmt = $dbh->prepare("SELECT codigo,nombre from descuentos where cod_estadoreferencial=1 and tipo_descuento=1 order by codigo");
 $stmt->execute();

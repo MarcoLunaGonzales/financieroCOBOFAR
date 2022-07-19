@@ -17,7 +17,6 @@ if (isset($_GET["codigo"])) {//aprobacion o autorizacion
         $sql="UPDATE descuentos_conta set cod_estado='$cod_estado' where codigo=$codigo";
         require_once 'generar_comprobante.php';
     }
-
 }elseif(isset($_POST["codigo"])){//rechazo 
     require_once '../conexion.php';
     require_once '../functionsGeneral.php';

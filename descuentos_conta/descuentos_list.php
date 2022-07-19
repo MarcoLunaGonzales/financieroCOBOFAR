@@ -12,9 +12,8 @@ $dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-
-$sql="SELECT dc.codigo,dc.fecha,dc.glosa,dc.cod_estado,dc.cod_contabilizado,dc.created_by,dc.created_at,dc.modified_by,dc.modified_by,p.paterno,p.materno,p.primer_nombre
-from descuentos_conta  dc join personal p on dc.created_by=p.codigo
+$sql="SELECT dc.codigo,dc.fecha,dc.glosa,dc.cod_estado,dc.cod_contabilizado,dc.created_by,dc.created_at,dc.modified_by,dc.modified_by,(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=dc.created_by)as personal
+from descuentos_conta  dc
 where dc.cod_estado<>2 order by dc.codigo desc limit 100";
 // echo  "<br><br><br><br>".$sql;
 $stmt = $dbh->prepare($sql);
@@ -30,9 +29,9 @@ $stmt->bindColumn('created_at', $created_at);
 $stmt->bindColumn('created_by', $created_by);
 $stmt->bindColumn('modified_by', $modified_by);
 $stmt->bindColumn('modified_by', $modified_by);
-$stmt->bindColumn('paterno', $paterno);
-$stmt->bindColumn('materno', $materno);
-$stmt->bindColumn('primer_nombre', $primer_nombre);
+$stmt->bindColumn('personal', $personal);
+// $stmt->bindColumn('materno', $materno);
+// $stmt->bindColumn('primer_nombre', $primer_nombre);
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -47,7 +46,7 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
           </div>
           <div class="card-body">
             <div class="table-responsive">              
-                <table class="table table-condensed" id="tablePaginatorHead">
+                <table class="table table-condensed table-bordered table-striped table-sm" id="tablePaginatorHead">
                   <thead>
                     <tr>
                       <th class="text-center">Index</th>
@@ -69,6 +68,9 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
                         $nombre_contabilizado="POR CONTABILIZAR";
                         $contabilizacion=0;
                       }
+                      if($created_by==0){
+                        $personal=" NO IDENTIFICADO";
+                      }
                       $btn_edit="";
                       $btn_printd="";
                       $btn_printc="";                      
@@ -78,7 +80,7 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
                       $titulo_icono="";
                       switch ($cod_estado) {
                         case 1://registro
-                            $label="<span class='badge badge-default'>";
+                            $label="<span style='color:orange'>";
                             $sw=3;//esta en registrado, enviar a autorizacion
                             $titulo_icono="Generar comprobante y enviar a revisión";
                             // $btn_edit="d-none";
@@ -93,35 +95,25 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
                             $btn_printc="d-none";
                             $btn_gencom="d-none";
                             $btn_enviar="d-none";
-                            $label="<span class='badge badge-danger'>";
+                            $label="<span style='color:red'>";
                           break;
                           case 3://revision
                             $btn_edit="d-none";
                             //$btn_printd="d-none";
                             // $btn_printc="d-none";
                             $btn_enviar="d-none";
-                            $label="<span class='badge badge-warning'>";
-                            $nombre_estado="En revisión";
-                          break;
-                          case 4://registro
-                            $btn_edit="d-none";
-                            //$btn_printd="d-none";
-                            $btn_printc="d-none";
-                            $btn_enviar="d-none";                 
-                            $label="<span class='badge badge-info'>";
-                            //$sw=3;//esta en registrado, enviar a autorizacion
-                            $titulo_icono="Aprobar Detalle";
-                            $nombre_estado="Aprobado";
+                            $label="<span style='color:green'>";
+                            $nombre_estado="Enviado";
                           break;
                       }
                      ?>
                       <tr>
-                        <td  class="td-actions text-right"><?=$index?></td>
-                        <td class="text-center small"><small><?=$fecha;?></small></td>
-                        <td class="text-left small"><small><?=$primer_nombre?> <?=$paterno?> <?=$materno?></small></td>
-                        <td class="text-left small"><small><?=$glosa;?></small></td>
-                        <td class="text-left small" ><small><?=$label.$nombre_estado?></span></small></td>
-                        <td class="text-center small"><small><?=$nombre_contabilizado;?></small></td>
+                        <td  class="td-actions text-right small"><?=$index?></td>
+                        <td class="text-center small"><?=$fecha;?></td>
+                        <td class="text-left small"><?=$personal?></td>
+                        <td class="text-left small"><?=$glosa;?></td>
+                        <td class="text-left small" ><?=$label.$nombre_estado?></span></td>
+                        <td class="text-center small"><?=$nombre_contabilizado;?></td>
                         <td class="td-actions text-center">
                           <a href="descuentos_conta/descuentos_detalle.php?codigo=<?=$codigo?>" target="_blank" class="btn btn-success <?=$btn_edit?>">
                             <i class="material-icons" title="Editar Descuentos" >edit</i>

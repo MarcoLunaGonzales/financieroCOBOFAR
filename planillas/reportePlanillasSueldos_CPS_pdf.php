@@ -215,7 +215,7 @@ $html.=  '<header class="header">'.
               }
 
               $html.='<tr>'.
-                '<td class="text-center"><small><small><small><small>'.$row['correlativo_planilla'].'</small></small></small></small></td>'.
+                '<td class="text-center"><small><small><small><small>'.$index.'</small></small></small></small></td>'.
                 '<td class="text-left"><small><small><small><small>'.$row['ci'].' '.$emision.'</small></small></small></small></td>'.
                 '<td class="text-left"><small><small><small><small>'.$row['paterno'].'</small></small></small></small></td>'.
                 '<td class="text-left"><small><small><small><small>'.$row['materno'].'</small></small></small></small></td>'.

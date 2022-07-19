@@ -20637,7 +20637,7 @@ function diferencia_descuento_personal(id){
   if(monto_sistema<0 || monto_sistema==0 || monto_sistema==null){
     // Swal.fire("Informativo!", "El monto del sistema NO debe ser 0 o número negativo!", "warning");
   }else{
-    if(monto_deposito<0 || monto_deposito==0 || monto_deposito==null){
+    if(monto_deposito<0 || monto_deposito==null){
       // Swal.fire("Informativo!", "El monto depositado NO debe ser 0 o número negativo!", "warning");
     }else{
       var monto_descuento=parseFloat(monto_sistema)-parseFloat(monto_deposito);
@@ -20690,6 +20690,9 @@ function modalDetalleDescuentosUpdate(datos){
   var descuento=d[2];
   var nombre_personal=d[3];
 
+  var mes=d[4];
+  var gestion=d[5];
+
 
   document.getElementById("nombre_persona_modal2").value="DESCUENTO EN MESES\nNombre : "+nombre_personal+"\nTipo Descuento : "+tipo_descuento+"      Descuento Total : "+descuento;
   document.getElementById("codigo_detalle").value=codigo_detalle;
@@ -20701,13 +20704,13 @@ function modalDetalleDescuentosUpdate(datos){
   // document.getElementById("admin_r").value=d[4];  //tipo admin
   // document.getElementById("direccion_r").value=d[5];  //link destino
   // document.getElementById("observaciones_r").value=d[6];  //obs
-  ajaxDetalleDescuentosUpdate(codigo_detalle);
+  ajaxDetalleDescuentosUpdate(codigo_detalle,mes,gestion);
 }
-function ajaxDetalleDescuentosUpdate(codigo_detalle){
+function ajaxDetalleDescuentosUpdate(codigo_detalle,mes,gestion){
   var contenedor;
   contenedor = document.getElementById('contenedor_descuento_detalle_update');
   ajax=nuevoAjax();
-  ajax.open('GET', '../descuentos_conta/ajax_descuentospersonaldetalleUpdate.php?codigo_detalle='+codigo_detalle,true);
+  ajax.open('GET', '../descuentos_conta/ajax_descuentospersonaldetalleUpdate.php?codigo_detalle='+codigo_detalle+'&mes='+mes+'&gestion='+gestion,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -20786,7 +20789,7 @@ function sumaDescuentosDetalleMes(){
   document.getElementById("sumaDescuentos_detallemes").value=sumal;
 }
 
-function GuardarConsolidadoDescuentos(mes,gestion,nombrePer,cod_personal){
+function GuardarConsolidadoDescuentos(mes,gestion,nombrePer,cod_personal,estado){
   // var codigo_detalle=document.getElementById("codigo_detalle").value;
   // if(monto_descuento_detalle==sumaDescuentos){
     swal({
@@ -20803,11 +20806,11 @@ function GuardarConsolidadoDescuentos(mes,gestion,nombrePer,cod_personal){
       if (result.value) {
         $.ajax({
           type:"POST",
-          data:"gestion="+gestion+"&mes="+mes+"&cod_personal="+cod_personal,
-          url:"procesar_descuento_consolidado.php",
+          data:"gestion="+gestion+"&mes="+mes+"&cod_personal="+cod_personal+"&estado="+estado,
+          url:"descuentos_conta/procesar_descuento_consolidado.php",
           success:function(r){
             if(r==1){
-              alerts.showSwal('success-message','../index.php?opcion=descuentosConsolidados_list');
+              alerts.showSwal('success-message','index.php?opcion=descuentosConsolidados_list');
               // Swal.fire("A ocurrido un error!", "No se pudo guardar los cambios.", "success");
             }else{
               Swal.fire("A ocurrido un error!", "No se pudo guardar los cambios.", "warning");

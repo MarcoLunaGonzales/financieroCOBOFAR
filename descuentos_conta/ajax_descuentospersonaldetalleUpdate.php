@@ -4,9 +4,10 @@ require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 
-$global_mes=$_SESSION["globalMes"];
-$globalNombreGestion=$_SESSION["globalNombreGestion"];
-
+// $global_mes=$_SESSION["globalMes"];
+// $globalNombreGestion=$_SESSION["globalNombreGestion"];
+$global_mes=$_GET['mes'];
+$globalNombreGestion=$_GET['gestion'];
 $codigo_detalle=$_GET["codigo_detalle"];
 $dbh = new Conexion();
 $query = "SELECT d.mes,d.gestion,d.monto,d.cod_estado from descuentos_conta_detalle_mes d where d.cod_descuento_detalle=$codigo_detalle

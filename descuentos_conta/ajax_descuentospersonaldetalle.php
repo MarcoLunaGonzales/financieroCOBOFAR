@@ -5,14 +5,11 @@ require_once '../functionsGeneral.php';
 
 $dbh = new Conexion();
 
-$mes=$_GET['mes'];
-$gestion=$_GET['gestion'];
+$mesGlobal=$_GET['mes'];
+$gestionGlobal=$_GET['gestion'];
 $cod_personal=$_GET['cod_personal'];
 
 $nombre_personal=$_GET['nombre_personal'];
-
-
-
 $query = "SELECT dd.codigo,dd.cod_personal,dd.diferencia,dd.cod_tipodescuento,td.nombre as tipo_descuento,dd.glosa
     from descuentos_conta_detalle dd join descuentos_conta d on d.codigo=dd.cod_descuento join tipos_descuentos_conta td on dd.cod_tipodescuento=td.codigo
     where  d.cod_estado=3 and dd.cod_personal=$cod_personal
@@ -31,9 +28,8 @@ while ($row = $stmt->fetch()){
   // $mes=$row["mes"];
   $descontado=0;
   $saldo=$descuento-$descontado;
-  $totalDescuento+=$descuento;
-  $totalDescontado+=$descontado;
-  $datos_modal=$codigo."###".$tipo_descuento."###".$descuento."###".$nombre_personal;
+  $totalDescuento+=$descuento;  
+  $datos_modal=$codigo."###".$tipo_descuento."###".$descuento."###".$nombre_personal."###".$mesGlobal."###".$gestionGlobal;
   ?>
   <tr style="background:#ccd1d1">
     <td><small><?=$index?></small></td>
@@ -57,25 +53,36 @@ while ($row = $stmt->fetch()){
     $gestion=$rowDet["gestion"];
     $montoDet=$rowDet["monto"];
     $cod_estadoDet=$rowDet["cod_estado"];
-    $saldoDet=$saldo-$montoDet;
+    $saldo=$saldo-$montoDet;
+    $totalDescontado+=$montoDet;
     $glosaDet="Gestion : ".$gestion." - Mes : ".$mes;
     switch ($cod_estadoDet) {
       case 1://registrado
         $label="style='color:red;'";
       break;
-      case 2://validado
+      case 3://validado
         $label="style='color:blue;'";
+        $glosaDet.=" (Validado)";
       break;
-      case 1://pagado
+      case 4://aprobado
         $label="style='color:green;'";
+        $glosaDet.=" (Aprobado)";
       break;
-    } ?>
+      case 5://Contabilizado
+        $label="style='color:green;'";
+        $glosaDet.=" (Contabilizado)";
+      break;
+    } 
+    if($mes==$mesGlobal and $gestion==$gestionGlobal){
+      $label="style='color:purple;'";
+    }
+    ?>
     <tr <?=$label?>>
       <td><small>-</small></td>
       <td class="text-left"><small>-</small></td>
       <td><small>-</small></td>
       <td><small><?=$montoDet?></small></td>
-      <td><small><?=$saldoDet?></small></td>
+      <td><small><?=$saldo?></small></td>
       <td class="text-left"><small><?=$glosaDet?></small></td>
       <td class="td-actions">-</td>
     </tr> <?php 

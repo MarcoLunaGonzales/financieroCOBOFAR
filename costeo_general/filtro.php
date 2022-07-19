@@ -75,7 +75,7 @@ if(isset($_GET['p'])){
                             <select name="id_sucursal" id="id_sucursal" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                 <option value=""></option>
                                 <?php 
-                                $queryUO1 = "SELECT cod_ciudad,descripcion from ciudades where cod_impuestos>0 order by descripcion";
+                                $queryUO1 = "SELECT cod_ciudad,descripcion from ciudades where cod_impuestos>0 or cod_ciudad = -1 or cod_ciudad=-3 order by descripcion";
                                 $resp=mysqli_query($dbh,$queryUO1);
                                 while($row=mysqli_fetch_array($resp)){  ?>
                                     <option value="<?=$row['cod_ciudad'];?>"><?=$row["descripcion"];?></option>

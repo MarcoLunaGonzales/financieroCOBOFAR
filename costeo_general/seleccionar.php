@@ -129,38 +129,47 @@ $cuentaDevolucion=5134;
 
                     $cuentaSalida=0;
                     $cuentaIngreso=0;
-                    switch ($row["tipo_comprobante"]) {
+                    $tipo_comprobante=$row["tipo_comprobante"];
+                    $estiloTipo="";                    
+                    switch ($tipo_comprobante) {
                       case 'S-S':  
+                        $estiloTipo="style='background:#DAF7A6;color#000;'";
                         $nombreTraspasos.=" (Entre Sucursales)";
                         $cuentaSalida=$cuentaSucursales;
                         $cuentaIngreso=$cuentaSucursales;
                         break;
                       case 'A-S':  
+                        $estiloTipo="style='background:#286DDE ;color#fff;'";
                         $nombreTraspasos.=" (Almacen - Sucursales)";
                         $cuentaSalida=$cuentaAlmacen;
                         $cuentaIngreso=$cuentaSucursales;
                       break;
-                      case 'S-V':  
+                      case 'S-V': 
+                        $estiloTipo="style='background:#23BDB2;color#fff;'"; 
                         $nombreTraspasos.=" (Sucursales - Vencidos)";
                         $cuentaSalida=$cuentaSucursales;
                         $cuentaIngreso=$cuentaDevolucion;
                       break;
                       case 'S-A':  
+                        $estiloTipo="style='background:#FFC300;color#000;'"; 
                         $nombreTraspasos.=" (Sucursales - Almacen)";
                         $cuentaSalida=$cuentaSucursales;
                         $cuentaIngreso=$cuentaAlmacen;
                       break;
                       case 'V-S':  
+                        $estiloTipo="style='background:#BB23BD;color#fff;'"; 
                         $nombreTraspasos.=" (Vencidos - Sucursales)";
                         $cuentaSalida=$cuentaDevolucion;
                         $cuentaIngreso=$cuentaSucursales;
                       break;
                       case 'A-V':  
+                        $estiloTipo="style='background:#BD2348;color#fff;'";
                         $nombreTraspasos.=" (Almacen - Vencidos)";
                         $cuentaSalida=$cuentaAlmacen;
                         $cuentaIngreso=$cuentaDevolucion; 
                       break;
                       case 'V-A':  
+                        $estiloTipo="style='background:#23BD28;color#fff;'";
                         $nombreTraspasos.=" (Vencidos - Almacen)";
                         $cuentaSalida=$cuentaDevolucion;
                         $cuentaIngreso=$cuentaAlmacen; 
@@ -174,20 +183,25 @@ $cuentaDevolucion=5134;
                     if($row["cod_comprobantes"]!=""){
                       $botonEstado="<a class='text-danger' href='../comprobantes/imp.php?comp=".$codComprobanteGeneral."&mon=1' target='_blank'><i class='material-icons'>print</i></a>";
                     }
+
+                    $debeOficial=number_format($costo_salida,2,'.','');
+                    $haberOficial=number_format($costo_ingreso,2,'.','');
+                    $diferenciaOficial=number_format($diferencia,2,'.','');
                       $index++;
                       ?>
                     <tr>
                       <td class="text-center small"><?=$index;?></td>
                       <td class="text-center small"><b><?=$nro_traspasos;?></b></td>
-                      <td class="text-left small"><?=$datos_ingreso_origen;?></td>
+                      <td class="text-left small" <?=$estiloTipo?>><?=$datos_ingreso_origen;?> <b>(<?=$tipo_comprobante?>)</b></td>
                       <td class="text-left small"><?=$almacen_origen;?></td>
                       <td class="text-left small"><b><?=$almacen_destino;?></b></td>
                       <td class="text-center small"><b><?=$FECHA1;?></b></td>
                       <td class="text-right small"><?=formatNumberDec($costo_salida);?></td>
                       <td class="text-right small"><?=formatNumberDec($costo_ingreso);?></td>
                       <td class="text-right small" <?=$estiloDiferencia?>>
+                        <input type="hidden" name="tipo_comprobante<?=$index?>" id="tipo_comprobante<?=$index?>" value="<?=$tipo_comprobante?>">
                         <input type="hidden" name="cod_comprobante<?=$index?>" id="cod_comprobante<?=$index?>" value="<?=$codComprobanteGeneral?>">
-                        <input type="hidden" name="diferencia<?=$index?>" id="diferencia<?=$index?>" value="<?=formatNumberDec($diferencia)?>">
+                        <input type="hidden" name="diferencia<?=$index?>" id="diferencia<?=$index?>" value="<?=$diferenciaOficial?>">
                         <input type="hidden" name="cod_traspasos<?=$index?>" id="cod_traspasos<?=$index?>" value="<?=$cod_traspasos?>">
                         <input type="hidden" name="nombre_traspasos<?=$index?>" id="nombre_traspasos<?=$index?>" value="<?=$nombreTraspasos?>">
                         <input type="hidden" name="cuenta_salida<?=$index?>" id="cuenta_salida<?=$index?>" value="<?=$cuentaSalida?>">
@@ -195,8 +209,8 @@ $cuentaDevolucion=5134;
                         <input type="hidden" name="cuenta_salida_aux<?=$index?>" id="cuenta_salida_aux<?=$index?>" value="<?=$cuentaAuxiliarSalida?>">
                         <input type="hidden" name="cuenta_ingreso_aux<?=$index?>" id="cuenta_ingreso_aux<?=$index?>" value="<?=$cuentaAuxiliarIngreso?>">
 
-                        <input type="hidden" name="haber<?=$index?>" id="haber<?=$index?>" value="<?=formatNumberDec($costo_salida)?>">
-                        <input type="hidden" name="debe<?=$index?>" id="debe<?=$index?>" value="<?=formatNumberDec($costo_ingreso)?>">
+                        <input type="hidden" name="haber<?=$index?>" id="haber<?=$index?>" value="<?=$debeOficial?>">
+                        <input type="hidden" name="debe<?=$index?>" id="debe<?=$index?>" value="<?=$haberOficial?>">
                         <?=formatNumberDec($diferencia);?></td>
                         <td class="text-right small"><?=$botonEstado?></td>
                     </tr>

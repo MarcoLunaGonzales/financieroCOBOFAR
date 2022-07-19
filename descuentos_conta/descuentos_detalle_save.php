@@ -10,6 +10,10 @@ $globalUser=$_SESSION["globalUser"];
 $codigo=$_POST["codigo"];
 $glosaCabecera=$_POST["glosa_cabecera"];
 $fecha=$_POST["fecha_cabecera"];
+
+$gestion=date('Y',strtotime($fecha));
+$mes=date('m',strtotime($fecha));
+
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
@@ -44,11 +48,17 @@ if($flagSuccess){
         $monto_sistema=$_POST["monto_sistema".$i]; 
         $monto_deposito=$_POST["monto_deposito".$i]; 
         $monto_diferencia=$_POST["monto_diferencia".$i]; 
-        $glosa=$_POST["glosa".$i]; 
-        $sql="INSERT INTO descuentos_conta_detalle(cod_descuento,cod_area,fecha,cod_personal,cod_tipodescuento,cod_contracuenta,monto_sistema,monto_depositado,diferencia,glosa)
-        values ('$codigo','$cod_sucursal','$fecha','$cod_personal','$cod_tipodescuento','$cod_contracuenta','$monto_sistema','$monto_deposito','$monto_diferencia','$glosa')";
+        $glosa=$_POST["glosa".$i];
+        $codigoDetalle=obtenerCodigoDescuentoDetalle();
+        $sql="INSERT INTO descuentos_conta_detalle(codigo,cod_descuento,cod_area,fecha,cod_personal,cod_tipodescuento,cod_contracuenta,monto_sistema,monto_depositado,diferencia,glosa)
+        values ('$codigoDetalle','$codigo','$cod_sucursal','$fecha','$cod_personal','$cod_tipodescuento','$cod_contracuenta','$monto_sistema','$monto_deposito','$monto_diferencia','$glosa')";
         $stmt = $dbh->prepare($sql);                
-        $flagSuccess=$stmt->execute();                
+        $flagSuccess=$stmt->execute();
+        
+        $sql="INSERT INTO descuentos_conta_detalle_mes(cod_descuento_detalle,mes,gestion,monto,cod_comprobante_detalle,cod_estado)
+        values ('$codigoDetalle','$mes','$gestion','$monto_diferencia',0,1)";
+        $stmtDesMes = $dbh->prepare($sql);                
+        $flagSuccess=$stmtDesMes->execute();
     }    
     //subir archivos al servidor
     if(isset($_POST["cantidad_archivosadjuntos"])){

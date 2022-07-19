@@ -94,17 +94,17 @@ $idFila=$_GET['idFila'];
     </div>
     <div class="col-sm-1">
         <div class="form-group">
-          <input type="number" step="0.01" min="0" id="monto_sistema<?=$idFila;?>" name="monto_sistema<?=$idFila;?>" class="form-control text-primary text-right" value="0" required="true">
+          <input type="number" step="0.01" min="0" id="monto_sistema<?=$idFila;?>" name="monto_sistema<?=$idFila;?>" class="form-control text-primary text-right" value="0" required="true" >
       </div>
     </div>
     <div class="col-sm-1">
       <div class="form-group">
-        <input type="number" step="0.01" min="0" id="monto_deposito<?=$idFila;?>" name="monto_deposito<?=$idFila;?>" class="form-control text-primary text-right" value="0" required="true">
+        <input type="number" step="0.01" min="0" id="monto_deposito<?=$idFila;?>" name="monto_deposito<?=$idFila;?>" class="form-control text-primary text-right" value="0" required="true" onchange="diferencia_descuento_personal(<?=$idFila?>)"> 
       </div>
     </div>
     <div class="col-sm-1">
       <div class="form-group">
-          <input type="number" step="0.01" min="0" id="monto_diferencia<?=$idFila;?>" name="monto_diferencia<?=$idFila;?>" class="form-control text-primary text-right" value="0" required="true">
+          <input type="number" step="0.01" min="0" id="monto_diferencia<?=$idFila;?>" name="monto_diferencia<?=$idFila;?>" class="form-control text-primary text-right" value="0" required="true" readonly style="background:#f2d7d5;" >
       </div>
     </div>
     <div class="col-sm-3">

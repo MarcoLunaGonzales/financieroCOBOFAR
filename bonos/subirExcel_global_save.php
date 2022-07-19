@@ -47,14 +47,11 @@ if($alert==true){
     //borrar todo y cargar de nuevo
     if($opcionCargar==3){
         //borramos logicamente
-        $stmte = $dbh->prepare("UPDATE descuentos_personal_mes SET cod_estadoreferencial=2 
-            WHERE  cod_gestion=$codGestion and cod_mes=$codMes");
+        $stmte = $dbh->prepare("DELETE from descuentos_personal_mes WHERE cod_gestion=$codGestion and cod_mes=$codMes");
         $stmte->execute();
-        $stmtkardexDelete = $dbh->prepare("UPDATE personal_kardex_mes SET cod_estadoreferencial=2 
-            WHERE  cod_gestion=$codGestion and cod_mes=$codMes");
+        $stmtkardexDelete = $dbh->prepare("DELETE from personal_kardex_mes WHERE cod_gestion=$codGestion and cod_mes=$codMes");
         $stmtkardexDelete->execute();
-        $stmtAnticipoDelete = $dbh->prepare("UPDATE anticipos_personal SET cod_estadoreferencial=2 
-            WHERE  cod_gestion=$codGestion and cod_mes=$codMes");
+        $stmtAnticipoDelete = $dbh->prepare("DELETE from anticipos_personal WHERE cod_gestion=$codGestion and cod_mes=$codMes");
         $stmtAnticipoDelete->execute(); 
         while((($datos=fgetcsv($fichero,$longitudDeLinea,$delimitador))!=FALSE)){
             $x++;

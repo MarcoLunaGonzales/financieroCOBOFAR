@@ -15,12 +15,11 @@ if (isset($_POST["cod_mes"])) {
     // $L = new DateTime($fechai); 
     // $fechaf= $L->format('Y-m-t');
     $codEstado=1;
-
+    $cod_descuento_as=100; //aporte al sindicato
     $dias_trabajados_mes = obtenerValorConfiguracionPlanillas(22); //por defecto
     
     //borramos logicamente
-    $stmte = $dbh->prepare("UPDATE bonos_personal_mes SET cod_estadoreferencial=2 
-        WHERE  cod_gestion=$codGestionActiva and cod_mes=$codMes");
+    $stmte = $dbh->prepare("DELETE from bonos_personal_mes WHERE cod_gestion=$codGestionActiva and cod_mes=$codMes");
     $flagSuccess=$stmte->execute();
     // $cantidadDomingos=domingosMes($fechai,$fechaf);
     $sql="SELECT pk.cod_personal,pk.cod_gestion,pk.cod_mes,pk.faltas,pk.faltas_sin_descuento,pk.dias_vacacion,pk.dias_trabajados,pk.domingos_trabajados_normal,pk.feriado_normal,pk.noche_normal,pk.domingo_reemplazo,pk.feriado_reemplazo,pk.ordianrio_reemplazo,pk.hxdomingo_extras,pk.hxferiado_extras,pk.hxdnnormal_extras,pk.reintegro,p.haber_basico
@@ -48,6 +47,13 @@ if (isset($_POST["cod_mes"])) {
     $stmt->bindColumn('reintegro', $reintegro);
     $stmt->bindColumn('haber_basico', $haber_basico);
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+        //borramos logicamente descuento tipo aporte a sindicato
+        $sql="DELETE FROM descuentos_personal_mes WHERE cod_descuento=$cod_descuento_as and cod_gestion=$codGestionActiva and cod_mes=$codMes and cod_personal=$cod_personal";
+        // echo $sql;
+        $stmtDesDelete = $dbh->prepare($sql);
+        $flagSuccessDelete= $stmtDesDelete->execute();
+
         $sqlBonosPactados="SELECT cod_bono,monto from bonos_personal_pactados where cod_personal=$cod_personal and cod_estadoreferencial=1 and tipo_bono_desc=1";
         // echo $sqlBonosPactados;
         $stmtPactados = $dbh->prepare($sqlBonosPactados);
@@ -95,6 +101,11 @@ if (isset($_POST["cod_mes"])) {
             $stmtInsert = $dbh->prepare($sqlinsert);
             $flagSuccess=$stmtInsert->execute();
         }
+        //****Solo descuento de tipo aporte al sindicato
+            $aporte_sindicato=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
+            $stmtSindicato=$dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
+                VALUES ($cod_descuento_as,$cod_personal,$codGestionActiva,$codMes,$aporte_sindicato,$codEstado)");
+            $flagSuccess=$stmtSindicato->execute();
     }
     echo 1;
 }

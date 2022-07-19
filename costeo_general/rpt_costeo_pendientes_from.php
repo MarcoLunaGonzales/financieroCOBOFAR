@@ -7,7 +7,7 @@ require_once '../layouts/bodylogin2.php';
 require_once '../conexion_comercial2.php'; 
 
 $dbh = new Conexion();
-$desde=date("Y-m", strtotime('-1 month'));
+$desde=date("Y-m"); // strtotime('-1 month')
 $desde.="-01";
 $hasta= date("Y-m-t", strtotime($desde));
 
@@ -38,7 +38,7 @@ $hasta= date("Y-m-t", strtotime($desde));
 					<div class="col-sm-4">
 						<div class="form-group">
 							<div id="div_contenedor_fechaI">				                			
-								<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde"  value="<?=$desde?>">	
+								<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde"  value="<?=$desde?>" min="2022-07-01">	
 							</div>		                                
 						 </div>
 					</div>
@@ -46,7 +46,7 @@ $hasta= date("Y-m-t", strtotime($desde));
 					<div class="col-sm-4">
 						<div class="form-group">
 							<div id="div_contenedor_fechaH">				                			
-								<input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" value="<?=$hasta?>">
+								<input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" value="<?=$hasta?>" min="2022-07-01">
 							</div>
 						</div>
 					</div>				 

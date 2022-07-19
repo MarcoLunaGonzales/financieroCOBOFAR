@@ -499,6 +499,10 @@
   </div>
 </div>
 
+
+
+
+
 <!-- modal envio de facturas -->
 <div class="modal fade" id="modalListaLibretasBancariasDetalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">

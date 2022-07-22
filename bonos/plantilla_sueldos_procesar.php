@@ -8,12 +8,23 @@ $dbh = new Conexion();
 session_start();
 $codGestionActiva=$_SESSION['globalGestion'];
 $globalNombreGestion=$_SESSION['globalNombreGestion'];
-
 if (isset($_POST["cod_mes"])) {
     $codMes=$_POST["cod_mes"];
     // $fechai=$globalNombreGestion.'-'.$codMes.'-01';
     // $L = new DateTime($fechai); 
     // $fechaf= $L->format('Y-m-t');
+        //descuetos
+    $sql="SELECT d.codigo from descuentos d where d.tipo_descuento in (2,3) and d.cod_estadoreferencial=1";
+    // echo $sql;
+    $stmtDescuentos = $dbh->prepare($sql);
+    $stmtDescuentos->execute();
+    $array_descuentos=[];$i=0;
+    while ($rowdescuentos = $stmtDescuentos->fetch(PDO::FETCH_ASSOC)) {
+        $array_descuentos[$i]=$rowdescuentos['codigo'];
+        $i++;
+    }
+    $contadorDescuentos=count($array_descuentos);
+
     $codEstado=1;
     $cod_descuento_as=100; //aporte al sindicato
     $dias_trabajados_mes = obtenerValorConfiguracionPlanillas(22); //por defecto
@@ -25,7 +36,7 @@ if (isset($_POST["cod_mes"])) {
     $sql="SELECT pk.cod_personal,pk.cod_gestion,pk.cod_mes,pk.faltas,pk.faltas_sin_descuento,pk.dias_vacacion,pk.dias_trabajados,pk.domingos_trabajados_normal,pk.feriado_normal,pk.noche_normal,pk.domingo_reemplazo,pk.feriado_reemplazo,pk.ordianrio_reemplazo,pk.hxdomingo_extras,pk.hxferiado_extras,pk.hxdnnormal_extras,pk.reintegro,p.haber_basico
     from personal_kardex_mes pk join personal p on pk.cod_personal=p.codigo 
     where pk.cod_mes=$codMes and pk.cod_gestion=$codGestionActiva and pk.cod_estadoreferencial=1";//and p.codigo=1
-     //echo $sql."<br><br><br>";
+     // echo $sql."<br><br><br>";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $stmt->bindColumn('cod_personal', $cod_personal);
@@ -47,9 +58,8 @@ if (isset($_POST["cod_mes"])) {
     $stmt->bindColumn('reintegro', $reintegro);
     $stmt->bindColumn('haber_basico', $haber_basico);
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-
-        //borramos logicamente descuento tipo aporte a sindicato
-        $sql="DELETE FROM descuentos_personal_mes WHERE cod_descuento=$cod_descuento_as and cod_gestion=$codGestionActiva and cod_mes=$codMes and cod_personal=$cod_personal";
+        //borramos logicamente descuento tipo no visible en plantilla
+        $sql="DELETE FROM descuentos_personal_mes WHERE cod_gestion=$codGestionActiva and cod_mes=$codMes and cod_personal=$cod_personal and cod_descuento in (select d.codigo from descuentos d where d.tipo_descuento in (2,3))";//tipo descuento 1 vista plantilla, se carga desde la plantilla 
         // echo $sql;
         $stmtDesDelete = $dbh->prepare($sql);
         $flagSuccessDelete= $stmtDesDelete->execute();
@@ -101,18 +111,48 @@ if (isset($_POST["cod_mes"])) {
             $flagSuccess=$stmtInsert->execute();
         }
         // PROCESO DE DESCUENTOS **  los de tipo_descuento 1 ya fueron cargados al cargar la plantilla
+        // echo "<br>";
+        // var_dump($array_descuentos);
+        for ($j=0; $j < $contadorDescuentos; $j++) { 
+            $codigoDescuento=$array_descuentos[$j];
+            if($codigoDescuento==$cod_descuento_as){// Aporte al sindicato
+                $montoDescuento=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
+            }else{
+                $montoDescuento=obtenerDescuentoPersonalMes($cod_personal,$codMes,$globalNombreGestion,$codigoDescuento);
+            }
+            $sqlInsert="INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
+            VALUES ($codigoDescuento,$cod_personal,$codGestionActiva,$codMes,'$montoDescuento',$codEstado)";
+            // echo $sqlInsert."<br>";
+            $stmtSindicato=$dbh->prepare($sqlInsert);
+            $flagSuccess=$stmtSindicato->execute();
+        }
 
         // Aporte al sindicato
-        $aporte_sindicato=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
-        $stmtSindicato=$dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-            VALUES ($cod_descuento_as,$cod_personal,$codGestionActiva,$codMes,$aporte_sindicato,$codEstado)");
-        $flagSuccess=$stmtSindicato->execute();
+        // $aporte_sindicato=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
+        // $stmtSindicato=$dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
+        //     VALUES ($cod_descuento_as,$cod_personal,$codGestionActiva,$codMes,$aporte_sindicato,$codEstado)");
+        // $flagSuccess=$stmtSindicato->execute();
+        //descuentos desde modulo de descuentos
+        // $sql="SELECT ddm.monto,(select t.cod_descuento from tipos_descuentos_conta t where t.codigo=dd.cod_tipodescuento) as cod_descuento
+        // from descuentos_conta d  join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento join descuentos_conta_detalle_mes  ddm on ddm.cod_descuento_detalle=dd.codigo
+        // where d.cod_estado=3 and ddm.mes=$codMes and ddm.gestion=$globalNombreGestion and dd.cod_personal=$cod_personal";
 
-        // Aporte al sindicato
-        $aporte_sindicato=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
-        $stmtSindicato=$dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-            VALUES ($cod_descuento_as,$cod_personal,$codGestionActiva,$codMes,$aporte_sindicato,$codEstado)");
-        $flagSuccess=$stmtSindicato->execute();
+        // $sql="SELECT sum(ddm.monto)as monto,t.cod_descuento as cod_descuento
+        // from descuentos_conta d  join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento join tipos_descuentos_conta t on t.codigo=dd.cod_tipodescuento join descuentos_conta_detalle_mes  ddm on ddm.cod_descuento_detalle=dd.codigo
+        // where d.cod_estado=3 and ddm.mes=$codMes and ddm.gestion=$globalNombreGestion and dd.cod_personal=$cod_personal
+        // GROUP BY t.cod_descuento";
+        //  // echo $sql;
+        // $stmtDescuento = $dbh->prepare($sql);
+        // $stmtDescuento->execute();
+        // while ($rowdescuento = $stmtDescuento->fetch(PDO::FETCH_ASSOC)) {
+        //      $montoDescuento=$rowdescuento['monto'];
+        //      $cod_descuento=$rowdescuento['cod_descuento'];
+        //     // Aporte al sindicato
+        //     // $aporte_sindicato=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
+        //     $stmtSindicato=$dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
+        //         VALUES ($cod_descuento,$cod_personal,$codGestionActiva,$codMes,$montoDescuento,$codEstado)");
+        //     $flagSuccess=$stmtSindicato->execute();
+        // }
     }
     echo 1;
 }

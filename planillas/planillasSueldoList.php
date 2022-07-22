@@ -190,7 +190,7 @@ $stmtAdmnin->bindColumn('dias_trabajo', $dias_trabajados);
                       </td>
                       <td class="td-actions text-right">
                         <?php                      
-                        if($cod_estadoplanilla==2 || $cod_estadoplanilla==3){    ?> <!-- vista PLanilla -->                                                                                                          
+                        if(($cod_estadoplanilla==2 || $cod_estadoplanilla==3) && ($usuario_admin==1)){    ?> <!-- vista PLanilla -->                                                                                                          
                         <div class="dropdown">
                           <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
                             <i class="material-icons" title="Planillas - Formato Interno">remove_red_eye</i>

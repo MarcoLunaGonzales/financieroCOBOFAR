@@ -42,7 +42,7 @@ $idFila=$_GET['idFila'];
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="cod_personal<?=$idFila;?>" id="cod_personal<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">Personal</option>
               <?php                 
-                $sql="SELECT codigo,identificacion,paterno,materno,primer_nombre from personal where cod_estadopersonal in (1,2) and cod_estadoreferencial=1";
+                $sql="SELECT codigo,identificacion,paterno,materno,primer_nombre from personal where cod_estadopersonal in (1) and cod_estadoreferencial=1";
                 $stmt3 = $dbh->prepare($sql);
                 $stmt3->execute();
                 while ($rowsuc = $stmt3->fetch(PDO::FETCH_ASSOC)) {
@@ -99,7 +99,7 @@ $idFila=$_GET['idFila'];
     </div>
     <div class="col-sm-1">
       <div class="form-group">
-        <input type="number" step="0.01" min="0" id="monto_deposito<?=$idFila;?>" name="monto_deposito<?=$idFila;?>" class="form-control text-primary text-right" value="0" required="true" onchange="diferencia_descuento_personal(<?=$idFila?>)"> 
+        <input type="number" step="0.01" min="0" id="monto_deposito<?=$idFila;?>" name="monto_deposito<?=$idFila;?>" class="form-control text-primary text-right" value="0" required="true" onkeyUp="diferencia_descuento_personal(<?=$idFila?>)"> 
       </div>
     </div>
     <div class="col-sm-1">

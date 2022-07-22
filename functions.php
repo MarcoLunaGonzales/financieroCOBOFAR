@@ -661,7 +661,6 @@
      return($codigo);
   }
 
-
   function namePersonalCompleto($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',primer_nombre,paterno,materno)as nombre FROM personal where codigo=:codigo");
@@ -13760,7 +13759,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
 
   function listaDetalleDescuentosPersonal($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT d.cod_area,a.nombre as nombreArea,d.cod_personal,tdc.cod_cuenta,d.cod_contracuenta,d.monto_sistema,d.monto_depositado,d.diferencia,d.glosa,d.fecha,tdc.tipo_contabilizacion
+     $stmt = $dbh->prepare("SELECT d.codigo,d.cod_area,a.nombre as nombreArea,d.cod_personal,tdc.cod_cuenta,d.cod_contracuenta,d.monto_sistema,d.monto_depositado,d.diferencia,d.glosa,d.fecha,tdc.tipo_contabilizacion
       from descuentos_conta_detalle d join areas a on d.cod_area=a.codigo join tipos_descuentos_conta tdc on d.cod_tipodescuento=tdc.codigo
       where d.cod_descuento=$codigo");
      $stmt->execute();
@@ -13792,15 +13791,18 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
       return($valor);
    }
 
-   function obtenerDescuentoPersonalMes($cod_personal,$mes,$gestion){
+   function obtenerDescuentoPersonalMes($cod_personal,$codMes,$globalNombreGestion,$cod_descuento){
       $dbh = new Conexion();
-      $stmt = $dbh->prepare("SELECT sum(ddm.monto)as descuento
-                              from descuentos_conta d  join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento join descuentos_conta_detalle_mes  ddm on ddm.cod_descuento_detalle=dd.codigo
-                              where d.cod_estado=3 and ddm.mes=$mes and ddm.gestion=$gestion and dd.cod_personal=$cod_personal");
+      $stmt = $dbh->prepare("SELECT sum(ddm.monto)as monto
+        from descuentos_conta d  join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento join tipos_descuentos_conta t on t.codigo=dd.cod_tipodescuento join descuentos_conta_detalle_mes  ddm on ddm.cod_descuento_detalle=dd.codigo
+        where d.cod_estado=3 and ddm.mes=$codMes and ddm.gestion=$globalNombreGestion and dd.cod_personal=$cod_personal and t.cod_descuento=$cod_descuento");
       $stmt->execute();
       $valor=0;
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $valor=$row['descuento'];
+        $valor=$row['monto'];
+        if($valor=="" || $valor==null || $valor==" "){
+         $valor=0;
+        }
       }
       return($valor);
    }

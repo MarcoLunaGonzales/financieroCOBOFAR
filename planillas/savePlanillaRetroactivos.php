@@ -167,7 +167,7 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$com_afp=$total_ganado*0.5/100;//0.5%
 		$aporte_sol=$total_ganado*0.5/100;//0.5%
 
-		$total_descuentos=$ap_vejez-$riesgo_prof-$com_afp-$aporte_sol;
+		$total_descuentos=$ap_vejez+$riesgo_prof+$com_afp+$aporte_sol;
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
 		//==== insert de panillas de personal mes

@@ -7682,6 +7682,8 @@ function verLibretasBancarias(fila){
   $("#boton_libreta_detalle_facturas").addClass("d-none");
   $("#contenedor_cabecera_libreta_bancaria").html("<label class='font-weight-bold'>"+$("#descripcion_detallelibreta"+fila).val()+"</label>");
 }
+
+
 function agregarEstadoCuentaCerrar(filaXXX,valor){
   //console.log("entro:"+fila+" "+valor);
 

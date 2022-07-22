@@ -1,7 +1,7 @@
 <style>
   #mayores_cuenta_reporte_modal_filter{
          display: none !important;
-       }      
+  }      
 </style>
 <!-- notice modal -->
 <div class="modal fade" id="modalActividadesProyecto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

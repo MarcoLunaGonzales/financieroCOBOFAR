@@ -47,12 +47,13 @@ if($desde==$hasta){
   <table class="table">
                 <thead>
                   <tr class="bg-celeste s3 text-center">
-                    <td colspan="9">DETALLE DE MOVIMIENTOS</td> 
+                    <td colspan="10">DETALLE DE MOVIMIENTOS</td> 
                   </tr>
                   <tr class="bg-celeste s3 text-center">
                     <td><small>#</small></td>
                     <td><small>FECHA</small></td>
                     <td><small>COMPROBANTE</small></td>
+                    <td><small>TIPO</small></td>
                     <td><small>TOKEN</small></td>
                     <td><small>CHEQUE</small></td> 
                     <td><small>GLOSA</small></td>  
@@ -66,7 +67,9 @@ if($desde==$hasta){
                 $dbh = new Conexion();
 
 				// Preparamos
-				$stmt = $dbh->prepare("SELECT c.codigo,t.nombre as tipo,c.fecha,c.comprobante,c.token,c.nro_trasaccion_cheque,c.glosa,c.importe,CONCAT(p.primer_nombre,' ',p.paterno) as personal,c.cod_tipocierre,c.cod_comprobante,c.created_by FROM cierre_tesoreria c join personal p on p.codigo=c.cod_personal join tipos_cierre t on t.codigo=c.cod_tipocierre
+				$stmt = $dbh->prepare("SELECT c.codigo,t.nombre as tipo,c.fecha,c.comprobante,c.token,c.nro_trasaccion_cheque,c.glosa,c.importe,CONCAT(p.primer_nombre,' ',p.paterno) as personal,c.cod_tipocierre,c.cod_comprobante,c.created_by,(SELECT numero from cheques_emitidos where cod_registrotesoreria=c.codigo) as nro_cheque,
+          (SELECT abreviatura from tipos_pagoproveedor where codigo=c.cod_tipopago) as tipo_pago 
+          FROM cierre_tesoreria c join personal p on p.codigo=c.cod_personal join tipos_cierre t on t.codigo=c.cod_tipocierre
 				where c.estado=1 and c.fecha>='$desde' and c.fecha<='$hasta' order by c.created_at;");
 				// Ejecutamos
 				$stmt->execute();
@@ -76,20 +79,21 @@ if($desde==$hasta){
 				$stmt->bindColumn('fecha', $fechaX);
 				$stmt->bindColumn('comprobante', $comprobanteX);
 				$stmt->bindColumn('token', $tokenX);
-				$stmt->bindColumn('nro_trasaccion_cheque', $chequeX);
+				$stmt->bindColumn('nro_cheque', $chequeX);
 				$stmt->bindColumn('glosa', $glosaX);
 				$stmt->bindColumn('importe', $importeX);
 				$stmt->bindColumn('personal', $personalX);
 				$stmt->bindColumn('cod_tipocierre', $cod_tipocierreX);
 				$stmt->bindColumn('cod_comprobante', $cod_comprobanteX);
 				$stmt->bindColumn('created_by', $created_byX);
+        $stmt->bindColumn('tipo_pago', $tipoPagoX);
                 
                  $saldo=obtenerSaldoCierreTesoreria($desde);  
                  $saldo=number_format($saldo,2,'.','');                                
 ?>
 
                         <tr class="s3 text-center">
-                          <th colspan="8">SALDO DIA ANTERIOR</th>
+                          <th colspan="9">SALDO DIA ANTERIOR</th>
                           <th style="text-align: right"><?=number_format($saldo,2,'.',',');?></th>                          
                         </tr>
 <?php
@@ -112,6 +116,7 @@ if($desde==$hasta){
                           <td align="center"><?=$index;?></td>
                           <td><?=date("d/m/Y",strtotime($fechaX));?></td>
                           <td><b><?=$comprobanteX;?></b></td>
+                          <td><?=$tipoPagoX;?></td>
                           <td><?=$tokenX;?></td>
                           <td><?=$chequeX;?></td>
                           <td style="text-align: left"><?=$glosaX;?></td>
@@ -126,7 +131,7 @@ if($desde==$hasta){
                 </tbody>
                 <tfoot>
                         <tr class="s3 text-center">
-                          <th colspan="8">SALDO FINAL</th>
+                          <th colspan="9">SALDO FINAL</th>
                           <th style="text-align: right"><?=number_format($saldo,2,'.',',');?></th>
                         </tr>
                 </tfoot>

@@ -46,10 +46,10 @@ switch ($filtro) {
           <td width="10%">Nro Doc / Nro Ref</td>
           <!--<td width="10%"><a href="#" id="minus_tabla_lib" title="Abrir/Cerrar Facturas" class="text-white float-right"><i class="material-icons">switch_left</i></a>Estado</td>-->
           <td class="bg-success">Fecha</td>
-          <td class="bg-success">Numero</td>
-          <td class="bg-success">NIT</td>
-          <td class="bg-success">Razon Social</td>
-          <td width="10%" class="bg-success">Detalle</td>
+          <td class="bg-success">F. Registro</td>
+          <td class="bg-success">Sucursal</td>
+          <!-- <td class="bg-success">Personal</td> -->
+          <td width="10%" class="bg-success">Glosa</td>
           <td class="bg-success">Monto</td>
           
         </tr>
@@ -134,86 +134,33 @@ switch ($filtro) {
               <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
               <td class="text-right"><?=$nro_documento?></td>
               <?php 
-              if($codFactura==""||$codFactura==0||$codFactura==null){
-                $facturaFecha="";
-                $facturaNumero="";
-                $facturaNit="";
-                $facturaRazonSocial="";
-                $facturaDetalle="";
-                $facturaMonto="";
-                $totalMontoFac+=0;
-                if(!($codComprobante==""||$codComprobante==0)){
-                  $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);                    
-                  /*if($filtro==0){
-                    $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);                    
-                  }else{
-                    $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);                    
-                  }*/
-                  if($datosDetalle[1]!=''){
-                     $facturaFecha="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
-                     $facturaNumero="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
-                     $facturaNit="<b class='text-success'>-</b>";
-                     $facturaDetalle="<b class='text-success'>".$datosDetalle[0]."</b>";
-                     $facturaRazonSocial="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
-                     $facturaMonto="<b class='text-success'>".$datosDetalle[1]."</b>";     
-                  }
-                  $totalMontoFac+=$datosDetalle[1];
-                }
-                
-               ?>
-                <td class="text-right font-weight-bold"><?=$facturaFecha?></td>
-                <td class="text-right font-weight-bold"><?=$facturaNumero?></td>
-                <td class="text-right font-weight-bold"><?=$facturaNit?></td>
-                <td class="text-right font-weight-bold"><?=$facturaRazonSocial?></td>
-                <td class="text-right font-weight-bold"><?=$facturaDetalle?></td>
-                <td class="text-right font-weight-bold"><?=$facturaMonto?></td> 
-               <?php                          
-              }else{
                 $cadena_facturas=obtnerCadenaFacturas($codigo);
-                $sqlDetalleX="SELECT f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,(SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) from facturas_ventadetalle fd where fd.cod_facturaventa=f.codigo)as importe FROM facturas_venta f where f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
-                //$sqlDetalleX="SELECT f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as importe FROM facturas_venta f, facturas_ventadetalle fd where f.codigo=fd.cod_facturaventa and f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
-                /*if($filtro==0){
-                  $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 order by codigo desc";
-                }else{
-                    $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc";
-                }*/
-                
-                // echo $sqlDetalleX;                                   
-                $stmtDetalleX = $dbh->prepare($sqlDetalleX);
-                $stmtDetalleX->execute();
-                $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);
-                $stmtDetalleX->bindColumn('nro_factura', $nroDetalle);
-                $stmtDetalleX->bindColumn('nit', $nitDetalle);
-                $stmtDetalleX->bindColumn('razon_social', $rsDetalle);
-                $stmtDetalleX->bindColumn('observaciones', $obsDetalle);
-                $stmtDetalleX->bindColumn('importe', $impDetalle);
-                $facturaFecha=[];
-                $facturaNumero=[];
-                $facturaNit=[];
-                $facturaRazonSocial=[];
-                $facturaDetalle=[];
-                $facturaMonto=[];
-                $filaFac=0;  
-                while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {
-                  if($nroDetalle!=""){
-                  $totalMontoFac+=$impDetalle;
-                  $facturaFecha[$filaFac]=strftime('%d/%m/%Y',strtotime($fechaDetalle));
-                  $facturaNumero[$filaFac]=$nroDetalle;
-                  $facturaNit[$filaFac]=$nitDetalle;
-                  $facturaRazonSocial[$filaFac]=$rsDetalle;
-                  $facturaDetalle[$filaFac]=$obsDetalle;
-                  $facturaMonto[$filaFac]=number_format($impDetalle,2,".",",");
-                  $filaFac++;
-                  }
-                }?>
-                <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></td>
-                <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></td>
-                <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNit)?></td>
-                <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaRazonSocial)?></td>
-                <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaDetalle)?></td>
-                <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaMonto)?></td> 
+                $sqlDetalleX="SELECT CONCAT(f.nombres,' ',f.paterno) as personal,r.fecha_registro,r.fecha,r.glosa,c.descripcion,r.monto_registrado FROM registro_depositos r join ciudades c on c.cod_ciudad=r.cod_ciudad join funcionarios f on f.codigo_funcionario=r.cod_funcionario where r.cod_libretabancaria='$codigo';";    
+                $resp=mysqli_query($enlaceCon,$sqlDetalleX);
+                $fechaDepo="";
+                $fechaRegistro="";
+                $sucursalDepo="";
+                $personalDepo="";
+                $glosaDepo="";
+                $montoDepo="";
+                while($dat=mysqli_fetch_array($resp)){ 
+                  $fechaDepo=strftime('%d/%m/%Y',strtotime($dat['fecha']));
+                  $fechaRegistro=strftime('%d/%m/%Y',strtotime($dat['fecha_registro']));;
+                  $sucursalDepo=$dat['descripcion'];
+                  $personalDepo=$dat['personal'];
+                  $glosaDepo=$dat['glosa'];
+                  $montoDepo=number_format($dat['monto_registrado'],2,".",",");
+                  $totalMontoFac+=number_format($dat['monto_registrado'],2,".","");
+                }
+
+
+                ?>
+                <td class="text-right" style="color:green;"><?=$fechaDepo?></td>
+                <td class="text-right" style="color:green;"><?=$fechaRegistro?></td>
+                <td class="text-right" style="color:green;"><?=$sucursalDepo?></td>
+                <td class="text-right" style="color:green;"><?=$glosaDepo?></td>
+                <td class="text-right" style="color:green;"><?=$montoDepo?></td> 
                 <?php
-              }
               ?>
             </tr><?php 
             $index++;
@@ -225,7 +172,6 @@ switch ($filtro) {
         <td align="center" colspan="4" class="csp">Totales</td>
         <td class="text-right"><?=number_format($montoMonto,2,".",",")?></td>
         <td class="text-right"><?=number_format($totalMonto,2,".",",")?></td>
-        <td class="text-left"></td>
         <td class="text-left"></td>
         <td class="text-left"></td>
         <td class="text-left"></td>
@@ -246,10 +192,10 @@ switch ($filtro) {
           <th>Saldo</th>
           <th>Nro Documento</th>
           <th class="bg-success">Fecha</th>
-          <th class="bg-success">Numero</th>
-          <th class="bg-success">NIT</th>
-          <th class="bg-success">Razon Social</th>
-          <th class="bg-success">Detalle</th>
+          <th class="bg-success">F.Registro</th>
+          <th class="bg-success">Sucursal</th>
+          <!-- <th class="bg-success">Personal</th> -->
+          <th class="bg-success">Glosa</th>
           <th class="bg-success">Monto</th>
         </tr>
       </tfoot>

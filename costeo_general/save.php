@@ -66,6 +66,18 @@ for ($i=1; $i <= (int)$items ; $i++) {
       $cuenta_ingreso=$_POST["cuenta_ingreso".$i]; 
       $cuenta_salida_aux=$_POST["cuenta_salida_aux".$i]; 
       $cuenta_ingreso_aux=$_POST["cuenta_ingreso_aux".$i]; 
+
+      $area_salida=$cod_area_solicitud; 
+      $area_ingreso=$cod_area_solicitud; 
+      
+      if($_POST["area_salida".$i]>0){
+        $area_salida=$_POST["area_salida".$i];
+      }
+      if($_POST["area_ingreso".$i]>0){
+        $area_ingreso=$_POST["area_ingreso".$i];
+      }
+
+
       $haber=$_POST["haber".$i]; 
       $debe=$_POST["debe".$i];   
       $cod_traspasos=$_POST["cod_traspasos".$i];    
@@ -85,8 +97,8 @@ for ($i=1; $i <= (int)$items ; $i++) {
           //mysqli_query($dbh,$sql);
       }
       //detalle del comprobante
-      $insDet=insertarDetalleComprobante($codComprobante,$cuenta_ingreso,$cuenta_ingreso_aux,$cod_uo_solicitud,$cod_area_solicitud,$debe,0,$concepto_contabilizacion,1);
-      $insDet=insertarDetalleComprobante($codComprobante,$cuenta_salida,$cuenta_salida_aux,$cod_uo_solicitud,$cod_area_solicitud,0,$haber,$concepto_contabilizacion,2);    
+      $insDet=insertarDetalleComprobante($codComprobante,$cuenta_ingreso,$cuenta_ingreso_aux,$cod_uo_solicitud,$area_ingreso,$debe,0,$concepto_contabilizacion,1);
+      $insDet=insertarDetalleComprobante($codComprobante,$cuenta_salida,$cuenta_salida_aux,$cod_uo_solicitud,$area_salida,0,$haber,$concepto_contabilizacion,2);    
   }
 }
 mysqli_close($enlaceCon);

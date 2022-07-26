@@ -49,24 +49,23 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $stmtInsert2 = $dbh->prepare($sqlInsert2);
     $flagSuccess=$stmtInsert2->execute();
 
-    if($tipo_pago==1){
-      $contadorCheque++;
-     $banco=$_POST['banco_pago'.$i];
-     $cheque=$_POST['emitidos_pago'.$i];
-     $numero_cheque=$_POST['numero_cheque'.$i];
-     $nombre_ben=$_POST['beneficiario'.$i];
+     if($tipo_pago==1){
+         $contadorCheque++;
+         $banco=$_POST['banco_pago'.$i];
+         $cheque=$_POST['emitidos_pago'.$i];
+         $numero_cheque=$_POST['numero_cheque'.$i];
+         $nombre_ben=$_POST['beneficiario'.$i];
 
-     $sqlInsert3="INSERT INTO cheques_emitidos (cod_cheque,fecha,nombre_beneficiario,monto,cod_pagodetalle,cod_estadoreferencial) 
-              VALUES ('".$cheque."','".$fecha_pagoDet."','".$nombre_ben."','".$monto_pago."','".$cod_pagoproveedordetalle."',1)";
-     $stmtInsert3 = $dbh->prepare($sqlInsert3);
-     $stmtInsert3->execute();
+         $sqlInsert3="INSERT INTO cheques_emitidos (cod_cheque,fecha,nombre_beneficiario,monto,cod_pagodetalle,cod_estadoreferencial) 
+                  VALUES ('".$cheque."','".$fecha_pagoDet."','".$nombre_ben."','".$monto_pago."','".$cod_pagoproveedordetalle."',1)";
+         $stmtInsert3 = $dbh->prepare($sqlInsert3);
+         $stmtInsert3->execute();
 
-     $sqlInsert4="UPDATE cheques SET nro_cheque=$numero_cheque where codigo=$cheque";
-     $stmtInsert4 = $dbh->prepare($sqlInsert4);
-     $stmtInsert4->execute();
-    }
-             
-	}
+         $sqlInsert4="UPDATE cheques SET nro_cheque=$numero_cheque where codigo=$cheque";
+         $stmtInsert4 = $dbh->prepare($sqlInsert4);
+         $stmtInsert4->execute();
+     }            
+   }
 }
 
 

@@ -101,7 +101,7 @@ $cuentaDevolucion=5134;
                     and ai.cod_tipoalmacen=1 and asa.cod_tipoalmacen=1 and asa.cod_ciudad='$id_sucursal'
                     GROUP BY s.cod_almacen,s.fecha,s.almacen_destino,s.cod_salida_almacenes,id.cod_material  
                     ) lie
-                    GROUP BY lie.cod_almacen,lie.fecha,lie.cod_almacen_destino
+                    GROUP BY lie.cod_almacen,lie.fecha,lie.cod_almacen_destino,lie.cod_traspasos
                     order by 1,almacen_origen,fecha,cod_almacen_destino;";
                   //echo $sql;
                   $resp=mysqli_query($enlaceCon,$sql);

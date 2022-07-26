@@ -45,7 +45,7 @@ join almacenes ai on ai.cod_almacen=i.cod_almacen
 join almacenes asa on asa.cod_almacen=s.cod_almacen
 where s.fecha>='$fechaInicio' and s.fecha<='$fechaFin' and s.salida_anulada=0 and i.ingreso_anulado=0
 and ai.cod_tipoalmacen=1 and asa.cod_tipoalmacen=1 
-and round(cti.costo_unitario,2)<>round(cts.costo_unitario,2)
+and round(cti.costo_unitario,2)<>round(cts.costo_unitario,2) AND s.costeo_cod_comprobante is null
 GROUP BY ai.cod_almacen;"; //and (s.cod_almacen<>1000 and s.cod_almacen<>1078) //and i.cod_almacen!=1000
 		        ?>
 

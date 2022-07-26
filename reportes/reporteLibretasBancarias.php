@@ -3,6 +3,7 @@ session_start();
 set_time_limit(0);
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
+require_once '../conexion_comercial2.php';
 require_once '../styles.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';

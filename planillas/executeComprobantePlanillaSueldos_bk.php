@@ -1,5 +1,5 @@
 <?php
-
+// bk Antes de modulo de descuentos 
 set_time_limit(0);
 session_start();
 
@@ -18,6 +18,7 @@ $dbh = new Conexion();
 $codigo_planilla=$_GET['codigo_planilla'];
 $cod_gestion=$_GET['cod_gestion'];
 $cod_mes=$_GET['cod_mes'];
+
 
 $sqlPersonalDistribucion="SELECT pd.cod_personal, SUM(pd.porcentaje) as porcentaje 
 from personal p join personal_area_distribucion pd on p.codigo=pd.cod_personal
@@ -62,6 +63,7 @@ if($sw_auxiliar==0){//distribucion de sueldos cuadrando
    $globalUnidad_ofcen=1;//Oficina central
    $cod_area_ofcen=obtenerValorConfiguracion(29);//area
    $tipoComprobante=3;
+
    $codEmpresa=1;
    $mesPlanilla=$_GET["cod_mes"];
    $gestionPlanilla=$_GET["cod_gestion"];
@@ -69,6 +71,8 @@ if($sw_auxiliar==0){//distribucion de sueldos cuadrando
    $nombreMes=nombreMes($mesPlanilla);
 
    // $mesTrabajo=$_SESSION['globalMes'];
+
+
     $anioActual=date("Y");
     $mesActual=date("m");
     $diaActual=date("d");
@@ -87,6 +91,7 @@ if($sw_auxiliar==0){//distribucion de sueldos cuadrando
         $fechaHoraActual=$gestionTrabajo."-".$codMesActiva."-".$diaUltimo." ".$horasActual;
       } 
     }
+
 
      //indicamos que ya se realizo el comprbante      
       $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas set comprobante=1 where codigo=$codigo_planilla");
@@ -227,50 +232,110 @@ if($sw_auxiliar==0){//distribucion de sueldos cuadrando
       //    $stmtInsertDet = $dbh->prepare($sqlInsertDet);
       //    $flagSuccessDet=$stmtInsertDet->execute();
       //    $ordenDetalle++;
-      //    //falta estado cuenta            
+      //    //falta estado cuenta
+
+
+            
       // }
 
 
-      //Descuentos No visibles en Plantilla
-
-         $sql="SELECT dd.codigo,(select ec.codigo from estados_cuenta  ec where ec.cod_comprobantedetalle in (dd.cod_comprobantedetalle))as cod_ec,dd.cod_personal,t.cod_cuenta,ddm.monto,dd.glosa,dd.cod_area
-        from descuentos_conta d  join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento join tipos_descuentos_conta t on t.codigo=dd.cod_tipodescuento join descuentos_conta_detalle_mes  ddm on ddm.cod_descuento_detalle=dd.codigo
-        where d.cod_estado=3 and ddm.mes=$mesPlanilla and ddm.gestion=$nombreGestion";
-      $stmtAnticipos = $dbh->prepare($sql);
-      $stmtAnticipos->execute();
-      while ($rowDescu = $stmtAnticipos->fetch(PDO::FETCH_ASSOC)) {
-         $codigo=$rowDescu['codigo'];
-         $cod_ec=$rowDescu['cod_ec'];
-         $cod_personal=$rowDescu['cod_personal'];
-         $cod_cuentaDescuento=$rowDescu['cod_cuenta'];
-         $monto=$rowDescu['monto'];
-         $cod_area=$rowDescu['cod_area'];
-         $monto=$rowDescu['monto'];
-         $monto=$rowDescu['monto'];
-         $glosaDetalle="Descuento - ".$rowDescu['glosa'];
-         $unidadDetalle=1;
-         $debe=0;
-         $haber=$monto;
-         $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_personal,$cod_cuentaDescuento);
-         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-         $sqlDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cod_cuentaDescuento', '$cuentaAuxiliar', '$unidadDetalle', '$cod_area', '$debe', '$haber', '$glosaDetalle', '$ordenDetalle')";
-         $stmtDet = $dbh->prepare($sqlDet);
-         $stmtDet->execute();
-         $ordenDetalle++;
-         //INGRESAMOS ESTADOS DE CUENTA
-         $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
-           VALUES ('$codComprobanteDetalle', '$cod_cuentaDescuento', '$monto', '$cod_personal', '$fechaHoraActual','$cod_ec','$cuentaAuxiliar','$glosaDetalle')";
-         $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
-         $stmtDetalleEstadoCuenta->execute();
-         // //actualizamos con que cod comprobante se guardó
-         // $sqlUpdateDesc="UPDATE descuentos_conta_detalle set cod_comprobantedetalle='$codComprobanteDetalle' where codigo=$codigoDetalle";
-         // $stmtUpdateDesc = $dbh_detalle->prepare($sqlUpdateDesc);
-         // $stmtUpdateDesc->execute();
+      
 
 
-      }
 
 
+
+
+
+      // //FIN PERSONAL PROYECTOS
+      // $glosaDetalleGeneral="Sueldo correspondiente a: ".$mesPlanilla."/".$gestionPlanilla;
+      // //$codUOCentroCosto="829";
+      // $codUOCentroCosto=$globalUnidadX;
+      // $codAreaCentroCosto="501";
+
+      // //SUELDOS POR PAGAR
+      // $totalLiquidoPagable=totalLiquidoPagable($gestionPlanilla, $mesPlanilla, $globalUnidadX);
+      // $numeroCuenta="110";
+      // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalLiquidoPagable','$glosaDetalleGeneral','$ordenDetalle')";
+      // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+      // $flagSuccessDet=$stmtInsertDet->execute();
+      // $ordenDetalle++;
+
+      // //CAJA PETROLERA
+      // // $totalCajaSalud=17819.96;
+      // $totalCajaSalud=obtenerTotalCPS($gestionPlanilla,$mesPlanilla,$globalUnidadX);
+      // $numeroCuenta="120";//por defecto
+      // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalCajaSalud','$glosaDetalleGeneral','$ordenDetalle')";
+      // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+      // $flagSuccessDet=$stmtInsertDet->execute();
+      // $ordenDetalle++;
+
+      // //AFP PREVISION BBV
+      // // $totalAFPPrevision=15514.25;
+      // $totalAFPPrevision=obtenerTotalAFP_prev1($gestionPlanilla,$mesPlanilla,$globalUnidadX);
+      // $numeroCuenta="121";//por defecto
+      // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPPrevision','$glosaDetalleGeneral','$ordenDetalle')";
+      // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+      // $flagSuccessDet=$stmtInsertDet->execute();
+      // $ordenDetalle++;
+
+      // //AFP PREVISION BBV
+      // // $totalAFPPrevision=298.24;
+      // $totalAFPPrevision=obtenerTotalAFP_prev2($gestionPlanilla,$mesPlanilla,$globalUnidadX);
+      // $numeroCuenta="121";//por defecto
+      // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPPrevision','$glosaDetalleGeneral','$ordenDetalle')";
+      // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+      // $flagSuccessDet=$stmtInsertDet->execute();
+      // $ordenDetalle++;
+
+
+      // //AFP FUTURO
+      // // $totalAFPFuturo=15528.13;
+      // $totalAFPFuturo=obtenerTotalAFP_prev3($gestionPlanilla,$mesPlanilla,$globalUnidadX);
+      // $numeroCuenta="121";//por defecto
+      // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPFuturo','$glosaDetalleGeneral','$ordenDetalle')";
+      // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+      // $flagSuccessDet=$stmtInsertDet->execute();
+      // $ordenDetalle++;
+
+      // //AFP PREVISION BBV
+      // $totalAFPFuturo=0;
+      // $numeroCuenta="121";
+      // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPFuturo','$glosaDetalleGeneral','$ordenDetalle')";
+      // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+      // $flagSuccessDet=$stmtInsertDet->execute();
+      // $ordenDetalle++;
+
+      // //PROVIVIENDA
+      // // $totalProVivienda=1781.20;
+      // $totalProVivienda=obtenerTotalprovivienda($gestionPlanilla,$mesPlanilla,$globalUnidadX);
+      // $numeroCuenta="121";
+      // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalProVivienda','$glosaDetalleGeneral','$ordenDetalle')";
+      // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+      // $flagSuccessDet=$stmtInsertDet->execute();
+      // $ordenDetalle++;
+
+      // //PROVIVIENDA
+      // // $totalProVivienda=1782.79;
+      // $totalProVivienda=obtenerTotalprovivienda2($gestionPlanilla,$mesPlanilla,$globalUnidadX);
+      // $numeroCuenta="121";
+      // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalProVivienda','$glosaDetalleGeneral','$ordenDetalle')";
+      // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+      // $flagSuccessDet=$stmtInsertDet->execute();
+      // $ordenDetalle++;
+
+
+      // //RC IVA
+      // // $totalRCIVA=108.03;
+      // $totalRCIVA=obtenerTotalOtrosdescuentos($gestionPlanilla,$mesPlanilla,$globalUnidadX);
+      // $numeroCuenta="131";
+      // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalRCIVA','$glosaDetalleGeneral','$ordenDetalle')";
+      // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+      // $flagSuccessDet=$stmtInsertDet->execute();
+      // $ordenDetalle++;
+      // //indicamos que ya se realizo el comprbante      
+      // $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas set comprobante=1 where codigo=$codigo_planilla");
+      // $stmtUdatePlanilla->execute();
 
    ?>
    <script>

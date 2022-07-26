@@ -20637,15 +20637,15 @@ function diferencia_descuento_personal(id){
   if(monto_sistema<0 || monto_sistema==0 || monto_sistema==null){
     // Swal.fire("Informativo!", "El monto del sistema NO debe ser 0 o número negativo!", "warning");
   }else{
-    if(monto_deposito<0 || monto_deposito==null){
-      // Swal.fire("Informativo!", "El monto depositado NO debe ser 0 o número negativo!", "warning");
-    }else{
+    // if(monto_deposito<0 || monto_deposito==null){
+    //   // Swal.fire("Informativo!", "El monto depositado NO debe ser 0 o número negativo!", "warning");
+    // }else{
       var monto_descuento=parseFloat(monto_sistema)-parseFloat(monto_deposito);
       monto_descuento=Math.round((monto_descuento + Number.EPSILON) * 100) / 100;//redondeamos a dos decimales
        //agregamos al total      
       $("#monto_diferencia"+id).val(monto_descuento);//irá en hidden 
       // $("#modal_importe_dos_add"+id).val(number_format(monto_descuento,2));//para mostrar con formato
-    }
+    // }
   }  
 }
 

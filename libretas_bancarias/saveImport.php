@@ -219,6 +219,7 @@ $sqlInserts=[];  $lista_documento=[];
                     $verSi=1;
                     //se encontraron fechas mayores a la fila
                   }
+                  $verSi=0;
                   if($verSi==0){
                     if($descripcion=="" && ($monto==""||$monto==0)){
 

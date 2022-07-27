@@ -1235,6 +1235,18 @@
 			require_once('vacaciones_permisos/permisos_list_rrhh.php'); //admin
 		}
 		//ASISTENCIA PERSONAL
+		if ($_GET['opcion']=='asistenciaPersonal_main') {
+			require_once('asistencia/index.php'); //ok
+		}
+
+		if ($_GET['opcion']=='rpt_asistencia_personal_from') {
+			require_once('asistencia/reporte_asistencia_personal_from.php'); //ok
+		}
+		if ($_GET['opcion']=='rpt_asistencia_consolidado_from') {
+			require_once('asistencia/reporte_asistencia_consolidado_from.php'); //ok
+		}
+
+		//cuadro de asistencia
 		if ($_GET['opcion']=='asistenciaPersonalLista') {
 			require_once('asistencia/asistencia_list.php'); //ok
 		}

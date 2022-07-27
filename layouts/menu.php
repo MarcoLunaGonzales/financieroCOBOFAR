@@ -208,21 +208,21 @@ if($menuModulo==0){
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listDescuentos">
                       <span class="sidebar-mini"> D </span>
-                      <span class="sidebar-normal">Tipos de Descuentos</span>
-                    </a>
-                </li>
-
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=descuentosContaList">
-                      <span class="sidebar-mini"> DC </span>
                       <span class="sidebar-normal">Descuentos</span>
                     </a>
                 </li>
 
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=descuentosConsolidados_list">
-                      <span class="sidebar-mini"> DCA </span>
-                      <span class="sidebar-normal"> Descuentos Consolidado</span>
+                    <a class="nav-link" href="?opcion=descuentosContaList" style="color:#2c3e50;font-weight:bold;">
+                      <span class="sidebar-mini"> DV </span>
+                      <span class="sidebar-normal">Descuentos V2</span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=descuentosConsolidados_list" style="color:#2c3e50;font-weight:bold;">
+                      <span class="sidebar-mini"> DVC </span>
+                      <span class="sidebar-normal"> Descuentos V2 Consolidado</span>
                     </a>
                 </li>
 
@@ -278,11 +278,10 @@ if($menuModulo==0){
             </a>
             <div class="collapse" id="transaccHHRR_pla">
               <ul class="nav">
-                
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=asistenciaPersonalListaRRHH"  style="background:#dab6aa; color:#584f4c;font-weight:bold;">
+                    <a class="nav-link" href="?opcion=asistenciaPersonal_main"  style="background:#dab6aa; color:#584f4c;font-weight:bold;">
                       <span class="sidebar-mini"> AP </span>
-                      <span class="sidebar-normal">Asistencia Sucursales</span>
+                      <span class="sidebar-normal">Control de Asistencia</span>
                     </a>
                 </li>
                 <li class="nav-item ">

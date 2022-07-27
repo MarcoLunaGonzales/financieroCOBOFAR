@@ -56,7 +56,7 @@ $fecha_actualización=date('d/m/Y');
                            </div>
                            <div class="col-sm-8">
                               <a href="?opcion=rpt_diferencias_depositos_from" >
-                                <h5 class="card-title" style="color:#ffffff;"><b>DIFERENCIA DE DEPOSITOS</b></h5>
+                                <h5 class="card-title" style="color:#ffffff;"><b>DIFERENCIAS EN DEPOSITOS</b></h5>
                                 <p class="card-text text-small" style="color:#ffffff">Reportes</p>
                               </a>  
                            </div>
@@ -69,7 +69,7 @@ $fecha_actualización=date('d/m/Y');
                            </div>
                            <div class="col-sm-8">
                               <a href="?opcion=cierrecaja_from" >
-                                <h5 class="card-title" style="color:#ffffff;"><b>GENERAR COMPROBANTE</b></h5>
+                                <h5 class="card-title" style="color:#ffffff;"><b>GENERACIÓN DE COMPROBANTES</b></h5>
                                 <p class="card-text text-small" style="color:#ffffff">Ingresos</p>
                               </a>  
                            </div>
@@ -83,7 +83,7 @@ $fecha_actualización=date('d/m/Y');
                            </div>
                            <div class="col-sm-8">
                               <a href="?opcion=rpt_bajadepositos_from" >
-                                <h5 class="card-title" style="color:#ffffff;"><b>ARQUEO DE CAJA</b></h5>
+                                <h5 class="card-title" style="color:#ffffff;"><b>PUNTOS DE VENTA</b></h5>
                                 <p class="card-text text-small" style="color:#ffffff">Reportes</p>
                               </a>  
                            </div>
@@ -98,7 +98,7 @@ $fecha_actualización=date('d/m/Y');
                            </div>
                            <div class="col-sm-8">
                               <a href="?opcion=rpt_facturasgeneradas_comercial_from" >
-                                <h5 class="card-title" style="color:#ffffff;"><b>FACTURAS</b></h5>
+                                <h5 class="card-title" style="color:#ffffff;"><b>FACTURAS GENERADAS</b></h5>
                                 <p class="card-text text-small" style="color:#ffffff">Reportes</p>
                               </a>  
                            </div>

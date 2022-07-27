@@ -58,6 +58,16 @@
     if($month==12){    return ("Diciembre");  }             
   }
 
+  function nombreDia($month){
+    if($month==1){    return ("Lunes");   }
+    if($month==2){    return ("Martes");  }
+    if($month==3){    return ("Miercoles");  }
+    if($month==4){    return ("Jueves");  }
+    if($month==5){    return ("Viernes");  }
+    if($month==6){    return ("Sabado");  } 
+    if($month==7){    return ("Domingo");  }    
+  }
+
   function nameGestion($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT nombre FROM gestiones where codigo=:codigo");

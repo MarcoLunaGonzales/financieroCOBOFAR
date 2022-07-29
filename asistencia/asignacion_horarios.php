@@ -78,7 +78,7 @@ $stmt->bindColumn('creador', $creadorX);
       
     }
 
-    if(modal_fecha_inicio==""||modal_area=="0"||modal_tipoasignacion=="0"||modal_fecha_fin==""){
+    if(modal_fecha_inicio==""||modal_area=="0"||modal_tipoasignacion.length==0||modal_fecha_fin==""){
       //||modal_tipohorario.length==0 horario continuo
       Swal.fire("Informativo","Debe ingresar los datos del formulario!","info");
     }else{
@@ -143,6 +143,39 @@ $stmt->bindColumn('creador', $creadorX);
         }
       })
     }
+  }
+
+
+  function copiarNuevoDatos(codigo){
+        var parametros={"codigo":codigo};
+        $.ajax({
+              type: "GET",
+              dataType: 'html',
+              url: "asistencia/asignacion_horarios_copiar.php",
+              data: parametros,
+              success:  function (resp) {
+                var r=resp.split("#####");
+                $("#modal_tipoasignacion").val(r[13]);
+                $("#modal_fecha_inicio").val(r[2]);
+                $("#modal_fecha_fin").val(r[3]);
+                $("#ingreso_1").val(r[4]);
+                $("#salida_1").val(r[5]);
+                $("#ingreso_2").val(r[6]);
+                $("#salida_2").val(r[7]);
+                $("#ingreso_3").val(r[8]);
+                $("#salida_3").val(r[9]);
+                $("#ingreso_4").val(r[10]);
+                $("#salida_4").val(r[11]);
+                $("#modal_tipohorario").val("");                
+                $.each(r[12].split(","), function(i,e){
+                    $("#modal_tipohorario option[value='" + e + "']").prop("selected", true);
+                });
+                mostrarHorarioTurno();
+                $(".selectpicker").selectpicker("refresh");
+                nuevoHorario();
+                //alert(resp);               
+              }
+        }); 
   }
 </script>
 <div class="content">
@@ -220,6 +253,9 @@ $stmt->bindColumn('creador', $creadorX);
                           <td class="text-center"><?=$estadoActivo;?></td>
                           <td class="text-center"><?=$creadorX;?></td>
                           <td class="td-actions text-right">
+                            <a href="#"> 
+                                  <i class="material-icons" title="Copiar" style="color:#9804AA" onclick="copiarNuevoDatos(<?=$codigoX?>);return false;">content_paste_go</i>
+                            </a>
                             <?php
                             if($activoX==0){
                             ?> <a href="asistencia/asignacion_horarios_delete.php?codigo=<?=$codigoX?>&e=0" > 
@@ -292,8 +328,8 @@ $stmt->bindColumn('creador', $creadorX);
           <label class="col-sm-2 col-form-label">Tipo Asignación</label>
           <div class="col-sm-2">
             <div class="form-group">                  
-              <select name="modal_tipoasignacion" id="modal_tipoasignacion" class="selectpicker form-control form-control-sm" data-style="btn btn-primary">
-                <option  value="0" selected disabled>--SELECCIONE--</option>
+              <select name="modal_tipoasignacion[]" id="modal_tipoasignacion" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" multiple>
+                <!-- <option  value="0" selected disabled>--SELECCIONE--</option> -->
                  <?php
                       $sql="SELECT a.codigo,a.descripcion from horarios_asignaciontipo a";
                       $stmtg = $dbh->prepare($sql);

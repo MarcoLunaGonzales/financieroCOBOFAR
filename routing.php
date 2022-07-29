@@ -1259,6 +1259,13 @@
 		if ($_GET['opcion']=='rpt_asignacion_horarios_des') {
 			require_once('asistencia/asignacion_horarios_deshabilitados.php'); //ok
 		}
+
+
+		if ($_GET['opcion']=='rpt_asignacion_horarios_areas') {
+			require_once('asistencia/asignacion_horarios_areas.php'); //ok
+		}
+
+
 		
 
 

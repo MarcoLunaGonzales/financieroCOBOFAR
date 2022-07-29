@@ -41,7 +41,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
                </table>
                <center>
                   <div class="btn-group">
-                     <a  class="btn btn-sm" href="?opcion=rpt_gestion_horarios_from">GESTIÓN<BR>HORARIOS</a><a  class="btn btn-sm btn-success" style="background:#7CC6A8 !important;" href="?opcion=rpt_asignacion_horarios_from">ASIGNACIÓN<BR>HORARIOS</a>
+                     <a  class="btn btn-sm" href="?opcion=rpt_gestion_horarios_from">GESTIÓN<BR>HORARIOS</a><a  class="btn btn-sm btn-success" style="background:#7CC6A8 !important;" href="?opcion=rpt_asignacion_horarios_areas">ASIGNACIÓN<BR>HORARIOS</a>
                   </div>
                </center>
             </div>

@@ -1,15 +1,14 @@
 <?php
 require_once '../conexion.php';
-
 $dbh = new Conexion();
-$tipo=$_GET['tipo'];
+session_start();
 $descripcion=$_GET['descripcion'];
-$ingreso=$_GET['ingreso'];
+$inicio=$_GET['inicio'];
 $salida=$_GET['salida'];
+$user=$_SESSION["globalUser"];
 
-
- $sqlInsertDet="INSERT INTO horarios(descripcion, hora_ingreso,hora_salida,tipo,estado) 
-    VALUES ('$descripcion','$ingreso','$salida','$tipo',1)";    
+ $sqlInsertDet="INSERT INTO horarios(descripcion, fecha_inicio,fecha_fin,created_by,created_at,activo,cod_estadoreferencial) 
+    VALUES ('$descripcion','$inicio','$salida','$user',NOW(),1,1)";    
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
     $flagSuccess=$stmtInsertDet->execute();
 

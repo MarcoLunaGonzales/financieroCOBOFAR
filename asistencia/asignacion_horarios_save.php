@@ -2,11 +2,10 @@
 require_once '../conexion.php';
 session_start();
 $dbh = new Conexion();
-$area=$_GET['area'];
+$cod_horario=$_GET['cod_horario'];
 $tipo_asignacionMultiple=$_GET['tipo_asignacion'];
 $tipo_horario=$_GET['tipo_horario'];
-$fecha_inicio=$_GET['fecha_inicio'];
-$fecha_fin=$_GET['fecha_fin'];
+
 
 $user=$_SESSION["globalUser"];
 
@@ -30,7 +29,9 @@ $flagSuccess=false;
 $queryMaestro="";
 for ($j=0; $j < count($tipo_asignacionMultiple); $j++) { 
    $tipo_asignacion=$tipo_asignacionMultiple[$j];
-   $sqlVerificar="SELECT codigo FROM horarios_areas where cod_area=$area and (fecha_fin>='$fecha_inicio' or fecha_inicio<='$fecha_fin') and cod_estadoreferencial=1 and cod_asignacion=$tipo_asignacion;";
+
+   // $sqlVerificar="SELECT codigo FROM horarios_areas where cod_area=$area and (fecha_fin>='$fecha_inicio' or fecha_inicio<='$fecha_fin') and cod_estadoreferencial=1 and cod_asignacion=$tipo_asignacion;";
+   $sqlVerificar="SELECT codigo FROM horarios_detalle where cod_horario=$cod_horario and cod_estadoreferencial=1 and cod_asignacion=$tipo_asignacion;";
 
    $stmtVerificar = $dbh->prepare($sqlVerificar);
    $stmtVerificar->execute();
@@ -40,15 +41,15 @@ for ($j=0; $j < count($tipo_asignacionMultiple); $j++) {
       $codigoHorario++;
    }
 
-   $sqlInsertDet="INSERT INTO horarios_areas(cod_area,cod_asignacion, fecha_inicio,fecha_fin $queryINTO ,activo,created_by,created_at,cod_estadoreferencial) 
-    VALUES ('$area','$tipo_asignacion','$fecha_inicio','$fecha_fin' $queryVALUES ,0,'$user',NOW(),1);";    
+   $sqlInsertDet="INSERT INTO horarios_detalle(cod_horario,cod_asignacion $queryINTO ,cod_estadoreferencial) 
+    VALUES ('$cod_horario','$tipo_asignacion' $queryVALUES ,1);";    
     $queryMaestro.=$sqlInsertDet;
 
 }
 
 
 if($codigoHorario>0){
-   $mensaje="Ya existe un horario establecido para el rango de fechas y el/los tipo(s) asignación!";
+   $mensaje="Ya existe un horario establecido con el/los tipo(s) de asignación!";
 }else{   
     $stmtInsertDet = $dbh->prepare($queryMaestro);
     $flagSuccess=$stmtInsertDet->execute();

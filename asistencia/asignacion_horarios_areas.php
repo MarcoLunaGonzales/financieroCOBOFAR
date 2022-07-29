@@ -68,7 +68,7 @@ $stmt->bindColumn('cod_horario', $cod_horarioX);
             <div class="card-icon" style="background:#F3BC02 !important;color:white;">
               <i class="material-icons">more_time</i>
             </div>
-            <h4 class="card-title">Aignación de Horarios</h4> 
+            <h4 class="card-title">Asignación de Horarios</h4> 
           </div>
           <div class="card-body">
             <input type="hidden" id="cod_horario" value="<?=$codigoHorario?>">
@@ -110,7 +110,7 @@ $stmt->bindColumn('cod_horario', $cod_horarioX);
         ?>
         <div class="card-footer fixed-bottom">           
           <a class="btn btn-info text-white btn-round btn-fab" style="background:#F3BC02 !important;color:white;" href="#" onClick="nuevoHorario();return false;"><i class="material-icons">add</i></a>
-          <a class="btn btn-default text-white btn-round" style="background:#7CC6A8 !important;" href="?opcion=rpt_gestion_horarios_from">Volver al Menú</a>
+          <a class="btn btn-default text-white btn-round" style="background:#7CC6A8 !important;" href="?opcion=asistenciaPersonal_main">Volver al Menú</a>
 
         </div>
         <?php

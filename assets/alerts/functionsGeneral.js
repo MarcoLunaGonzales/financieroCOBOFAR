@@ -20125,7 +20125,7 @@ function RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_va
     }
   });
 }
-
+//permisos
 
 function ajaxGlosaMotivoPermiso(combo){
   var contenedor;
@@ -20178,6 +20178,21 @@ function ajaxCalcularDiasPermiso(){
   }
   ajax.send(null)
 }
+function ajaxPesonalAreaPermisos(combo){
+  var contenedor;
+  var codigo=combo.value;
+  contenedor = document.getElementById('contenedor_personal');  
+  ajax=nuevoAjax();
+  ajax.open('GET', 'vacaciones_permisos/ajax_personalArea_permiso.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);       
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
+
 
 
 function ajax_cuentas_auxiliares_mayor(){

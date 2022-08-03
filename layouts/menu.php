@@ -14,7 +14,6 @@ switch ($menuModulo) {
    $nombreModulo="RRHH";
    // $estiloMenu="rojo";
    $estiloMenu="celestebebe";
-   
   break;
   case 2:
   $nombreModulo="Activos Fijos";
@@ -162,12 +161,13 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Escalas Antiguedad </span>
                     </a>
                 </li>
-                <!-- <li class="nav-item ">
+                <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listPoliticaDescuento">
                       <span class="sidebar-mini"> PDR </span>
-                      <span class="sidebar-normal"> Politicas de Descuento por retrasos </span>
+                      <span class="sidebar-normal"> Politicas de Descuento por atrasos</span>
                     </a>
-                </li> -->
+                </li>
+                
                 <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=personalFinExterna">
                     <span class="sidebar-mini"> PFE </span>
@@ -250,12 +250,12 @@ if($menuModulo==0){
                       <span class="sidebar-normal">Permisos (Sol & Aut)</span>
                     </a>
                 </li>
-                 <li class="nav-item ">
+                <!--  <li class="nav-item ">
                     <a class="nav-link" href="?opcion=permisosPersonalListaADMrrhh">
                       <span class="sidebar-mini"> PSA </span>
                       <span class="sidebar-normal">Permisos ADM (Sol)</span>
                     </a>
-                </li>
+                </li> -->
                 
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=permisosPersonalListaRRHH"  style="background:#dab6aa; color:#584f4c;font-weight:bold;">

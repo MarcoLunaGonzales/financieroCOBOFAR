@@ -13817,4 +13817,31 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
       }
       return($valor);
    }
+
+
+
+   function obtenerDescuentoMinutosPersonal($minutos_retraso,$haber_basico){
+      $dbh = new Conexion();
+      $porcentaje_diahaber_x=0;
+      $stmtPoliticaRetraso = $dbh->prepare("SELECT minutos_inicio,minutos_final,porcentaje_diahaber 
+      from politica_descuentoretrasos where cod_estadoreferencial=1");
+      $stmtPoliticaRetraso->execute();
+      while ($row = $stmtPoliticaRetraso->fetch(PDO::FETCH_ASSOC)) {
+         $minutos_inicio=$row['minutos_inicio'];
+         $minutos_final=$row['minutos_final'];
+         $porcentaje_diahaber=$row['porcentaje_diahaber'];
+
+         if($minutos_inicio<=$minutos_retraso and $minutos_retraso<=$minutos_final )
+         {
+          $porcentaje_diahaber_x=$porcentaje_diahaber;
+         }
+         }
+         $dia_haber=$haber_basico/30;
+         $descuentos_neto=$dia_haber*$porcentaje_diahaber_x/100;
+         $stmt = null;
+         $dbh = null;
+         return ($descuentos_neto);
+      }
+
+
 ?>

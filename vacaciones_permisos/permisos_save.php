@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once '../conexion.php';
 require_once '../functionsGeneral.php';
 require_once '../layouts/bodylogin.php';
@@ -10,6 +10,7 @@ $s=$_POST["s"];
 $cod_personal=$_POST["cod_personal"];
 $cod_sucursal=$_POST["cod_sucursal"];
 
+$globalUser=$_SESSION['globalUser'];
 
 $fecha_inicio=$_POST["fecha_inicio"];
 $hora_inicio=$_POST["hora_inicio"];
@@ -18,6 +19,9 @@ $hora_final=$_POST["hora_final"];
 $motivo=$_POST["motivo"];
 $observaciones=$_POST["observaciones"];
 $dias_permiso=$_POST["dias_solicitadas"];
+
+$minutos_solicitados=$_POST["minutos_solicitados"];
+
 if (isset($_POST["fecha_evento"])) {
 	$fecha_evento=$_POST["fecha_evento"];
 }else{
@@ -26,7 +30,7 @@ if (isset($_POST["fecha_evento"])) {
 
 $cod_estadoreferencial=1;
 // Prepare
-$sql="INSERT INTO personal_permisos (cod_personal, cod_tipopermiso,fecha_inicial,hora_inicial,fecha_final,hora_final,observaciones,cod_estado,created_at,created_by,fecha_evento,dias_permiso,cod_area) VALUES ($cod_personal,'$motivo' ,'$fecha_inicio','$hora_inicio','$fecha_final','$hora_final','$observaciones','$cod_estadoreferencial',NOW(),'$cod_personal','$fecha_evento','$dias_permiso','$cod_sucursal')";
+$sql="INSERT INTO personal_permisos (cod_personal, cod_tipopermiso,fecha_inicial,hora_inicial, fecha_final,hora_final,observaciones,cod_estado,created_at,created_by,fecha_evento,dias_permiso, cod_area,minutos_permiso) VALUES ($cod_personal,'$motivo' ,'$fecha_inicio','$hora_inicio','$fecha_final','$hora_final','$observaciones','$cod_estadoreferencial',NOW(),'$globalUser','$fecha_evento','$dias_permiso','$cod_sucursal','$minutos_solicitados')";
  // echo $sql;
 $stmt = $dbh->prepare($sql);
 $flagSuccess=$stmt->execute();

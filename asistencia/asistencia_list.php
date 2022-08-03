@@ -6,7 +6,7 @@ require_once 'styles.php';
 $dbh = new Conexion();
 
 if(isset($_GET['q'])){
-$q=$_GET['q'];
+$q=$_GET['q'];//cod_personal
 $s=$_GET['s'];//cod area
 $sql="SELECT ap.codigo,ap.cod_gestion,ap.cod_mes,(select s.nombre from areas s where s.codigo=ap.cod_sucursal)as sucursal,ap.cod_estado,ap.created_at,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=ap.created_by)as creadopor,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=ap.modified_by)as modificadopor,ap.modified_at,ap.modified_by from asistencia_personal ap where ap.cod_estadoreferencial=1 and ap.cod_sucursal in ($s) order by ap.codigo desc limit 20";
    // echo "<br><br><br>".$sql;

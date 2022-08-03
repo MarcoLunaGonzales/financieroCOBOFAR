@@ -75,7 +75,7 @@ if($codigo_permiso == 1 or $codigo_permiso == 2 or $codigo_permiso == 3){ //pate
 	</div>
   </div>
 
-  <label class="col-sm-1 col-form-label" style="color:black;">Fin *</label>
+  <label class="col-sm-2 col-form-label" style="color:black;">Fin *</label>
   <div class="col-sm-2">
 	<div class="form-group">
 	  <input  type='date' class='form-control'  id='fecha_final' name='fecha_final' value="<?=$fecha_actual?>" required>
@@ -91,10 +91,15 @@ if($codigo_permiso == 1 or $codigo_permiso == 2 or $codigo_permiso == 3){ //pate
 	  <button  title="Calcular días Permiso" class="btn btn-success btn-sm btn-round btn-fab" onclick="ajaxCalcularDiasPermiso();return false;"> <i class="material-icons" style="color:black">cached</i></button>
 	</div>
   </div>
-  <div class="col-sm-2">
-	<div class="form-group" id="div_comentario_permisos_obtenidos">
-		<input  type='text' class='form-control' readonly="true" style="background: white;color:green;font-size: 18px;"  value="Total días solicitadas: 0">
-		<input  type='hidden' id="dias_solicitadas" name="dias_solicitadas" value="0">
-	</div>
+</div>
+
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-10">
+  <div class="form-group" id="div_comentario_permisos_obtenidos">
+    <input  type='text' class='form-control' readonly="true" style="background: white;color:green;font-size: 18px;"  value="***---***">
+    <input  type='hidden' id="dias_solicitadas" name="dias_solicitadas" value="0">
+    <input  type='hidden' id="minutos_solicitados" name="minutos_solicitados" value="0">
+  </div>
   </div>
 </div>

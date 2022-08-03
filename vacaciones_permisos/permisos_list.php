@@ -9,7 +9,7 @@ $dbh = new Conexion();
 if(isset($_GET['q'])){
   if(isset($_GET['s']) && $_GET['s']<>""){
     $q=$_GET['q'];
-    $a=$_GET['a'];//indicador de admin
+    $a=$_GET['a'];//indicador de admin o cargo
     $s=$_GET['s'];//cod ciudad
     $cod_personal_q=$q;
     if($a==1 || $a==30 || $a==31){//1 admin 30 apoyo de regencia 31 regente
@@ -36,6 +36,22 @@ if(isset($_GET['q'])){
   }
   $cod_area=$_SESSION['globalArea'];//cod area
 }
+//Personal admin de RRHH
+$string_configuracion=obtenerValorConfiguracionPlanillas(34);
+$array_personal_respo_audi=explode(",", $string_configuracion);
+$sw_personal_admin=false;
+for ($i=0; $i <count($array_personal_respo_audi) ; $i++) { 
+    if($cod_personal_q==$array_personal_respo_audi[$i]){
+        $sw_personal_admin=true;
+    }
+}
+// if($sw_personal_admin){//responsable de RRHH
+//   $add_sqlArea=" a.cod_estado=1 and a.centro_costos=1";
+//   $sw_personal=true;
+// }else{
+//   $add_sqlArea=" a.codigo in ($cod_sucursal)";
+// }
+
 //contador de permisos pendientes
 $sqlPendiente="SELECT count(*)as contador
 from personal_permisos pp join estados_permisos_personal epp on pp.cod_estado=epp.codigo join tipos_permisos_personal tpp on pp.cod_tipopermiso=tpp.codigo 
@@ -50,14 +66,15 @@ if(isset($resultPendintes['contador'])){
   $pendientes_aprobacion=0;
 }
 
-$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.cod_personal_autorizado,pp.observaciones_rechazo,pp.created_at,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_autorizado)as nombre_personal_autorizado,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_aprobado)as nombre_personal_aprobado
-from personal_permisos pp join estados_permisos_personal epp on pp.cod_estado=epp.codigo join tipos_permisos_personal tpp on pp.cod_tipopermiso=tpp.codigo
- where pp.cod_personal=$cod_personal_q and cod_area in ($cod_area) order by pp.created_at desc limit 50";
-  // echo "<br><br><br>".$sql;
+$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,pp.minutos_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.cod_personal_autorizado,pp.observaciones_rechazo,pp.created_at,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_autorizado)as nombre_personal_autorizado,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_aprobado)as nombre_personal_aprobado,a.abreviatura as area
+from personal_permisos pp join estados_permisos_personal epp on pp.cod_estado=epp.codigo join tipos_permisos_personal tpp on pp.cod_tipopermiso=tpp.codigo join areas a on pp.cod_area=a.codigo
+ where pp.created_by=$cod_personal_q  order by pp.created_at desc limit 50";
+  // echo "<br><br><br>".$sql;//and cod_area in ($cod_area)
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo);
 // $stmt->bindColumn('cod_personal', $cod_personal);
+$stmt->bindColumn('area', $area);
 $stmt->bindColumn('cod_tipopermiso', $cod_tipopermiso);
 $stmt->bindColumn('nombre_tipopermiso', $nombre_tipopermiso);
 $stmt->bindColumn('fecha_inicial', $fecha_inicial);
@@ -69,6 +86,7 @@ $stmt->bindColumn('cod_estado', $cod_estado);
 $stmt->bindColumn('nombre_estado', $nombre_estado);
 $stmt->bindColumn('fecha_evento', $fecha_evento); 
 $stmt->bindColumn('dias_permiso', $dias_permiso); 
+$stmt->bindColumn('minutos_permiso', $minutos_permiso); 
 $stmt->bindColumn('nombre_personal', $nombre_personal); 
 $stmt->bindColumn('created_at', $created_at); 
 $stmt->bindColumn('cod_personal_autorizado', $cod_personal_autorizado); 
@@ -88,7 +106,7 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
             </div>
             <!-- <h4 class="card-title">Permisos del Personal</h4> -->
             <h3 style="color:#2c3e50;"><b>Mis Permisos</b></h3>
-            <center><b><span style="color:black;font-size: 17px;"><?=namePersonalCompleto($cod_personal_q)?> -  <?=nameArea($cod_area)?></span></b></center>
+            <!-- <center><b><span style="color:black;font-size: 17px;"><?=namePersonalCompleto($cod_personal_q)?> -  <?=nameArea($cod_area)?></span></b></center> -->
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -96,12 +114,14 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
                 <thead>
                   <tr  class='bg-dark text-white'>
                     <th class="text-left" width="2%">#</th>
+                    <th class="text-center" width="5%">Area/Suc.</th>
                     <th class="text-center" width="15%">Personal</th>
                     <th class="text-center" width="15%">Tipo Permiso</th>
                     <th class="text-center" width="5%">Fecha<br>Solicitud</th>
                     <th class="text-center" width="5%">Salida</th>
                     <th class="text-center" width="5%">Retorno</th>
                     <th class="text-center" width="2%">Total Días</th>
+                    <th class="text-center" width="2%">Total Min</th>
                     <th class="text-center">Observaciones</th>
                     <th class="text-center"width="10%">Estado</th>
                     <th class="text-center" width="5%">Actions</th>
@@ -111,6 +131,8 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
                   <?php
                     $index = 1;
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+
+
                       $sw=0;
                       $btn_delete='';
                       $btn_ws='';
@@ -126,9 +148,17 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
                           $label="<span class='badge badge-danger'>";
                           break;
                         case 1://Registrado
+                          //
+                          if($sw_personal_admin){// Revision
+                            // $cod_estado=3;  
+                            $label="<span class='badge badge-default'>";
+                            $sw=4;//esta en registrado, enviar a aprobacion
+                            $titulo_icono="Enviar a Aprobación";
+                          }else{
                             $label="<span class='badge badge-default'>";
                             $sw=3;//esta en registrado, enviar a autorizacion
                             $titulo_icono="Enviar a Autorización";
+                          }
                           break;
                         case 3://en revision
                           $btn_ws='d-none';
@@ -165,12 +195,15 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
                       ?>
                     <tr <?=$estilo?> >
                       <td class="text-center"><?=$index;?></td>
+                      
+                      <td class="text-left"><?=$area?></td>
                       <td class="text-left"><?=$nombre_personal?></td>
                       <td class="text-left"><?=$nombre_tipopermiso?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($created_at));?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($fecha_inicial));?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($fecha_final));?></td>
                       <td class="text-center"><?=$dias_permiso;?></td>
+                      <td class="text-center"><?=$minutos_permiso;?></td>
                       <td class="text-center"><?=$observaciones." ".$observaciones_rechazo;?></td>
                       <td class="text-center" title="<?=$titulo_estado?>"><?=$label.$nombre_estado;?></span></td>
                       <td class="td-actions">
@@ -218,7 +251,7 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
 
             <?php }?>
 
-            <button class="btn btn-info btn-sm" onClick="location.href='index.php?opcion=permisosPersonalListaADMrrhh'">Nuevo Permiso Terceros</button>
+            <!-- <button class="btn btn-info btn-sm" onClick="location.href='index.php?opcion=permisosPersonalListaADMrrhh'">Nuevo Permiso Terceros</button> -->
 
           </div>
       </div>

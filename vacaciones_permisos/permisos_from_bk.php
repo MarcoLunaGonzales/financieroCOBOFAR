@@ -20,6 +20,8 @@ if(isset($_GET["q"])){
 	$s=0;
 }
 
+
+
 $dbh = new Conexion();
 $fecha_actual=date('Y-m-d');
 ?>
@@ -27,11 +29,11 @@ $fecha_actual=date('Y-m-d');
 	<div class="container-fluid">
 		<div class="col-md-12">
 		  <form id="form1" class="form-horizontal" action="vacaciones_permisos/permisos_save.php" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
-			<!-- <input type="hidden" id="cod_personal" name="cod_personal" value="<?=$cod_personal_q?>">
-			<input type="hidden" id="cod_sucursal" name="cod_sucursal" value="<?=$cod_sucursal?>"> -->
-		  	<!-- <input type="hidden" id="q" name="q" value="<?=$q?>">
+			<input type="hidden" id="cod_personal" name="cod_personal" value="<?=$cod_personal_q?>">
+			<input type="hidden" id="cod_sucursal" name="cod_sucursal" value="<?=$cod_sucursal?>">
+		  	<input type="hidden" id="q" name="q" value="<?=$q?>">
 		  	<input type="hidden" id="a" name="a" value="<?=$a?>">
-		  	<input type="hidden" id="s" name="s" value="<?=$s?>"> -->
+		  	<input type="hidden" id="s" name="s" value="<?=$s?>">
 			<div class="card">
 			  	<div class="card-header card-header-rose card-header-text">
 					<div class="card-text">
@@ -39,36 +41,7 @@ $fecha_actual=date('Y-m-d');
 					</div>				
 			  </div>
 			  <div class="card-body ">
-				<!-- <center><span style="color:black;font-size: 17px;">Solicitante : <b><?=namePersonalCompleto($cod_personal_q)?></b> - Sucursal : <b><?=nameArea($cod_sucursal)?></span></b></center> -->
-				
-				<div class="row">
-					<label class="col-sm-2 col-form-label" style="color:black;">Personal *</label>
-					<div class="col-sm-4">
-						<div class="form-group">
-						<select class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-live-search="true" name="cod_personal" id="cod_personal" required="true" onChange="ajaxGlosaMotivoPermiso(this);">
-							<option value="">SELECCIONE UN ITEM</option>
-						  	<?php
-							  $stmt = $dbh->prepare("SELECT codigo,nombre FROM tipos_permisos_personal where cod_estadoreferencial=1 order by nombre");
-							$stmt->execute();
-							while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-								$codigoX=$row['codigo'];
-								$nombreX=$row['nombre'];
-							?>
-							<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
-							<?php
-						  	}
-						  	?>
-						</select>
-						</div>
-					</div>
-					  <div class="col-sm-4" >
-					  	<label class="col-sm-2 col-form-label" style="color:black;">Sucursal *</label>
-					  	<div class="form-group" id="div_sucursal_permisos">
-							<input  type='hidden' id="cod_sucursal" name="cod_sucursal" value="0">
-						</div>
-					</div>
-				</div> 
-
+				<center><span style="color:black;font-size: 17px;">Solicitante : <b><?=namePersonalCompleto($cod_personal_q)?></b> - Sucursal : <b><?=nameArea($cod_sucursal)?></span></b></center>
 				<div class="row">
 					<label class="col-sm-2 col-form-label" style="color:black;">Motivo *</label>
 					<div class="col-sm-4">

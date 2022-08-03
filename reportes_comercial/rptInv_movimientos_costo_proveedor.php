@@ -55,7 +55,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($fechai))." al ".strftime('%
       <?php
         $sql_listsucursales="SELECT a.cod_almacen,a.nombre_almacen
           from almacenes a join ciudades c on a.cod_ciudad=c.cod_ciudad 
-          where a.estado_pedidos=1  and cod_almacen in ($sucursal)
+          where cod_almacen in ($sucursal)
           order by a.nombre_almacen";
          // echo $sql_listsucursales;
         $resp=mysqli_query($dbh,$sql_listsucursales);

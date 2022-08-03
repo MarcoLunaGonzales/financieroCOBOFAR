@@ -13117,7 +13117,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     //para saldo  Anterior    
     
     $ingresoString="";
-    if($almacen==1000){
+    if($almacen==1000||$almacen==1078){
       $ingresoString=" and i.estado_guardado>0 ";
     }  
     // if(strtotime($fecha_ini)<strotime("2021-12-01")){

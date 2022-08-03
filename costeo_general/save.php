@@ -59,7 +59,8 @@ $cod_area_solicitud=522;
 
 
 $flagSuccess=false;
-$tipoComprobante="";$codComprobante=0;
+// $tipoComprobante="";
+$codComprobante=0;
 for ($i=1; $i <= (int)$items ; $i++) { 
   if($_POST["diferencia".$i]==0&&$_POST["cod_comprobante".$i]==""){ //crear solo si no hay diferencia
       $cuenta_salida=$_POST["cuenta_salida".$i]; 

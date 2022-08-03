@@ -1246,6 +1246,29 @@
 			require_once('asistencia/reporte_asistencia_consolidado_from.php'); //ok
 		}
 
+		if ($_GET['opcion']=='rpt_gestion_horarios_from') {
+			require_once('asistencia/gestion_horarios.php'); //ok
+		}
+		if ($_GET['opcion']=='rpt_gestion_horarios_des') {
+			require_once('asistencia/gestion_horarios_deshabilitados.php'); //ok
+		}
+
+		if ($_GET['opcion']=='rpt_asignacion_horarios_from') {
+			require_once('asistencia/asignacion_horarios.php'); //ok
+		}
+		if ($_GET['opcion']=='rpt_asignacion_horarios_des') {
+			require_once('asistencia/asignacion_horarios_deshabilitados.php'); //ok
+		}
+
+
+		if ($_GET['opcion']=='rpt_asignacion_horarios_areas') {
+			require_once('asistencia/asignacion_horarios_areas.php'); //ok
+		}
+
+
+		
+
+
 		//cuadro de asistencia
 		if ($_GET['opcion']=='asistenciaPersonalLista') {
 			require_once('asistencia/asistencia_list.php'); //ok

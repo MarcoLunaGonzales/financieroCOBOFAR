@@ -32,14 +32,18 @@ $globalUnidad=$_SESSION["globalUnidad"];
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                               <label class="control-label" for="inputSuccess">Asignación</label>
+                               <label class="control-label" for="inputSuccess">Gestión de Horarios</label>
                              </div>
                            </div>
                         </div>
                      </td>
                   </tr>
                </table>
-               <center><button  class="btn btn-sm" onclick="boton_incremento_salarial_main(1)">Ingresar</button></center>
+               <center>
+                  <div class="btn-group">
+                     <a  class="btn btn-sm" href="?opcion=rpt_gestion_horarios_from">GESTIÓN<BR>HORARIOS</a><a  class="btn btn-sm btn-success" style="background:#7CC6A8 !important;" href="?opcion=rpt_asignacion_horarios_areas">ASIGNACIÓN<BR>HORARIOS</a>
+                  </div>
+               </center>
             </div>
          </div>
       </div> 

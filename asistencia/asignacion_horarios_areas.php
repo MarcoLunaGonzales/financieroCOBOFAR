@@ -13,21 +13,59 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="select a.nombre,h.descripcion,ha.cod_area,ha.cod_horario from horarios_area ha join areas a on a.codigo=ha.cod_area join horarios h on h.codigo=ha.cod_horario order by a.nombre,h.descripcion";
+$sql="select a.codigo,a.nombre,h.descripcion,ha.cod_area,ha.cod_horario, 
+hd.ingreso_1,hd.salida_1,hd.ingreso_2,hd.salida_2,hd.ingreso_3,hd.salida_3,hd.ingreso_4,hd.salida_4,
+(select descripcion from horarios_asignaciontipo where codigo=hd.cod_asignacion) as tipo
+from horarios_area ha join areas a on a.codigo=ha.cod_area join horarios h on h.codigo=ha.cod_horario 
+join horarios_detalle hd on hd.cod_horario=h.codigo order by a.nombre,h.descripcion,hd.cod_asignacion";
 $stmt = $dbh->prepare($sql);
 //ejecutamos
 $stmt->execute();
 //bindColumn
+$stmt->bindColumn('codigo', $codigoX);
 $stmt->bindColumn('nombre', $nombreX);
 $stmt->bindColumn('descripcion', $descripcionX);
 $stmt->bindColumn('cod_area', $cod_areaX);
 $stmt->bindColumn('cod_horario', $cod_horarioX);
-
+$stmt->bindColumn('ingreso_1', $ingreso_1X);
+$stmt->bindColumn('salida_1', $salida_1X);
+$stmt->bindColumn('ingreso_2', $ingreso_2X);
+$stmt->bindColumn('salida_2', $salida_2X);
+$stmt->bindColumn('ingreso_3', $ingreso_3X);
+$stmt->bindColumn('salida_3', $salida_3X);
+$stmt->bindColumn('ingreso_4', $ingreso_4X);
+$stmt->bindColumn('salida_4', $salida_4X);
+$stmt->bindColumn('tipo', $tipoX);
 
 
 
 ?>
 <script type="text/javascript">
+  function mostrarFilaTablaHorario(codigo){   
+  var mostrar=0; 
+    $(".fila_"+codigo).each(function(){
+        if($(this).hasClass("d-none")){
+          $(this).removeClass("d-none");
+          mostrar++;
+        }else{
+          $(this).addClass("d-none");
+        }
+    }); 
+
+    if(mostrar>0){      
+      if(!$("#icono_"+codigo).hasClass("text-danger")){
+        $("#icono_"+codigo).removeClass("text-success");
+        $("#icono_"+codigo).addClass("text-danger");
+      }
+      $("#icono_"+codigo).html("do_not_disturb_on");      
+    }else{
+      if(!$("#icono_"+codigo).hasClass("text-success")){
+        $("#icono_"+codigo).removeClass("text-danger");
+        $("#icono_"+codigo).addClass("text-success");
+      }  
+      $("#icono_"+codigo).html("add_circle"); 
+    }   
+  }
   function nuevoHorario(){
     $("#modalNuevoHorario").modal("show");
   }
@@ -74,23 +112,63 @@ $stmt->bindColumn('cod_horario', $cod_horarioX);
             <input type="hidden" id="cod_horario" value="<?=$codigoHorario?>">
             <div class="table-responsive">
               <div class="" id="data_activosFijos">
-                <table class="table table-condensed small table-bordered" id="tablePaginatorHead">
+                <table class="table table-condensed small table-bordered" id="tablePaginatorHorarios"><!---->
                   <thead>
+                     <tr class="bg-success" style="background: #00C2B9 !important;color:white;">
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center"></td>
+                      <td class="text-center" colspan="2">CONTINUO</td>                      
+                      <td class="text-center" colspan="2" style="background: #FF8300">TURNO MAÑANA</td>                      
+                      <td class="text-center" colspan="2" style="background: #FF8300">TURNO TARDE</td>                      
+                      <td class="text-center" colspan="2" style="background: #FF8300">TURNO NOCHE</td>                      
+                      
+                      
+                      <td class="text-center"></td>
+                    </tr>
                     <tr class="bg-success" style="background: #00C2B9 !important;color:white;">
                       <td class="text-center">#</td>
                       <td class="text-center">AREA</td>                     
                       <td class="text-center">HORARIO</td>
+                      <td class="text-center">DÍA</td>
+                      <td class="text-center">INGRESO</td>
+                      <td class="text-center">SALIDA</td>                      
+                      <td class="text-center" style="background: #FF8300">INGRESO</td>
+                      <td class="text-center" style="background: #FF8300">SALIDA</td>                      
+                      <td class="text-center" style="background: #FF8300">INGRESO</td>
+                      <td class="text-center" style="background: #FF8300">SALIDA</td>                      
+                      <td class="text-center" style="background: #FF8300">INGRESO</td>
+                      <td class="text-center" style="background: #FF8300">SALIDA</td>
                       <td class="text-center">OPCION</td>
                     </tr>
+
                   </thead>
                   <tbody>
                     <?php $index=1;
-                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                         
-                     ?>
-                      <tr>
+                    $codSucursal="";
+                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {   
+                      if($ingreso_1X==""){$ingreso_1X="-";}if($salida_1X==""){$salida_1X="-";}
+                      if($ingreso_2X==""){$ingreso_2X="-";}if($salida_2X==""){$salida_2X="-";}
+                      if($ingreso_3X==""){$ingreso_3X="-";}if($salida_3X==""){$salida_3X="-";}
+                      if($ingreso_4X==""){$ingreso_4X="-";}if($salida_4X==""){$salida_4X="-";}                      
+                      
+                      if($codSucursal!=$codigoX){
+                          //$claseFila="";
+                         ?>
+                        <tr>
                           <td class="text-left"><?=$index;?></td>
-                          <td class="text-left"><?=$nombreX;?></td>
-                          <td class="text-center"><?=$descripcionX?></span></td>
+                          <td class="text-left" onclick="mostrarFilaTablaHorario(<?=$codigoX?>);return false;"><i style="font-size: 18px;" class="material-icons text-success" id="icono_<?=$codigoX?>">add_circle</i>  <?=$nombreX;?></td>
+                          <td class="text-center"><?=$descripcionX?></td>
+                          <td></td> 
+                          <td></td>  
+                          <td></td>  
+                          <td></td>  
+                          <td></td>  
+                          <td></td>  
+                          <td></td>  
+                          <td></td>  
+                          <td></td>  
                           <td class="td-actions text-right">
                             <a href="#" > 
                                   <i class="material-icons" title="Eliminar" style="color:red">delete</i>
@@ -98,7 +176,29 @@ $stmt->bindColumn('cod_horario', $cod_horarioX);
                            
                           </td>
                       </tr>
-                    <?php $index++; } ?>
+                       <?php
+                        $codSucursal=$codigoX;
+                        $index++;
+                      }
+                     ?>
+                      <tr class="d-none fila_<?=$codigoX?>" style="background: #6EFCE6; color:#000;">
+                          <td class="text-left"></td>
+                          <td class="text-left small"><?=$nombreX;?></td>
+                          <td class="text-center"></td>
+                          <td class="text-left small"><?=$tipoX?></td>
+                          <td class="text-center"><?=$ingreso_4X?></td>
+                          <td class="text-center"><?=$salida_4X?></td> 
+                          <td class="text-center"><?=$ingreso_1X?></td>
+                          <td class="text-center"><?=$salida_1X?></td> 
+                          <td class="text-center"><?=$ingreso_2X?></td>
+                          <td class="text-center"><?=$salida_2X?></td> 
+                          <td class="text-center"><?=$ingreso_3X?></td>
+                          <td class="text-center"><?=$salida_3X?></td>  
+                          <td class="td-actions text-right">
+                           
+                          </td>
+                      </tr>
+                    <?php  } ?>
                   </tbody>
                 </table>
               </div>

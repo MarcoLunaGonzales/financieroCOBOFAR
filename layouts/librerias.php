@@ -789,6 +789,20 @@
             ]
         } );
 
+        $('#tablePaginatorHorarios').DataTable({
+            "paging":   false,
+            "info":     false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "ordering": false,
+            fixedHeader: {
+              header: true,
+              footer: true
+            }
+        } );
+
+
         $('.dataTable tbody').on('click', 'tr', function () {
           $('.dataTable tbody tr').removeClass("fila_activa_color");
           $(this).addClass("fila_activa_color");

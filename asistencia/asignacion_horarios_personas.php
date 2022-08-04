@@ -13,19 +13,20 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="select ha.codigo,a.nombre,h.descripcion,ha.cod_area,ha.cod_horario, 
+$sql="select ha.codigo,CONCAT(a.primer_nombre,' ',a.paterno) as nombres,h.descripcion,ha.cod_persona,ha.cod_horario, 
 hd.ingreso_1,hd.salida_1,hd.ingreso_2,hd.salida_2,hd.ingreso_3,hd.salida_3,hd.ingreso_4,hd.salida_4,
 (select descripcion from horarios_asignaciontipo where codigo=hd.cod_asignacion) as tipo
-from horarios_area ha join areas a on a.codigo=ha.cod_area join horarios h on h.codigo=ha.cod_horario 
-join horarios_detalle hd on hd.cod_horario=h.codigo where ha.estado=1 order by a.nombre,h.descripcion,hd.cod_asignacion";
+from horarios_persona ha join personal a on a.codigo=ha.cod_persona join horarios h on h.codigo=ha.cod_horario 
+join horarios_detalle hd on hd.cod_horario=h.codigo where ha.estado=1 order by 2,h.descripcion,hd.cod_asignacion";
+//echo $sql;
 $stmt = $dbh->prepare($sql);
 //ejecutamos
 $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigoX);
-$stmt->bindColumn('nombre', $nombreX);
+$stmt->bindColumn('nombres', $nombreX);
 $stmt->bindColumn('descripcion', $descripcionX);
-$stmt->bindColumn('cod_area', $cod_areaX);
+$stmt->bindColumn('cod_persona', $cod_personaX);
 $stmt->bindColumn('cod_horario', $cod_horarioX);
 $stmt->bindColumn('ingreso_1', $ingreso_1X);
 $stmt->bindColumn('salida_1', $salida_1X);
@@ -70,23 +71,23 @@ $stmt->bindColumn('tipo', $tipoX);
     $("#modalNuevoHorario").modal("show");
   }
   function asignarHorarioGestion(){    
-    var modal_area=$("#modal_area").val();
+    var modal_persona=$("#modal_persona").val();
     var modal_horario=$("#modal_horario").val();    
-    if(modal_area=="0"||modal_horario=="0"){
+    if(modal_persona=="0"||modal_horario=="0"){
       
       Swal.fire("Informativo","Debe ingresar los datos del formulario!","info");
     }else{
-        var parametros={"modal_horario":modal_horario,"modal_area":modal_area
+        var parametros={"modal_horario":modal_horario,"modal_persona":modal_persona
         };
         $.ajax({
               type: "GET",
               dataType: 'html',
-              url: "asistencia/asignacion_horarios_areas_save.php",
+              url: "asistencia/asignacion_horarios_personas_save.php",
               data: parametros,
               success:  function (resp) {
                 var r=resp.split("#####");
                 if(r[1]==0){
-                  window.location.href='?opcion=rpt_asignacion_horarios_areas';    
+                  window.location.href='?opcion=rpt_asignacion_horarios_personas';    
                 }else{
                   Swal.fire("Error",r[2],"error");   
                 }                
@@ -119,7 +120,7 @@ $stmt->bindColumn('tipo', $tipoX);
             <div class="card-icon" style="background:#F3BC02 !important;color:white;">
               <i class="material-icons">more_time</i>
             </div>
-            <h4 class="card-title">Asignación de Horarios</h4> 
+            <h4 class="card-title">Asignación de Horarios por Persona</h4> 
           </div>
           <div class="card-body">
             <input type="hidden" id="cod_horario" value="<?=$codigoHorario?>">
@@ -133,9 +134,9 @@ $stmt->bindColumn('tipo', $tipoX);
                       <td class="text-center"></td>
                       <td class="text-center"></td>
                       <td class="text-center" colspan="2">CONTINUO</td>                      
-                      <td class="text-center" colspan="2" style="background: #FF8300">TURNO MAÑANA</td>                      
-                      <td class="text-center" colspan="2" style="background: #FF8300">TURNO TARDE</td>                      
-                      <td class="text-center" colspan="2" style="background: #FF8300">TURNO NOCHE</td>                      
+                      <td class="text-center" colspan="2" style="background: #5C079B">TURNO MAÑANA</td>                      
+                      <td class="text-center" colspan="2" style="background: #5C079B">TURNO TARDE</td>                      
+                      <td class="text-center" colspan="2" style="background: #5C079B">TURNO NOCHE</td>                      
                       
                       
                       <td class="text-center"></td>
@@ -147,12 +148,12 @@ $stmt->bindColumn('tipo', $tipoX);
                       <td class="text-center">DÍA</td>
                       <td class="text-center">INGRESO</td>
                       <td class="text-center">SALIDA</td>                      
-                      <td class="text-center" style="background: #FF8300">INGRESO</td>
-                      <td class="text-center" style="background: #FF8300">SALIDA</td>                      
-                      <td class="text-center" style="background: #FF8300">INGRESO</td>
-                      <td class="text-center" style="background: #FF8300">SALIDA</td>                      
-                      <td class="text-center" style="background: #FF8300">INGRESO</td>
-                      <td class="text-center" style="background: #FF8300">SALIDA</td>
+                      <td class="text-center" style="background: #5C079B">INGRESO</td>
+                      <td class="text-center" style="background: #5C079B">SALIDA</td>                      
+                      <td class="text-center" style="background: #5C079B">INGRESO</td>
+                      <td class="text-center" style="background: #5C079B">SALIDA</td>                      
+                      <td class="text-center" style="background: #5C079B">INGRESO</td>
+                      <td class="text-center" style="background: #5C079B">SALIDA</td>
                       <td class="text-center">OPCION</td>
                     </tr>
 
@@ -166,7 +167,7 @@ $stmt->bindColumn('tipo', $tipoX);
                       if($ingreso_3X==""){$ingreso_3X="-";}if($salida_3X==""){$salida_3X="-";}
                       if($ingreso_4X==""){$ingreso_4X="-";}if($salida_4X==""){$salida_4X="-";}                      
                       
-                      if($codSucursal!=$cod_areaX){
+                      if($codSucursal!=$cod_personaX){
                           //$claseFila="";
                          ?>
                         <tr>
@@ -183,13 +184,13 @@ $stmt->bindColumn('tipo', $tipoX);
                           <td></td>  
                           <td></td>  
                           <td class="td-actions text-right">                            
-                            <a href="asistencia/asignacion_horarios_areas_delete.php?codigo=<?=$codigoX?>&e=0" > 
+                            <a href="asistencia/asignacion_horarios_personas_delete.php?codigo=<?=$codigoX?>&e=0" > 
                                   <i class="material-icons" title="Eliminar" style="color:red">delete</i>
                                 </a>
                           </td>
                       </tr>
                        <?php
-                        $codSucursal=$cod_areaX;
+                        $codSucursal=$cod_personaX;
                         $index++;
                       }
                      ?>
@@ -222,8 +223,7 @@ $stmt->bindColumn('tipo', $tipoX);
         ?>
         <div class="card-footer fixed-bottom">           
           <a class="btn btn-info text-white btn-round btn-fab" style="background:#F3BC02 !important;color:white;" href="#" onClick="nuevoHorario();return false;"><i class="material-icons">add</i></a>
-          <a class="btn btn-default text-white btn-round" style="background:#7CC6A8 !important;" href="?opcion=asistenciaPersonal_main">Volver al Menú</a>   
-          <a class="btn btn-default text-white btn-round" style="background:#5C079B !important;" href="?opcion=rpt_asignacion_horarios_personas"><i class="material-icons">people</i> ASIGNACION POR PERSONA</a>               
+          <a class="btn btn-default text-white btn-round" style="background:#7CC6A8 !important;" href="?opcion=asistenciaPersonal_main">Volver al Menú</a>                 
 
         </div>
         <?php
@@ -241,7 +241,7 @@ $stmt->bindColumn('tipo', $tipoX);
     <div class="modal-content card">
       <div class="card-header card-header-info card-header-text">
         <div class="card-text" style="background:#F3BC02 !important;color:white;">
-          <h5>Asignacion de Horario</h5> 
+          <h5>Asignacion de Horario por Persona</h5> 
         </div>
         <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
@@ -250,13 +250,13 @@ $stmt->bindColumn('tipo', $tipoX);
       <div class="card-body">
         <div class="row">
         
-          <label class="col-sm-2 col-form-label">Area</label>
+          <label class="col-sm-2 col-form-label">Persona</label>
           <div class="col-sm-4">
             <div class="form-group">                  
-              <select name="modal_area" id="modal_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-live-search="true">
+              <select name="modal_persona" id="modal_persona" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-live-search="true">
                 <option  value="0" selected disabled>--SELECCIONE--</option>
                  <?php
-                      $sql="SELECT codigo,nombre FROM areas WHERE cod_estado=1 and centro_costos=1 order by nombre;";
+                      $sql="SELECT codigo,CONCAT(primer_nombre,' ',paterno) AS nombre from personal where cod_estadoreferencial=1;";
                       $stmtg = $dbh->prepare($sql);
                       $stmtg->execute();
                       while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
@@ -276,7 +276,7 @@ $stmt->bindColumn('tipo', $tipoX);
               <select name="modal_horario" id="modal_horario" class="selectpicker form-control form-control-sm"  data-style="btn btn-primary" data-live-search="true" onchange="verDetalleHorarioAsignado()"> 
               <option  value="0" selected disabled>--SELECCIONE--</option>               
                  <?php
-                      $sql="SELECT codigo,descripcion,fecha_inicio,fecha_fin FROM horarios where activo=1 AND cod_estadoreferencial=1;";
+                      $sql="SELECT codigo,descripcion,fecha_inicio,fecha_fin FROM horarios where activo=1 AND cod_estadoreferencial=1 and cod_estadopersonal=1;";
                       $stmtg = $dbh->prepare($sql);
                       $stmtg->execute();
                       while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {

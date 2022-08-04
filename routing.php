@@ -1264,6 +1264,9 @@
 		if ($_GET['opcion']=='rpt_asignacion_horarios_areas') {
 			require_once('asistencia/asignacion_horarios_areas.php'); //ok
 		}
+		if ($_GET['opcion']=='rpt_asignacion_horarios_personas') {
+			require_once('asistencia/asignacion_horarios_personas.php'); //ok
+		}
 
 
 		

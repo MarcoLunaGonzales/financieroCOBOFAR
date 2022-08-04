@@ -82,8 +82,8 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 	}
 	set_time_limit(0);  
   $porcentaje_aport_afp=obtenerValorConfiguracionPlanillas(12);
-$porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
-set_time_limit(0);
+	$porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
+	set_time_limit(0);
   $mes=strtoupper(nombreMes($cod_mes));
   $gestion=nameGestion($cod_gestion);
 

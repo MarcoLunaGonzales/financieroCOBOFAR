@@ -265,11 +265,11 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
 
       dias_vacacion=$('#dias_vacacion').val();
       fecha_inicio_modal=$('#fecha_inicio_modal').val();
-      console.log(fecha_inicio_modal);
+      // console.log(fecha_inicio_modal);
       fecha_final_modal=$('#fecha_final_modal').val();
       tipo_vacacion=$('#tipo_vacacion').val();
       if(gestion_modal==""){
-        Swal.fire('ERROR!','Gestion No Encontrada. :(','error'); 
+        Swal.fire('ERROR!','Gestión No Encontrada. :(','error'); 
       }else{
          // alert(saldo_modal+"--"+dias_vacacion);
         if(dias_vacacion=="" || dias_vacacion==0){//|| dias_vacacion>saldo_modal
@@ -279,7 +279,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
             //Swal.fire('ERROR!','Para las vacaciones menores a 5 días, se debe realizar una solicitud de permiso. GRACIAS.','error'); 
             Swal.fire('ERROR!','Seleccione el tipo de vacación. GRACIAS.','error'); 
           }else{
-            if(fecha_inicio_modal=="" || fecha_final_modal==""){
+            if((fecha_inicio_modal=="" || fecha_final_modal=="") && tipo_vacacion!=3 ){
               Swal.fire('ERROR!','Fechas no admitidas ','error'); 
             }else{
               RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,tipo_vacacion,ing_planilla,fecha_actual);    

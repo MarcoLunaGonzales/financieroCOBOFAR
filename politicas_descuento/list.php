@@ -9,16 +9,14 @@ $globalAdmin = $_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT codigo,nombre, minutos_inicio, minutos_final,porcentaje_diahaber
-                     FROM $table_politicaDescuento WHERE cod_estadoreferencial=1");
+                     FROM $table_politicaDescuento WHERE cod_estadoreferencial=1 order by codigo");
 
 $stmt->execute();
-
 $stmt->bindColumn('codigo', $cod_politica_descuento);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('minutos_inicio', $minutos_inicio);
 $stmt->bindColumn('minutos_final', $minutos_final);
 $stmt->bindColumn('porcentaje_diahaber', $porcentaje_diahaber);
-
 ?>
 
 <div class="content">

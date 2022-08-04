@@ -14,7 +14,8 @@ $codigo=$_GET['codigo'];
 $q=$_GET['q'];
 $s=$_GET['s'];
 if($codigo==0){
-  $cod_mes=date('m');
+  // $cod_mes=date('m');
+  $cod_mes=6;
   $cod_gestion=date('Y');
 }else{
   $cod_mes=$_GET['cod_mes'];

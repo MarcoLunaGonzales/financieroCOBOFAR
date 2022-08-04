@@ -13819,6 +13819,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
    }
 
 
+
    function cargarValoresVentasYSaldosProductosArray_prodrotacion_provIngresoDetalle($almacen,$fecha_ini,$fecha_fin,$proveedores){
     set_time_limit(0);
     $estilosVenta=1;
@@ -13999,5 +14000,31 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
     mysqli_close($enlaceCon);
     return array($ingresos,$ingresos_unidad,$salida,$salida_unidad,$ventas,$ventas_unidad,$ingresos_ant,$ingresos_unidad_ant,$salida_ant,$salida_unidad_ant,$salida_unidad_ven,$ingresos_alma_ant,$ingresos_suc_ant,$ingresos_alma_act,$ingresos_suc_act,$ingresos_otro_act);
   }
+
+
+   function obtenerDescuentoMinutosPersonal($minutos_retraso,$haber_basico){
+      $dbh = new Conexion();
+      $porcentaje_diahaber_x=0;
+      $stmtPoliticaRetraso = $dbh->prepare("SELECT minutos_inicio,minutos_final,porcentaje_diahaber 
+      from politica_descuentoretrasos where cod_estadoreferencial=1");
+      $stmtPoliticaRetraso->execute();
+      while ($row = $stmtPoliticaRetraso->fetch(PDO::FETCH_ASSOC)) {
+         $minutos_inicio=$row['minutos_inicio'];
+         $minutos_final=$row['minutos_final'];
+         $porcentaje_diahaber=$row['porcentaje_diahaber'];
+
+         if($minutos_inicio<=$minutos_retraso and $minutos_retraso<=$minutos_final )
+         {
+          $porcentaje_diahaber_x=$porcentaje_diahaber;
+         }
+         }
+         $dia_haber=$haber_basico/30;
+         $descuentos_neto=$dia_haber*$porcentaje_diahaber_x/100;
+         $stmt = null;
+         $dbh = null;
+         return ($descuentos_neto);
+      }
+
+
 
 ?>

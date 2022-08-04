@@ -8,7 +8,7 @@ $dbh = new Conexion();
 
 $cod_personal_q=$_SESSION['globalUser'];
 
-$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.created_at,pp.cod_area,(select a.nombre from areas a where a.codigo=pp.cod_area)as nombre_sucursal,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_autorizado)as nombre_personal_autorizado
+$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,pp.minutos_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.created_at,pp.cod_area,(select a.abreviatura from areas a where a.codigo=pp.cod_area)as nombre_sucursal,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_autorizado)as nombre_personal_autorizado
 from personal_permisos pp join estados_permisos_personal epp on pp.cod_estado=epp.codigo join tipos_permisos_personal tpp on pp.cod_tipopermiso=tpp.codigo 
  where pp.cod_estado=4 order by pp.created_at";
  // echo "<br><br><br>".$sql;
@@ -32,6 +32,8 @@ $stmt->bindColumn('created_at', $created_at);
 $stmt->bindColumn('nombre_sucursal', $nombre_sucursal);
 $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
 
+$stmt->bindColumn('minutos_permiso', $minutos_permiso); 
+
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -50,13 +52,14 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
                 <thead>
                   <tr  class='bg-dark text-white'>
                     <th class="text-left" width="2%">#</th>
-                    <th class="text-center" width="15%">Sucursal / area</th>
+                    <th class="text-center" width="5%">Area/Suc.</th>
                     <th class="text-center" width="15%">Personal</th>
                     <th class="text-center" width="15%">Tipo Permiso</th>
                     <th class="text-center" width="5%">Fecha<br>Solicitud</th>
                     <th class="text-center" width="5%">Salida</th>
                     <th class="text-center" width="5%">Retorno</th>
                     <th class="text-center" width="2%">Total Días</th>
+                    <th class="text-center" width="2%">Total Min</th>
                     <th class="text-center">Observaciones</th>
                     <th class="text-center"width="10%">Estado</th>
                     <th class="text-center" width="5%">Actions</th>
@@ -113,6 +116,7 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
                       <td class="text-center"><?=date('d/m/Y',strtotime($fecha_inicial));?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($fecha_final));?></td>
                       <td class="text-center"><?=$dias_permiso;?></td>
+                      <td class="text-center"><?=$minutos_permiso;?></td>
                       <td class="text-center"><?=$observaciones;?></td>
                       <td class="text-center"><?=$label.$nombre_estado;?></span></td>
                       <td class="td-actions">

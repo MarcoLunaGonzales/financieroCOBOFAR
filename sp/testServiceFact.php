@@ -6,8 +6,8 @@ require_once '../functions.php';
 $sIde = "bolfincobo";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 
-// $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
-$direccion="localhost:8090/financieroCOBOFAR/wsifin/";
+$direccion=obtenerValorConfiguracion(45);//direccion del servicio web ifinanciero
+// $direccion="localhost:8090/financieroCOBOFAR/wsifin/";
 
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
     "accion"=>"listPlanillasSueldos", 

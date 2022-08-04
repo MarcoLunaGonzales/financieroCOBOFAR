@@ -96,6 +96,19 @@ $stmt->bindColumn('tipo', $tipoX);
     }
   }
 
+  function verDetalleHorarioAsignado(){
+    var parametros={"cod_horario":$("#modal_horario").val()};
+        $.ajax({
+              type: "GET",
+              dataType: 'html',
+              url: "asistencia/ajax_asignacion_horarios_detalle.php",
+              data: parametros,
+              success:  function (resp) {
+                $("#detalle_horario").html(resp);             
+              }
+        });  
+  }
+
 </script>
 <div class="content">
   <div class="container-fluid">
@@ -260,7 +273,7 @@ $stmt->bindColumn('tipo', $tipoX);
           <label class="col-sm-2 col-form-label">Horario</label>
           <div class="col-sm-4">
             <div class="form-group">                  
-              <select name="modal_horario" id="modal_horario" class="selectpicker form-control form-control-sm"  data-style="btn btn-primary" data-live-search="true"> 
+              <select name="modal_horario" id="modal_horario" class="selectpicker form-control form-control-sm"  data-style="btn btn-primary" data-live-search="true" onchange="verDetalleHorarioAsignado()"> 
               <option  value="0" selected disabled>--SELECCIONE--</option>               
                  <?php
                       $sql="SELECT codigo,descripcion,fecha_inicio,fecha_fin FROM horarios where activo=1 AND cod_estadoreferencial=1;";
@@ -279,7 +292,7 @@ $stmt->bindColumn('tipo', $tipoX);
           </div>
         </div>
         <br>
-
+        <div class="row" id="detalle_horario"></div>
 
 
         <div class="form-group float-right">

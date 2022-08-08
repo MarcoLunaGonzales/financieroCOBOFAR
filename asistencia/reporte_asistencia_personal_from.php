@@ -17,7 +17,7 @@ if(isset($_GET['cp'])){
 		  <form id="form1" class="form-horizontal" action="asistencia/reporte_asistencia_personal_print.php" method="post" target="_blank">
 			<div class="card">
 			  <div class="card-header card-header-text">
-				<div class="card-text" style="background:#f1948a;">
+				<div class="card-text" style="background:#c0392b;">
 				  <h4 class="card-title">Reporte de Marcación Por Persona</h4>
 				</div>
 			  </div>

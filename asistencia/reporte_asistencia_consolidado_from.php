@@ -4,8 +4,8 @@ require_once 'styles.php';
 $dbh = new Conexion();
 $fecha_inicial=date('Y-m-01');
 $fecha_fin=date('Y-m-t');
-
 ?>
+
 
 <div class="content">
 	<div class="container-fluid">
@@ -13,7 +13,7 @@ $fecha_fin=date('Y-m-t');
 		  <form id="form1" class="form-horizontal" action="asistencia/reporte_asistencia_consolidado_print.php" method="post" target="_blank">
 			<div class="card">
 			  <div class="card-header card-header-text">
-				<div class="card-text" style="background:#d2b4de;">
+				<div class="card-text" style="background:#7d3c98;">
 				  <h4 class="card-title">Reporte de Marcación Consolidado</h4>
 				</div>
 			  </div>

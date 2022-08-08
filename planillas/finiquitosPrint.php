@@ -37,7 +37,7 @@ $html.='<body>'.
           '}'.
         '</script>';
 $html.=  '<header class="header">'.        
-            '<img class="imagen-logo-der" src="../assets/img/ibnorca2.jpg">'.
+            '<img class="imagen-logo-der" src="../assets/img/ibnorca222.jpg">'.
                 
             '<div id="info_izq">
               <h4 >

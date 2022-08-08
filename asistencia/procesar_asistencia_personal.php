@@ -1,4 +1,13 @@
 <?php
+
+echo "<div class='cargar-ajax'>
+  <div class='div-loading text-center'>
+     <h4 class='text-warning font-weight-bold' id='texto_ajax_titulo'>Procesando Datos</h4>
+     <p class='text-white'>Aguarde un momento por favor</p>  
+  </div>
+</div>";
+
+
 require("../conexion_comercial_oficial.php");
 require_once '../layouts/bodylogin2.php';
 require_once '../styles.php';
@@ -6,8 +15,21 @@ require_once '../styles.php';
 require_once '../conexion.php';
 $dbhFin = new Conexion();
 
-$fechaUltimoProc="2022-07-01";
+
+$sql="SELECT IFNULL(max(fecha),'2022-07-01') as fecha from asistencia_procesada";
+$stmtFecha = $dbhFin->prepare($sql);
+$stmtFecha->execute();
+$stmtFecha->bindColumn('fecha', $fechaUltimoProc);
+while ($rowFecha = $stmtFecha->fetch()) {
+  $fechaUltimoProc=$fechaUltimoProc;
+}
+// $fechaUltimoProc="2022-07-01";
+// $fechaFinal=date('Y-m-d');
+
 $fechaFinal="2022-07-31";
+
+if($fechaFinal>$fechaUltimoProc){
+
 
 ?>
 <center><table class='table table-bordered table-condensed' style='width:80% !important'>
@@ -28,7 +50,77 @@ $fechaFinal="2022-07-31";
   <td>estadoAsistencia</td>
 </tr>
 <?php 
+//Todos los horarios
+// $cod_horariox=1;
+// $array_horasx[1]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//lunes
+// $array_horasx[2]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//martes
+// $array_horasx[3]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//miercoles
+// $array_horasx[4]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//jueves
+// $array_horasx[5]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//viernes
+// $array_horasx[6]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//sabado
+// $array_horasx[7]=array(2,'00:00','00:00','00:00','00:00','00:00','00:00','09:00','21:00');//domingo
+// $array_horasx[8]=array(2,'00:00','00:00','00:00','00:00','00:00','00:00','09:00','21:00');//feriado
+// $array_horarios[$cod_horariox]=$array_horasx;
+//obtenemos horarios
+$sqlHorario="SELECT codigo from horarios where cod_estadoreferencial=1";//
+$stmtHorarioCab = $dbhFin->prepare($sqlHorario);
+$stmtHorarioCab->execute();
+$stmtHorarioCab->bindColumn('codigo', $cod_horariox);
+$array_horarios=[];
+while ($rowHorarioCab = $stmtHorarioCab->fetch()) {
+  $sqlHorario="SELECT cod_asignacion,ingreso_1,salida_1,ingreso_2,salida_2,ingreso_3,salida_3,ingreso_4,salida_4 from horarios_detalle where cod_horario=$cod_horariox and cod_estadoreferencial=1";//
+  // echo "<br><br>".$sqlHorario;
+  $stmtHorarioDet = $dbhFin->prepare($sqlHorario);
+  $stmtHorarioDet->execute();
+  $stmtHorarioDet->bindColumn('cod_asignacion', $cod_asignacion);
+  $stmtHorarioDet->bindColumn('ingreso_1', $ingreso_1);
+  $stmtHorarioDet->bindColumn('salida_1', $salida_1);
+  $stmtHorarioDet->bindColumn('ingreso_2', $ingreso_2);
+  $stmtHorarioDet->bindColumn('salida_2', $salida_2);
+  $stmtHorarioDet->bindColumn('ingreso_3', $ingreso_3);
+  $stmtHorarioDet->bindColumn('salida_3', $salida_3);
+  $stmtHorarioDet->bindColumn('ingreso_4', $ingreso_4);
+  $stmtHorarioDet->bindColumn('salida_4', $salida_4);
+  $array_horasx=[];
+  while ($rowHorarioDet = $stmtHorarioDet->fetch()) {
+    $cod_tipoHorario=1;
+    if($ingreso_4 <> null && $ingreso_4 <> ""){//turno continuo
+      $cod_tipoHorario=2;
+    }
+    $array_horasx[$cod_asignacion]=array($cod_tipoHorario,$ingreso_1,$salida_1,$ingreso_2,$salida_2,$ingreso_3,$salida_3,$ingreso_4,$salida_4);//(Turno Mañana, Tarde, Noche, Continuo)
+  }
+  $array_horarios[$cod_horariox]=$array_horasx;
+}
 
+//Obtenemos Array  de Areas y horarios
+//procesamos areas 
+$sql="SELECT a.codigo,a.nombre,(select ha.cod_horario from horarios_area ha where ha.cod_area=a.codigo limit 1)as cod_horario
+  from areas_organizacion ao join areas a on ao.cod_area=a.codigo
+  where ao.cod_unidad=2 and ao.cod_estadoreferencial=1 and a.cod_estado=1 
+  order by a.nombre";//solo sucursales LP//and a.codigo in (80)
+  // echo "<br><br><br>".$sql;
+$stmtArea = $dbhFin->prepare($sql);
+$stmtArea->execute();
+$stmtArea->bindColumn('codigo', $cod_area);
+$stmtArea->bindColumn('cod_horario', $cod_horario);
+$i=0;
+$array_horariossuc=[];
+while ($rowArea = $stmtArea->fetch()) {
+  $array_areas[$i]=$cod_area;
+  $i++;
+  //ASIGNAMOS HORARIO A SUCURSAL
+  $array_horariossuc[$cod_area]=$array_horarios[$cod_horario];
+
+  // $array_horas[1]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//lunes
+  // $array_horas[2]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//martes
+  // $array_horas[3]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//miercoles
+  // $array_horas[4]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//jueves
+  // $array_horas[5]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//viernes
+  // $array_horas[6]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//sabado
+  // $array_horas[7]=array(2,'00:00','00:00','00:00','00:00','00:00','00:00','09:00','21:00');//domingo
+  // $array_horas[8]=array(2,'00:00','00:00','00:00','00:00','00:00','00:00','09:00','21:00');//feriado
+  // $array_horariossuc[$cod_area]=$array_horas;
+}
 //OBTENEMOS DIAS FERIADOS
 $sql="SELECT f.fecha from dias_feriados f WHERE f.cod_estado=1 and f.fecha BETWEEN '$fechaUltimoProc' and '$fechaFinal' order by f.fecha";//solo sucursales LP
 $stmtFeriados = $dbhFin->prepare($sql);
@@ -37,64 +129,6 @@ $stmtFeriados->bindColumn('fecha', $fecha_feriado);
 while ($rowArea = $stmtFeriados->fetch()) {
   $array_feriados[$fecha_feriado]=$fecha_feriado;
 }
-
-//Obtenemos Array  de Areas y horarios
-//procesamos areas 
-$sql="SELECT a.codigo,a.nombre
-  from areas_organizacion ao join areas a on ao.cod_area=a.codigo
-  where ao.cod_unidad=2 and ao.cod_estadoreferencial=1 and a.cod_estado=1 and a.codigo in (80)
-  order by a.nombre";//solo sucursales LP
-$stmtArea = $dbhFin->prepare($sql);
-$stmtArea->execute();
-$stmtArea->bindColumn('codigo', $cod_area);
-$i=0;
-while ($rowArea = $stmtArea->fetch()) {
-  $array_areas[$i]=$cod_area;
-  $i++;
-  //BUSCAMOS HORARIOS POR SUCURSAL
-  // $sqlHorario="SELECT cod_asignacion,ingreso_1,salida_1,ingreso_2,salida_2,ingreso_3,salida_3,ingreso_4,salida_4 from horarios_areas where cod_area=$cod_area and '$fechaFinal'>=fecha_inicio and '$fechaFinal'<=fecha_fin and cod_estadoreferencial=1 and activo=1";//
-  // $stmtHorario = $dbhFin->prepare($sqlHorario);
-  // $stmtHorario->execute();
-  // $stmtHorario->bindColumn('cod_asignacion', $cod_asignacion);
-  // $stmtHorario->bindColumn('ingreso_1', $ingreso_1);
-  // $stmtHorario->bindColumn('salida_1', $salida_1);
-  // $stmtHorario->bindColumn('ingreso_2', $ingreso_2);
-  // $stmtHorario->bindColumn('salida_2', $salida_2);
-  // $stmtHorario->bindColumn('ingreso_3', $ingreso_3);
-  // $stmtHorario->bindColumn('salida_3', $salida_3);
-  // $stmtHorario->bindColumn('ingreso_4', $ingreso_4);
-  // $stmtHorario->bindColumn('salida_4', $salida_4);
-  // $array_asistencia=[];
-  // while ($rowHorario = $stmtHorario->fetch()) {
-  //   $cod_tipoHorario=1;
-  //   if($ingreso_4 <> null && $ingreso_4 <> ""){//turno continuo
-  //     $cod_tipoHorario=2;
-  //   }
-  //   $array_asistencia[$cod_asignacion]=array($cod_tipoHorario,'$ingreso_1','$salida_1','$ingreso_2','$salida_2','$ingreso_3','$salida_3','$ingreso_4','$salida_4');//(Turno Mañana, Tarde, Noche, Continuo)  
-  // }
-  $array_horas[1]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//lunes
-  $array_horas[2]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//martes
-  $array_horas[3]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//miercoles
-  $array_horas[4]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//jueves
-  $array_horas[5]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//viernes
-  $array_horas[6]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//sabado
-  $array_horas[7]=array(2,'00:00','00:00','00:00','00:00','00:00','00:00','09:00','21:00');//domingo
-  $array_horas[8]=array(2,'00:00','00:00','00:00','00:00','00:00','00:00','09:00','21:00');//feriado
-  $array_horariossuc[$cod_area]=$array_horas;
-}
-//Horarios asignados personal
-$cod_horariox=1;
-$array_horasx[1]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//lunes
-$array_horasx[2]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//martes
-$array_horasx[3]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//miercoles
-$array_horasx[4]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//jueves
-$array_horasx[5]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//viernes
-$array_horasx[6]=array(1,'07:30','15:30','15:30','23:00','00:00','00:00','09:00','21:00');//sabado
-$array_horasx[7]=array(2,'00:00','00:00','00:00','00:00','00:00','00:00','09:00','21:00');//domingo
-$array_horasx[8]=array(2,'00:00','00:00','00:00','00:00','00:00','00:00','09:00','21:00');//feriado
-
-$array_horarios[$cod_horariox]=$array_horasx;
-
 $contadorAreas=count($array_areas);
 for ($ix=0; $ix<$contadorAreas; $ix++) {
   $cod_areax=$array_areas[$ix];
@@ -109,7 +143,7 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
   // echo $sqlPersonal;
   while($datPersonal=mysqli_fetch_array($respPersonal)){
     $sw_datoshorario=false;
-    $cod_horario=1;
+    $cod_horario=5;
     $cod_turno=$datPersonal['turno'];
     $fechaMarcado_x=$datPersonal['fecha_marcado_x'];
     $cod_funcionario=$datPersonal['cod_funcionario'];
@@ -124,7 +158,7 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
     $horaMarcado="";
     $horaMarcadoFin="";
 
-    if($cod_horario>0){//personal tiene asignado un horario?
+    if($cod_horario>0){//personal tiene asignado un horario? solo se asignará a algunas personas * casos especiales
       $array_horas_asignadas=$array_horarios[$cod_horario];
       $diaSemana=date('N',strtotime($fechaMarcado_x));
       if(isset($array_horas_asignadas[$diaSemana])){//vemos si existe ese día
@@ -218,11 +252,11 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
         $minutosAbandono+=$minutosAsignados;
       }
     }
-    // $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono) 
-    //   VALUES ('$fechaMarcado_x','$cod_funcionario','$cod_areax','$cod_horario','$hora_entrada','$hora_salida','$horaMarcado','$horaMarcadoFin','$minutosAsignados','$minutosTrabajados','$minutosAtraso','$minutosExtras','$estadoAsistencia','$minutosAbandono')";
-    //   //echo $sqlInsert."RRRR"; 
-    //   $stmtInsert = $dbhFin->prepare($sqlInsert);
-    //   $flagSuccessInsert=$stmtInsert->execute();
+    $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono) 
+      VALUES ('$fechaMarcado_x','$cod_funcionario','$cod_areax','$cod_horario','$hora_entrada','$hora_salida','$horaMarcado','$horaMarcadoFin','$minutosAsignados','$minutosTrabajados','$minutosAtraso','$minutosExtras','$estadoAsistencia','$minutosAbandono')";
+      //echo $sqlInsert."RRRR"; 
+      $stmtInsert = $dbhFin->prepare($sqlInsert);
+      $flagSuccessInsert=$stmtInsert->execute();
     ?>
     <tr>
       <td><?=$fechaMarcado_x?></td>
@@ -307,11 +341,11 @@ while ($row = $stmtPersonal->fetch()) {
         $estadoAsistencia=2;
       }
 
-      // $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono) 
-      // VALUES ('$fechaInicioxy','$cod_personaly','$cod_areay','$cod_horarioy','$hora_entradaxy','$hora_salidaxy','-','-','$minutosAsignadosxy','0','0','0','$estadoAsistencia',0)";
-      // //echo $sqlInsert."RRRR"; 
-      // $stmtInsert = $dbhFin->prepare($sqlInsert);
-      // $flagSuccessInsert=$stmtInsert->execute();
+      $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono) 
+      VALUES ('$fechaInicioxy','$cod_personaly','$cod_areay','$cod_horarioy','$hora_entradaxy','$hora_salidaxy','-','-','$minutosAsignadosxy','0','0','0','$estadoAsistencia',0)";
+      //echo $sqlInsert."RRRR"; 
+      $stmtInsert = $dbhFin->prepare($sqlInsert);
+      $flagSuccessInsert=$stmtInsert->execute();
       ?>
       <tr>
         <td><?=$fechaInicioxy?></td>
@@ -328,7 +362,8 @@ while ($row = $stmtPersonal->fetch()) {
         <td>0</td>
         <td>0</td>
         <td><?=$estadoAsistencia?></td>
-      </tr><?php
+      </tr>
+      <?php
 
     } 
 
@@ -337,8 +372,26 @@ while ($row = $stmtPersonal->fetch()) {
 
 }
 
+}
+
+echo "<script language='Javascript'>
+  $('.cargar-ajax').addClass('d-none');
+    Swal.fire({
+      title: 'CORRECTO',
+      text: 'PROCESADO CORRECTAMENTE',
+      type: 'success'
+    }).then(function() {
+        location.href='../index.php?opcion=asistenciaPersonal_main';
+    });
+    </script>";
 ?>
-</table></center>
+
+
+
+<!-- </table></center> -->
+
+
+
 
 
 

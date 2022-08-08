@@ -1,7 +1,7 @@
 <?php
 require_once 'conexion.php';
 require_once 'styles.php';
-
+require_once 'functionsGeneral.php';
 
 
 $cod_personal=$_GET['codigo'];
@@ -123,22 +123,32 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                               
                            }
                         }
-
                         $fechainicio=date('Y-m-d',strtotime($fechainicio.'+1 year'));  
                       }
 
-                      // if($fechainicio!=$ing_planilla){
-                      //   $fechainicio=date('Y-m-d',strtotime($fechainicio.'-1 year'));
-                      // }
-                      // $date1 = new DateTime($fechainicio);
-                      // $date2 = new DateTime($fecha_actual);
-                      // $diff = $date1->diff($date2);    
-                      // $diferencia_mes_sobrante=$diff->m;
-                      // $diferencia_dias_sobrante=$diff->d;
+                      if($fechainicio!=$ing_planilla){
+                        $fechainicio=date('Y-m-d',strtotime($fechainicio.'-1 year'));
+                      }
+                      // echo $fechainicio."**".$fecha_actual;
+                      $date1 = new DateTime($fechainicio);
+                      $date2 = new DateTime($fecha_actual);
+                      $diff = $date1->diff($date2);
+                      $diferencia_dias_sobrante=$diff->days;
+                      $duodecimas=$dias_vacacion/360*$diferencia_dias_sobrante;
+                      // echo $duodecimas."-".$dias_vacacion."-".$diferencia_dias_sobrante;
+                      $array_datos[$index_x]="-100,".$duodecimas.",0,".$duodecimas;
                       // var_dump($array_datos);
                       $array_datos = serialize($array_datos);
                       $array_datos = urlencode($array_datos);
                   ?>
+                  <tr>
+                    <td class="text-center">DUODECIMAS DE VACACION</b></td>
+                    <td class="text-center"><?=formatNumberDec($duodecimas);?></td>
+                    <td class="text-center">0</td>
+                    <td class="text-center"><?=formatNumberDec($duodecimas);?></td>
+                    <td class="text-center"><span class="badge badge-default">Duodécima</span></td>
+                    <td class="td-actions text-right"></td>
+                  </tr>
                   <tr class='bg-dark text-white'>
                     <td class="text-center">TOTAL</td>
                     <td class="text-center"><?=$total_dias_vacacion?></td>

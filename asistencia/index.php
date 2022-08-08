@@ -20,19 +20,19 @@ $globalUnidad=$_SESSION["globalUnidad"];
             <div class="card-body">
                <table>
                   <tr>
-                     <td width="25%"><center><i class="material-icons" style="color: #a9dfbf;font-size:60px;" >pending_actions</i></center></td>
+                     <td width="25%"><center><i class="material-icons" style="color: #3b7a56;font-size:60px;" >pending_actions</i></center></td>
                      <td>
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                                 <h5 class="card-title" style="color:#7dcea0;"><b>Jornada de Trabajo</b></h5>
+                                 <h5 class="card-title" style="color:#3b7a56;"><b>Jornada de Trabajo</b></h5>
                               </div>
                            </div>
                         </div>
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                               <label class="control-label" for="inputSuccess">Gestión de Horarios</label>
+                               <label class="control-label" for="inputSuccess" style="color:#808b96">Gestión de Horarios</label>
                              </div>
                            </div>
                         </div>
@@ -41,7 +41,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
                </table>
                <center>
                   <div class="btn-group">
-                     <a  class="btn btn-sm" href="?opcion=rpt_gestion_horarios_from">GESTIÓN<BR>HORARIOS</a><a  class="btn btn-sm btn-success" style="background:#7CC6A8 !important;" href="?opcion=rpt_asignacion_horarios_areas">ASIGNACIÓN<BR>HORARIOS</a>
+                     <a  class="btn btn-sm" href="?opcion=rpt_gestion_horarios_from">GESTIÓN<BR>HORARIOS</a><a  class="btn btn-sm btn-success" style="background:#3b7a56 !important;" href="?opcion=rpt_asignacion_horarios_areas">ASIGNACIÓN<BR>HORARIOS</a>
                   </div>
                </center>
             </div>
@@ -53,26 +53,26 @@ $globalUnidad=$_SESSION["globalUnidad"];
             <div class="card-body">
                <table>
                   <tr>
-                     <td width="25%"><center><i class="material-icons" style="color: #fad7a0;font-size:60px;" >settings</i></center></td>
+                     <td width="25%"><center><i class="material-icons" style="color: #dc7633 ;font-size:60px;" >settings</i></center></td>
                      <td>
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                                 <h5 class="card-title" style="color:#f8c471;"><b>Procesar Asistencia</b></h5>
+                                 <h5 class="card-title" style="color:#dc7633;"><b>Procesar Asistencia</b></h5>
                               </div>
                            </div>
                         </div>
                         <div class="row">
                            <div class="col-sm-6">
                                  <div class="form-group has-primary">
-                                    <label class="control-label" for="inputSuccess">Sucursales</label>
+                                    <label class="control-label" for="inputSuccess" style="color:#808b96">Sucursales</label>
                                 </div>
                            </div>
                         </div>
                      </td>
                   </tr>
                </table>
-               <center><button  class="btn btn-sm" onclick="boton_incremento_salarial_main(3)">Ingresar</button></center>
+               <center><a class="btn btn-sm" href="asistencia/procesar_asistencia_personal.php" >Ingresar</a></center>
             </div>
          </div>
       </div>
@@ -82,19 +82,19 @@ $globalUnidad=$_SESSION["globalUnidad"];
             <div class="card-body">
                <table>
                   <tr>
-                     <td width="25%"><center><i class="material-icons" style="color: #fad7a0;font-size:60px;" >settings</i></center></td>
+                     <td width="25%"><center><i class="material-icons" style="color: #dc7633;font-size:60px;" >settings</i></center></td>
                      <td>
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                                 <h5 class="card-title" style="color:#f8c471;"><b>Procesar Asistencia</b></h5>
+                                 <h5 class="card-title" style="color:#dc7633;"><b>Procesar Asistencia</b></h5>
                               </div>
                            </div>
                         </div>
                         <div class="row">
                            <div class="col-sm-6">
                                  <div class="form-group has-primary">
-                                    <label class="control-label" for="inputSuccess">Of. Central</label>
+                                    <label class="control-label" for="inputSuccess" style="color:#808b96">Of. Central</label>
                                 </div>
                            </div>
                         </div>
@@ -113,19 +113,19 @@ $globalUnidad=$_SESSION["globalUnidad"];
             <div class="card-body">
                <table>
                   <tr>
-                     <td width="25%"><center><i class="material-icons" style="color: #4f657c;font-size:60px;" >groups</i></center></td>
+                     <td width="25%"><center><i class="material-icons" style="color:#1a5276;font-size:60px;" >groups</i></center></td>
                      <td>
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                                 <h5 class="card-title" style="color:#4f657c;"><b>Cuadro de Asistencia</b></h5>
+                                 <h5 class="card-title" style="color#1a5276;"><b>Cuadro de Asistencia</b></h5>
                               </div>
                            </div>
                         </div>
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                               <label class="control-label" for="inputSuccess">Sucursales</label>
+                               <label class="control-label" for="inputSuccess" style="color:#808b96">Sucursales</label>
                              </div>
                            </div>
                         </div>
@@ -142,19 +142,19 @@ $globalUnidad=$_SESSION["globalUnidad"];
             <div class="card-body">
                <table>
                   <tr>
-                     <td width="25%"><center><i class="material-icons" style="color: #f5b7b1 ;font-size:60px;" >assignment_ind</i></center></td>
+                     <td width="25%"><center><i class="material-icons" style="color:#c0392b ;font-size:60px;" >assignment_ind</i></center></td>
                      <td>
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                                 <h5 class="card-title" style="color:#f1948a ;"><b>Reporte de Marcación</b></h5>
+                                 <h5 class="card-title" style="color:#c0392b ;"><b>Reporte de Marcación</b></h5>
                               </div>
                            </div>
                         </div>
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                               <label class="control-label" for="inputSuccess">Por Persona</label>
+                               <label class="control-label" for="inputSuccess" style="color:#808b96">Por Persona</label>
                              </div>
                            </div>
                         </div>
@@ -170,19 +170,19 @@ $globalUnidad=$_SESSION["globalUnidad"];
             <div class="card-body">
                <table>
                   <tr>
-                     <td width="25%"><center><i class="material-icons" style="color: #d2b4de;font-size:60px;" >assignment</i></center></td>
+                     <td width="25%"><center><i class="material-icons" style="color:#7d3c98;font-size:60px;" >assignment</i></center></td>
                      <td>
                         <div class="row">
                            <div class="col-sm-12">
                               <div class="form-group has-primary">
-                                 <h5 class="card-title" style="color:#bb8fce;"><b>Reporte de Marcación</b></h5>
+                                 <h5 class="card-title" style="color:#7d3c98;"><b>Reporte de Marcación</b></h5>
                               </div>
                            </div>
                         </div>
                         <div class="row">
                            <div class="col-sm-6">
                                  <div class="form-group has-primary">
-                                    <label class="control-label" for="inputSuccess">Consolidado</label>
+                                    <label class="control-label" for="inputSuccess" style="color:#808b96">Consolidado</label>
                                 </div>
                            </div>
                         </div>

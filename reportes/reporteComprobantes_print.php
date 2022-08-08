@@ -5,7 +5,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once '../functionsReportes.php';
-require_once '../fpdf_html.php';
+// require_once '../fpdf_html.php';
 require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
 

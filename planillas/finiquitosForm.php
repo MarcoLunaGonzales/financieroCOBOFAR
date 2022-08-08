@@ -5,22 +5,20 @@ require_once 'styles.php';
 require_once 'rrhh/configModule.php';
 
 $dbh = new Conexion();
-$query_retiro = "SELECT * from tipos_retiro_personal where cod_estadoreferencial=1 order by 2";
-$statementTiposRetiro = $dbh->query($query_retiro);
+
 
 //tipo de retiro                   
 $querytiporetiro = "SELECT codigo,nombre from tipos_retiro_personal where cod_estadoreferencial=1 order by 2";
 $stmtTipoRetiro = $dbh->query($querytiporetiro);
 //por is es edit
+
 if ($codigo > 0){
     //EDIT GET1 no guardar, sino obtener
     $codigo=$codigo;
-    $stmt = $dbh->prepare("SELECT * FROM finiquitos where codigo =:codigo");
+    $stmt = $dbh->prepare("SELECT cod_personal,cod_tiporetiro,cod_contrato,anios_pagados,dias_vacaciones_pagar,duodecimas,otros_pagar FROM finiquitos where codigo =$codigo");
     //Ejecutamos;
-    $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
     $result = $stmt->fetch();
-    $codigo = $result['codigo'];
     $cod_personal = $result['cod_personal'];
     // $fecha_retiro = $result['fecha_retiro'];
     $cod_tiporetiro = $result['cod_tiporetiro'];
@@ -30,7 +28,11 @@ if ($codigo > 0){
     $dias_vacaciones_pagar = $result['dias_vacaciones_pagar'];
     $duodecimas = $result['duodecimas'];
     $otros_pagar = $result['otros_pagar'];
+
+    $query_retiro = "SELECT * from tipos_retiro_personal where codigo=$cod_tiporetiro";
+    $statementTiposRetiro = $dbh->query($query_retiro);
 }else {    
+  $cod_personal=0;
   if(isset($_GET['codigo_contrato'])){
     $codigo_contrato=$_GET['codigo_contrato'];
   }else{
@@ -44,6 +46,7 @@ if ($codigo > 0){
   $duodecimas = 0;
   $otros_pagar = 0;
 }
+
 $sql="SELECT cod_tipocontrato from personal_contratos where codigo=$codigo_contrato";
 $stmtTipoContrato = $dbh->prepare($sql);
 $stmtTipoContrato->execute();
@@ -70,8 +73,7 @@ if($codigo_contrato==0 && $codigo==0){
   }
 }
 
-
- // echo "<br><br><br>".$sqlpersonal;
+// echo "<br><br><br>".$sqlpersonal;
 $stmtpersonal = $dbh->prepare($sqlpersonal);
 $stmtpersonal->execute();
 ?>
@@ -95,14 +97,14 @@ $stmtpersonal->execute();
                         <label class="col-sm-2 col-form-label">Personal</label>
                         <div class="col-sm-8">
                           <div class="form-group">
-                            <select name="cod_personal" id="cod_personal" data-style="btn btn-info" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
-                                  <option value="" disabled="disabled"></option>
+                            <select name="cod_personal" id="cod_personal" data-style="btn btn-info" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true" onChange="ajaxFiniquitoPersonal(this);">
+
+                                  <option value="" <?=($codigo>0)?"disabled":""?>></option>
                                   <?php 
                                       while ($row = $stmtpersonal->fetch()){ 
                                         $dias=$row['dias'];                                        
                                         ?>
-
-                                       <option  <?=($dias<89)?"disabled":"";?> data-subtext="FI:<?=$row["ing_contr"];?> FF:<?=$row["fecha_retiro"];?> (<?=$row["dias"];?> días)"  value="<?=$row["cod_personal"].'##'.$row["codigo"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?> </option>
+                                       <option <?=($cod_personal==$row["cod_personal"])?"selected":""?> <?=($dias<89)?"disabled":"";?> data-subtext="FI:<?=$row["ing_contr"];?> FF:<?=$row["fecha_retiro"];?> (<?=$row["dias"];?> días)"  value="<?=$row["cod_personal"].'##'.$row["codigo"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?> </option>
                                    <?php } ?>
                             </select>
                           </div>
@@ -111,11 +113,13 @@ $stmtpersonal->execute();
                     <div class="row">
                       <label class="col-sm-2 col-form-label" >Tipo De Retiro</label>
                       <div class="col-sm-8">
-                        <div class="form-group">              
+                        <div class="form-group" id="div_tipo_retiro">
                             <select name="cod_tiporetiro" id="cod_tiporetiro" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required data-show-subtext="true" data-live-search="true">
-                            <?php while ($row = $statementTiposRetiro->fetch()){ ?>
-                                <option <?=($cod_tiporetiro==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                            <?php } ?>
+                              <option value="" ></option>
+                            <?php if($codigo>0){
+                              while ($row = $statementTiposRetiro->fetch()){ ?>
+                                  <option <?=($cod_tiporetiro==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                              <?php } } ?>
                           </select>
                         </div>
                       </div>
@@ -129,23 +133,24 @@ $stmtpersonal->execute();
                         </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <label class="col-sm-2 col-form-label">Días de Vacaciones a Pagar</label>
+                    <div id="div_tipo_vacacionesapagar">
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Días de Vacaciones a Pagar</label>
                         <div class="col-sm-8">
-                        <div class="form-group">
-                            <input class="form-control" type="number" name="vacaciones_pagar" id="vacaciones_pagar" required="true" value="<?=$dias_vacaciones_pagar?>" />
+                        <div class="form-group" >
+                            <input class="form-control" type="number" name="vacaciones_pagar" id="vacaciones_pagar" required="true" value="<?=$dias_vacaciones_pagar?>" readonly />
                         </div>
                         </div>
-                    </div>
-                    <div class="row">
+                      </div>
+                      <div class="row">
                         <label class="col-sm-2 col-form-label">Doudécimas a Pagar</label>
                         <div class="col-sm-8">
                         <div class="form-group">
-                            <input class="form-control" type="number" name="duodecimas" id="duodecimas" required="true" value="<?=$duodecimas?>" />
+                            <input class="form-control" type="number" step="0.01" name="duodecimas" id="duodecimas" required="true" value="<?=$duodecimas?>" readonly />
                         </div>
                         </div>
+                      </div>
                     </div>
-
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Otros a Pagar</label>
                         <div class="col-sm-8">

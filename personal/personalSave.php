@@ -191,13 +191,11 @@ try {
         $sql="SELECT codigo 
                 from personal_contratos 
                 where cod_personal=$codigo and cod_estadoreferencial=1 and cod_estadocontrato=1";
-        
         $stmtPer = $dbhS->prepare($sql);
         $stmtPer->execute();
         $resultPer=$stmtPer->fetch();
         $codigo_contrato=$resultPer['codigo'];
         $Sql="UPDATE personal_contratos set fecha_iniciocontrato='$ing_planilla', fecha_evaluacioncontrato='$fecha_evaluacioncontrato' where codigo=$codigo_contrato";
-        
         $stmtUContrato = $dbh->prepare($sql);  
         $stmtUContrato->execute();
 

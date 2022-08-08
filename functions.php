@@ -3690,11 +3690,15 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   function obtener_id_planilla($cod_gestion,$cod_mes){
     $dbh = new Conexion();
     $sql="SELECT codigo from planillas
-    where cod_gestion=$cod_gestion and cod_mes=$cod_mes";
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
-    $result=$stmt->fetch();
-    $codigo=$result['codigo'];
+    where cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoplanilla=3";
+
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+   }
+    
     $dbh = null;
     $stmt = null;
     return ($codigo);
@@ -4541,13 +4545,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerTiempoDosFechas($fechaInicio,$fechafin){
     $datetime1=date_create($fechaInicio);
-    $datetime2=date_create($fechaFin);
+    $datetime2=date_create($fechafin);
     $intervalo=date_diff($datetime1,$datetime2);
     $tiempo=array();
     foreach ($intervalo as $valor ) {
       $tiempo[]=$valor;
     }
     return $tiempo;
+  }
+  function obtenerTiempoDosFechas2($fechaInicio,$fechafin){
+      
+      $dateTimeAsg1 = date_create($fechaInicio); 
+      $dateTimeAsg2 = date_create($fechafin); 
+      $differenceAsg = date_diff($dateTimeAsg1, $dateTimeAsg2);
+      // $minutosAsignadosy = $differenceAsg->y;
+      // $minutosAsignadosm = $differenceAsg->m;
+      // $minutosAsignadosd = $differenceAsg->d;
+      return array($differenceAsg->y,$differenceAsg->m,$differenceAsg->d);
   }
 
   function obtenerPaisesServicioIbrnorca(){
@@ -12847,6 +12861,7 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
    $total_dias_vacacion=0;
    $diferencia_mes_sobrante=0;
    $diferencia_dias_sobrante=0;
+   $dias_vacacion_ultimo=0;
    while($fechainicio<=$fecha_actual){
       //echo $fechainicio."<br>";
       $date1 = new DateTime($fechainicio);
@@ -12859,6 +12874,9 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
          $anios_final=$datos[1];
          $dias_vacacion=$datos[2];
          if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
+            if($dias_vacacion_ultimo<$dias_vacacion){
+               $dias_vacacion_ultimo=$dias_vacacion;
+            }
             $total_dias_vacacion += $dias_vacacion;
             break;
          }
@@ -12872,11 +12890,11 @@ function obtenerDiasVacacion($ing_planilla,$fecha_actual,$array_escalas){
    $date1 = new DateTime($fechainicio);
    $date2 = new DateTime($fecha_actual);
    $diff = $date1->diff($date2);    
-   $diferencia_mes_sobrante=$diff->m;
-   $diferencia_dias_sobrante=$diff->d;
+   // $diferencia_mes_sobrante=$diff->m;
+   $diferencia_dias_sobrante=$diff->days;
 
    //echo $ing_planilla."/".$fecha_actual." Tot:".$total_dias_vacacion." mes:".$diferencia_mes_sobrante." dias:".$diferencia_dias_sobrante;
-   return $total_dias_vacacion."#".$diferencia_mes_sobrante."#".$diferencia_dias_sobrante;
+   return $total_dias_vacacion."#".$diferencia_mes_sobrante."#".$diferencia_dias_sobrante."#".$dias_vacacion_ultimo;
 }
 
 
@@ -13117,7 +13135,7 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_prov($almacen,$fe
     //para saldo  Anterior    
     
     $ingresoString="";
-    if($almacen==1000||$almacen==1078){
+    if($almacen==1000){
       $ingresoString=" and i.estado_guardado>0 ";
     }  
     // if(strtotime($fecha_ini)<strotime("2021-12-01")){
@@ -14017,13 +14035,39 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
          {
           $porcentaje_diahaber_x=$porcentaje_diahaber;
          }
-         }
-         $dia_haber=$haber_basico/30;
-         $descuentos_neto=$dia_haber*$porcentaje_diahaber_x/100;
-         $stmt = null;
-         $dbh = null;
-         return ($descuentos_neto);
       }
+      $dia_haber=$haber_basico/30;
+      $descuentos_neto=$dia_haber*$porcentaje_diahaber_x/100;
+      $stmt = null;
+      $dbh = null;
+      return ($descuentos_neto);
+   }
+
+   function obtenerSaldoVacacionPersona($cod_personal,$ing_planilla,$fecha_fin){
+      $dbh = new Conexion();
+      $stmtEscalas = $dbh->prepare("SELECT anios_inicio,anios_final,dias_vacacion from escalas_vacaciones where cod_estadoreferencial=1");
+      $stmtEscalas->execute();
+      $stmtEscalas->bindColumn('anios_inicio', $anios_inicio);
+      $stmtEscalas->bindColumn('anios_final', $anios_final);
+      $stmtEscalas->bindColumn('dias_vacacion', $dias_vacacion);  
+      $i=0;
+      while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
+      {
+        $array_escalas[$i]=$anios_inicio.",".$anios_final.",".$dias_vacacion;
+        $i++;
+      }
+
+      $datos_array=explode('#',obtenerDiasVacacion($ing_planilla,$fecha_fin,$array_escalas));
+      $total_dias_vacacion=$datos_array[0];
+      // $diferencia_mes_sobrante=$datos_array[1];
+      $diferencia_dias_sobrante=$datos_array[2];
+      $dias_vacacion_x=$datos_array[3];
+      $dias_uzadas=obtenerDiasVacacionUzadas($cod_personal,-100);
+      $saldo_vacacion=$total_dias_vacacion-$dias_uzadas;
+      $duodecimas=$dias_vacacion_x/360*$diferencia_dias_sobrante;
+      // echo $dias_vacacion_x."--".$diferencia_dias_sobrante;
+      return array($saldo_vacacion,$duodecimas);
+   }
 
 
 

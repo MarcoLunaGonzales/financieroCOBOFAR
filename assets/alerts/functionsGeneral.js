@@ -20841,3 +20841,35 @@ function GuardarConsolidadoDescuentos(mes,gestion,nombrePer,cod_personal,estado)
   //   Swal.fire("ERROR!", "La suma de los meses difiere del TOTAL ("+monto_descuento_detalle+"<>"+sumaDescuentos+")", "warning");
   // }
 }
+
+
+
+function ajaxFiniquitoPersonal(combo){
+  var contenedor;
+  var cod_personal=combo.value;
+  contenedor = document.getElementById('div_tipo_retiro');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'planillas/ajax_finiquito_tiporetiro.php?cod_personal='+cod_personal,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);   
+      ajaxFiniquitoPersonal_vacaciones(cod_personal);
+    }
+  }
+  ajax.send(null)  
+}
+function ajaxFiniquitoPersonal_vacaciones(cod_personal){
+  var contenedor;
+  contenedor = document.getElementById('div_tipo_vacacionesapagar');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'planillas/ajax_finiquito_vacaciones.php?cod_personal='+cod_personal,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);   
+      // ajaxFiniquitoPersonal_vacaciones(cod_personal);
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo

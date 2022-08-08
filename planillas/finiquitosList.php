@@ -10,9 +10,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 
-  $stmt = $dbh->prepare("SELECT codigo,cod_personal,fecha_ingreso,fecha_retiro,
-(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as nombre_personal,
-(Select t.nombre from tipos_retiro_personal t where t.codigo=cod_tiporetiro) as motivo_retiro from finiquitos where cod_estadoreferencial=1");
+  $stmt = $dbh->prepare("SELECT f.codigo,f.cod_personal,f.fecha_ingreso,f.fecha_retiro,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) as nombre_personal,
+(Select t.nombre from tipos_retiro_personal t where t.codigo=cod_tiporetiro) as motivo_retiro,f.anios_indemnizacion
+
+from finiquitos f join personal p on f.cod_personal=p.codigo
+where f.cod_estadoreferencial=1 limit 20");
   //ejecutamos
   $stmt->execute();
   //bindColumn
@@ -22,6 +24,7 @@ $dbh = new Conexion();
   $stmt->bindColumn('fecha_ingreso', $fecha_ingreso);
   $stmt->bindColumn('fecha_retiro', $fecha_retiro);
   $stmt->bindColumn('motivo_retiro', $motivo_retiro);
+  $stmt->bindColumn('anios_indemnizacion', $anios_indemnizacion);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -68,11 +71,9 @@ $dbh = new Conexion();
                           if($globalAdmin==1){
                         ?>
                           <a href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
-                            <i class="material-icons" title="Imprimir Oficial">print</i>
+                            <i class="material-icons" title="Imprimir Finiquito">print</i>
                           </a>
-                          <a href='<?=$urlprintFiniquitos;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
-                            <i class="material-icons" title="Imprimir">print</i>
-                          </a>
+                          <a href="index.php?opcion=vacacionesPersonalLista&cf=<?=$cod_personal?>" target="_blank" class="btn btn-sm btn-warning"><i class="material-icons" title="Ir a Vacaciones">arrow_right_alt</i></a>
                           <a href='<?=$urlFormFiniquitos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                             <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                           </a>

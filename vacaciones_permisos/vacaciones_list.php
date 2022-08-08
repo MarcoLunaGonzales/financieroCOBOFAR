@@ -5,8 +5,15 @@ require_once 'styles.php';
 $globalAdmin = $_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("SELECT p.codigo,p.cod_unidadorganizacional,(select a.nombre from areas a where a.codigo=p.cod_area) as areas,p.turno,p.paterno,p.materno,p.primer_nombre,date_format(p.ing_planilla,'%d/%m/%Y') as fecha_ingreso,p.ing_planilla
-from personal p where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1
+$sql_add=" where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1 ";
+if(isset($_GET['cf'])){
+  $codigo_personal_x=$_GET['cf'];
+  $sql_add=" where p.codigo in ($codigo_personal_x)";
+}
+
+$stmt = $dbh->prepare("SELECT p.codigo,p.cod_unidadorganizacional,(select a.nombre from areas a where a.codigo=p.cod_area) as areas,p.turno,p.paterno,p.materno,p.primer_nombre,date_format(p.ing_planilla,'%d/%m/%Y') as fecha_ingreso,p.ing_planilla,(select pr.fecha_retiro from personal_retiros pr where pr.cod_personal=p.codigo and pr.cod_estadoreferencial=1) as fecha_retiro
+from personal p 
+$sql_add
 order by p.cod_unidadorganizacional,areas,p.turno,p.paterno");
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo);
@@ -19,8 +26,11 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
 $stmt->bindColumn('fecha_ingreso', $fecha_ingreso);
 $stmt->bindColumn('ing_planilla', $ing_planilla);
 
+$stmt->bindColumn('fecha_retiro', $fecha_retiro);
+
 $fecha_actual=date('Y-m-d');
 
+// $fecha_actual
 
 $stmtEscalas = $dbh->prepare("SELECT anios_inicio,anios_final,dias_vacacion from escalas_vacaciones where cod_estadoreferencial=1");
 $stmtEscalas->execute();
@@ -65,6 +75,9 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                   <?php
                     $index = 1;
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                      if($fecha_retiro<>"" || $fecha_retiro<> null){
+                        $fecha_actual= $fecha_retiro;
+                      }
 
                       $turno_nombre="";
                       switch ($turno) {

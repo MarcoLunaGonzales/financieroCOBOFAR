@@ -256,7 +256,7 @@ $stmt->bindColumn('tipo', $tipoX);
               <select name="modal_persona" id="modal_persona" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-live-search="true">
                 <option  value="0" selected disabled>--SELECCIONE--</option>
                  <?php
-                      $sql="SELECT codigo,CONCAT(primer_nombre,' ',paterno) AS nombre from personal where cod_estadoreferencial=1;";
+                      $sql="SELECT codigo,CONCAT(primer_nombre,' ',paterno) AS nombre from personal where cod_estadoreferencial=1 and cod_estadopersonal=1;";
                       $stmtg = $dbh->prepare($sql);
                       $stmtg->execute();
                       while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
@@ -276,7 +276,7 @@ $stmt->bindColumn('tipo', $tipoX);
               <select name="modal_horario" id="modal_horario" class="selectpicker form-control form-control-sm"  data-style="btn btn-primary" data-live-search="true" onchange="verDetalleHorarioAsignado()"> 
               <option  value="0" selected disabled>--SELECCIONE--</option>               
                  <?php
-                      $sql="SELECT codigo,descripcion,fecha_inicio,fecha_fin FROM horarios where activo=1 AND cod_estadoreferencial=1 and cod_estadopersonal=1;";
+                      $sql="SELECT codigo,descripcion,fecha_inicio,fecha_fin FROM horarios where activo=1 AND cod_estadoreferencial=1;";
                       $stmtg = $dbh->prepare($sql);
                       $stmtg->execute();
                       while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {

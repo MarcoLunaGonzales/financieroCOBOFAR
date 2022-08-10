@@ -84,7 +84,6 @@ while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
                 <th>Trabajado [Min]</th>
                 <th>Atraso [Min]</th>
                 <th>Permisos</th>
-                
                 <th>Extras [Min]</th>
                 <th>Abandono [Min]</th>
                 
@@ -98,11 +97,12 @@ while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
               $totalAbandono=0;
               $totalPermisos=0;              
 
-              $sqlPersonal="SELECT ap.fecha,ap.cod_personal,ap.cod_sucursal,ap.cod_horario,ap.entrada_asig,ap.salida_asig,ap.marcado1,ap.marcado2,ap.minutos_asignados,ap.minutos_trabajados,ap.minutos_atraso,ap.minutos_extras,ap.minutos_abandono,ap.estado_asistencia
+              $sqlPersonal="SELECT ap.codigo,ap.fecha,ap.cod_personal,ap.cod_sucursal,ap.cod_horario,ap.entrada_asig,ap.salida_asig,ap.marcado1,ap.marcado2,ap.minutos_asignados,ap.minutos_trabajados,ap.minutos_atraso,ap.minutos_extras,ap.minutos_abandono,ap.estado_asistencia
               from asistencia_procesada ap
               where ap.cod_personal=$stringPersonas and fecha between '$fechaInicio' and '$fechaFinal' order by ap.fecha ";
               $stmtPersonal = $dbh->prepare($sqlPersonal);
               $stmtPersonal->execute();
+              $stmtPersonal->bindColumn('codigo', $codigo);
               $stmtPersonal->bindColumn('cod_personal', $cod_personal);
               $stmtPersonal->bindColumn('cod_sucursal', $cod_area);
               $stmtPersonal->bindColumn('fecha', $fecha);
@@ -120,6 +120,7 @@ while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
                 $label_abandono="";
                 $label_extras="";
                 $label_atraso="";
+                $sw_edit=true;
                 switch ($estado_asistencia) {
                   case 0://sin asistencia
                     $marcado1="X";
@@ -128,11 +129,15 @@ while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
                     $label_salida="style='color:red;font-weight:bold;'";
                   break;
                   case 1://Asistencia
-                    if($minutos_atraso>0){
+                    if($minutos_atraso>0){                      
                       $label_entrada="style='color:red;font-weight:bold;'";
                       $label_atraso="style='color:red;font-weight:bold;'";
                     }else{
-                      $label_entrada="style='color:green;font-weight:bold;'";
+                      if($marcado1>$entrada_asig){//si está dentro de la tolerancia
+                        $label_entrada="style='color:blue;font-weight:bold;'";
+                      }else{
+                        $label_entrada="style='color:green;font-weight:bold;'";
+                      }
                     }
                     if($minutos_abandono>0){
                       $label_salida="style='color:red;font-weight:bold;'";
@@ -143,6 +148,7 @@ while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
                     }
                   break;
                   case 2://Dia sin trabajo
+                    $sw_edit=false;
                     $marcado1="X";
                     $marcado2="X";
                     $entrada_asig="X";
@@ -180,22 +186,23 @@ while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
                   $marcado2="X";
                   $label_salida="style='color:red;font-weight:bold;'";
                 }
-
-                
-
                 $totalAsignados+=$minutos_asignados;
                 $totalTrabajados+=$minutos_trabajados;
                 $totalAtrasos+=$minutos_atraso;
                 // $totalPermisos+=$minutos_permiso;
                 $totalExtras+=$minutos_extras;
                 $totalAbandono+=$minutos_abandono;                
+                $fecha_formato=nombreDia(date('N',strtotime($fecha)))." ".date('d',strtotime($fecha))." ".abrevMes(date('m',strtotime($fecha)));
+                $datos_envio=$codigo."#".$fecha_formato."#".$marcado1."#".$marcado2."#".$entrada_asig."#".$salida_asig."#".$fechaInicio."#".$fechaFinal."#".$stringPersonas;
                 ?>
                 <tr >
-                  <td style='background:#A6B1F7' class="text-left"><b><?=nombreDia(date('N',strtotime($fecha)))?> <?=date('d',strtotime($fecha))?> <?=abrevMes(date('m',strtotime($fecha)))?></b></td>
+                  <td style='background:#A6B1F7' class="text-left"><b><?=$fecha_formato?></b></td>
                   <td><?=$entrada_asig?></td>
                   <td <?=$label_entrada?>><?=$marcado1?></td>
                   <td><?=$salida_asig?></td>
-                  <td <?=$label_salida?>><?=$marcado2?></td>
+                  <td <?=$label_salida?>><div class="row"><div class="col-md-8"><?=$marcado2?></div><div class="col-md-1"><?php if($sw_edit){?><button title="Editar Marcado" class="btn btn-success btn-sm" style="padding: 0;font-size:5px;width:18px;height:18px;" type="button" data-toggle="modal" data-target="#modalEditar" onclick="agregardatosModalEditAsistencia('<?=$datos_envio;?>')">
+                          <i class="material-icons">edit</i>
+                        </button><?php } ?></div></div></td>
                   <td><?=$minutos_asignados?></td>
                   <td><?=$minutos_trabajados?></td>
                   <td <?=$label_atraso?>><?=$minutos_atraso?></td>
@@ -230,3 +237,66 @@ while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
   </div>
   </div>
 </div>
+
+
+<!-- modal editar -->
+<div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#A6F7C3 !important;color:#000 !important">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><b>Editar Horario</b><br>
+          <input type="text" class="form-control" name="cabecera_e" id="cabecera_e" style="background:white;color:blue;text-align: center;" readonly="true"></h4>
+      </div>
+      <div class="modal-body">        
+        <input type="hidden" name="codigo_asistencia_e" id="codigo_asistencia_e" value="0">
+        <input type="hidden" name="fecha_inicio_e" id="fecha_inicio_e" value="0">
+        <input type="hidden" name="fecha_fin_e" id="fecha_fin_e" value="0">
+        <input type="hidden" name="cod_personal_e" id="cod_personal_e" value="0">
+        <div class="row">
+          <label class="col-sm-3 col-form-label text-dark font-weight-bold"><small>Hora Ingreso</small></label>
+          <div class="col-sm-3">
+            <div class="form-group">              
+              <input type="time" class="form-control" name="hora_ingreso_e" id="hora_ingreso_e" style="background-color:white">
+            </div>
+          </div>
+          <label class="col-sm-3 col-form-label text-dark font-weight-bold"><small>Hora Salida</small></label>
+          <div class="col-sm-3">
+            <div class="form-group" >              
+              <input type="time" class="form-control" name="hora_salida_e" id="hora_salida_e" style="background-color:white">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info btn-sm" id="guardar_edit_ingreso_alm" name="guardar_edit_ingreso_alm" data-dismiss="modal">Guardar Cambios</button>
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"> Cancelar </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#guardar_edit_ingreso_alm').click(function(){
+      
+      var codigo_asistencia_e=document.getElementById("codigo_asistencia_e").value;
+      var fecha_inicio=document.getElementById("fecha_inicio_e").value;
+      var fecha_fin=document.getElementById("fecha_fin_e").value;
+
+      var cod_personal=document.getElementById("cod_personal_e").value;
+      var hora_ingreso_e=$('#hora_ingreso_e').val();
+      var hora_salida_e=$('#hora_salida_e').val();
+      if(hora_ingreso_e==null || hora_ingreso_e==0 || hora_ingreso_e=='' || hora_ingreso_e==' '){
+        Swal.fire("Informativo!", "Por favor introduzca Hora Ingreso.", "warning");
+       }else{
+          // if(hora_salida_e==null || hora_salida_e==0 || hora_salida_e=='' || hora_salida_e==' '){
+          //   Swal.fire("Informativo!", "Por favor introduzca Hora Salida.", "warning");
+          // }else{
+            guardar_edit_horario(codigo_asistencia_e,hora_ingreso_e,hora_salida_e,fecha_inicio,fecha_fin,cod_personal);    
+          // }
+        
+       }      
+    });    
+  });
+</script>

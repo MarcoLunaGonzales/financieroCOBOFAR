@@ -11,10 +11,10 @@ echo "<div class='cargar-ajax'>
 require("../conexion_comercial_oficial.php");
 require_once '../layouts/bodylogin2.php';
 require_once '../styles.php';
-
 require_once '../conexion.php';
 $dbhFin = new Conexion();
 
+$minutos_tolerancia=obtenerValorConfiguracionPlanillas(37);
 
 $sql="SELECT IFNULL(max(fecha),'2022-07-01') as fecha from asistencia_procesada";
 $stmtFecha = $dbhFin->prepare($sql);
@@ -24,9 +24,9 @@ while ($rowFecha = $stmtFecha->fetch()) {
   $fechaUltimoProc=$fechaUltimoProc;
 }
 // $fechaUltimoProc="2022-07-01";
-// $fechaFinal=date('Y-m-d');
 
-$fechaFinal="2022-07-31";
+$fechaFinal=date('Y-m-d');
+// $fechaFinal="2022-07-31";
 
 if($fechaFinal>$fechaUltimoProc){
 
@@ -94,7 +94,7 @@ while ($rowHorarioCab = $stmtHorarioCab->fetch()) {
 
 //Obtenemos Array  de Areas y horarios
 //procesamos areas 
-$sql="SELECT a.codigo,a.nombre,(select ha.cod_horario from horarios_area ha where ha.cod_area=a.codigo limit 1)as cod_horario
+$sql="SELECT a.codigo,a.nombre,(select ha.cod_horario from horarios_area ha where ha.cod_area=a.codigo and ha.estado=1 limit 1)as cod_horario
   from areas_organizacion ao join areas a on ao.cod_area=a.codigo
   where ao.cod_unidad=2 and ao.cod_estadoreferencial=1 and a.cod_estado=1 
   order by a.nombre";//solo sucursales LP//and a.codigo in (80)
@@ -144,7 +144,7 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
   while($datPersonal=mysqli_fetch_array($respPersonal)){
     $sw_datoshorario=false;
     $cod_horario=5;
-    $cod_turno=$datPersonal['turno'];
+    // $cod_turno=$datPersonal['turno'];
     $fechaMarcado_x=$datPersonal['fecha_marcado_x'];
     $cod_funcionario=$datPersonal['cod_funcionario'];
     $minutosAtraso=0;
@@ -173,19 +173,44 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
         $sw_datoshorario=true;
       }
     }
+
     if($sw_datoshorario){
       $estadoAsistencia=1;//tiene asistencia
+      //HORA DE MARCACION
+      $fecha=explode(" ",$datPersonal['fecha_marcado']);
+      $fechaMarcado=$fecha[0];
+      $horaMarcado=explode(":",$fecha[1])[0].":".explode(":",$fecha[1])[1];
+      $fechaFin=explode(" ",$datPersonal['fecha_marcado_salida']);
+      $fechaMarcadoFin=$fechaFin[0];
+      $horaMarcadoFin=explode(":",$fechaFin[1])[0].":".explode(":",$fechaFin[1])[1];
+      $horaMarcadodoble=date('H:i',strtotime($horaMarcado." + 2 hours"));
+      if($horaMarcadoFin==$horaMarcado || ($horaMarcadoFin>=$horaMarcado && $horaMarcadoFin<=$horaMarcadodoble)){//si marco dos veces en una misma hora
+        $horaMarcadoFin="-";
+      }
+
+      //HORARIO ASIGNADO A LA SUCURSAL
       $tipo_horario=$datosHorario[0];
       if($tipo_horario==1){//horario normal
-        if($cod_turno==1){
+        $horaEntrada=date('H:i',strtotime($datosHorario[1]." - 1 hours"));//marcado mañana rago de una hora
+        $horaEntradaMax=date('H:i',strtotime($datosHorario[1]." + 1 hours"));//marcado mañana rago de una hora
+        if($horaMarcado>=$horaEntrada && $horaMarcado<=$horaEntradaMax){
           $hora_entrada=$datosHorario[1];//$hora_entradaTM
           $hora_salida=$datosHorario[2];//$hora_salidaTM
-        }elseif($cod_turno==2){
+        }else{
           $hora_entrada=$datosHorario[3];//$hora_entradaTT
           $hora_salida=$datosHorario[4];//$hora_salidaTT
-        }else{
-          // $turno="OF_CENTRAL";
         }
+
+        // if($cod_turno==1){
+        //   $hora_entrada=$datosHorario[1];//$hora_entradaTM
+        //   $hora_salida=$datosHorario[2];//$hora_salidaTM
+        // }elseif($cod_turno==2){
+        //   $hora_entrada=$datosHorario[3];//$hora_entradaTT
+        //   $hora_salida=$datosHorario[4];//$hora_salidaTT
+        // }else{
+        //   // $turno="OF_CENTRAL";
+        // }
+
       }else{//horario continuo
         $hora_entrada=$datosHorario[7];
         $hora_salida=$datosHorario[8];
@@ -196,35 +221,30 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
           $hora_salida=$datosHorario[8];//$hora_salida
       }
 
-      //Minutos Trabajados Asignados 
+      //Minutos  Asignados de trabajo 
       $dateTimeAsg1 = date_create($hora_entrada.':00'); 
       $dateTimeAsg2 = date_create($hora_salida.':00'); 
       $differenceAsg = date_diff($dateTimeAsg1, $dateTimeAsg2);
       $minutosAsignados += $differenceAsg->h * 60;
       $minutosAsignados += $differenceAsg->i;
-      
-      $fecha=explode(" ",$datPersonal['fecha_marcado']);
-      $fechaMarcado=$fecha[0];
-      $horaMarcado=explode(":",$fecha[1])[0].":".explode(":",$fecha[1])[1];
-      $fechaFin=explode(" ",$datPersonal['fecha_marcado_salida']);
-      $fechaMarcadoFin=$fechaFin[0];
-      $horaMarcadoFin=explode(":",$fechaFin[1])[0].":".explode(":",$fechaFin[1])[1];
 
-      $horaMarcadodoble=date('H:i',strtotime($horaMarcado." + 2 hours"));
-      if($horaMarcadoFin==$horaMarcado || ($horaMarcadoFin>=$horaMarcado && $horaMarcadoFin<=$horaMarcadodoble)){//si marco dos veces en una misma hora
-        $horaMarcadoFin="-";
-      }
+
       //CALCULAMOS MINUTOS ATRASOS Y DEMAS
       // Minutos Atraso
       $tarde = strtotime($horaMarcado)-strtotime($hora_entrada);
+      // $tarde=$tarde-$minutos_tolerancia;      
       if($tarde>=0){//echo "LLEGO A TIEMPO\n";        
         $dateTimeObject1 = date_create($hora_entrada.':00'); 
         $dateTimeObject2 = date_create($horaMarcado.':00'); 
         $difference = date_diff($dateTimeObject1, $dateTimeObject2);   
         // $dif_hora= $difference->h;
         // $minutosCalc = $difference->days * 24 * 60;
-        $minutosAtraso += $difference->h * 60;
-        $minutosAtraso += $difference->i;
+        $minutosAtraso_x = $difference->h * 60;
+        $minutosAtraso_X += $difference->i;
+
+        if($minutosAtraso_x>$minutos_tolerancia){
+            $minutosAtraso+=$minutosAtraso_x;
+        }
       }
       if($horaMarcadoFin<>"-"){//si no marco su hora salida
         //Minutos Trabajados Marcados
@@ -254,7 +274,7 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
     }
     $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono) 
       VALUES ('$fechaMarcado_x','$cod_funcionario','$cod_areax','$cod_horario','$hora_entrada','$hora_salida','$horaMarcado','$horaMarcadoFin','$minutosAsignados','$minutosTrabajados','$minutosAtraso','$minutosExtras','$estadoAsistencia','$minutosAbandono')";
-      //echo $sqlInsert."RRRR"; 
+      // echo $sqlInsert."RRRR"; 
       $stmtInsert = $dbhFin->prepare($sqlInsert);
       $flagSuccessInsert=$stmtInsert->execute();
     ?>
@@ -298,7 +318,6 @@ while ($row = $stmtPersonal->fetch()) {
   while ($rowPerAsis = $stmtPerAsis->fetch()) {
     $array_marcadoxy[$fechaxy]=1;
   }
-
   $fechaInicioxy=$fechaUltimoProc;
   while($fechaInicioxy<=$fechaFinal){
     if(!isset($array_marcadoxy[$fechaInicioxy])){//no marcó ese día
@@ -307,6 +326,7 @@ while ($row = $stmtPersonal->fetch()) {
         $datosHorarioxy=$array_horas_asignadas[$diaSemana];
         $tipo_horario=$datosHorarioxy[0];
         if($tipo_horario==1){//horario normal
+          
           if($turnoy==1){
             $hora_entradaxy=$datosHorarioxy[1];//$hora_entradaxyTM
             $hora_salidaxy=$datosHorarioxy[2];//$hora_salidaxyTM
@@ -343,7 +363,7 @@ while ($row = $stmtPersonal->fetch()) {
 
       $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono) 
       VALUES ('$fechaInicioxy','$cod_personaly','$cod_areay','$cod_horarioy','$hora_entradaxy','$hora_salidaxy','-','-','$minutosAsignadosxy','0','0','0','$estadoAsistencia',0)";
-      //echo $sqlInsert."RRRR"; 
+      // echo $sqlInsert."RRRR"; 
       $stmtInsert = $dbhFin->prepare($sqlInsert);
       $flagSuccessInsert=$stmtInsert->execute();
       ?>

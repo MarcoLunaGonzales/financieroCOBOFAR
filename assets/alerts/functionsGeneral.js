@@ -20868,8 +20868,36 @@ function ajaxFiniquitoPersonal_vacaciones(cod_personal){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);   
-      // ajaxFiniquitoPersonal_vacaciones(cod_personal);
     }
   }
   ajax.send(null)  
-}//unidad_area-cargo
+}
+
+
+function agregardatosModalEditAsistencia(datos){
+  var d=datos.split('#');
+  document.getElementById("codigo_asistencia_e").value=d[0];
+  document.getElementById("hora_ingreso_e").value=d[2];
+  document.getElementById("hora_salida_e").value=d[3];  
+  var cabecera=" "+d[1]+"  ->  Entrada: "+d[4]+"   Salida: "+d[5];
+  document.getElementById("cabecera_e").value=cabecera; 
+  document.getElementById("fecha_inicio_e").value=d[6];  
+  document.getElementById("fecha_fin_e").value=d[7];   
+  document.getElementById("cod_personal_e").value=d[8];   
+}
+
+function guardar_edit_horario(codigo_asistencia_e,hora_ingreso_e,hora_salida_e,fecha_inicio,fecha_fin,cod_personal){
+  $.ajax({
+    type:"POST",
+    data:"codigo_asistencia="+codigo_asistencia_e+"&hora_ingreso="+hora_ingreso_e+"&hora_salida="+hora_salida_e,
+    url:"save_edit.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','reporte_asistencia_personal_print.php?cod_personal='+cod_personal+'&fecha_inicio='+fecha_inicio+'&fecha_fin='+fecha_fin);
+        // Swal.fire("Se procedió con el cambio!", "Por favor actualizar Página.", "success");
+      }else{
+        Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
+      }
+    }
+  });
+}

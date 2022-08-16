@@ -14069,6 +14069,15 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
       return array($saldo_vacacion,$duodecimas);
    }
 
-
+ function obtenerDatosTipoHorario($tipo,$horario){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT CONCAT(hd.ingreso_1,' A ',hd.salida_1) as hora_1,CONCAT(hd.ingreso_2,' A ',hd.salida_2) as hora_2,CONCAT(hd.ingreso_3,' A ',hd.salida_3) as hora_3,CONCAT(hd.ingreso_4,' A ',hd.salida_4) as hora_4 FROM horarios_detalle hd WHERE hd.cod_horario='$horario' and cod_asignacion='$tipo'");
+     $stmt->execute();
+     $hora_1='';$hora_2='';$hora_3='';$hora_4='';
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {        
+        $hora_1=$row['hora_1'];$hora_2=$row['hora_2'];$hora_3=$row['hora_3'];$hora_4=$row['hora_4'];
+     }
+     return array($hora_1,$hora_2,$hora_3,$hora_4);
+  }
 
 ?>

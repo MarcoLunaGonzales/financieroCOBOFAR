@@ -43,6 +43,9 @@ $globalUnidad=$_SESSION["globalUnidad"];
                   <div class="btn-group">
                      <a  class="btn btn-sm" href="?opcion=rpt_gestion_horarios_from">GESTIÓN<BR>HORARIOS</a><a  class="btn btn-sm btn-success" style="background:#3b7a56 !important;" href="?opcion=rpt_asignacion_horarios_areas">ASIGNACIÓN<BR>HORARIOS</a>
                   </div>
+                  <div class="btn-group" style="margin-top: 0px;">
+                     <a  class="btn btn-sm col-sm-12" href="?opcion=rpt_opt_horarios">REPORTE HORARIOS</a>
+                  </div>
                </center>
             </div>
          </div>

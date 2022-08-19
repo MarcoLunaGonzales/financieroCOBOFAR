@@ -103,18 +103,18 @@ if($existe>0){
 
 
 <script type="text/javascript">  
-  // var parametros={"fecha_desde":"<?=$fechaDesde?>","fecha_hasta":"<?=$fechahasta?>"};
-  // $.ajax({
-  //       type: "GET",
-  //       dataType: 'html',
-  //       url: "costeo_general.php",
-  //       data: parametros,
-  //       success:  function (resp) {
-  //         var r = resp.split("#####");
-  //         $("#tiempo_costeo").html(r[1]);
-  //         $("#cargando_datos").addClass("d-none");     
-  //       }
-  // });
+  var parametros={"fecha_desde":"<?=$fechaDesde?>","fecha_hasta":"<?=$fechahasta?>"};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "costeo_general.php",
+        data: parametros,
+        success:  function (resp) {
+          var r = resp.split("#####");
+          $("#tiempo_costeo").html(r[1]);
+          $("#cargando_datos").addClass("d-none");     
+        }
+  });
 </script>
 
 

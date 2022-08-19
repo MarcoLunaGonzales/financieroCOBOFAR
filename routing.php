@@ -1283,6 +1283,10 @@
 			require_once('asistencia/asignacion_horarios_personas.php'); //ok
 		}
 
+		if ($_GET['opcion']=='rpt_opt_horarios') {
+			require_once('asistencia/rpt_op_horarios.php'); //ok
+		}
+
 
 		
 

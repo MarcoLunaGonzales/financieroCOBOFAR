@@ -9,11 +9,14 @@ echo "<div class='cargar-ajax'>
 
 
 require("../conexion_comercial_oficial.php");
+// require("../conexion_comercial.php");
+
 require_once '../layouts/bodylogin2.php';
 require_once '../styles.php';
 require_once '../conexion.php';
+require_once '../functions.php';
 $dbhFin = new Conexion();
-
+// echo "aqui";
 $minutos_tolerancia=obtenerValorConfiguracionPlanillas(37);
 
 $sql="SELECT IFNULL(max(fecha),'2022-07-01') as fecha from asistencia_procesada";
@@ -23,12 +26,11 @@ $stmtFecha->bindColumn('fecha', $fechaUltimoProc);
 while ($rowFecha = $stmtFecha->fetch()) {
   $fechaUltimoProc=$fechaUltimoProc;
 }
-// $fechaUltimoProc="2022-07-01";
+// $fechaUltimoProc="2022-08-07";
 
 $fechaFinal=date('Y-m-d');
-// $fechaFinal="2022-07-31";
-
-if($fechaFinal>$fechaUltimoProc){
+// $fechaFinal="2022-08-07";
+if($fechaFinal>=$fechaUltimoProc){
 
 
 ?>
@@ -122,12 +124,21 @@ while ($rowArea = $stmtArea->fetch()) {
   // $array_horariossuc[$cod_area]=$array_horas;
 }
 //OBTENEMOS DIAS FERIADOS
-$sql="SELECT f.fecha from dias_feriados f WHERE f.cod_estado=1 and f.fecha BETWEEN '$fechaUltimoProc' and '$fechaFinal' order by f.fecha";//solo sucursales LP
+$sql="SELECT f.fecha from dias_feriados f WHERE f.cod_estado=1 and f.fecha BETWEEN '$fechaUltimoProc' and '$fechaFinal' order by f.fecha";
 $stmtFeriados = $dbhFin->prepare($sql);
 $stmtFeriados->execute();
 $stmtFeriados->bindColumn('fecha', $fecha_feriado);
+$array_feriados=[];
 while ($rowArea = $stmtFeriados->fetch()) {
   $array_feriados[$fecha_feriado]=$fecha_feriado;
+}
+$sql="SELECT cod_persona,cod_horario from horarios_persona where estado=1";//
+$stmtHrPersona = $dbhFin->prepare($sql);
+$stmtHrPersona->execute();
+$stmtHrPersona->bindColumn('fecha', $fecha_feriado);
+$array_persona_hr=[];
+while ($rowArea = $stmtHrPersona->fetch()) {
+  $array_persona_hr[$cod_persona]=$cod_horario;
 }
 $contadorAreas=count($array_areas);
 for ($ix=0; $ix<$contadorAreas; $ix++) {
@@ -143,7 +154,8 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
   // echo $sqlPersonal;
   while($datPersonal=mysqli_fetch_array($respPersonal)){
     $sw_datoshorario=false;
-    $cod_horario=5;
+    
+
     // $cod_turno=$datPersonal['turno'];
     $fechaMarcado_x=$datPersonal['fecha_marcado_x'];
     $cod_funcionario=$datPersonal['cod_funcionario'];
@@ -158,7 +170,15 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
     $horaMarcado="";
     $horaMarcadoFin="";
 
+    //verificamos si la persona tiene otro horario
+    if(isset($array_persona_hr[$cod_funcionario])){
+      $cod_horario=$array_persona_hr[$cod_funcionario];
+    }else{
+      $cod_horario=0;  
+    }
+
     if($cod_horario>0){//personal tiene asignado un horario? solo se asignará a algunas personas * casos especiales
+      // echo "aqui***";
       $array_horas_asignadas=$array_horarios[$cod_horario];
       $diaSemana=date('N',strtotime($fechaMarcado_x));
       if(isset($array_horas_asignadas[$diaSemana])){//vemos si existe ese día
@@ -200,25 +220,15 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
           $hora_entrada=$datosHorario[3];//$hora_entradaTT
           $hora_salida=$datosHorario[4];//$hora_salidaTT
         }
-
-        // if($cod_turno==1){
-        //   $hora_entrada=$datosHorario[1];//$hora_entradaTM
-        //   $hora_salida=$datosHorario[2];//$hora_salidaTM
-        // }elseif($cod_turno==2){
-        //   $hora_entrada=$datosHorario[3];//$hora_entradaTT
-        //   $hora_salida=$datosHorario[4];//$hora_salidaTT
-        // }else{
-        //   // $turno="OF_CENTRAL";
-        // }
-
       }else{//horario continuo
         $hora_entrada=$datosHorario[7];
         $hora_salida=$datosHorario[8];
       }
-      if(isset($array_feriados[$fechaMarcado_x])){//es feriado?
-          $datosHorario=$array_horas_asignadas[8];
-          $hora_entrada=$datosHorario[7];//$hora_entrada
-          $hora_salida=$datosHorario[8];//$hora_salida
+      if(isset($array_feriados[$fechaMarcado_x])){//es feriado?      
+        $array_horas_asignadas=$array_horariossuc[$cod_areax];
+        $datosHorario=$array_horas_asignadas[8];
+        $hora_entrada=$datosHorario[7];//$hora_entrada
+        $hora_salida=$datosHorario[8];//$hora_salida
       }
 
       //Minutos  Asignados de trabajo 
@@ -227,7 +237,6 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
       $differenceAsg = date_diff($dateTimeAsg1, $dateTimeAsg2);
       $minutosAsignados += $differenceAsg->h * 60;
       $minutosAsignados += $differenceAsg->i;
-
 
       //CALCULAMOS MINUTOS ATRASOS Y DEMAS
       // Minutos Atraso
@@ -240,8 +249,7 @@ for ($ix=0; $ix<$contadorAreas; $ix++) {
         // $dif_hora= $difference->h;
         // $minutosCalc = $difference->days * 24 * 60;
         $minutosAtraso_x = $difference->h * 60;
-        $minutosAtraso_X += $difference->i;
-
+        $minutosAtraso_x += $difference->i;
         if($minutosAtraso_x>$minutos_tolerancia){
             $minutosAtraso+=$minutosAtraso_x;
         }

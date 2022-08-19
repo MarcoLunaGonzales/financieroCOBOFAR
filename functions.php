@@ -3742,6 +3742,44 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $stmt = null;
       return ($valor_haber_basico."@@@".$valor_bono_antiguedad."@@@".$valor_bonos_otros."@@@".$valor_total_ganado."@@@".$valor_dias_trabajados);
   }
+
+  function obtenerdatos_planilla2($cod_personal,$cod_planilla){
+      $dbh = new Conexion();   
+
+      $renumeracion_mensual1=0;
+      $bono_antiguedad1=0;
+      $domingos_feriados1=0;
+      $bono_refrigerio1=0;
+      $falla_caja1=0;
+      $movilidad1=0;
+
+      $bferiados=0;
+      $breintegro=0;
+      $bextras=0;
+
+      $sql="SELECT pm.haber_basico,pm.bono_antiguedad,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=11 and bm.cod_estadoreferencial=1 and bm.cod_personal=pm.cod_personalcargo and bm.cod_gestion=p.cod_gestion and bm.cod_mes=p.cod_mes) as bnoches,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=12 and bm.cod_estadoreferencial=1 and bm.cod_personal=pm.cod_personalcargo and bm.cod_gestion=p.cod_gestion and bm.cod_mes=p.cod_mes) as bdomingos,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=13 and bm.cod_estadoreferencial=1 and bm.cod_personal=pm.cod_personalcargo and bm.cod_gestion=p.cod_gestion and bm.cod_mes=p.cod_mes) as bferiados,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=14 and bm.cod_estadoreferencial=1 and bm.cod_personal=pm.cod_personalcargo and bm.cod_gestion=p.cod_gestion and bm.cod_mes=p.cod_mes) as bmovilidad,(select sum(bm.monto) from bonos_personal_mes bm where bm.cod_bono in (15,16) and bm.cod_estadoreferencial=1 and bm.cod_personal=pm.cod_personalcargo and bm.cod_gestion=p.cod_gestion and bm.cod_mes=p.cod_mes) as brefrig,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=17 and bm.cod_estadoreferencial=1 and bm.cod_personal=pm.cod_personalcargo and bm.cod_gestion=p.cod_gestion and bm.cod_mes=p.cod_mes) as breintegro,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=18 and bm.cod_estadoreferencial=1 and bm.cod_personal=pm.cod_personalcargo and bm.cod_gestion=p.cod_gestion and bm.cod_mes=p.cod_mes) as bventas,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=19 and bm.cod_estadoreferencial=1 and bm.cod_personal=pm.cod_personalcargo and bm.cod_gestion=p.cod_gestion and bm.cod_mes=p.cod_mes) as bfallo,(select bm.monto from bonos_personal_mes bm where bm.cod_bono=20 and bm.cod_estadoreferencial=1 and bm.cod_personal=pm.cod_personalcargo and bm.cod_gestion=p.cod_gestion and bm.cod_mes=p.cod_mes) as bextras FROM planillas p join planillas_personal_mes pm on pm.cod_planilla=p.codigo
+      where pm.cod_planilla=$cod_planilla and pm.cod_personalcargo=$cod_personal";
+      // echo $sql."<br>";
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $renumeracion_mensual1=$row['haber_basico'];
+         $bono_antiguedad1=$row['bono_antiguedad'];
+         $domingos_feriados1=$row['bdomingos'];
+         $bnoches=$row['bnoches'];
+         
+         $bferiados=$row['bferiados'];
+         $breintegro=$row['breintegro'];
+         $bextras=$row['bextras'];
+
+         $bono_refrigerio1=$row['brefrig'];
+         $falla_caja1=$row['bfallo'];
+         $movilidad1=$row['bmovilidad'];
+      }
+      $dbh = null;
+      $stmt = null;
+      return array($renumeracion_mensual1,$bono_antiguedad1,$domingos_feriados1,$bono_refrigerio1,$falla_caja1,$movilidad1,$bferiados,$breintegro,$bextras);
+  }
     
 
   //=======
@@ -4059,7 +4097,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
           }*/
          
 
-    $canvas->page_text(500, 25, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));
+    $canvas->page_text(500, 25, "Pagina:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));
     $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
@@ -12672,10 +12710,26 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
       return($valor);
   }
 
+//quiniquenios pagados Anterior
+function obtenerQuinquenioPagadoPersonalAnt($cod_personal){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT sum(anios_pagados) as total_pagado from quinquenios_personal where cod_personal=$cod_personal and cod_estadoreferencial=1");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['total_pagado'];
+   }
+   if($valor==" " || $valor=="" || $valor==null){
+      $valor=0;
+   }
+   $dbh=null;
+   $stmt=null;
+   return($valor);
+}
 //quiniquenios pagados
 function obtenerQuinquenioPagadoPersonal($cod_personal){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT sum(anios_pagados) as total_pagado from quinquenios_personal where cod_personal=$cod_personal and cod_estadoreferencial=1");
+   $stmt = $dbh->prepare("SELECt sum(anios_indemnizacion) as total_pagado from finiquitos where tipo_beneficio=2 and cod_estadoreferencial=1 and cod_personal=$cod_personal");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

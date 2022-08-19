@@ -1,6 +1,7 @@
 <?php
 
 require_once '../conexion.php';
+require_once '../functionsGeneral.php';
 require_once '../layouts/bodylogin2.php';
 
 $codigo=$_GET['codigo'];
@@ -68,15 +69,15 @@ $stmt->bindColumn('glosa', $glosa);
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                      ?>
                       <tr>
-                        <td class="text-left small"><small><?=$area?></small></td>
-                          <td class="text-center small"><small><?=$fecha;?></small></td>
-                          <td class="text-left small"><small><?=$primer_nombre?> <?=$paterno?> <?=$materno?></small></td>
-                          <td class="text-left small"><small><?=$tipo_descuento;?></small></td>
-                          <td class="text-left small" ><small><?=$contracuenta?></small></td>
-                          <td class="text-center small"><small><?=$monto_sistema;?></small></td>
-                          <td class="text-center small"><small><?=$monto_depositado;?></small></td>
-                          <td class="text-center small"><small><?=$diferencia;?></small></td>
-                          <td class="text-lefts small"><small><?=$glosa;?></small></td>
+                        <td class="text-left"><small><?=$area?></small></td>
+                          <td class="text-center"><small><?=$fecha;?></small></td>
+                          <td class="text-left"><small><?=$primer_nombre?> <?=$paterno?> <?=$materno?></small></td>
+                          <td class="text-left"><small><?=$tipo_descuento;?></small></td>
+                          <td class="text-left" ><small><?=$contracuenta?></small></td>
+                          <td class="text-center"><small><?=formatNumberDec($monto_sistema);?></small></td>
+                          <td class="text-center"><small><?=formatNumberDec($monto_depositado);?></small></td>
+                          <td class="text-center"><small><?=formatNumberDec($diferencia);?></small></td>
+                          <td class="text-left"><small><?=$glosa;?></small></td>
                       </tr>
                     <?php $index++; } ?>
                   </tbody>

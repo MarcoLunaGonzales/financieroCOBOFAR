@@ -32,7 +32,7 @@ if(isset($_GET['q'])){
   $s=0;//cod area
 }
 
-$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,pp.minutos_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.created_at,a.abreviatura as area
+$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,pp.minutos_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.created_at,a.abreviatura as area,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.created_by)as nombre_personal_solicitado
 from personal_permisos pp join estados_permisos_personal epp on pp.cod_estado=epp.codigo join tipos_permisos_personal tpp on pp.cod_tipopermiso=tpp.codigo join areas a on pp.cod_area=a.codigo
  where pp.cod_estado=3 and cod_area in ($cod_area) order by pp.created_at";
  // echo "<br><br><br>".$sql;
@@ -55,6 +55,8 @@ $stmt->bindColumn('minutos_permiso', $minutos_permiso);
 $stmt->bindColumn('nombre_personal', $nombre_personal); 
 $stmt->bindColumn('created_at', $created_at); 
 $stmt->bindColumn('area', $area);
+
+$stmt->bindColumn('nombre_personal_solicitado', $nombre_personal_solicitado);  
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -120,8 +122,8 @@ $stmt->bindColumn('area', $area);
                     <tr <?=$estilo?> >
                       <td class="text-center"><?=$index;?></td>
                       <td class="text-left"><?=$area?></td>
-                      <td class="text-left"><?=$nombre_personal?></td>
-                      
+                      <td class="text-left" title="Solcitado por :<?=$nombre_personal_solicitado?>"><?=$nombre_personal?></td>
+
                       <td class="text-left"><?=$nombre_tipopermiso?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($created_at));?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($fecha_inicial));?></td>

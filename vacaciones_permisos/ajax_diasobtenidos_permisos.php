@@ -20,6 +20,8 @@ $dateTimeObject1 = date_create($fecha_inicio." ".$hora_inicio);
 $dateTimeObject2 = date_create($fecha_final." ".$hora_final); 
 $difference = date_diff($dateTimeObject1, $dateTimeObject2);   
 $dias_obtenidos = $difference->days;
+
+$dias_obtenidos+=1;
 $dif_hora= $difference->h;
 $minutos += $difference->h * 60;
 $minutos += $difference->i;

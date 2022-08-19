@@ -49,7 +49,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
           <div class="card-body">
             <h4 style="color:#212f3d;"><b><i>Días de vacación disponible</i></b></h4>
             <div class="table-responsive">
-              <table id="#" class="table table-bordered table-condensed table-striped  table-sm table-secondary">
+              <table class="table table-condensed small table-bordered" id="tablePaginatorHorarios"><!---->
                 <thead>
                   <tr class='bg-dark text-white'>
                     <th class="text-center">Gestión</th>
@@ -94,7 +94,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                             $array_datos[$index_x]=$gestion.",".$dias_vacacion.",".$dias_utilizadas.",".$saldo;
                             ?>
                             <tr>
-                              <td class="text-center"><?=date('d/m/Y', strtotime($fechainicio."- 1 year"));?> - <?=date('d/m/Y', strtotime($fechainicio));?>  <b>( <?=$gestion?>)</b></td>
+                              <td class="text-center" onclick="mostrarFilaTablaHorario(<?=$gestion?>);return false;"><?=date('d/m/Y', strtotime($fechainicio."- 1 year"));?> - <?=date('d/m/Y', strtotime($fechainicio));?>  <b>( <?=$gestion?>)</b><i style="font-size: 18px;" class="material-icons text-success" id="icono_<?=$codigoX?>">add_circle</i></td>
                               <td class="text-center"><?=$dias_vacacion;?></td>
                               <td class="text-center"><?=$dias_utilizadas;?></td>
                               <td class="text-center"><?=$saldo;?></td>
@@ -104,26 +104,64 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                                   $datosModal=$cod_personal."/".$gestion."/".$saldo."/".$ing_planilla."/".$fecha_actual."/".$nombre_personal;
                                   ?>
                                   <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalAgregarC" onclick="agregaformVacaciones('<?=$datosModal;?>')">
-                                    <i class="material-icons" title="Solicitar Vacaciones">add</i>
+                                    <i class="material-icons" title="Nueva Vacaciones">add</i>
                                  </button>
                                   <?php
                                 }
                                 ?>
-                                <button type="button" class="btn btn-info btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalAgregarC" onclick="agregaformVacaciones('<?=$datosModal;?>')">
-                                    <i class="material-icons" title="Solicitar Vacaciones">visibility</i>
-                                 </button>
                               </td>
                             </tr>
-                              <?php
+                            <tr class="d-none fila_<?=$gestion?>" style="background: #6EFCaa; color:#000;">
+                              <td>Fecha Inicial</td>
+                              <td>Fecha Fin</td>
+                              <td>Total Días</td>
+                              <td>Tipo</td>
+                              <td>Saldos</td>                                
+                              <td>
+                              </td>
+                            </tr>
+                             <?php
+                             $sql="SELECT pv.codigo,DATE_FORMAT(pv.fecha_inicial,'%d/%m/%Y')as fecha_inicial,pv.hora_inicial,DATE_FORMAT(pv.fecha_final,'%d/%m/%Y') as fecha_final,pv.hora_final,pv.observaciones,pv.dias_vacacion,(select tvp.nombre from tipos_vacacion_personal tvp where tvp.codigo=pv.cod_tipovacacion)as tipo_vacacion
+                                from personal_vacaciones pv  where pv.cod_personal=$cod_personal and pv.cod_estadoreferencial=1 and pv.gestion=$gestion";                        
+                            $stmtDetalle = $dbh->prepare($sql);
+                            $stmtDetalle->execute();
+                            $saldo_gestionDet=$dias_vacacion;
+                            while ($result = $stmtDetalle->fetch(PDO::FETCH_ASSOC)) {
+                                $cod_detalle=$result['codigo'];
+                                $fecha_inicialDet=$result['fecha_inicial'];
+                                // $hora_inicial=$result['hora_inicial'];
+                                $fecha_finalDet=$result['fecha_final'];
+                                // $hora_final=$result['hora_final'];
+                                $tipo_vacacionDet=$result['tipo_vacacion'];
+                                $dias_vacacionDet=$result['dias_vacacion'];
+                                $saldo_gestionDet-=$dias_vacacionDet;
+
+                                if($fecha_inicialDet=='00/00/0000'){
+                                    $fecha_inicialDet="-";
+                                }
+                                if($fecha_finalDet=='00/00/0000'){
+                                    $fecha_finalDet="-";
+                                }
+                                ?>
+                                <tr class="d-none fila_<?=$gestion?>" style="background: #6EFCE6; color:#000;">
+                                <td align="center"><?=$fecha_inicialDet?></td><td align="center"><?=$fecha_finalDet?></td><td align="center"><?=round($dias_vacacionDet)?></td><td><?=$tipo_vacacionDet?></td><td align="center" ><b><?=$saldo_gestionDet?></b></td>
+                                <td class="td-actions text-right">
+                                  <!-- <button type="button" class="btn btn-success btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalEdit" onclick="agregaformVacaciones_edit('<?=$datosModal;?>')">
+                                    <i class="material-icons" title="Editar Vacación">edit</i>
+                                 </button>-->                                 
+                                  <button rel="tooltip" class="btn btn-danger  btn-sm" onclick="alerts.showSwal('warning-message-and-confirmation','index.php?opcion=vacacionesdeletepersonal&codigo=<?=$cod_detalle;?>&cod_personal=<?=$cod_personal;?>&ing_planilla=<?=$ing_planilla;?>&fecha_actual=<?=$fecha_actual;?>')">
+                                  <i class="material-icons" ><?=$iconDelete;?></i>
+                                </button>
+                                </td></tr>
+                            <?php }
                               $total_dias_vacacion += $dias_vacacion;
                               $total_dias_vacacion_uzadas+=$dias_utilizadas;
                               $total_dias_vacacion_saldo+=$saldo;
                               $index_x++;
                               break;
-                              
                            }
                         }
-                        $fechainicio=date('Y-m-d',strtotime($fechainicio.'+1 year'));  
+                        $fechainicio=date('Y-m-d',strtotime($fechainicio.'+1 year'));
                       }
 
                       if($fechainicio!=$ing_planilla){
@@ -157,13 +195,11 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                     <td class="text-center"></td>
                     <td class="text-center"></td>
                   </tr>
-
                 </tbody>
               </table>
             </div>
           </div>
           <div class="card-footer ml-auto mr-auto ">
-            
             <a href="index.php?opcion=vacacionesPersonalLista" class="btn btn-sm btn-danger"> <-- Volver </a>
             <a href="vacaciones_permisos/vacaciones_pdf.php?cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>&aa=<?=$anios_antiguedad?>&datos=<?=$array_datos?>" target="_blank" class="btn btn-sm btn-warning"><i class="material-icons">print</i> Imprimir </a>
             <a href="index.php?opcion=vacacionesValidacion&cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>" class="btn btn-sm btn-info"><i class="material-icons">access_time</i> Capturar Fecha Validación </a>
@@ -211,13 +247,13 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
           <label class="col-sm-2 col-form-label">Inicio (*)</label>
           <div class="col-sm-3">
             <div class="form-group">
-              <input  type='date' class='form-control'  id='fecha_inicio_modal'  name='fecha_inicio_modal' required>
+              <input  type='date' class='form-control'  id='fecha_inicio_modal'  name='fecha_inicio_modal' min='2000-01-01' required>
             </div>
           </div>
           <label class="col-sm-3 col-form-label">Finalización (*)</label>
           <div class="col-sm-3">
             <div class="form-group">
-              <input  type='date' class='form-control'  id='fecha_final_modal'  name='fecha_final_modal' required>
+              <input  type='date' class='form-control'  id='fecha_final_modal'  name='fecha_final_modal' min='2000-01-01' required>
             </div>
           </div>
         </div>
@@ -262,6 +298,112 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
   </div>
 </div>
 
+<!-- Modal agregar -->
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background: #212f3d;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel" style="background: #212f3d; color:white;"><b>Vacación Solicitada</b></h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="codigo_personal_modal_e" id="codigo_personal_modal_e" value="0">
+        <input type="hidden" name="ing_planilla_e" id="ing_planilla_e" value="0">
+        <input type="hidden" name="fecha_actual_e" id="fecha_actual_e" value="0">
+        <input type="hidden" name="saldo_modal_e" id="saldo_modal_e" value="0">
+        <input type="hidden" name="gestion_modal_e" id="gestion_modal_e" value="0">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+                <input style="background: white;color:blue;text-align: center;font: 15px;" type="text" class='form-control' id="datos_cabecera" name="datos_cabecera" readonly="true" value="">
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Total Días (*)</label>
+          <div class="col-sm-3">
+            <div class="form-group">
+                <input  type='number' style="color: green;" class='form-control'  id='dias_vacacion_e'  name='dias_vacacion_e' min="5" value="<?=$saldo?>" max="<?=$saldo?>" required>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Inicio (*)</label>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <input  type='date' class='form-control'  id='fecha_inicio_modal_e'  name='fecha_inicio_modal_e' required>
+            </div>
+          </div>
+          <label class="col-sm-3 col-form-label">Finalización (*)</label>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <input  type='date' class='form-control'  id='fecha_final_modal_e'  name='fecha_final_modal_e' required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Tipo de Vacación</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+            <select class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-live-search="true" name="tipo_vacacion_e" id="tipo_vacacion_e" data-style="<?=$comboColor;?>" required="true">
+              <option value="">SELECCIONE UN ITEM</option>  
+                <?php
+                $stmt = $dbh->prepare("select codigo,nombre from tipos_vacacion_personal where cod_estadoreferencial=1 order by nombre");
+              $stmt->execute();
+              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $codigoX=$row['codigo'];
+                $nombreX=$row['nombre'];
+              ?>
+              <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+              <?php
+                }
+                ?>
+            </select>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="registrarPC" name="registrarPC" data-dismiss="modal">Guardar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">  Cerrar </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+  function mostrarFilaTablaHorario(codigo){   
+  var mostrar=0; 
+    $(".fila_"+codigo).each(function(){
+        if($(this).hasClass("d-none")){
+          $(this).removeClass("d-none");
+          mostrar++;
+        }else{
+          $(this).addClass("d-none");
+        }
+    }); 
+
+    if(mostrar>0){      
+      if(!$("#icono_"+codigo).hasClass("text-danger")){
+        $("#icono_"+codigo).removeClass("text-success");
+        $("#icono_"+codigo).addClass("text-danger");
+      }
+      $("#icono_"+codigo).html("do_not_disturb_on");      
+    }else{
+      if(!$("#icono_"+codigo).hasClass("text-success")){
+        $("#icono_"+codigo).removeClass("text-danger");
+        $("#icono_"+codigo).addClass("text-success");
+      }  
+      $("#icono_"+codigo).html("add_circle"); 
+    }   
+  }
+</script>
 
 <script type="text/javascript">
   $(document).ready(function(){

@@ -12,9 +12,8 @@ $dbh = new Conexion();
 
   $stmt = $dbh->prepare("SELECT f.codigo,f.cod_personal,f.fecha_ingreso,f.fecha_retiro,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) as nombre_personal,
 (Select t.nombre from tipos_retiro_personal t where t.codigo=cod_tiporetiro) as motivo_retiro,f.anios_indemnizacion
-
 from finiquitos f join personal p on f.cod_personal=p.codigo
-where f.cod_estadoreferencial=1 limit 20");
+where f.cod_estadoreferencial=1 and f.tipo_beneficio=1 limit 20");//f.tipo_beneficio=1 corresponde a finiquito
   //ejecutamos
   $stmt->execute();
   //bindColumn

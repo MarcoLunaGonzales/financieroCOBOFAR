@@ -60,7 +60,7 @@ $sucursalgStringOrigen=trim($sucursalgStringOrigen,",");
 if($tipo==2 || $tipo==3){
   include "auditoria_sucursales_print_tiempo.php";
 }elseif($tipo==1){
-$sql="SELECT s.cod_salida_almacenes,s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito,(select al.nombre_almacen from almacenes al where al.cod_almacen=s.almacen_destino)as nombre_almacen_des,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer)as nombre_responsable,s.hora_salida
+$sql="SELECT s.cod_salida_almacenes,s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito,(select al.nombre_almacen from almacenes al where al.cod_almacen=s.almacen_destino)as nombre_almacen_des,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer)as nombre_responsable,s.hora_salida,s.cod_persona_entrega,(select IFNULL(us.usuario,'PROVEEDOR-SUPERVISOR') from usuarios_sistema us where us.codigo_funcionario=s.cod_persona_entrega)as nombre_recibido
   FROM salida_almacenes s, tipos_salida ts, almacenes a 
   where s.fecha between '$fechai' and '$fechaf' and s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringDestino)) and s.cod_almacen in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringOrigen)) and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null) ORDER BY s.fecha desc, s.nro_correlativo desc ";
 
@@ -103,6 +103,7 @@ if($sw_excel==1){?>
                   <th><b>Glosa</b></th>
                   <th><b>Suc. Destino</b></th>
                   <th><b>Monto</b></th>
+                  <th><b>Personal Entrega</b></th>
                   <th><b></b></th>
                 </tr>
                 <tr>    
@@ -124,6 +125,8 @@ if($sw_excel==1){?>
                     $salida_anulada=$dat[7];   
                     $nombre_responsable=$dat[10];
                     $hora_salida=$dat[11];
+                    $cod_persona_entrega=$dat[12];
+                    $nombre_recibido=$dat[13];
 
                     $monto_transaccion=obtenerMontoDetalleSalida($codigo);
                     $color_fondo = "";
@@ -134,7 +137,11 @@ if($sw_excel==1){?>
                       $color_fondo = "#ff8080";
                       $chk = "&nbsp;";
                       $obs_salida=$obs_salida."<br><b class='text-danger'>(".$dat[8].")</b>";
-                    }?>
+                    }
+                    if($cod_persona_entrega==null || $cod_persona_entrega=="" || $cod_persona_entrega==0){
+                      $nombre_recibido='PROVEEDOR-SUPERVISOR';
+                    }
+                    ?>
                     <tr <?=$color_fondo?>>
                       <td class="text-left"><?=$nombre_almacen_origen?></td>
                       <td class="text-left"><?=$nombre_responsable?></td>
@@ -144,6 +151,8 @@ if($sw_excel==1){?>
                       <td class="text-left">&nbsp;<?=$obs_salida?></td>
                       <td class="text-left">&nbsp;<?=$nombre_almacen_dest?></td>
                       <td>&nbsp;<?=number_format($monto_transaccion,2)?></td>
+
+                      <td class="text-left">&nbsp;<?=$nombre_recibido?></td>
                       <td class='td-actions text-right'><?php if($sw_excel==1){?> <a href='#' rel='tooltip' class='btn btn-warning' onclick='abrir_detalle_modal("<?=$codigo?>",0);return false;'><i class='material-icons' title='Ver Detalle'>list</i></a><?php }?></td>
                     </tr>
                 <?php

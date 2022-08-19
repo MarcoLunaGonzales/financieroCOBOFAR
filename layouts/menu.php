@@ -280,7 +280,7 @@ if($menuModulo==0){
               <ul class="nav">
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=asistenciaPersonal_main"  style="background:#dab6aa; color:#584f4c;font-weight:bold;">
-                      <span class="sidebar-mini"> AP </span>
+                      <span class="sidebar-mini"> CA </span>
                       <span class="sidebar-normal">Control de Asistencia</span>
                     </a>
                 </li>
@@ -294,6 +294,12 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=finiquitos_list">
                     <span class="sidebar-mini"> F </span>
                     <span class="sidebar-normal"> Finiquitos </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=quinquenios_list">
+                    <span class="sidebar-mini"> Q </span>
+                    <span class="sidebar-normal"> Quinquenios</span>
                   </a>
                 </li>
                 <li class="nav-item ">

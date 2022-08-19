@@ -66,9 +66,9 @@ if(isset($resultPendintes['contador'])){
   $pendientes_aprobacion=0;
 }
 
-$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,pp.minutos_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.cod_personal_autorizado,pp.observaciones_rechazo,pp.created_at,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_autorizado)as nombre_personal_autorizado,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_aprobado)as nombre_personal_aprobado,a.abreviatura as area
+$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,pp.minutos_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.cod_personal_autorizado,pp.observaciones_rechazo,pp.created_at,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_autorizado)as nombre_personal_autorizado,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_aprobado)as nombre_personal_aprobado,a.abreviatura as area,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.created_by)as nombre_personal_solicitado
 from personal_permisos pp join estados_permisos_personal epp on pp.cod_estado=epp.codigo join tipos_permisos_personal tpp on pp.cod_tipopermiso=tpp.codigo join areas a on pp.cod_area=a.codigo
- where pp.created_by=$cod_personal_q  order by pp.created_at desc limit 50";
+ where (pp.created_by=$cod_personal_q or pp.cod_personal=$cod_personal_q)   order by pp.created_at desc limit 50";
   // echo "<br><br><br>".$sql;//and cod_area in ($cod_area)
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -88,11 +88,13 @@ $stmt->bindColumn('fecha_evento', $fecha_evento);
 $stmt->bindColumn('dias_permiso', $dias_permiso); 
 $stmt->bindColumn('minutos_permiso', $minutos_permiso); 
 $stmt->bindColumn('nombre_personal', $nombre_personal); 
-$stmt->bindColumn('created_at', $created_at); 
+$stmt->bindColumn('created_at', $created_at);
+
 $stmt->bindColumn('cod_personal_autorizado', $cod_personal_autorizado); 
 $stmt->bindColumn('observaciones_rechazo', $observaciones_rechazo); 
 $stmt->bindColumn('nombre_personal_aprobado', $nombre_personal_aprobado); 
 $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado); 
+$stmt->bindColumn('nombre_personal_solicitado', $nombre_personal_solicitado);  
 
 ?>
 <div class="content">
@@ -131,8 +133,6 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
                   <?php
                     $index = 1;
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-
-
                       $sw=0;
                       $btn_delete='';
                       $btn_ws='';
@@ -195,9 +195,8 @@ $stmt->bindColumn('nombre_personal_autorizado', $nombre_personal_autorizado);
                       ?>
                     <tr <?=$estilo?> >
                       <td class="text-center"><?=$index;?></td>
-                      
                       <td class="text-left"><?=$area?></td>
-                      <td class="text-left"><?=$nombre_personal?></td>
+                      <td class="text-left" title="Solcitado por :<?=$nombre_personal_solicitado?>"><?=$nombre_personal?></td>
                       <td class="text-left"><?=$nombre_tipopermiso?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($created_at));?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($fecha_inicial));?></td>

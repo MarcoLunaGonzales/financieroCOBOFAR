@@ -36,6 +36,10 @@ if($flagSuccess){
     $stmtDelete = $dbh->prepare($sqldelte);
     $flagSuccess=$stmtDelete->execute();
 
+    $sqldelteMes="DELETE from descuentos_conta_detalle_mes order by cod_descuento_detalle in (select codigo from descuentos_conta_detalle where cod_descuento='$codigo')";
+    $stmtDeleteMes = $dbh->prepare($sqldelteMes);
+    $flagSuccess=$stmtDeleteMes->execute();
+
     // detalle de descuentos
     $cantidad_filas = $_POST["cantidad_filas"];
     for ($i=1;$i<=$cantidad_filas;$i++){                

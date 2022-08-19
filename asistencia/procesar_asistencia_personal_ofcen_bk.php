@@ -66,61 +66,66 @@ while ($row = $stmtPersonal->fetch()) {
       $tipo_turno=$datos[0];
       // $cod_turno=1;
       if($tipo_turno==1){//horario normal
+        
+        
         $hora_entrada=$datos[1];//$hora_entradaTM
         $hora_salida=$datos[2];//$hora_salidaTM
-        //Minutos Trabajados Asignados 
-        $dateTimeAsg1 = date_create($hora_entrada.':00'); 
-        $dateTimeAsg2 = date_create($hora_salida.':00'); 
-        $differenceAsg = date_diff($dateTimeAsg1, $dateTimeAsg2);      
-        $minutosAsignados += $differenceAsg->h * 60;
-        $minutosAsignados += $differenceAsg->i;
-        //Hora marcado ENTRADAS*
-        $sql="SELECT min(a.fecha) as entrada1,max(a.fecha)as entrada2
-              from asistencia_oficinacentral  a 
-              where a.fecha BETWEEN '$fechaInicio_x 00:00:00' and '$fechaInicio_x 23:59:59'  and identificacion like '$identificacion' and a.tipo_marcacion=0
-              group by DATE(a.fecha)
-              order by a.fecha";
-            // echo $sqlPersonal."<br><br>";
-        $respPersonal=mysqli_query($dbh,$sqlPersonal);
-        while($datPersonal=mysqli_fetch_array($respPersonal)){
-          $fechaEntrada1=explode(" ",$datPersonal['entrada']);
-          $fechaMarcado=$fechaEntrada1[0];
-          $horaMarcado=explode(":",$fechaEntrada1[1])[0].":".explode(":",$fechaEntrada1[1])[1];
-          $fechaEntrada2=explode(" ",$datPersonal['entrada2']);
-          $fechaMarcado2=$fechaEntrada2[0];
-          $horaMarcado2=explode(":",$fechaEntrada2[1])[0].":".explode(":",$fechaEntrada2[1])[1];
-          $horaMarcadodoble=date('H:i',strtotime($horaMarcado." + 1 hours"));//si se marcó dos veces en una sola hora
-          if($horaMarcado2==$horaMarcado || ($horaMarcado2>=$horaMarcado && $horaMarcado2<=$horaMarcadodoble)){//si marco dos veces en una misma hora
-            $horaMarcado2="-";
-          }
-        }
-        //HoraS marcado SALIDAS*
-        $sql="SELECT min(a.fecha) as salida1,max(a.fecha)as salida2
-              from asistencia_oficinacentral  a 
-              where a.fecha BETWEEN '$fechaInicio_x 00:00:00' and '$fechaInicio_x 23:59:59'  and identificacion like '$identificacion' and a.tipo_marcacion=0
-              group by DATE(a.fecha)
-              order by a.fecha";
-            // echo $sqlPersonal."<br><br>";
-        $respPersonal=mysqli_query($dbh,$sqlPersonal);
-        while($datPersonal=mysqli_fetch_array($respPersonal)){
-          $fecha=explode(" ",$datPersonal['entrada']);
-          $fechaMarcado=$fecha[0];
-          $horaMarcado=explode(":",$fecha[1])[0].":".explode(":",$fecha[1])[1];
-          $fechaFin=explode(" ",$datPersonal['salida']);
-          $fechaMarcadoFin=$fechaFin[0];
-          $horaMarcadoFin=explode(":",$fechaFin[1])[0].":".explode(":",$fechaFin[1])[1];
-
-          $horaMarcadodoble=date('H:i',strtotime($horaMarcado." + 1 hours"));//si se marcó dos veces en una sola hora
-          if($horaMarcadoFin==$horaMarcado || ($horaMarcadoFin>=$horaMarcado && $horaMarcadoFin<=$horaMarcadodoble)){//si marco dos veces en una misma hora
-            $horaMarcadoFin="-";
-          }
-        }
-
+        
       }else{//horario continuo
         $hora_entrada=$datos[7];
         $hora_salida=$datos[8];
-
       }
+
+      //Minutos Trabajados Asignados 
+      $dateTimeAsg1 = date_create($hora_entrada.':00'); 
+      $dateTimeAsg2 = date_create($hora_salida.':00'); 
+      $differenceAsg = date_diff($dateTimeAsg1, $dateTimeAsg2);      
+      $minutosAsignados += $differenceAsg->h * 60;
+      $minutosAsignados += $differenceAsg->i;
+      //Hora marcado ENTRADAS*
+      $sql="SELECT min(a.fecha) as entrada,max(a.fecha)as salida
+            from asistencia_oficinacentral  a 
+            where a.fecha BETWEEN '$fechaInicio_x 00:00:00' and '$fechaInicio_x 23:59:59'  and identificacion like '$identificacion' and a.tipo_marcacion=0
+            group by DATE(a.fecha)
+            order by a.fecha";
+          // echo $sqlPersonal."<br><br>";
+      $respPersonal=mysqli_query($dbh,$sqlPersonal);
+      while($datPersonal=mysqli_fetch_array($respPersonal)){
+        $fecha=explode(" ",$datPersonal['entrada']);
+        $fechaMarcado=$fecha[0];
+        $horaMarcado=explode(":",$fecha[1])[0].":".explode(":",$fecha[1])[1];
+        $fechaFin=explode(" ",$datPersonal['salida']);
+        $fechaMarcadoFin=$fechaFin[0];
+        $horaMarcadoFin=explode(":",$fechaFin[1])[0].":".explode(":",$fechaFin[1])[1];
+
+        $horaMarcadodoble=date('H:i',strtotime($horaMarcado." + 1 hours"));//si se marcó dos veces en una sola hora
+        if($horaMarcadoFin==$horaMarcado || ($horaMarcadoFin>=$horaMarcado && $horaMarcadoFin<=$horaMarcadodoble)){//si marco dos veces en una misma hora
+          $horaMarcadoFin="-";
+        }
+      }
+      //HoraS marcado SALIDAS*
+      $sql="SELECT min(a.fecha) as entrada,max(a.fecha)as salida
+            from asistencia_oficinacentral  a 
+            where a.fecha BETWEEN '$fechaInicio_x 00:00:00' and '$fechaInicio_x 23:59:59'  and identificacion like '$identificacion' and a.tipo_marcacion=0
+            group by DATE(a.fecha)
+            order by a.fecha";
+          // echo $sqlPersonal."<br><br>";
+      $respPersonal=mysqli_query($dbh,$sqlPersonal);
+      while($datPersonal=mysqli_fetch_array($respPersonal)){
+        $fecha=explode(" ",$datPersonal['entrada']);
+        $fechaMarcado=$fecha[0];
+        $horaMarcado=explode(":",$fecha[1])[0].":".explode(":",$fecha[1])[1];
+        $fechaFin=explode(" ",$datPersonal['salida']);
+        $fechaMarcadoFin=$fechaFin[0];
+        $horaMarcadoFin=explode(":",$fechaFin[1])[0].":".explode(":",$fechaFin[1])[1];
+
+        $horaMarcadodoble=date('H:i',strtotime($horaMarcado." + 1 hours"));//si se marcó dos veces en una sola hora
+        if($horaMarcadoFin==$horaMarcado || ($horaMarcadoFin>=$horaMarcado && $horaMarcadoFin<=$horaMarcadodoble)){//si marco dos veces en una misma hora
+          $horaMarcadoFin="-";
+        }
+      }
+
+
 
 
         //CALCULAMOS MINUTOS ATRASOS Y DEMAS

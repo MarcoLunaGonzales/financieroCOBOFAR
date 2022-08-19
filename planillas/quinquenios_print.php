@@ -20,11 +20,11 @@ $nombre_cuenta_pagadora=obtenerValorConfiguracionPlanillas(36);
 try{
     //====================================
 
-    $sql="SELECT f.*,trp.nombre as motrivoretiro,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as nombre_personal,(select nombre from tipos_estado_civil tec where tec.codigo=p.cod_estadocivil)as estado_civil,p.fecha_nacimiento,p.direccion,(select c.nombre from cargos c where c.codigo=p.cod_cargo)as cargo,identificacion,(select pd.abreviatura from personal_departamentos pd where pd.codigo=cod_lugar_emision)as lugar_emision,lugar_emision_otro,(
+    $sql="SELECT f.*,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as nombre_personal,(select nombre from tipos_estado_civil tec where tec.codigo=p.cod_estadocivil)as estado_civil,p.fecha_nacimiento,p.direccion,(select c.nombre from cargos c where c.codigo=p.cod_cargo)as cargo,identificacion,(select pd.abreviatura from personal_departamentos pd where pd.codigo=cod_lugar_emision)as lugar_emision,lugar_emision_otro,(
         select  CONCAT_WS('-',m.abreviatura,g.nombre)as fecha from planillas p join gestiones g on p.cod_gestion=g.codigo join meses m on p.cod_mes=m.codigo where p.codigo=f.cod_planilla1)as fecha1,(
         select  CONCAT_WS('-',m.abreviatura,g.nombre)as fecha from planillas p join gestiones g on p.cod_gestion=g.codigo join meses m on p.cod_mes=m.codigo where p.codigo=f.cod_planilla2)as fecha2,(
         select  CONCAT_WS('-',m.abreviatura,g.nombre)as fecha from planillas p join gestiones g on p.cod_gestion=g.codigo join meses m on p.cod_mes=m.codigo where p.codigo=f.cod_planilla3)as fecha3,f.meses_aguinaldo,f.dias_aguinaldo,f.dias_vacaciones_pagar,f.anios_indemnizacion,f.meses_indemnizacion,f.dias_indemnizacion,f.duodecimas
-    FROM finiquitos f join personal p on f.cod_personal=p.codigo join tipos_retiro_personal trp on trp.codigo=f.cod_tiporetiro
+    FROM finiquitos f join personal p on f.cod_personal=p.codigo 
     where  f.codigo =$codigo";
 
     $stmt = $dbh->prepare($sql);
@@ -47,6 +47,8 @@ try{
     $aguinaldo_total=$result['aguinaldo_anios_monto']+$result['aguinaldo_meses_monto']+$result['aguinaldo_dias_monto'];
     $meses_aguinaldo=$result['meses_aguinaldo'];
     $dias_aguinaldo=$result['dias_aguinaldo'];
+
+    $observaciones=$result['observaciones'];
 
     //cantidad de dias,meses y años trabajados
     $datos=obtenerTiempoDosFechas2($result['fecha_ingreso'],$result['fecha_retiro']);
@@ -213,7 +215,7 @@ $html.='<body>'.
                                     </tr>
                                     <tr>
                                         <td colspan="2">MOTIVO DEL RETIRO</td>
-                                        <td colspan="3" align="center">'.$result["motrivoretiro"].'</td>
+                                        <td colspan="3" align="center">QUINQUENIO<br>'.$observaciones.'</td>
                                         <td ></td>
                                         <td colspan="4">REMUNERACION MENSUAL Bs</td>
                                         <td colspan="3" align="center">'.formatNumberDec($sueldo_promedio).'</td>

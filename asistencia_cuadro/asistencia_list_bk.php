@@ -96,12 +96,12 @@ $stmt->bindColumn('modificadopor', $modificadopor);
                       <td class="text-center" title="Fecha Modificación: <?=$modified_at?>"><?=date('d/m/Y',strtotime($created_at));?></td>
                       <td class="text-center"><?=$label.$nombre_estado;?></span></td>
                       <td class="td-actions">
-                        <a href='asistencia/asistencia_cambiarestado.php?codigo=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>' class="btn btn-info btn-sm <?=$btn_ws?>">
+                        <a href='asistencia_cuadro/asistencia_cambiarestado.php?codigo=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>' class="btn btn-info btn-sm <?=$btn_ws?>">
                           <i class="material-icons" title="Enviar Asistencia">send</i>
                         </a>
-                        <a href="asistencia/asistencia_detalle.php?codigo=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&cod_mes=<?=$cod_mes?>&cod_gestion=<?=$cod_gestion?>" class="btn btn-success btn-sm <?=$btn_ws?>"><i class="material-icons" title="Editar Asistencia">edit</i></a>
-                        <a href="asistencia/asistencia_detalle_view.php?codigo=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&cod_mes=<?=$cod_mes?>&cod_gestion=<?=$cod_gestion?>" class="btn btn-primary btn-sm <?=$btn_view?>"><i class="material-icons" title="Ver Asistencia">visibility</i></a>
-                        <a href='asistencia/asistencia_save_delete.php?codigo=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>' rel="tooltip" class="btn btn-danger btn-sm <?=$btn_delete?>">
+                        <a href="asistencia_cuadro/asistencia_detalle.php?codigo=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&cod_mes=<?=$cod_mes?>&cod_gestion=<?=$cod_gestion?>" class="btn btn-success btn-sm <?=$btn_ws?>"><i class="material-icons" title="Editar Asistencia">edit</i></a>
+                        <a href="asistencia_cuadro/asistencia_detalle_view.php?codigo=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&cod_mes=<?=$cod_mes?>&cod_gestion=<?=$cod_gestion?>" class="btn btn-primary btn-sm <?=$btn_view?>"><i class="material-icons" title="Ver Asistencia">visibility</i></a>
+                        <a href='asistencia_cuadro/asistencia_save_delete.php?codigo=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>' rel="tooltip" class="btn btn-danger btn-sm <?=$btn_delete?>">
                           <i class="material-icons" title="Anular">delete</i>
                         </a>
                       </td>
@@ -116,7 +116,7 @@ $stmt->bindColumn('modificadopor', $modificadopor);
           </div>
           </div>
           <div class="card-footer fixed-bottom">
-              <a  href="asistencia/asistencia_detalle.php?codigo=0&q=<?=$q?>&s=<?=$s?>" class="btn btn-primary btn-sm btn-round <?=$btn_view?>">Registrar</a>            
+              <a  href="asistencia_cuadro/asistencia_detalle.php?codigo=0&q=<?=$q?>&s=<?=$s?>" class="btn btn-primary btn-sm btn-round <?=$btn_view?>">Asistencia</a>
           </div>
       </div>
     </div>

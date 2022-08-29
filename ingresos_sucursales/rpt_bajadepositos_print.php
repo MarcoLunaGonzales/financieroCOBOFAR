@@ -101,7 +101,8 @@ if($sw_excel==1){?>
                   <th style="background:#3f51b5;color:white;"><small>Depositar[USD]</small></th>
                   <th style="background:#3f51b5;color:white;"><small>Depositado[Bs]</small></th>
                   <th style="background:#3f51b5;color:white;"><small>Depositado[USD]</small></th>
-                  <th style="background:#d98880;"><small>Nro. Dep.</small></th>
+                  <th style="background:#73c6b6;"><small>Nro. Dep.</small></th>
+                  <th style="background:#27ae60;"><small>Banco</small></th>
                   <th ><small><b>Total Ventas</b></small></th>
                   <th ><small><b></b></small></th>
                 </tr>
@@ -148,6 +149,7 @@ if($sw_excel==1){?>
                     $monto_depositado=$depositadoArray[0];
                     $monto_depositado_dolar=$depositadoArray[1];
                     $nro_deposito=$depositadoArray[2];
+                    $descripcion=$depositadoArray[3];
 
                     $monto_venta=$montoefectivo+$montoTarjeta+$montoTrasferencia-$montoAnulada-$monto_dolar_bs;
                     $monto_depositar=$montoefectivo-$montoAnulada-$monto_dolar_bs;
@@ -185,7 +187,8 @@ if($sw_excel==1){?>
                       <td <?=$label_style_usd?> class="text text-right"><small><?=number_format($monto_dolar,2,".",",")?></small></td>
                       <td <?=$label_style_bs?> class="text text-right"><small><?=number_format($monto_depositado,2,".",",");?></small></td>
                       <td <?=$label_style_usd?> class="text text-right"><small><?=number_format($monto_depositado_dolar,2,".",",");?></small></td>
-                      <td style="background:#f1948a;" class="text text-right"><small><?=$nro_deposito?></small></td>
+                      <td style="background:#73c6b6;" class="text text-right"><small><?=$nro_deposito?></small></td>
+                      <td style="background:#27ae60;" class="text text-left"><small><?=$descripcion?></small></td>
                       <td align='right'><small><?=number_format($monto_venta,2,".",",");?></small></td>
                       <td  class="td-actions text-right"><?php if($sw_excel==1){?>
                         <a  target='_blank' href='http://172.16.0.5/cobofar_comercialplus/rptArqueoDiarioPDF.php?rpt_territorio=<?=$cod_ciudad?>&fecha_ini=<?=$fechaVenta?>&fecha_fin=<?=$fechaVenta?>&hora_ini=00:00&hora_fin=23:59&variableAdmin=1&rpt_funcionario=<?=$cod_personal?>'  class="btn btn-dark"  >

@@ -285,7 +285,7 @@ if($menuModulo==0){
                     </a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=incremento_salarial"  style="background:#dab6aa; color:#584f4c;font-weight:bold;">
+                    <a class="nav-link" href="?opcion=incremento_salarial">
                       <span class="sidebar-mini"> IS </span>
                       <span class="sidebar-normal">Incremento Salarial</span>
                     </a>

@@ -20,7 +20,7 @@ $db = new Conexion();
 
 $stmt = $db->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
 from personal p, unidades_organizacionales uo 
-where uo.codigo=p.cod_unidadorganizacional and uo.codigo=:codigo_UO order by 2");
+where uo.codigo=p.cod_unidadorganizacional and uo.codigo=:codigo_UO and  p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 order by 2");
 $stmt->bindParam(':codigo_UO', $codigo_UO);
 $stmt->execute();
 

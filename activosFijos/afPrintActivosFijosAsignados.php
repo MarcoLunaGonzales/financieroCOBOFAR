@@ -4,8 +4,8 @@ error_reporting(-1);
 
 require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
-require_once  __DIR__.'/../fpdf_html.php';
-require '../assets/phpqrcode/qrlib.php';
+// require_once  __DIR__.'/../fpdf_html.php';
+// require '../assets/phpqrcode/qrlib.php';
 
 require_once '../layouts/bodylogin2.php';
 

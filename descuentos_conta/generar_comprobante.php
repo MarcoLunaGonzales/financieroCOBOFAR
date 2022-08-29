@@ -77,17 +77,20 @@ if($sw==0){
             $glosa_detalleContra="Ajuste por diferencia deposito ". $glosa_detalleSis;
             $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_personal,$cod_cuentaDescuento);
             $nombrePersonal=namePersonalCompleto($cod_personal);
+            // echo $cuentaAuxiliar."**<br>";
             if($cuentaAuxiliar==0){//creamos cuenta auxiliar
                 $sqlDet="INSERT INTO cuentas_auxiliares (nombre,cod_cuenta,cod_estadoreferencial,cod_tipoauxiliar,cod_proveedorcliente) VALUES ('$nombrePersonal','$cod_cuentaDescuento','1','2','$cod_personal')";
-                 $stmtDet = $dbh->prepare($sqlDet);
-                 $stmtDet->execute();
+                    // echo  $sqlDet; 
+                 $stmtDetAux = $dbh_detalle->prepare($sqlDet);
+                 $stmtDetAux->execute();
+                $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_personal,$cod_cuentaDescuento);
             }
             $unidadDetalle=1;
             if($tipo_contabilizacionDetalle==1){//tiene banco incorporado
                 $debe=$monto_depositado;
                 $haber=0;
                 $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-                $sqlDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cod_contracuenta', '$cuentaAuxiliar', '$unidadDetalle', '$cod_area', '$debe', '$haber', '$glosa_detalleSis', '$indexCompro')";
+                $sqlDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cod_contracuenta', '0', '$unidadDetalle', '$cod_area', '$debe', '$haber', '$glosa_detalleSis', '$indexCompro')";
                 $stmtDet = $dbh_detalle->prepare($sqlDet);
                 $stmtDet->execute();
                 $indexCompro++;
@@ -116,10 +119,15 @@ if($sw==0){
             $stmtUpdateDesc->execute();
 
             //contra cuenta
+            $cuentaAuxiliarContracuenta=0;
+            if($cod_contracuenta==5134){//cuenta INV. PROD. PARA DEVOLUCION
+                $cuentaAuxiliarContracuenta=9796;//aux generico para la cuenta INV. PROD. PARA DEVOLUCION
+            }
+
             $debe=0;
             $haber=$monto_sistema;
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-            $sqlDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cod_contracuenta', '$cuentaAuxiliar', '$unidadDetalle', '$cod_area', '$debe', '$haber', '$glosa_detalleContra', '$indexCompro')";
+            $sqlDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cod_contracuenta', '$cuentaAuxiliarContracuenta', '$unidadDetalle', '$cod_area', '$debe', '$haber', '$glosa_detalleContra', '$indexCompro')";
             // echo $sqlDet;
             $stmtDet = $dbh_detalle->prepare($sqlDet);
             $stmtDet->execute();

@@ -1172,6 +1172,21 @@
 			$codigo=$_GET['codigo'];
 			require_once('planillas/finiquitosDelete.php');
 		}
+		//Quinquenios
+		if ($_GET['opcion']=='quinquenios_list') {
+			require_once('planillas/quinquenios_list.php'); //ok
+		}
+		if ($_GET['opcion']=='quinquenios_form') {
+			$codigo=$_GET['codigo'];
+			require_once('planillas/quinquenios_from.php');
+		}
+		if ($_GET['opcion']=='savequinquenios') {
+			require_once('planillas/quinquenios_save.php');
+		}
+		if ($_GET['opcion']=='deleteFiniquito') {
+			$codigo=$_GET['codigo'];
+			require_once('planillas/quinquenios_delete.php');
+		}
 		//VACACIONES PERSONAL
 		if ($_GET['opcion']=='vacacionesPersonalLista') {
 			require_once('vacaciones_permisos/vacaciones_list.php'); //ok

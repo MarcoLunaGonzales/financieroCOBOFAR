@@ -68,10 +68,11 @@ for ($i=0; $i <2 ; $i++) {
         if($i==1){
           $copia_conta="Copia: Proveedor";
         }
+        //<img height="50px"  src="../assets/img/logo_cobofar.png">
   $html.='<div  style="height: 49.4%"><br><br>';
   $html.=  '<table class="table">
                 <tr>
-                  <td rowspan="2" width="20%"><img height="50px"  src="../assets/img/logo_cobofar.png"></td>
+                  <td rowspan="2" width="20%"></td>
                   <td align="center" class="table-title"><b>ORDEN DE PAGO</b></td>
                   <td rowspan="2" width="20%">N° : '.$nro_pago.'<br>Fecha : '.$fecha_actual.'</td>
                 </tr>

@@ -4,6 +4,7 @@ error_reporting(-1);
 
 require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
+require_once __DIR__.'/../functionsGeneral.php';
 require_once  __DIR__.'/../fpdf_html.php';
 require '../assets/phpqrcode/qrlib.php';
 
@@ -56,7 +57,7 @@ if($tipo==1){
 }
 
 
-$sqlActivos="SELECT codigoactivo,otrodato,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
+$sqlActivos="SELECT codigo,codigoactivo,otrodato,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
 tipoalta,
@@ -74,6 +75,7 @@ $stmtActivos = $dbh->prepare($sqlActivos);
 $stmtActivos->execute();
 
 // bindColumn
+$stmtActivos->bindColumn('codigo', $codigoX);
 $stmtActivos->bindColumn('codigoactivo', $codigoActivoX);
 $stmtActivos->bindColumn('otrodato', $activoX);
 $stmtActivos->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
@@ -117,11 +119,11 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                           <th class="font-weight-bold">Of/Area</th>
                           <th class="font-weight-bold">Rubro</th>
                           <th class="font-weight-bold">Activo</th>
-
                           <th class="font-weight-bold">Tipo Alta</th>
                           <th class="font-weight-bold">Fecha Alta</th>
                           <th class="font-weight-bold">Valor Ini.</th>
-                          <th class="font-weight-bold">Valor Res.</th>
+                          <th class="font-weight-bold">Valor Neto.</th>
+                          <th class="font-weight-bold">Vida Util.</th>
                           <th class="font-weight-bold">Respo1</th>
                           <th class="font-weight-bold">Respo2</th>
                           <th class="font-weight-bold">Estado AF</th>
@@ -131,6 +133,43 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                         <?php  
                           $contador = 0;
                           while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
+
+                            $stmt2 = $dbh->prepare("SELECT d10_valornetobs,d11_vidarestante 
+                            from mesdepreciaciones m, mesdepreciaciones_detalle md
+                            WHERE m.codigo = md.cod_mesdepreciaciones 
+                            and md.cod_activosfijos = $codigoX and m.estado=1 order by m.codigo desc limit 1");
+                            // Ejecutamos
+                            //$stmt2->bindParam(':mes',$mes2);
+                            // $stmt2->bindParam(':codigo',$codigo_af);
+
+                            $stmt2->execute();
+                            //resultado
+                            // $stmt2->bindColumn('mes', $mes3);
+                            // $stmt2->bindColumn('gestion', $gestion3);
+                            // $stmt2->bindColumn('ufvinicio', $ufvinicio);
+                            // $stmt2->bindColumn('ufvfinal', $ufvfinal);
+                            // //$stmt2->bindColumn('estado', $estado);
+                            // //$stmt2->bindColumn('codigo1', $codigo1);
+                            // $stmt2->bindColumn('cod_mesdepreciaciones', $cod_mesdepreciaciones);
+                            // $stmt2->bindColumn('cod_activosfijos', $cod_activosfijos);
+                            // $stmt2->bindColumn('d2_valorresidual', $d2_valorresidual);
+                            // $stmt2->bindColumn('d3_factoractualizacion', $d3_factoractualizacion);
+                            // $stmt2->bindColumn('d4_valoractualizado', $d4_valoractualizado);
+                            // $stmt2->bindColumn('d5_incrementoporcentual', $d5_incrementoporcentual);
+                            // $stmt2->bindColumn('d6_depreciacionacumuladaanterior', $d6_depreciacionacumuladaanterior);
+                            // $stmt2->bindColumn('d7_incrementodepreciacionacumulada', $d7_incrementodepreciacionacumulada);
+                            // $stmt2->bindColumn('d8_depreciacionperiodo', $d8_depreciacionperiodo);
+                            // $stmt2->bindColumn('d9_depreciacionacumuladaactual', $d9_depreciacionacumuladaactual);
+                            // $stmt2->bindColumn('d10_valornetobs', $d10_valornetobs);
+                            // $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
+                            $rowdePre = $stmt2->fetch();
+                            $d10_valornetobs_aux = $rowdePre["d10_valornetobs"];
+                            $d11_vidarestante_aux = $rowdePre["d11_vidarestante"];
+
+                            if($d10_valornetobs_aux==null){
+                                $d10_valornetobs_aux=$valorinicial;
+                            }
+
                             $contador++;   
                         ?>
                         <tr>
@@ -141,8 +180,9 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                           <td class="text-left small"><?= $activoX; ?></td>
                           <td class="text-left small"><?= $tipo_alta; ?></td>
                           <td class="text-center small"><?= $fecha_alta; ?></td>
-                          <td class="text-left small"><?= $valor_inicial; ?></td>
-                          <td class="text-left small"><?= $valor_residual; ?></td>
+                          <td class="text-left small"><?= formatNumberDec($valor_inicial); ?></td>
+                          <td class="text-left small"><?= formatNumberDec($d10_valornetobs_aux); ?></td>
+                          <td class="text-left small"><?= $d11_vidarestante_aux; ?></td>
                           
                           <td class="text-left small"><?= $responsables_responsable; ?></td>
                           <td class="text-left small"><?= $responsables_responsable2; ?></td>

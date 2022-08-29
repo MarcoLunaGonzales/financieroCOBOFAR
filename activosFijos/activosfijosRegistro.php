@@ -129,7 +129,7 @@ if ($codigo > 0){
     $valorinicial =  '';
     $depreciacionacumulada = 0;
     $valorresidual = '';
-    $cod_depreciaciones = '';
+    $cod_depreciaciones = 0;
     $cod_tiposbienes = '';
     $vidautilmeses = '';
     $estadobien  = '';

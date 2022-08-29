@@ -196,7 +196,7 @@ $stmtAdmnin->bindColumn('dias_trabajo', $dias_trabajados);
                             <i class="material-icons" title="Planillas - Formato Interno">remove_red_eye</i>
                             <span class="caret"></span>
                           </button>
-                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                          <ul class="dropdown-menu menu-fixed-sm-table" role="menu" aria-labelledby="reporte_sueldos">
                             <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><i class="material-icons text-warning">assignment_turned_in</i><small>PLANILLA GRAL.</small></a></li>
                              <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-info">home_work</i><small>AFP FUTURO</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_AFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-info">home_work</i><small>AFP PREVISION</small></a></li>
@@ -211,7 +211,7 @@ $stmtAdmnin->bindColumn('dias_trabajo', $dias_trabajados);
                             <i class="material-icons" title="Planillas - Formato Oficial">remove_red_eye</i>
                             <span class="caret"></span>
                           </button>
-                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                          <ul class="dropdown-menu menu-fixed-sm-table" role="menu" aria-labelledby="reporte_sueldos">
                             
                             <li role="presentation" ><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100&tipo=1" target="_blank"><i class="material-icons text-warning">assignment_turned_in</i><small>PLANILLA GRAL. PDF</small></a></li>
                             <li role="presentation" ><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100&tipo=2" target="_blank"><i class="material-icons text-success">assignment_turned_in</i><small>PLANILLA GRAL. EXCEL</small></a></li>

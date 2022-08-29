@@ -81,7 +81,7 @@ $html.=  '<header class="header">'.
             $html.='</header>';
 
                     $html.='<table class="table"><thead>
-                        <tr style="background:#45b39d;color:black;"><td></td><td align="center">F.INICIO</td><td align="center">F.FIN</td><td align="center">TOTAL DIAS</td><td align="center">OBSERVACIONES</td><td align="center">SALDO</td></tr></thead><tbody>';
+                        <tr style="background:#45b39d;color:black;"><td></td><td align="center">F.INICIO</td><td align="center">F.FIN</td><td align="center">TOTAL DIAS</td><td align="center">TIPO</td><td align="center">SALDO</td></tr></thead><tbody>';
                     $saldo_total=0;
                     $contador_items=count($datos);
                     for ($i=0; $i <$contador_items; $i++) {
@@ -101,13 +101,13 @@ $html.=  '<header class="header">'.
                                 $total_det=$resultcont['contador'];
                             }
 
-                            $sql="SELECT pv.fecha_inicial,pv.hora_inicial,pv.fecha_final,pv.hora_final,pv.observaciones,pv.dias_vacacion,(select tvp.nombre from tipos_vacacion_personal tvp where tvp.codigo=pv.cod_tipovacacion)as tipo_vacacion
+                            $sql="SELECT DATE_FORMAT(pv.fecha_inicial,'%d/%m/%Y')as fecha_inicial,pv.hora_inicial,DATE_FORMAT(pv.fecha_final,'%d/%m/%Y')as fecha_final,pv.hora_final,pv.observaciones,pv.dias_vacacion,(select tvp.nombre from tipos_vacacion_personal tvp where tvp.codigo=pv.cod_tipovacacion)as tipo_vacacion
                                 from personal_vacaciones pv  where pv.cod_personal=$cod_personal and pv.cod_estadoreferencial=1 and pv.gestion=$nombre_gestion";                        
                             $stmt = $dbh->prepare($sql);
                             $stmt->execute();
                             
                             $contador_det=0;
-                            $html.='<tr style="padding:0px !important"><td align="center" rowspan="'.$total_det.'">GESTION<BR><span style="font-size:18px">'.$nombre_gestion.'</span><BR>ACUMULADO <b>'.$acumulado_gestion.'</b> DIAS</td>';
+                            $html.='<tr style="padding:0px !important"><td align="center" rowspan="'.$total_det.'">GESTION<BR><b>'.$nombre_gestion.'</b><BR>ACUMULADO <b>'.$acumulado_gestion.'</b> DIAS</td>';
                             while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 $fecha_inicial=$result['fecha_inicial'];
                                 $hora_inicial=$result['hora_inicial'];
@@ -116,11 +116,18 @@ $html.=  '<header class="header">'.
                                 $tipo_vacacion=$result['tipo_vacacion'];
                                 $dias_vacacion=$result['dias_vacacion'];
                                 $saldo_gestion-=$dias_vacacion;
+                                if($fecha_inicial=='00/00/0000'){
+                                    $fecha_inicial="-";
+                                }
+                                if($fecha_final=='00/00/0000'){
+                                    $fecha_final="-";
+                                }
+                                
                                 if($contador_det>0){
                                     $html.='<tr>';
                                 }
                                 $contador_det++;
-                                $html.='<td align="center">'.$fecha_inicial.'</td><td align="center">'.$fecha_final.'</td><td align="center">'.round($dias_vacacion).'</td><td>'.$tipo_vacacion.'</td><td align="center" style="font-size:15px"><b>'.$saldo_gestion.'</b></td></tr>';
+                                $html.='<td align="center">'.$fecha_inicial.'</td><td align="center">'.$fecha_final.'</td><td align="center">'.round($dias_vacacion).'</td><td>'.$tipo_vacacion.'</td><td align="center" ><b>'.$saldo_gestion.'</b></td></tr>';
                             }
                             if($contador_det==0){
                                 $html.='<td></td><td></td><td></td><td></td><td align="center"><h2>'.$saldo_gestion.'</h2></td></tr>';

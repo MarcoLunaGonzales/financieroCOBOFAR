@@ -54,7 +54,12 @@ if($tipo==1){
                         <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosChequeDetalle_lotes(this)" name="tipo_pago_s" id="tipo_pago_s" data-style="btn btn-rose" required>
                               <option disabled value="">--TIPO--</option>
                               <?php 
-                               $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_pagoproveedor where cod_estadoreferencial=1 order by 2");
+                              if($tipo==1){
+                              	$stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_pagoproveedor where cod_estadoreferencial=1 and codigo!=1 order by 2");
+                              }else{
+                              	$stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_pagoproveedor where cod_estadoreferencial=1 order by 2");
+                              }
+                               
                                $stmt3->execute();
                                while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                 $codigoSel=$rowSel['codigo'];

@@ -23,6 +23,8 @@ $stmt->bindColumn('creador', $creadorX);
 $stmt->bindColumn('descripcion', $descripcionX);
 $stmt->bindColumn('fecha_inicio', $fecha_inicioX);
 $stmt->bindColumn('fecha_fin', $fecha_finX);
+$stmt->bindColumn('activo', $estadoActivo);
+
 
 ?>
 <script type="text/javascript">
@@ -72,22 +74,36 @@ $stmt->bindColumn('fecha_fin', $fecha_finX);
                       <th class="text-center">DESCRIPCIÓN</th>
                       <th class="text-center">FECHA INICIO</th>
                       <th class="text-center">FECHA FIN</th>
+                      <th class="text-center">ESTADO</th>
                       <th class="text-center">CREADO POR</th>
                       <th class="text-center">OPCIONES</th>                      
                     </tr>
                   </thead>
                   <tbody>
                     <?php $index=1;
-                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {              
+                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                    if($estadoActivo==1){
+                      $enabled=0;
+                      $iconoActive='<i class="material-icons" title="Desactivar" style="color:#F1C40F;font-size: 42px;">toggle_on</i>';
+                      $tituloActivo="<b class='text-primary'>ACTIVO</b>";
+                    }else{
+                      $enabled=1;
+                      $iconoActive='<i class="material-icons" title="Activar" style="color:#AAB7B8;font-size: 42px;">toggle_off</i>';
+                      $tituloActivo="<b class='text-muted'>INACTIVO</b>";
+                    }             
                      ?>
                       <tr>
                           <td width="5%" class="text-left small"><?=$index;?></td>
                           <td class="text-left small"><?=$descripcionX;?></td>
                           <td width="15%" class="text-center small"><?=date("d/m/Y",strtotime($fecha_inicioX));?></td>
                           <td width="15%" class="text-center small"><?=date("d/m/Y",strtotime($fecha_finX))?></span></td>  
+                          <td width="15%" class="text-center small"><?=$tituloActivo?></td>  
                           <td width="15%" class="text-left small"><?=$creadorX;?></td>
                           <td class="td-actions text-right">
-                            <a href="index.php?opcion=rpt_asignacion_horarios_from&codigo=<?=$codigoX?>" class="btn btn-sm btn-fab btn-warning"> 
+                            <a href="asistencia/gestion_horarios_active.php?codigo=<?=$codigoX?>&e=<?=$enabled?>"> 
+                                  <?=$iconoActive?>
+                            </a>
+                            <a href="index.php?opcion=rpt_asignacion_horarios_from&codigo=<?=$codigoX?>" class="btn btn-sm btn-fab btn-primary"> 
                                   <i class="material-icons" title="Detalles">playlist_add</i>
                             </a>
                             <a href="asistencia/gestion_horarios_delete.php?codigo=<?=$codigoX?>&e=0" target="_blank" > 

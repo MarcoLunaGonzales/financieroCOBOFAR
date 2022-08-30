@@ -98,7 +98,7 @@ $array_sucursales_asistencia="";
                       <td class="text-center" title="Fecha Modificación: <?=$modified_at?>"><?=date('d/m/Y',strtotime($created_at));?></td>
                       <td class="text-center"><?=$label.$nombre_estado;?></span></td>
                       <td class="td-actions">
-                        <a target="_blank" href="asistencia/asistencia_detalle_view.php?codigo=<?=$codigo?>&q=-100&s=<?=$cod_sucursal?>&cod_mes=<?=$cod_mes?>&cod_gestion=<?=$cod_gestion?>&t=1" class="btn btn-primary btn-sm <?=$btn_view?>"><i class="material-icons" title="Ver Asistencia">visibility</i></a>
+                        <a target="_blank" href="asistencia_cuadro/asistencia_detalle_view.php?codigo=<?=$codigo?>&q=-100&s=<?=$cod_sucursal?>&cod_mes=<?=$cod_mes?>&cod_gestion=<?=$cod_gestion?>&t=1" class="btn btn-primary btn-sm <?=$btn_view?>"><i class="material-icons" title="Ver Asistencia">visibility</i></a>
                       </td>
                     </tr>
                   <?php

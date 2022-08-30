@@ -8,6 +8,18 @@ require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
  $globalUserX=$_SESSION['globalUser'];
 
+// $globalUser=$_SESSION["globalUser"];
+//CODIGO PERSONAL PARA PROCESAR Y REPROCESAR PLANILLAS
+$personalRRHH=obtenerValorConfiguracionPlanillas(28);
+$array_personal=explode(',',$personalRRHH);
+$usuario_admin=0;
+for ($i=0; $i <count($array_personal) ; $i++) { 
+  $cod_personalRRHH=$array_personal[$i];
+  if($globalUserX==$cod_personalRRHH){
+    $usuario_admin=1;
+  }  
+}
+
 $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.paterno,p.materno,p.primer_nombre,p.bandera,p.ing_contr,DATE_FORMAT(p.ing_contr,'%d/%m/%Y')as ing_contr_x,p.cod_estadopersonal,
@@ -138,7 +150,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
           </div>
           <?php
 
-          if($globalUserX==8){
+          if($usuario_admin==1){
           ?>
           <div class="card-footer fixed-bottom">               
             <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormPersonal;?>&codigo=0'">Registrar</button>

@@ -69,7 +69,7 @@ if($codigo>0){
     $personal_confianza = $result['personal_confianza'];
     $cuenta_bancaria = $result['cuenta_bancaria'];
     $cod_turno=$result['turno'];
-    $cod_tipotrabajo=$result['cod_tipotrabajo'];
+    $cod_tipotrabajo=$result['tipo_trabajo'];
     $cod_cajasalud=$result['cod_cajasalud'];
     $cuenta_habilitada=$result['cuenta_habilitada'];
     

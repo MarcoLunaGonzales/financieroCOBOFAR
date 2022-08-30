@@ -67,26 +67,26 @@ $html.='
 
 <table class="table" >
     <thead>
-        <tr class="table-title bold text-center">                 
-        <td><small>N°</small></td> 
-        <td><small>CI</small></td>
-        <td><small>Lugar de Emision</small></td>
-        <td><small>PATERNO</small></td>
-        <td><small>MATERNO</small></td>
-        <td><small>NOMBRE</small></td>
-        <td><small>NACION<br>ALIDAD</small></td>
-        <td><small>FECHA NAC.</small></td>
-        <td><small>DIAS TRAB</small></td>
-        <td><small>CARGO</small></td>
-        <td><small>FECHA ING R.A. INASES 129/2016</small></td>
-        <td><small>HABER BASICO DIAS TRAB</small></td>
-        <td><small>OTROS INGRESOS</small></td>
-        <td><small>BONO ANT</small></td>
-        <td><small>TOTAL GANADO</small></td>
-        <td><small>DESCTO AFPS 12.71%</small></td>
-        <td><small>OTROS DESCTS.</small></td>
-        <td><small>TOTAL DESCTO</small></td>
-        <td><small>LIQUIDO PAG</small></td>
+        <tr class="table-title bold text-center" style="font-size: 8px !important;">
+        <td>N°</td> 
+        <td>CI</td>
+        <td>Lugar de Emision</td>
+        <td>PATERNO</td>
+        <td>MATERNO</td>
+        <td>NOMBRE</td>
+        <td>NACION<br>ALIDAD</td>
+        <td>FECHA NAC.</td>
+        <td>DIAS TRAB</td>
+        <td>CARGO</td>
+        <td>FECHA ING R.A. INASES 129/2016</td>
+        <td>HABER BASICO DIAS TRAB</td>
+        <td>OTROS INGRESOS</td>
+        <td>BONO ANT</td>
+        <td>TOTAL GANADO</td>
+        <td>DESCTO AFPS 12.71%</td>
+        <td>OTROS DESCTS.</td>
+        <td>TOTAL DESCTO</td>
+        <td>LIQUIDO PAG</td>
       </tr>                                  
     </thead>
     <tbody>';
@@ -151,42 +151,42 @@ $html.='
           $total_total_descuentos+=$total_descuentos;
           $total_liquido_pagable+=$liquido_pagable;
           
-          $html.='<tr>
-            <td class="small"><small>'.$index.'</small></td> 
-            <td class="small"><small>'.$identificacion.'</small></td>
-            <td class="small"><small>'.$lugar_emision.'</small></td>
-            <td class="small"><small>'.$paterno.'</small></td>
-            <td class="small"><small>'.$materno.'</small></td>
-            <td class="small"><small>'.$primer_nombre.'</small></td>
-            <td class="small"><small>BOLIVIANA</small></td>
-            <td class="text-center small"><small>'.strftime("%d/%m/%Y",strtotime($fecha_nacimiento)).'</small></td>
-            <td class="text-center small"><small>'.$dias_trabajados.'</small></td>
-            <td class="small"><small>'.$cargo.'</small></td>
-            <td class="text-center small"><small>'.strftime("%d/%m/%Y",strtotime($ing_planilla)).'</small></td>
-            <td class="text-right small"><small>'.formatNumberDec($haber_basico).'</small></td>
-            <td class="text-right small"><small>'.formatNumberDec($bonos_otros).'</small></td>
-            <td class="text-right small"><small>'.formatNumberDec($bono_antiguedad).'</small></td>
-            <td class="text-right small"><small>'.formatNumberDec($total_ganado).'</small></td>
-            <td class="text-right small"><small>'.formatNumberDec($aporte_caja).'</small></td>
-            <td class="text-right small"><small>'.formatNumberDec($descuentos_otros).'</small></td>
-            <td class="text-right small"><small>'.formatNumberDec($total_descuentos).'</small></td>
-            <td class="text-right small"><small>'.formatNumberDec($liquido_pagable).'</small></td>
+          $html.='<tr style="font-size: 8px !important;">
+            <td>'.$index.'</td> 
+            <td>'.$identificacion.'</td>
+            <td>'.$lugar_emision.'</td>
+            <td>'.$paterno.'</td>
+            <td>'.$materno.'</td>
+            <td>'.$primer_nombre.'</td>
+            <td>BOLIVIANA</td>
+            <td class="text-center">'.strftime("%d/%m/%Y",strtotime($fecha_nacimiento)).'</td>
+            <td class="text-center">'.$dias_trabajados.'</td>
+            <td>'.$cargo.'</td>
+            <td class="text-center">'.strftime("%d/%m/%Y",strtotime($ing_planilla)).'</td>
+            <td class="text-right">'.formatNumberDec($haber_basico).'</td>
+            <td class="text-right">'.formatNumberDec($bonos_otros).'</td>
+            <td class="text-right">'.formatNumberDec($bono_antiguedad).'</td>
+            <td class="text-right">'.formatNumberDec($total_ganado).'</td>
+            <td class="text-right">'.formatNumberDec($aporte_caja).'</td>
+            <td class="text-right">'.formatNumberDec($descuentos_otros).'</td>
+            <td class="text-right">'.formatNumberDec($total_descuentos).'</td>
+            <td class="text-right">'.formatNumberDec($liquido_pagable).'</td>
             </tr>';
               $index+=1;
           }
 
 
-          $html.='<tr>
-            <td colspan="11" class="small text-center"><small><b>TOTAL</b></small></td> 
+          $html.='<tr style="font-size: 8px !important;">
+            <td colspan="11" class="text-center"><b>TOTAL</b></td> 
             
-            <td class="text-right small"><small><b>'.formatNumberDec($total_haber_basico).'</b></small></td>
-            <td class="text-right small"><small><b>'.formatNumberDec($total_bonos_otros).'</b></small></td>
-            <td class="text-right small"><small><b>'.formatNumberDec($total_bono_antiguedad).'</b></small></td>
-            <td class="text-right small"><small><b>'.formatNumberDec($total_total_ganado).'</b></small></td>
-            <td class="text-right small"><small><b>'.formatNumberDec($total_aporte_caja).'</b></small></td>
-            <td class="text-right small"><small><b>'.formatNumberDec($total_descuentos_otros).'</b></small></td>
-            <td class="text-right small"><small><b>'.formatNumberDec($total_total_descuentos).'</b></small></td>
-            <td class="text-right small"><small><b>'.formatNumberDec($total_liquido_pagable).'</b></small></td>
+            <td class="text-right"><b>'.formatNumberDec($total_haber_basico).'</b></td>
+            <td class="text-right"><b>'.formatNumberDec($total_bonos_otros).'</b></td>
+            <td class="text-right"><b>'.formatNumberDec($total_bono_antiguedad).'</b></td>
+            <td class="text-right"><b>'.formatNumberDec($total_total_ganado).'</b></td>
+            <td class="text-right"><b>'.formatNumberDec($total_aporte_caja).'</b></td>
+            <td class="text-right"><b>'.formatNumberDec($total_descuentos_otros).'</b></td>
+            <td class="text-right"><b>'.formatNumberDec($total_total_descuentos).'</b></td>
+            <td class="text-right"><b>'.formatNumberDec($total_liquido_pagable).'</b></td>
             </tr>';
 
              $html.='

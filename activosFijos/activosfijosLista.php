@@ -174,7 +174,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                                        <i class="material-icons" title="Imprimir Comporbante" style="color:red">print</i>
                                    </a> 
                               <?php }elseif($contabilizado==0){ ?>
-                                <a href="executeComprobanteActivoFijo.php?codigo_activo=<?=$codigo_activo;?>" target="_blank" > 
+                                <a href="executeComprobanteActivoFijo.php?codigo_activo=<?=$codigo;?>" target="_blank" > 
                                   <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
                                 </a>
                               <?php }

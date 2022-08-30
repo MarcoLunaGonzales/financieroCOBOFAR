@@ -79,9 +79,9 @@ $html.=  '<header class="header">'.
               '<td width="3%">Materno</td>'.
               '<td width="4%">Nombre</td>'.
               '<td width="2%">Sex</td>'.
-              '<td >Fech Nac</td>'.
+              '<td width="3%">Fech Nac</td>'.
               '<td width="7%">Cargo</td>'.
-              '<td>Fech Ing</td>'.
+              '<td width="3%">Fech Ing</td>'.
               '<td width="2%">Hrs Trab</td>'.
               '<td width="2%">Días Trab</td>'.
               '<td width="3%">Haber Basico</td>'.
@@ -366,37 +366,37 @@ $html.=  '<header class="header">'.
             }
       $html.='</tbody>';
       $html.='<tfoot><tr>'.
-          '<td style="border: 0;" colspan="11" class="text-right"><b>'.formatNumberDec($subtotal_dias).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_haberbasico).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_haberbasico_traba).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_bantig).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_bnoche).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_bdomin).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_bferi).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_bmov).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_brefr).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_breint).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_bventas).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_bfallo).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_bhrsex).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_totalganado).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_seguro_salud).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_riesgo).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_comafp).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_apsol).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_apsol13).'</b></td>'.
+          '<td style="border: 0;" colspan="11" class="text-center"><b>'.formatNumberDec($subtotal_dias).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_haberbasico).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_haberbasico_traba).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_bantig).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_bnoche).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_bdomin).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_bferi).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_bmov).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_brefr).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_breint).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_bventas).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_bfallo).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_bhrsex).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_totalganado).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_seguro_salud).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_riesgo).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_comafp).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_apsol).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_apsol13).'</b></td>'.
 
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_rciva).'</b></td>'.              
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_anticipo).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_dprest).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_dinvt).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_dvencid).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_datraso).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_dfalcaj).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_dodesc).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_daposind).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_totdesc).'</b></td>'.
-          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_liqpag).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_rciva).'</b></td>'.              
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_anticipo).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_dprest).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_dinvt).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_dvencid).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_datraso).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_dfalcaj).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_dodesc).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_daposind).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_totdesc).'</b></td>'.
+          '<td style="border: 0;" class="text-center"><b>'.formatNumberDec($subtotal_liqpag).'</b></td>'.
           '</tr>
       </tfoot>';
 $html.='</table><br><br><br>';        

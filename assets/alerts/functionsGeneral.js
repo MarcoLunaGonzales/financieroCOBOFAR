@@ -20096,7 +20096,7 @@ function agregaformVacaciones(datos){
   var d=datos.split('/');
   document.getElementById("codigo_personal_modal").value=d[0];
   document.getElementById("gestion_modal").value=d[1];
-  document.getElementById("dias_vacacion").value=d[2];
+  // document.getElementById("dias_vacacion").value=d[2];
   document.getElementById("saldo_modal").value=d[2];
   document.getElementById("ing_planilla").value=d[3];
   document.getElementById("fecha_actual").value=d[4];
@@ -20115,6 +20115,22 @@ function RegistrarVacacionesPersonal(codigo_personal_modal,gestion_modal,dias_va
     type:"POST",
     data:"codigo_personal_modal="+codigo_personal_modal+"&gestion_modal="+gestion_modal+"&dias_vacacion="+dias_vacacion+"&fecha_inicio_modal="+fecha_inicio_modal+"&fecha_final_modal="+fecha_final_modal+"&tipo_vacacion="+tipo_vacacion,
     url:"vacaciones_permisos/vacaciones_save.php",
+    success:function(r){
+      // console.log(r);
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=vacaciones_detalle&codigo='+codigo_personal_modal+'&ing_planilla='+ing_planilla+'&fecha_actual='+fecha_actual);
+      }else{
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+      } 
+    }
+  });
+}
+//registro de vacaciones generales
+function RegistrarVacacionesPersonalGral(codigo_personal_modal,gestion_modal,dias_vacacion,fecha_inicio_modal,fecha_final_modal,tipo_vacacion,ing_planilla,fecha_actual,observaciones_modal){
+  $.ajax({
+    type:"POST",
+    data:"codigo_personal_modal="+codigo_personal_modal+"&gestion_modal="+gestion_modal+"&dias_vacacion="+dias_vacacion+"&fecha_inicio_modal="+fecha_inicio_modal+"&fecha_final_modal="+fecha_final_modal+"&tipo_vacacion="+tipo_vacacion+"&ing_planilla="+ing_planilla+"&observaciones_modal="+observaciones_modal,
+    url:"vacaciones_permisos/vacaciones_save_temp.php",
     success:function(r){
       // console.log(r);
       if(r==1){
@@ -20900,4 +20916,23 @@ function guardar_edit_horario(codigo_asistencia_e,hora_ingreso_e,hora_salida_e,f
       }
     }
   });
+}
+
+function ajaxCalcualrFechaFinVacaciones(){
+
+  var fecha_inicio_modal=document.getElementById("fecha_inicio_modal").value;
+  var fecha_final_modal=document.getElementById("fecha_final_modal").value;
+  var saldo_modal=document.getElementById("saldo_modal").value;
+
+  var contenedor;
+  contenedor = document.getElementById('contendor_fecha_fin_vacaciones');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'vacaciones_permisos/ajax_fechafin_vacaciones.php?fecha_final_modal='+fecha_final_modal+'&fecha_inicio_modal='+fecha_inicio_modal+'&saldo_modal='+saldo_modal,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null)
 }

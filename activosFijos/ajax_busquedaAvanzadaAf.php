@@ -173,7 +173,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                        <i class="material-icons" title="Imprimir Comporbante" style="color:red">print</i>
                                    </a> 
                               <?php }elseif($contabilizado==0){ ?>
-                                <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
+                                <a href="executeComprobanteActivoFijo.php?codigo_activo=<?=$codigo;?>" target="_blank" > 
                                   <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
                                 </a>
                               <?php }

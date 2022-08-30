@@ -12212,20 +12212,24 @@ function obtenerIngresoPendienteDatos($codIngreso){
    }
 
    function obtenerMontodepositado_nuevosis_bajas($fecha,$cod_personal){
-      $sql="SELECT monto_registrado ,monto_registradousd,nro_recibo from registro_depositos where fecha='$fecha' and cod_funcionario=$cod_personal and cod_estadoreferencial=1";
+      $sql="SELECT rd.monto_registrado,rd.monto_registradousd,rd.nro_recibo,cb.descripcion
+            from registro_depositos rd join cuentas_bancarias cb on rd.cod_cuenta=cb.codigo 
+            where rd.fecha='$fecha' and rd.cod_funcionario=$cod_personal and rd.cod_estadoreferencial=1";
       //echo $sql;  
       $valor_bs=0;
       $valor_us=0;
       $valor_recibo="";
+      $valor_descripcion="";
       require("conexion_comercial.php");
       $resp=mysqli_query($dbh,$sql);
       while($row=mysqli_fetch_array($resp)){ 
          $valor_bs+=number_format($row['monto_registrado'],1,'.','');
          $valor_us+=number_format($row['monto_registradousd'],1,'.','');
          $valor_recibo=$row['nro_recibo'];
+         $valor_descripcion=$row['descripcion'];
       }
      mysqli_close($dbh);
-     return $valor_bs."###".$valor_us."###".$valor_recibo;
+     return $valor_bs."###".$valor_us."###".$valor_recibo."###".$valor_descripcion;
    }
 
 
@@ -13717,7 +13721,41 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
         $horas_extras=$row['horas_extras'];
         $noches=$row['noches'];
         $observaciones=$row['observaciones'];
+      }
+      return array($dias_normales,$faltas,$fecha_faltas,$baja_medicas,$dias_vacacion,$domingos,$fecha_domingos,$feriados,$fecha_feriados,$horas_extras,$noches,$observaciones);
+   }
 
+   function obtenerDatosAsistenciaPersonal_procesada($cod_personal,$dias_trabajado,$cod_gestion,$cod_mes){
+      $fecha_inicio=$cod_gestion."-".$cod_mes."-01";
+      $fecha_fin=date('Y-m-t',strtotime($fecha_inicio));
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT faltas,fecha_faltas,baja_medicas,dias_vacacion,domingos,fecha_domingos,feriados,fecha_feriados,horas_extras,noches,observaciones from asistencia_personal_detalle where cod_asistenciapersonal=$codigo and cod_personal=$cod_personal");
+      $stmt->execute();
+      $dias_normales=$dias_trabajado;
+      $faltas=0;
+      $fecha_faltas="";
+      $baja_medicas=0;
+      $dias_vacacion=0;
+      $domingos=0;
+      $fecha_domingos="";
+      $feriados=0;
+      $fecha_feriados="";
+      $horas_extras=0;
+      $noches=0;
+      $observaciones="";
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // $dias_normales=$row['dias_normales'];
+        $faltas=$row['faltas'];
+        $fecha_faltas=$row['fecha_faltas'];
+        $baja_medicas=$row['baja_medicas'];
+        $dias_vacacion=$row['dias_vacacion'];
+        $domingos=$row['domingos'];
+        $fecha_domingos=$row['fecha_domingos'];
+        $feriados=$row['feriados'];
+        $fecha_feriados=$row['fecha_feriados'];
+        $horas_extras=$row['horas_extras'];
+        $noches=$row['noches'];
+        $observaciones=$row['observaciones'];
       }
       return array($dias_normales,$faltas,$fecha_faltas,$baja_medicas,$dias_vacacion,$domingos,$fecha_domingos,$feriados,$fecha_feriados,$horas_extras,$noches,$observaciones);
    }

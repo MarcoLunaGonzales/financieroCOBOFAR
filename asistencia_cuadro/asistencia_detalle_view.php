@@ -100,11 +100,10 @@ $dias_trabajado=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
                     $estilo_glosa="style='width:120px !important;height:40px !important;text-align: right;color:000;font-size:12px;' data-toggle='tooltip' ";
                     ?>
                     <tr>
-                      <td class="text text-left" style="background:#5882d5;color:white;"><small><?=$index?></small></td>
-                      <td class="text text-left" style="background:#5882d5;color:white;"><small><?=$personal?></small></td>
-                      <td class="text text-left" style="background:#5882d5;color:white;"><small><?=$cargo?></small></td>
+                      <td class="text text-left"><small><?=$index?></small></td>
+                      <td class="text text-left"><small><?=$personal?></small></td>
+                      <td class="text text-left"><small><?=$cargo?></small></td>
                       <td class="text text-center" style="background:#5d6b89;color:white;"><small><?=$dias_normales?></small></td> 
-
                       <td><?=$faltas?></td>
                       <td><?=$fecha_faltas?></td>
                       <td><?=$bajas_medicas?></td>

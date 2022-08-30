@@ -1293,11 +1293,21 @@
 
 		//cuadro de asistencia
 		if ($_GET['opcion']=='asistenciaPersonalLista') {
-			require_once('asistencia/asistencia_list.php'); //ok
+			require_once('asistencia_cuadro/asistencia_list.php'); //ok
 		}
 		if ($_GET['opcion']=='asistenciaPersonalListaRRHH') {
-			require_once('asistencia/asistencia_list_admin.php'); //ok
+			require_once('asistencia_cuadro/asistencia_list_admin.php'); //ok
 		}
+		//cuadro de reemplazos a sucursal
+		if ($_GET['opcion']=='reempasuc_lst') {
+			require_once('asistencia_cuadro/reemp_a_suc_list.php'); //ok
+		}
+		//cuadro de reemplazos a otras sucursal
+		if ($_GET['opcion']=='reempaotrassuc_lst') {
+			require_once('asistencia_cuadro/reemp_a_otras_suc_list.php'); //ok
+		}
+
+
 		//incremento Salarial & retroactivos
 		if ($_GET['opcion']=='incremento_salarial') {
 			require_once('incremento_salarial/main.php'); //ok

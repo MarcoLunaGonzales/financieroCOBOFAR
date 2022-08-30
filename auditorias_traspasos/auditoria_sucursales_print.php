@@ -60,7 +60,7 @@ $sucursalgStringOrigen=trim($sucursalgStringOrigen,",");
 if($tipo==2 || $tipo==3){
   include "auditoria_sucursales_print_tiempo.php";
 }elseif($tipo==1){
-$sql="SELECT s.cod_salida_almacenes,s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito,(select al.nombre_almacen from almacenes al where al.cod_almacen=s.almacen_destino)as nombre_almacen_des,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer)as nombre_responsable,s.hora_salida,s.cod_persona_entrega,(select IFNULL(us.usuario,'PROVEEDOR-SUPERVISOR') from usuarios_sistema us where us.codigo_funcionario=s.cod_persona_entrega)as nombre_recibido
+$sql="SELECT s.cod_salida_almacenes,s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo ,s.salida_anulada,s.observaciones_transito,(select al.nombre_almacen from almacenes al where al.cod_almacen=s.almacen_destino)as nombre_almacen_des,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_chofer)as nombre_responsable,s.hora_salida,s.cod_persona_entrega,(select us.usuario from usuarios_sistema us where us.codigo_funcionario=s.cod_persona_entrega)as nombre_recibido
   FROM salida_almacenes s, tipos_salida ts, almacenes a 
   where s.fecha between '$fechai' and '$fechaf' and s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringDestino)) and s.cod_almacen in (select a.cod_almacen from almacenes a, ciudades c where a.cod_ciudad=c.cod_ciudad and a.cod_tipoalmacen=1 and c.cod_area in ($sucursalgStringOrigen)) and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and (s.salida_anulada=0 or s.salida_anulada is null) ORDER BY s.fecha desc, s.nro_correlativo desc ";
 
@@ -139,7 +139,9 @@ if($sw_excel==1){?>
                       $obs_salida=$obs_salida."<br><b class='text-danger'>(".$dat[8].")</b>";
                     }
                     if($cod_persona_entrega==null || $cod_persona_entrega=="" || $cod_persona_entrega==0){
-                      $nombre_recibido='PROVEEDOR-SUPERVISOR';
+                      $nombre_recibido='PROVEEDOR';
+                    }elseif($cod_persona_entrega==-1){
+                      $nombre_recibido='SUPERVISOR';
                     }
                     ?>
                     <tr <?=$color_fondo?>>

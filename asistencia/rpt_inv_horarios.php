@@ -90,11 +90,12 @@ $stmtActivos->bindColumn('cod_horario', $cod_horario);
                   <div class="table-responsive">
 
                     <?php 
+                    //
                     $htmlCabecera='<table class="table table-bordered table-condensed small" id="libreta_bancaria_reporte_modal">
                       <thead class="bg-dark text-white">
                         <tr style="background:#581845;color:#fff;">
                           <th class="font-weight-bold">-</th>
-                          <th class="font-weight-bold">Area</th>';
+                          <th class="font-weight-bold">AREA</th>';
                           //el medio de la cabecera se hace al final por el colspan
                     $colspans=[];
                     $sqlTipo="SELECT codigo,descripcion FROM horarios_asignaciontipo order by codigo;";                          
@@ -123,41 +124,57 @@ $stmtActivos->bindColumn('cod_horario', $cod_horario);
                           while ($rowTipo = $stmtTipo->fetch()) {
                             $codigoTipo=$rowTipo['codigo'];                          
                             $dato=obtenerDatosTipoHorario($codigoTipo,$cod_horario);
+
+                            $htmlCuerpo.='<td class="columna_m'.$codigoTipo.'">'.$dato[0].'</td>';
+                            $htmlCuerpo.='<td class="columna_t'.$codigoTipo.'">'.$dato[1].'</td>';
+                            $htmlCuerpo.='<td class="columna_n'.$codigoTipo.'">'.$dato[2].'</td>';
+                            $htmlCuerpo.='<td class="columna_c'.$codigoTipo.'">'.$dato[3].'</td>';
+
                             if($dato[0]!=''){
-                              $htmlCuerpo.='<td>'.$dato[0].'</td>';$colspans[$codigoTipo][0]++;
+                              $colspans[$codigoTipo][0]++;
                             }
                             if($dato[1]!=''){
-                              $htmlCuerpo.='<td>'.$dato[1].'</td>';$colspans[$codigoTipo][1]++;
+                              $colspans[$codigoTipo][1]++;
                             }
                             if($dato[2]!=''){
-                              $htmlCuerpo.='<td>'.$dato[2].'</td>';$colspans[$codigoTipo][2]++;
+                              $colspans[$codigoTipo][2]++;
                             }
                             if($dato[3]!=''){
-                              $htmlCuerpo.='<td>'.$dato[3].'</td>';$colspans[$codigoTipo][3]++;
+                              $colspans[$codigoTipo][3]++;
                             } 
                           }  
                           $htmlCuerpo.='</tr>';                                                                        
                         }                         
                         $stmtTipo = $dbh->prepare($sqlTipo);
                         $stmtTipo->execute();
-                        $detalleCabecera2='';
+                        $detalleCabecera2=''; 
+                        $scriptColumnas='';                        
                         while ($rowTipo = $stmtTipo->fetch()) {
                           $colspanFila=0;
+                          
                           if($colspans[$rowTipo['codigo']][0]>0){
                             $colspanFila++;
-                            $detalleCabecera2.='<th><small>TM</small></th>';
+                            $detalleCabecera2.='<th><small>TM</small></th>';                                       
+                          }else{
+                            $scriptColumnas.='<script>$(".columna_m'.$rowTipo['codigo'].'").each(function(){$(this).remove();});</script>';
                           }
                           if($colspans[$rowTipo['codigo']][1]>0){
                             $colspanFila++;
                             $detalleCabecera2.='<th><small>TT</small></th>';
+                          }else{
+                            $scriptColumnas.='<script>$(".columna_t'.$rowTipo['codigo'].'").each(function(){$(this).remove();});</script>';
                           }
                           if($colspans[$rowTipo['codigo']][2]>0){
                             $colspanFila++;
-                            $detalleCabecera2.='<th><small>TN</small></th>';
+                            $detalleCabecera2.='<th><small>TN</small></th>';                            
+                          }else{
+                            $scriptColumnas.='<script>$(".columna_n'.$rowTipo['codigo'].'").each(function(){$(this).remove();});</script>';
                           }
                           if($colspans[$rowTipo['codigo']][3]>0){
                             $colspanFila++;
-                            $detalleCabecera2.='<th><small>HC</small></th>';
+                            $detalleCabecera2.='<th><small>HC</small></th>';                            
+                          }else{
+                            $scriptColumnas.='<script>$(".columna_c'.$rowTipo['codigo'].'").each(function(){$(this).remove();});</script>';
                           }
 
                           if($colspanFila>0){
@@ -174,6 +191,10 @@ $stmtActivos->bindColumn('cod_horario', $cod_horario);
                         ?>
                       </tbody>
                     </table>
+
+                    <?php 
+                    echo $scriptColumnas;
+                    ?>
                   </div>
                 </div>
               </div>
@@ -181,3 +202,9 @@ $stmtActivos->bindColumn('cod_horario', $cod_horario);
           </div>  
         </div>
     </div>
+
+    <script type="text/javascript">
+      $(".columna_n6").each(function(){
+        $(this).attr("style","display:block");
+      });
+    </script>

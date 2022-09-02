@@ -49,7 +49,9 @@ $cantidad=0;
                           <th class="text-center">#</th>
                           <th>Mes</th>
                           <th>Estado</th>
-                          <th>Cantidad de Registros</th>
+                          <th>Personal Validación</th>
+                          <th>Fecha Validación</th>
+                          
                           <th width="5px">Acciones</th>
                         </tr>
                       </thead>
@@ -66,21 +68,26 @@ $cantidad=0;
                           $btn_detalle_view="d-none";
                           $btn_print="d-none";
                           $btn_enviar="d-none";
-
+                          $nombreValidado="";
+                          $fechaValidado="-";
                           $nombreEstado="-";
                           if($globalMesActiva==$codigo){
                             $btn_enviar="";
                             $label_mes="style='color:#633974;font-weight:bold;'";
                             $label_estado="style='color:#633974;font-weight:bold;'";
                           }
-                          $stmtEst = $dbh->prepare("SELECT t.codigo,t.nombre
+                          $stmtEst = $dbh->prepare("SELECT t.codigo,t.nombre,d.created_at,d.created_by
                             from  descuentos_conta_consolidado d join tipos_estado_descuento_consolidado t on d.cod_estado=t.codigo
                             where d.mes=$codigo and d.gestion='$nombreGestion' limit 1");
                           $stmtEst->execute();
                           $stmtEst->bindColumn('codigo', $codigoEstado);
                           $stmtEst->bindColumn('nombre', $nombreEstado);
+                          $stmtEst->bindColumn('created_at', $created_at);
+                          $stmtEst->bindColumn('created_by', $created_by);
                           while ($rowEst = $stmtEst->fetch(PDO::FETCH_BOUND)) {
                             $nombreEstado=$nombreEstado;
+                            $nombreValidado=namePersonal($created_by);
+                            $fechaValidado=date('d/m/Y',strtotime($created_at));
                             switch ($codigoEstado) {
                               case 3://validado
                               $label_estado="style='color:blue;font-weight:bold;'";
@@ -118,7 +125,8 @@ $cantidad=0;
                             <td align="center"><?=$index;?></td>
                             <td class="text-left"><?=$nombre."/".$nombreGestion;?></td>
                             <td class="text-center" <?=$label_estado?>><?=$nombreEstado?></td>
-                            <td class="text-center"><?=$cantidad." registros";?></td>
+                            <td class="text-center"><?=$nombreValidado?></td>
+                            <td class="text-center"><?=$fechaValidado?></td>
                             <td class="td-actions text-left">
                               <a href='descuentos_conta/descuentos_detalle_consolidado.php?cod_mes=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonMorado;?> <?=$btn_detalle?>">
                                 <i class="material-icons" title="Ver Descuentos">playlist_add</i>
@@ -127,9 +135,6 @@ $cantidad=0;
                                 <i class="material-icons" title="Ver Descuentos">playlist_add</i>
                               </a>
                               <button type="button" onclick="GuardarConsolidadoDescuentos(<?=$codigo?>,<?=$nombreGestion?>,'<?=$globalNombrePersonal?>',<?=$globalUSer?>,<?=$sw?>)" class="btn btn-sm btn-success <?=$btn_enviar?>" ><i class="material-icons" title="<?=$titulo_icono?>">send</i></button>
-                              <!-- <a href="comprobantes/imp.php?comp=<?=$cod_contabilizado;?>&mon=1" target="_blank" class="btn btn-danger <?=$btn_print?>">
-                                <i class="material-icons" title="Imprimir Comprobante" >print</i>
-                              </a> -->
                             </td>
                           </tr>
                         <?php

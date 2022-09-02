@@ -19892,7 +19892,77 @@ function historico_ingresos_almacen_nuevo(fi,ff,idprov){
 
 
 function procesar_bonos_descuentos_planilla(nombre_mes,cod_mes,estado_planilla){
-  
+  var sw_planilla=false;
+  var txt="Hubo un error en la transacción";
+  switch (estado_planilla) {
+    case '100':
+      var txt="Los descuentos del Mes de "+nombre_mes+", Aún no se encuentran vigentes.";
+      var sw_planilla=false;
+      break;
+    case '0':
+      var txt="Por favor, Registrar la PLANILLA del mes de "+nombre_mes+", Gracias. :)";
+      var sw_planilla=false;
+      break;
+    case '3':
+      var txt="La PLANILLA del Mes de "+nombre_mes+", No se encuentra disponible.";
+      var sw_planilla=false;
+      break;
+    case '1':
+    var sw_planilla=true;
+      break;
+    case '2': 
+      var sw_planilla=true;
+      break;
+  }
+  if(sw_planilla){
+    Swal.fire({
+      title: '¿Estás Segur@?',
+      text: "Se procesará o reprocesará la PLANTILLA del mes de "+nombre_mes,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonClass: 'btn btn-warning',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'SI',
+      cancelButtonText: 'NO',
+      buttonsStyling: false
+      }).then((result) => {
+        if (result.value) {
+          iniciarCargaAjax();
+          $.ajax({
+            type:"POST",
+            data:"cod_mes="+cod_mes,
+            url:"bonos/plantilla_sueldos_procesar.php", 
+            success:function(r){
+              detectarCargaAjax();
+              if(r==1){              
+                  alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+              }else{
+                Swal.fire("Ocurrió un error! :(", "Contáctese con el administrador.", "warning");
+              }
+            }
+          });
+          return(true);
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          return(false);
+        }
+      });
+  }else{
+    Swal.fire({
+      title: 'LO SIENTO :(',
+      text: txt,
+      type: 'error',
+      confirmButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Aceptar',
+      buttonsStyling: false
+      }).then((result) => {
+        if (result.value) {
+          return(false);
+        } 
+      });
+  }
+}
+
+function procesar_bonos_descuentos_planilla_bk(nombre_mes,cod_mes,estado_planilla){
   if(estado_planilla==0){
      Swal.fire({
         title: 'Informativo',
@@ -19946,7 +20016,6 @@ function procesar_bonos_descuentos_planilla(nombre_mes,cod_mes,estado_planilla){
           title: 'LO SIENTO :(',
           text: "La PLANILLA del Mes de "+nombre_mes+", No se encuentra disponible.",
           type: 'error',
-          
           confirmButtonClass: 'btn btn-danger',
           confirmButtonText: 'Aceptar',
           buttonsStyling: false
@@ -20008,7 +20077,6 @@ function botonBuscar_pagoproveedores(){
   }
   ajax.send(null)
 }
-
 
 function agregardatosModalEdicionPlantillaSueldos(datos){  
   var d=datos.split('/');
@@ -20664,7 +20732,6 @@ function borrarItemDescuentoPersonalConta(idF){
 function diferencia_descuento_personal(id){
   var monto_sistema=$("#monto_sistema"+id).val();
   var monto_deposito=$("#monto_deposito"+id).val();
-
   if(monto_sistema<0 || monto_sistema==0 || monto_sistema==null){
     // Swal.fire("Informativo!", "El monto del sistema NO debe ser 0 o número negativo!", "warning");
   }else{
@@ -20674,11 +20741,41 @@ function diferencia_descuento_personal(id){
       var monto_descuento=parseFloat(monto_sistema)-parseFloat(monto_deposito);
       monto_descuento=Math.round((monto_descuento + Number.EPSILON) * 100) / 100;//redondeamos a dos decimales
        //agregamos al total      
-      $("#monto_diferencia"+id).val(monto_descuento);//irá en hidden 
+      $("#monto_diferencia"+id).val(monto_descuento);
+
+      calcularTotalesDescuentosConta(id);
       // $("#modal_importe_dos_add"+id).val(number_format(monto_descuento,2));//para mostrar con formato
     // }
   }  
 }
+
+
+function calcularTotalesDescuentosConta(id){
+  
+  var sumasistema=0;
+  var sumaDepositado=0;  
+  var formulariop = document.getElementById("formDesceuntosConta");
+  for (var i=0;i<formulariop.elements.length;i++){
+    if (formulariop.elements[i].id.indexOf("monto_sistema") !== -1 ){    
+      //console.log("debe "+formulariop.elements[i].value);    
+      sumasistema += (formulariop.elements[i].value) * 1; 
+    }
+    if (formulariop.elements[i].id.indexOf("monto_deposito") !== -1 ){        
+      //console.log("haber "+formulariop.elements[i].value);    
+      sumaDepositado += (formulariop.elements[i].value) * 1;
+    }
+  }
+  document.getElementById("totalSistema").value=redondeo(sumasistema,2).toFixed(2);  
+  document.getElementById("totalDepos").value=redondeo(sumaDepositado,2).toFixed(2); 
+  document.getElementById("total_dif").value=redondeo(sumasistema-sumaDepositado,2).toFixed(2);  
+  document.getElementById("totalsistema_fijo").value=document.getElementById("totalSistema").value;
+  document.getElementById("totalDepos_fijo").value=document.getElementById("totalDepos").value;
+  document.getElementById("total_dif_fijo").value=document.getElementById("total_dif").value;
+
+}
+
+
+
 
 function modalDetalleDescuentos(datos){  
   var d=datos.split('###');

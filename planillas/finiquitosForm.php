@@ -15,7 +15,7 @@ $stmtTipoRetiro = $dbh->query($querytiporetiro);
 if ($codigo > 0){
     //EDIT GET1 no guardar, sino obtener
     $codigo=$codigo;
-    $stmt = $dbh->prepare("SELECT cod_personal,cod_tiporetiro,cod_contrato,anios_pagados,dias_vacaciones_pagar,duodecimas,otros_pagar FROM finiquitos where codigo =$codigo");
+    $stmt = $dbh->prepare("SELECT cod_personal,cod_tiporetiro,cod_contrato,anios_pagados,dias_vacaciones_pagar,duodecimas,otros_pagar,fecha_pago FROM finiquitos where codigo =$codigo");
     //Ejecutamos;
     $stmt->execute();
     $result = $stmt->fetch();
@@ -29,8 +29,9 @@ if ($codigo > 0){
     $duodecimas = $result['duodecimas'];
     $otros_pagar = $result['otros_pagar'];
 
-    $query_retiro = "SELECT * from tipos_retiro_personal where codigo=$cod_tiporetiro";
+    $query_retiro = "SELECT codigo,nombre from tipos_retiro_personal where cod_estadoreferencial=1";
     $statementTiposRetiro = $dbh->query($query_retiro);
+    $fecha_finiquito=$result['fecha_pago'];
 }else {    
   $cod_personal=0;
   if(isset($_GET['codigo_contrato'])){
@@ -45,6 +46,7 @@ if ($codigo > 0){
   $dias_vacaciones_pagar = 0;
   $duodecimas = 0;
   $otros_pagar = 0;
+  $fecha_finiquito=date('Y-m-d');
 }
 
 $sql="SELECT cod_tipocontrato from personal_contratos where codigo=$codigo_contrato";
@@ -158,7 +160,15 @@ $stmtpersonal->execute();
                             <input class="form-control" type="number" name="otros" id="otros" required="true" value="<?=$otros_pagar?>" />
                         </div>
                         </div>
-                    </div>                    
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Fecha Finiquito</label>
+                        <div class="col-sm-8">
+                        <div class="form-group">
+                            <input class="form-control" type="date" name="fecha_finiquito" id="fecha_finiquito" required="true" value="<?=$fecha_finiquito?>" />
+                        </div>
+                        </div>
+                    </div>
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

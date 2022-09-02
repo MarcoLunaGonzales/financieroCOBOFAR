@@ -1,11 +1,11 @@
 <?php
 
-echo "<div class='cargar-ajax'>
-  <div class='div-loading text-center'>
-     <h4 class='text-warning font-weight-bold' id='texto_ajax_titulo'>Procesando Datos</h4>
-     <p class='text-white'>Aguarde un momento por favor</p>  
-  </div>
-</div>";
+// echo "<div class='cargar-ajax'>
+//   <div class='div-loading text-center'>
+//      <h4 class='text-warning font-weight-bold' id='texto_ajax_titulo'>Procesando Datos</h4>
+//      <p class='text-white'>Aguarde un momento por favor</p>  
+//   </div>
+// </div>";
 
 
 require("../conexion_comercial_oficial.php");//cambiar al de reportes
@@ -17,7 +17,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 $dbhFin = new Conexion();
 $minutos_tolerancia=obtenerValorConfiguracionPlanillas(37);
-$sql="SELECT IFNULL(max(fecha),'2022-07-01') as fecha from asistencia_procesada";
+$sql="SELECT IFNULL(max(fecha),'2022-08-01') as fecha from asistencia_procesada";
 $stmtFecha = $dbhFin->prepare($sql);
 $stmtFecha->execute();
 $stmtFecha->bindColumn('fecha', $fechaUltimoProc);
@@ -146,7 +146,7 @@ if($fechaFinal>$fechaUltimoProc){//validacion para no repetir ese día
       where r.fecha_marcado BETWEEN '$fechaUltimoProc 00:00:00' and '$fechaFinal 23:59:59' and r.cod_ciudad in (select c.cod_ciudad from ciudades c where c.cod_area=$cod_areax)
       group by r.cod_funcionario,DATE(r.fecha_marcado)
       order by r.fecha_marcado";
-     // echo $sqlPersonal."<br><br>";
+      // echo $sqlPersonal."<br><br>";
     $respPersonal=mysqli_query($dbh,$sqlPersonal);
     // echo $sqlPersonal;
     while($datPersonal=mysqli_fetch_array($respPersonal)){

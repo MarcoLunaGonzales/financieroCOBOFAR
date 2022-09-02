@@ -227,7 +227,7 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
         <td class="text text-left"><small><?=$reintegro_obs?></small></td>
         <td class="text text-left"><small><?=$anticipos?></small></td><?php
         for ($x=0; $x <$contador ; $x++) { ?>
-          <td class="text text-left"><small></small></td>
+          <td class="text text-left"><small>0</small></td>
         <?php }
         ?>
       </tr>

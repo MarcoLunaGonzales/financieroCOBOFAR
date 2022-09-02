@@ -35,7 +35,7 @@ $dbh = new Conexion();
                         </div>
                         <div class="card-body ">                            
                             <div class="table-responsive">              
-                                <table class="table table-condensed table-bordered table-striped table-secondary" >
+                                <table id="libro_mayor_rep" class="table table-condensed table-bordered table-striped table-secondary" >
                                     <thead >
                                         <tr style="background:#18537e;color:white;">
                                           <th class="text-center small"><small>#</small></th>
@@ -58,7 +58,7 @@ $dbh = new Conexion();
                                             where d.cod_estado=3 and ddm.mes=$globalMes and ddm.gestion=$globalGestion
                                             GROUP BY dd.cod_personal
                                             order by p.paterno";
-                                             // echo $sql;
+                                              // echo $sql;
                                         $stmt = $dbh->prepare($sql);
                                         $stmt->execute();
                                         $stmt->bindColumn('cod_personal', $cod_personal);
@@ -187,7 +187,7 @@ $dbh = new Conexion();
       </div>
       <div class="modal-footer">
         <!-- <a  type="button" href="../descuentos_conta/descuentos_detalle_consolidado.php?codigo=0" class="btn btn-danger btn-sm close"  aria-label="Close">Cerrar</a> -->
-        <a  type="button"  data-dismiss="modal" class="btn btn-danger btn-sm close"  aria-label="Close">Cerrar</a>
+        <a  type="button"  data-dismiss="modal" class="btn btn-danger btn-sm text-white" >Cerrar</a>
       </div>
     </div>
   </div>
@@ -222,8 +222,8 @@ $dbh = new Conexion();
          </table>
       </div>
       <div class="modal-footer">
-        <button  type="button" onclick="cambiarMesDescuentoPersonal()" class="btn btn-success btn-sm close" aria-label="Close">Guardar</button>
-        <a  type="button"  data-dismiss="modal" class="btn btn-danger btn-sm close"  aria-label="Close">Cancelar</a>
+        <button  type="button" onclick="cambiarMesDescuentoPersonal()" class="btn btn-success btn-sm text-white" aria-label="Close">Guardar</button>
+        <a  type="button"  data-dismiss="modal" class="btn btn-danger btn-sm text-white"  >Cancelar</a>
       </div>
     </div>
   </div>

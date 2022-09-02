@@ -24,7 +24,7 @@ $dias_obtenidos = $difference->days;
 $dias_obtenidos+=1;
 
 $dias_obtenidos=$dias_obtenidos-$total_domingos_mes-$total_feriados_mes;
-if($saldo_modal>$dias_obtenidos){?>
+if($saldo_modal>=$dias_obtenidos){?>
     <input  type='number' style="color: green;" class='form-control'  id='dias_vacacion'  name='dias_vacacion' min="5" value="<?=$dias_obtenidos?>" required readonly>
 <?php }else{?>
     <input  type='hidden'  id='dias_vacacion'  name='dias_vacacion' value="0" required>

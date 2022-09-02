@@ -2,8 +2,20 @@
 
 require_once 'styles.php';
 require_once 'functions.php';
+require("conexion_comercial_oficial.php");
 
- require("conexion_comercial_oficial.php");
+$globalAdmin=$_SESSION["globalAdmin"];
+$globalUser=$_SESSION["globalUser"];
+$globalUnidad=$_SESSION["globalUnidad"];
+
+$string_configuracion=obtenerValorConfiguracion(116);
+$array_personal_respo_audi=explode(",", $string_configuracion);
+$sw_personal_audi=false;
+for ($i=0; $i <count($array_personal_respo_audi) ; $i++) { 
+    if($globalUser==$array_personal_respo_audi[$i]){
+        $sw_personal_audi=true;
+    }
+}
 
 ?>
 
@@ -51,9 +63,13 @@ require_once 'functions.php';
                             <td class="text-left"><?=$descripcion?></td>
                             <td class="text-left"><?=$banco?></td>
                             <td class="text-left"><?=$banco2?></td>
-                              <td><button title="Editar Ingreso" class="btn btn-success btn-sm" style="padding: 0;font-size:5px;width:18px;height:18px;" type="button" data-toggle="modal" data-target="#modalEditar" onclick="agregardatosModal_configuracionComercial('<?=$datos;?>')">
-                            <i class="material-icons">edit</i>
-                          </button></td>
+                            <td>
+                              <?php if($sw_personal_audi){ ?>
+                              <button title="Editar Ingreso" class="btn btn-success btn-sm" style="padding: 0;font-size:5px;width:18px;height:18px;" type="button" data-toggle="modal" data-target="#modalEditar" onclick="agregardatosModal_configuracionComercial('<?=$datos;?>')">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <?php }?>
+                            </td>
                           </tr>
                         <?php } ?>
                         

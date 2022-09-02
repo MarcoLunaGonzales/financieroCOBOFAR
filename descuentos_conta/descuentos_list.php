@@ -21,7 +21,7 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo);
-$stmt->bindColumn('fecha', $fecha);
+$stmt->bindColumn('fecha', $fechaDescuento);
 $stmt->bindColumn('glosa', $glosa);
 $stmt->bindColumn('cod_estado', $cod_estado);
 $stmt->bindColumn('cod_contabilizado', $cod_contabilizado);
@@ -53,6 +53,7 @@ $stmt->bindColumn('personal', $personal);
                       <th class="text-center">Fecha</th>
                       <th class="text-center">Registrado por</th>
                       <th class="text-center">Nombre Descuento</th>
+                      <th class="text-center">Mes Descuento</th>
                       <th class="text-center">Estado</th>
                       <th class="text-center">Comprobante</th>
                       <th class="text-center">Acc/Eventos</th>
@@ -106,12 +107,15 @@ $stmt->bindColumn('personal', $personal);
                             $nombre_estado="Enviado";
                           break;
                       }
+                      $datos_fecha=explode('-',$fechaDescuento);
+                      $mes_descuento=nombreMes($datos_fecha[1])." - ".$datos_fecha[0];
                      ?>
                       <tr>
-                        <td  class="td-actions text-right small"><?=$index?></td>
-                        <td class="text-center small"><?=$fecha;?></td>
+                        <td  class="td-actions text-right small"><?=$codigo?></td>
+                        <td class="text-center small"><?=date('d/m/Y',strtotime($created_at));?></td>
                         <td class="text-left small"><?=$personal?></td>
                         <td class="text-left small"><?=$glosa;?></td>
+                        <td class="text-left small"><?=$mes_descuento;?></td>
                         <td class="text-left small" ><?=$label.$nombre_estado?></span></td>
                         <td class="text-center small"><?=$nombre_contabilizado;?></td>
                         <td class="td-actions text-center">

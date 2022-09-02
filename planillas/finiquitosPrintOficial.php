@@ -15,15 +15,18 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 $codigo = $_GET["codigo"];//
 
 
-$numero_cuenta_pagadora=obtenerValorConfiguracionPlanillas(35);
+// $numero_cuenta_pagadora=obtenerValorConfiguracionPlanillas(35);
 $nombre_cuenta_pagadora=obtenerValorConfiguracionPlanillas(36);
+
+// $numero_cuenta_pagadora=obtenerValorConfiguracionPlanillas(35);
+// $nombre_cuenta_pagadora=obtenerValorConfiguracionPlanillas(36);
 try{
     //====================================
 
     $sql="SELECT f.*,trp.nombre as motrivoretiro,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as nombre_personal,(select nombre from tipos_estado_civil tec where tec.codigo=p.cod_estadocivil)as estado_civil,p.fecha_nacimiento,p.direccion,(select c.nombre from cargos c where c.codigo=p.cod_cargo)as cargo,identificacion,(select pd.abreviatura from personal_departamentos pd where pd.codigo=cod_lugar_emision)as lugar_emision,lugar_emision_otro,(
         select  CONCAT_WS('-',m.abreviatura,g.nombre)as fecha from planillas p join gestiones g on p.cod_gestion=g.codigo join meses m on p.cod_mes=m.codigo where p.codigo=f.cod_planilla1)as fecha1,(
         select  CONCAT_WS('-',m.abreviatura,g.nombre)as fecha from planillas p join gestiones g on p.cod_gestion=g.codigo join meses m on p.cod_mes=m.codigo where p.codigo=f.cod_planilla2)as fecha2,(
-        select  CONCAT_WS('-',m.abreviatura,g.nombre)as fecha from planillas p join gestiones g on p.cod_gestion=g.codigo join meses m on p.cod_mes=m.codigo where p.codigo=f.cod_planilla3)as fecha3,f.meses_aguinaldo,f.dias_aguinaldo,f.dias_vacaciones_pagar,f.anios_indemnizacion,f.meses_indemnizacion,f.dias_indemnizacion,f.duodecimas
+        select  CONCAT_WS('-',m.abreviatura,g.nombre)as fecha from planillas p join gestiones g on p.cod_gestion=g.codigo join meses m on p.cod_mes=m.codigo where p.codigo=f.cod_planilla3)as fecha3,f.meses_aguinaldo,f.dias_aguinaldo,f.dias_vacaciones_pagar,f.anios_indemnizacion,f.meses_indemnizacion,f.dias_indemnizacion,f.duodecimas,p.cuenta_bancaria
     FROM finiquitos f join personal p on f.cod_personal=p.codigo join tipos_retiro_personal trp on trp.codigo=f.cod_tiporetiro
     where  f.codigo =$codigo";
 
@@ -77,6 +80,14 @@ try{
     $cod_planilla2=$result["cod_planilla2"];
     $cod_planilla3=$result["cod_planilla3"];
 
+    $numero_cuenta_pagadora=$result["cuenta_bancaria"];
+
+    $fecha_finiquito=$result["fecha_pago"];
+
+    
+
+    
+
     $cod_personal=$result["cod_personal"];
     $datos_planilla=obtenerdatos_planilla2($cod_personal,$cod_planilla1);
     $renumeracion_mensual1=$datos_planilla[0];
@@ -113,13 +124,14 @@ try{
     $bextras3=$datos_planilla[8];    
 
 
-
     $entero=floor($result["total_a_pagar"]);
     $decimal=$result["total_a_pagar"]-$entero;
     $centavos=round($decimal*100);
     if($centavos<10){
     $centavos="0".$centavos;
     }
+
+
 
 
 $html = '';
@@ -266,7 +278,7 @@ $html.='<body>'.
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($bono_antiguedad1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td>'.formatNumberDec($bono_antiguedad1+$bono_antiguedad2+$bono_antiguedad3).'</td>                                    
+                                        <td align="right">'.formatNumberDec($bono_antiguedad1+$bono_antiguedad2+$bono_antiguedad3).'</td>                                    
                                     </tr>
                                     <tr>
                                         <td>Turno rotatorio domingo o feriado y/o reemplazos</td>
@@ -277,7 +289,7 @@ $html.='<body>'.
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($domingos_feriados1+$bferiados1+$breintegro1+$bextras1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td >'.formatNumberDec($domingos_feriados1+$bferiados1+$breintegro1+$bextras1+$domingos_feriados2+$bferiados2+$breintegro2+$bextras2+$domingos_feriados3+$bferiados3+$breintegro3+$bextras3).'</td>
+                                        <td align="right">'.formatNumberDec($domingos_feriados1+$bferiados1+$breintegro1+$bextras1+$domingos_feriados2+$bferiados2+$breintegro2+$bextras2+$domingos_feriados3+$bferiados3+$breintegro3+$bextras3).'</td>
                                     </tr>
                                     <tr>
                                         <td>Bono Refrigerio</td>
@@ -288,7 +300,7 @@ $html.='<body>'.
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($bono_refrigerio1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td >'.formatNumberDec($bono_refrigerio1+$bono_refrigerio2+$bono_refrigerio3).'</td>
+                                        <td align="right">'.formatNumberDec($bono_refrigerio1+$bono_refrigerio2+$bono_refrigerio3).'</td>
                                     </tr>
                                     <tr>
                                         <td>Falla de Caja</td>
@@ -299,7 +311,7 @@ $html.='<body>'.
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($falla_caja1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td >'.formatNumberDec($falla_caja1+$falla_caja2+$falla_caja3).'</td>
+                                        <td align="right">'.formatNumberDec($falla_caja1+$falla_caja2+$falla_caja3).'</td>
                                     </tr>
                                     <tr>
                                         <td>Bono Movilidad</td>
@@ -310,7 +322,7 @@ $html.='<body>'.
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($movilidad1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td >'.formatNumberDec($movilidad1+$movilidad2+$movilidad3).'</td>
+                                        <td align="right">'.formatNumberDec($movilidad1+$movilidad2+$movilidad3).'</td>
                                     </tr>
                                 
                                     <tr>
@@ -340,8 +352,6 @@ $html.='<body>'.
                                         <td align="right">'.formatNumberDec($result["desahucio_monto"]).'</td>
                                     </tr>
                                     <tr>
-
-
                                         <td colspan="4">D) INDEMNIZACIÓN POR TIEMPO DE TRABAJO:</td>
                                         <td style="width: 3%">DE</td>
                                         <td class="text-right" >'.$anios_indemnizacion.'</td>
@@ -500,7 +510,7 @@ $html.='<body>'.
                             MAYOR DE EDAD, CON C.I. Nº '.$result['identificacion'].' '.$result['lugar_emision'].' DECLARO QUE EN LA FECHA RECIBO A MI ENTERA
                             SATISFACCIÓN, EL IMPORTE DE Bs &nbsp '.formatNumberDec($result["total_a_pagar"]).' &nbsp&nbsp POR CONCEPTO DE LA LIQUIDACIÓN DE MIS BENEFICIOS SOCIALES, DE CONFORMIDAD CON LA LEY GENERAL DEL TRABAJO, SU DECRETO REGLAMENTARIO Y DISPOSICIONES CONEXAS.<br><br><br>
 
-                            LUGAR Y FECHA &nbsp; La Paz, '.date('d').' de '.nombreMes(date('m')).' de '.date('Y').'
+                            LUGAR Y FECHA &nbsp; La Paz, '.date('d',strtotime($fecha_finiquito)).' de '.nombreMes(date('m',strtotime($fecha_finiquito))).' de '.date('Y',strtotime($fecha_finiquito)).'
                             <p>
                             <br><br><br><br><br><br>
                             <table style="width: 100%;">

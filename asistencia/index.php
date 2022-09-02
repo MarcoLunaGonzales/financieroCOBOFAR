@@ -4,7 +4,6 @@ require_once 'conexion.php';
 require_once 'styles.php';
 
 
-
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION["globalUnidad"];
@@ -135,13 +134,12 @@ $globalUnidad=$_SESSION["globalUnidad"];
                   <center>
                   <div class="btn-group">
                      <a type="button" class="btn btn-sm" href="?opcion=asistenciaPersonalListaRRHH">Cuadro <BR>Asistencia</a>
-                     <a type="button" class="btn btn-sm" href="?opcion=asistenciaPersonalListaRRHH" style="background:#1a5276 !important;" >Reemplazos<BR>a Suc.</a>
+                     <!-- <a type="button" class="btn btn-sm" href="?opcion=asistenciaPersonalListaRRHH" style="background:#1a5276 !important;" >Reemplazos<BR>a Suc.</a> -->
                   </div>   
                   </center>
-                  <center>
+                  <!-- <center>
                      <a type="button" class="btn btn-sm" href="?opcion=asistenciaPersonalListaRRHH">Reemplazos<BR>a Otras Suc.</a>
-                  
-                  </center>
+                  </center> -->
                
             </div>
          </div>

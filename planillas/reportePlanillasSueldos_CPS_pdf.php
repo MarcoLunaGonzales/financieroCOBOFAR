@@ -70,23 +70,23 @@ $html.=  '<header class="header">'.
             </table>'.
          '</header>';
 
-          $html.='<table class="table" style="font-size: 5px !important;">'.
+          $html.='<table class="table" style="font-size: 6px !important;">'.
             '<thead >'.
-            '<tr class="table-title bold text-center" style="font-size: 7px !important;">'.
+            '<tr class="table-title bold text-center" style="font-size: 6px !important;">'.
               '<td width="1%">Nro</td>'.
               '<td>CI EXT</td>'.
               '<td width="3%">Paterno</td>'.
               '<td width="3%">Materno</td>'.
               '<td width="4%">Nombre</td>'.
-              '<td width="2%">Sex</td>'.
+              '<td width="1%">Sex</td>'.
               '<td width="3%">Fech Nac</td>'.
               '<td width="7%">Cargo</td>'.
               '<td width="3%">Fech Ing</td>'.
-              '<td width="2%">Hrs Trab</td>'.
-              '<td width="2%">Días Trab</td>'.
+              '<td width="1%">Hr Tra</td>'.
+              '<td width="1%">Ds Tra</td>'.
               '<td width="3%">Haber Basico</td>'.
               '<td width="3%">Haber Basico DTrab</td>'.
-              '<td>Bono Ant</td>'.
+              '<td width="3%">Bono Ant</td>'.
               '<td>Noch</td>'.
               '<td>Dom</td>'.
               '<td>Feri ado</td>'.

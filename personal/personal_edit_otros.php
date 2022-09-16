@@ -228,7 +228,7 @@ if($codigo_item==4){?><!--haber basico-->
                             <label class="col-sm-2 col-form-label">Haber Basico</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" step="any" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" required/>
+                                    <input class="form-control" type="number" step="any" name="haber_basico" id="haber_basico" value="<?=number_format($haber_basico,2,'.','');?>" required/>
                                 </div>
                             </div> 
                         </div><!--haber basico-->

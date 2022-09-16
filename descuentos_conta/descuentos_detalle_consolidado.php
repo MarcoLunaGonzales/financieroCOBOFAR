@@ -57,7 +57,7 @@ $dbh = new Conexion();
                                             from descuentos_conta d  join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento join personal p on dd.cod_personal=p.codigo join descuentos_conta_detalle_mes  ddm on ddm.cod_descuento_detalle=dd.codigo
                                             where d.cod_estado=3 and ddm.mes=$globalMes and ddm.gestion=$globalGestion
                                             GROUP BY dd.cod_personal
-                                            order by p.paterno";
+                                            order by p.primer_nombre";
                                               // echo $sql;
                                         $stmt = $dbh->prepare($sql);
                                         $stmt->execute();
@@ -78,7 +78,7 @@ $dbh = new Conexion();
                                                 $contadorError++;
                                                 $label_error="<span class='badge badge-danger'>";
                                             }
-                                            $nombre_personal=$paterno." ".$materno." ".$primer_nombre;
+                                            $nombre_personal=$primer_nombre." ".$paterno." ".$materno;
                                             $datos_modal=$cod_personal."###".$nombre_personal."###".$haber_basico."###".$descuento."###".$globalMes."###".$globalGestion;
                                             $queryDet ="SELECT sum(dd.diferencia)as descuento_ingreso,(SELECT sum(ddm.monto) from descuentos_conta d2 join descuentos_conta_detalle dd2 on d2.codigo=dd2.cod_descuento join descuentos_conta_detalle_mes ddm on ddm.cod_descuento_detalle=dd2.codigo where d2.cod_estado=3 and dd2.cod_personal=$cod_personal and ddm.cod_estado in (3,4,5))as descontado
                                                 from descuentos_conta d join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento

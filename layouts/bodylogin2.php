@@ -2447,6 +2447,29 @@
                 ]
               });
 
+    var tableColStatic = $('#tablePaginatorHeaderFooterColStatic').DataTable({
+        scrollY:        "450px",
+            scrollX:        true,
+            scrollCollapse: true,
+            paging:         false,
+            bFilter:        true,
+            ordering:       false,
+            bInfo:          false,
+            fixedColumns:   {
+                leftColumns: 3
+            },
+            language: {
+             emptyTable: "No hay datos en la tabla"
+            },
+            columnDefs: [
+                { targets: 0, width: 10},
+                { targets: 1, width: 200},
+                { targets: 2, width: 150}
+            ]
+    });
+
+
+
         var table_afxU=$('#tablePaginatorHeader').DataTable({
                 "paging":   false,
                   "info":     false,

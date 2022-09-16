@@ -13689,35 +13689,62 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
 
    function obtenerDatosAsistenciaPersonal($codigo,$cod_personal,$dias_trabajado){
       $dbh = new Conexion();
-      $stmt = $dbh->prepare("SELECT faltas,fecha_faltas,baja_medicas,dias_vacacion,domingos,fecha_domingos,feriados,fecha_feriados,horas_extras,noches,observaciones from asistencia_personal_detalle where cod_asistenciapersonal=$codigo and cod_personal=$cod_personal");
+      $stmt = $dbh->prepare("SELECT faltas,fecha_faltas,baja_medicas,dias_vacacion,domingos,fecha_domingos,feriados,fecha_feriados,horas_extras,noches,observaciones,baja_medicas_fi,baja_medicas_ff,dias_vacacion_fi,dias_vacacion_ff,domingo_reemp,feriado_reemp,reemp,tipo_reemplazo,fecha_reemp,nombre_per_reemp,horas_extras_dom,horas_extras_feri from asistencia_personal_detalle where cod_asistenciapersonal=$codigo and cod_personal=$cod_personal");
       $stmt->execute();
       $dias_normales=$dias_trabajado;
+
       $faltas=0;
       $fecha_faltas="";
-      $baja_medicas=0;
+      $bajas_medicas=0;
+      $bajas_medicas_fi="";
+      $bajas_medicas_ff="";
       $dias_vacacion=0;
+      $dias_vacacion_fi="";
+      $dias_vacacion_ff="";
       $domingos=0;
       $fecha_domingos="";
       $feriados=0;
       $fecha_feriados="";
-      $horas_extras=0;
       $noches=0;
+      $domingo_reemp=0;
+      $feriado_reemp=0;
+      $reemp=0;
+      $tipo_reemplazo="";
+      $fecha_reemp="";
+      $nombre_per_reemp="";
+      $horas_extras_dom=0;
+      $horas_extras_feri=0;
+      $horas_extras=0;
       $observaciones="";
+
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         // $dias_normales=$row['dias_normales'];
-        $faltas=$row['faltas'];
-        $fecha_faltas=$row['fecha_faltas'];
-        $baja_medicas=$row['baja_medicas'];
-        $dias_vacacion=$row['dias_vacacion'];
-        $domingos=$row['domingos'];
-        $fecha_domingos=$row['fecha_domingos'];
-        $feriados=$row['feriados'];
-        $fecha_feriados=$row['fecha_feriados'];
-        $horas_extras=$row['horas_extras'];
-        $noches=$row['noches'];
-        $observaciones=$row['observaciones'];
+         $faltas=$row['faltas'];
+         $fecha_faltas=$row['fecha_faltas'];
+         $bajas_medicas=$row['baja_medicas'];
+         $bajas_medicas_fi=$row['baja_medicas_fi'];
+         $bajas_medicas_ff=$row['baja_medicas_ff'];
+         $dias_vacacion=$row['dias_vacacion'];
+         $dias_vacacion_fi=$row['dias_vacacion_fi'];
+         $dias_vacacion_ff=$row['dias_vacacion_ff'];
+         $domingos=$row['domingos'];
+         $fecha_domingos=$row['fecha_domingos'];
+         $feriados=$row['feriados'];
+         $fecha_feriados=$row['fecha_feriados'];
+         $noches=$row['noches'];
+         $domingo_reemp=$row['domingo_reemp'];
+         $feriado_reemp=$row['feriado_reemp'];
+         $reemp=$row['reemp'];
+         $tipo_reemplazo=$row['tipo_reemplazo'];
+         $fecha_reemp=$row['fecha_reemp'];
+         $nombre_per_reemp=$row['nombre_per_reemp'];
+         $horas_extras_dom=$row['horas_extras_dom'];
+         $horas_extras_feri=$row['horas_extras_feri'];
+         $horas_extras=$row['horas_extras'];
+         $observaciones=$row['observaciones'];
       }
-      return array($dias_normales,$faltas,$fecha_faltas,$baja_medicas,$dias_vacacion,$domingos,$fecha_domingos,$feriados,$fecha_feriados,$horas_extras,$noches,$observaciones);
+
+      return array($dias_normales,$faltas,$fecha_faltas,$bajas_medicas,$bajas_medicas_fi,$bajas_medicas_ff,$dias_vacacion,$dias_vacacion_fi,$dias_vacacion_ff,$domingos,$fecha_domingos,$feriados,$fecha_feriados,$noches,$domingo_reemp,$feriado_reemp,$reemp,$tipo_reemplazo,$fecha_reemp,$nombre_per_reemp,$horas_extras_dom,$horas_extras_feri,$horas_extras,$observaciones);
    }
 
    function obtenerDatosAsistenciaPersonal_procesada($cod_personal,$dias_trabajado,$cod_gestion,$cod_mes){

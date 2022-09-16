@@ -80,6 +80,9 @@ if($estado_asistencia<>0 and $codigo==0){// registrar planilla mes
    </script><?php
 }
 if($sw_validado){
+  ?>
+
+  <?php
   $nombre_mes=nombreMes($cod_mes);
   $nombreGestion=$cod_gestion;
   $fecha_inicio_x=$cod_gestion."-".$cod_mes."-01";
@@ -111,23 +114,36 @@ if($sw_validado){
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table id="tablePaginatorHeaderFooter" class="table table-bordered table-condensed table-striped  table-sm table-secondary" style="width:100%">
+                <table id="tablePaginatorHeaderFooterColStatic" class="table table-bordered table-condensed table-striped  table-sm table-secondary">
                   <thead>                              
                     <tr style="background:#138d75;color:white;">
-                      <th width="2%"><small>Nro</small></th>
-                      <th width="15%"><small>Apellidos y Nombres</small></th>
-                      <th width="10%"><small>Cargo</small></th>
-                      <th width="5%"><small>Dias<br>Normls L-S</small></th>
-                      <th width="5%"><small>Faltas</small></th>
-                      <th width="8%"><small>Fecha Falta</small></th>
-                      <th width="5%"><small>Bajas Medicas</small></th>
-                      <th width="5%"><small>Dias Vacacion</small></th>
-                      <th width="5%"><small>N° Domingos</small></th>
-                      <th width="5%"><small>F. Dom</small></th>
-                      <th width="5%"><small>N° Feriados</small></th>
-                      <th width="5%"><small>F Feria</small></th>
-                      <th width="5%"><small>Horas Extras</small></th>
-                      <th width="5%"><small>Noches</small></th>
+                      <th style="background:#64a095;color:white;"><small>Nro</small></th>
+                      <th style="background:#64a095;color:white;"><small>Apellidos y Nombres</small></th>
+                      <th style="background:#64a095;color:white;"><small>Cargo</small></th>
+                      <th ><small>Dias<br>Normls L-S</small></th>
+                      <th ><small>Faltas</small></th>
+                      <th ><small>Fecha Falta</small></th>
+                      <th ><small>Bajas Medicas</small></th>
+                      <th ><small>F.Inicio</small></th>
+                      <th ><small>F.Fin</small></th>
+                      <th ><small>Dias Vacacion</small></th>
+                      <th ><small>F.Inicio</small></th>
+                      <th ><small>F.Fin</small></th>
+                      <th ><small>Domingos Normal</small></th>
+                      <th ><small>F. Dom</small></th>
+                      <th ><small>Feriados Normal</small></th>
+                      <th ><small>F Feria</small></th>
+                      <th ><small>Noche Normal</small></th>
+                      <!-- <th ><small>Horas Extras</small></th> -->
+                      <th ><small>Domingo Reemp</small></th>
+                      <th ><small>Feriado Reemp</small></th>
+                      <th ><small>Reemp</small></th>
+                      <th ><small>Tipo de Reemp</small></th>
+                      <th ><small>Fecha</small></th>
+                      <th ><small>Nombre de Personal que Reemp</small></th>
+                      <th ><small>HXDOMINGO EXTRAS</small></th>
+                      <th ><small>HXFERIADO EXTRAS</small></th>
+                      <th ><small>HXDNORMAL EXTRAS</small></th>
                       <th><small>Observaciones (Reint, Domigs y/o hrs extras no pagadas)</small></th>
                     </tr>                                  
                   </thead>
@@ -161,37 +177,66 @@ if($sw_validado){
                       $faltas=$datosAsistencia[1];
                       $fecha_faltas=$datosAsistencia[2];
                       $bajas_medicas=$datosAsistencia[3];
-                      $dias_vacacion=$datosAsistencia[4];
-                      $domingos=$datosAsistencia[5];
-                      $fecha_domingos=$datosAsistencia[6];
-                      $feriados=$datosAsistencia[7];
-                      $fecha_feriados=$datosAsistencia[8];
-                      $horas_extras=$datosAsistencia[9];
-                      $noches=$datosAsistencia[10];
-                      $observaciones=$datosAsistencia[11];
-                      
-                      if($turno==1){
-                        $estilo_left="style='background:#5882d5;color:white;'";
-                      }else{
-                        $estilo_left="style='background:#5882d5;color:white;'";
-                      }
+                      $bajas_medicas_fi=$datosAsistencia[4];
+                      $bajas_medicas_ff=$datosAsistencia[5];
+                      $dias_vacacion=$datosAsistencia[6];
+                      $dias_vacacion_fi=$datosAsistencia[7];
+                      $dias_vacacion_ff=$datosAsistencia[8];
+                      $domingos=$datosAsistencia[9];
+                      $fecha_domingos=$datosAsistencia[10];
+                      $feriados=$datosAsistencia[11];
+                      $fecha_feriados=$datosAsistencia[12];
+                      $noches=$datosAsistencia[13];
+                      $domingo_reemp=$datosAsistencia[14];
+                      $feriado_reemp=$datosAsistencia[15];
+                      $reemp=$datosAsistencia[16];
+                      $tipo_reemplazo=$datosAsistencia[17];
+                      $fecha_reemp=$datosAsistencia[18];
+                      $nombre_per_reemp=$datosAsistencia[19];
+                      $horas_extras_dom=$datosAsistencia[20];
+                      $horas_extras_feri=$datosAsistencia[21];
+                      $horas_extras=$datosAsistencia[22];
+                      $observaciones=$datosAsistencia[23];
+                      // if($turno==1){
+                      //   $estilo_left="style='background:#5882d5;color:white;'";
+                      // }else{
+                      //   $estilo_left="style='background:#5882d5;color:white;'";
+                      // }
                       
                       ?>
                       <tr>
-                        <td class="text text-left" ><small><?=$index?></small></td>
+                        <td class="text text-left"><small><?=$index?></small></td>
                         <td class="text text-left" ><small><?=$personal?><input type="hidden" name="codigo_personal_<?=$index?>" id="codigo_personal_<?=$index?>" value="<?=$codigo_personal?>"></small></td>
                         <td class="text text-left" ><small><?=$cargo?></small></td>
-                        <td class="text text-center"><small><?=$dias_normales?></small></td> 
+                        <td class="text text-center"><small><?=$dias_normales?></small></td>
                         <td><input type="text" name="faltas_<?=$index?>" value="<?=$faltas?>" <?=$estilo_input?> ></td>
                         <td><textarea name="fecha_faltas_<?=$index?>" <?=$estilo_glosa?>><?=$fecha_faltas?></textarea></td>
                         <td><input type="text" name="bajas_medicas_<?=$index?>" value="<?=$bajas_medicas?>" <?=$estilo_input?>></td>
+                        <td><textarea name="bajas_medicas_fi_<?=$index?>" <?=$estilo_glosa?>><?=$bajas_medicas_fi?></textarea></td>
+                        <td><textarea name="bajas_medicas_ff_<?=$index?>" <?=$estilo_glosa?>><?=$bajas_medicas_ff?></textarea></td>
+
                         <td><input type="text" name="dias_vacacion_<?=$index?>" value="<?=$dias_vacacion?>" <?=$estilo_input?>></td>
+                        <td><textarea name="dias_vacacion_fi_<?=$index?>" <?=$estilo_glosa?>><?=$dias_vacacion_fi?></textarea></td>
+                        <td><textarea name="dias_vacacion_ff_<?=$index?>" <?=$estilo_glosa?>><?=$dias_vacacion_ff?></textarea></td>
+
                         <td><input type="text" name="domingos_<?=$index?>" value="<?=$domingos?>" <?=$estilo_input?>></td>
                         <td><textarea name="fecha_domingos_<?=$index?>" <?=$estilo_glosa?>><?=$fecha_domingos?></textarea></td>
                         <td><input type="text" name="feriados_<?=$index?>" value="<?=$feriados?>" <?=$estilo_input?>></td>
                         <td><textarea name="fecha_feriados_<?=$index?>" <?=$estilo_glosa?>><?=$fecha_feriados?></textarea></td>
-                        <td><input type="text" name="horas_extras_<?=$index?>" value="<?=$horas_extras?>" <?=$estilo_input?>></td>
                         <td><input type="text" name="noches_<?=$index?>" value="<?=$noches?>" <?=$estilo_input?>></td>
+
+                        <td><input type="text" name="domingo_reemp_<?=$index?>" value="<?=$domingo_reemp?>" <?=$estilo_input?>></td>
+                        <td><input type="text" name="feriado_reemp_<?=$index?>" value="<?=$feriado_reemp?>" <?=$estilo_input?>></td>
+                        
+                        <td><input type="text" name="reemp_<?=$index?>" value="<?=$reemp?>" <?=$estilo_input?>></td>
+                        <td><textarea name="tipo_reemplazo_<?=$index?>" <?=$estilo_glosa?>><?=$tipo_reemplazo?></textarea></td>
+
+                        <td><textarea name="fecha_reemp_<?=$index?>" <?=$estilo_glosa?>><?=$fecha_reemp?></textarea></td>
+                        <td><textarea name="nombre_per_reemp_<?=$index?>" <?=$estilo_glosa?>><?=$nombre_per_reemp?></textarea></td>
+
+                        <td><input type="text" name="horas_extras_dom_<?=$index?>" value="<?=$horas_extras_dom?>" <?=$estilo_input?>></td>
+                        <td><input type="text" name="horas_extras_feri_<?=$index?>" value="<?=$horas_extras_feri?>" <?=$estilo_input?>></td>
+                        <td><input type="text" name="horas_extras_<?=$index?>" value="<?=$horas_extras?>" <?=$estilo_input?>></td>
                         <td><textarea name="observaciones_<?=$index?>" style='width:200px !important;height:40px !important;text-align:right;font-size:11px;'><?=$observaciones?></textarea></td>
                       </tr>
                       <?php

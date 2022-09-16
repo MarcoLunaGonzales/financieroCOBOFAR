@@ -69,7 +69,7 @@ $dbh = new Conexion();
         </div>
         <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?> btn-round">Generar Reporte</button>
-          <a class="btn btn-default text-white btn-round" style="background:#7CC6A8 !important;" href="?opcion=asistenciaPersonal_main">Volver al Listado</a>
+          <a class="btn btn-danger text-white btn-round"  href="?opcion=asistenciaPersonal_main">Volver al Listado</a>
         </div>
       </div>
       </form>

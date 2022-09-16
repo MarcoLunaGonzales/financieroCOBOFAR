@@ -435,7 +435,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
       tipo_vacacion=$('#tipo_vacacion').val();
       console.log(dias_vacacion+"-"+saldo_modal);
       if(parseInt(dias_vacacion)>parseInt(saldo_modal)){
-        Swal.fire('ERROR!','Cantidad Solicitada Insuficiente. :(','error'); 
+        Swal.fire('ERROR!','Cantidad Solicitado Insuficiente. :(','error'); 
       }else{
         if(gestion_modal==""){
           Swal.fire('ERROR!','Gestión No Encontrada. :(','error'); 
@@ -474,7 +474,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
       tipo_vacacion=$('#tipo_vacacion_g').val();
       console.log(dias_vacacion+"-"+saldo_modal);
       if(parseInt(dias_vacacion)>parseInt(saldo_modal)){
-        Swal.fire('ERROR!','Cantidad Solicitada Insuficiente. :(','error'); 
+        Swal.fire('ERROR!','Cantidad Solicitado Insuficiente. :(','error'); 
       }else{
         if(gestion_modal==""){
           Swal.fire('ERROR!','Gestión No Encontrada. :(','error'); 

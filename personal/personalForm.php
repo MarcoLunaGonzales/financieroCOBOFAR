@@ -170,9 +170,11 @@ if($codigo>0){
 
     $cod_nacionalidad = "";
     $cod_estadocivil = "";
-    $cod_pais = "";
-    $cod_departamento = "";
-    $cod_ciudad = "";
+    
+    $cod_pais = 26;//BOLIVIA defecto
+    $cod_ciudad = 64;//LP defecto
+
+    $cod_departamento = "";    
     $ciudadOtro = "";
     $cod_grado_academico = "";
     $ing_contr = "";
@@ -304,6 +306,12 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                         <input class="form-control" type="text" name="lugar_emisionOtro" id="lugar_emisionOtro" value="<?=$lugar_emisionOtro;?>"/>
                                     </div>
                                 </div>
+                                
+                            </div><!--fin campo Nacionalidad -->
+                            <input type="hidden" name="cod_pais" id="cod_pais" value="<?=$cod_pais?>">
+                            <input type="hidden" name="cod_ciudad" id="cod_ciudad" value="<?=$cod_ciudad?>">
+
+                            <div class="row">
                                 <label class="col-sm-2 col-form-label">Nacionalidad</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -318,22 +326,8 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                         </select>
                                     </div>
                                 </div>
-                            </div><!--fin campo Nacionalidad -->
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">Pais</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <select name="cod_pais" id="cod_pais" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
-                                            <option value=""></option>
-                                            <?php 
-                                            $queryUO = "SELECT codigo,nombre,abreviatura from personal_pais where cod_estadoreferencial=1 order by nombre";
-                                            $statementUO = $dbh->query($queryUO);
-                                            while ($row = $statementUO->fetch()){ ?>
-                                                <option <?=($cod_pais==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
+
+                                
                                 <label class="col-sm-2 col-form-label">Departamento</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -350,20 +344,7 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                 </div>
                             </div><!--fin campo pais y departamento -->
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Ciudad</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <select name="cod_ciudad" id="cod_ciudad" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
-                                            <option value=""></option>
-                                            <?php 
-                                            $queryUO = "SELECT codigo,nombre,abreviatura from personal_ciudad where cod_estadoreferencial=1 order by nombre";
-                                            $statementUO = $dbh->query($queryUO);
-                                            while ($row = $statementUO->fetch()){ ?>
-                                                <option <?=($cod_ciudad==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
+                                
                                 <label class="col-sm-2 col-form-label">Otra Ciudad</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -671,7 +652,7 @@ $stmt_cajasalud = $dbh->query($querycajasalud);
                                     <label class="col-sm-2 col-form-label">Haber Basico (Bs)</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                             <input class="form-control" type="number" step="any" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" readonly="readonly"/>
+                                             <input class="form-control" type="text" step="any" name="haber_basico" id="haber_basico" value="<?=number_format($haber_basico,2,'.',',');?>" readonly="readonly"/>
                                         </div>
                                     </div> 
                                     <label class="col-sm-2 col-form-label">Email Empresarial</label>

@@ -38,15 +38,15 @@ while ($rowVerifPlani = $stmtVerifPlani->fetch(PDO::FETCH_ASSOC)) {
   $estado_planilla=$rowVerifPlani['cod_estadoplanilla'];
 }
 //VALIDAMOS DESCUENTOS VALIDADOS
-$sql="SELECT codigo FROM  descuentos_conta_consolidado where mes=$cod_mes_global and gestion=$globalNombreGestion";
-// echo "<br><br><br><br>".$sql;
-$stmtVerifDesc=$dbh->prepare($sql);
-$stmtVerifDesc->execute();
-$estado_planilla_x=100;
-while ($rowVerifPlani = $stmtVerifDesc->fetch(PDO::FETCH_ASSOC)) {
-  $estado_planilla_x=$estado_planilla;
-}
-$estado_planilla=$estado_planilla_x;
+// $sql="SELECT codigo FROM  descuentos_conta_consolidado where mes=$cod_mes_global and gestion=$globalNombreGestion";
+// // echo "<br><br><br><br>".$sql;
+// $stmtVerifDesc=$dbh->prepare($sql);
+// $stmtVerifDesc->execute();
+// $estado_planilla_x=100;
+// while ($rowVerifPlani = $stmtVerifDesc->fetch(PDO::FETCH_ASSOC)) {
+//   $estado_planilla_x=$estado_planilla;
+// }
+// $estado_planilla=$estado_planilla_x;
 
 $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,dias_trabajo,
 (select m.nombre from meses m where m.codigo=cod_mes)as mes,

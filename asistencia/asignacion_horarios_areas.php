@@ -222,9 +222,9 @@ $stmt->bindColumn('tipo', $tipoX);
         ?>
         <div class="card-footer fixed-bottom">           
           <a class="btn btn-info text-white btn-round btn-fab" style="background:#F3BC02 !important;color:white;" href="#" onClick="nuevoHorario();return false;"><i class="material-icons">add</i></a>
-          <a class="btn btn-default text-white btn-round" style="background:#7CC6A8 !important;" href="?opcion=asistenciaPersonal_main">Volver al Menú</a>   
+          
           <a class="btn btn-default text-white btn-round" style="background:#5C079B !important;" href="?opcion=rpt_asignacion_horarios_personas"><i class="material-icons">people</i> ASIGNACION POR PERSONA</a>               
-
+          <a class="btn btn-danger text-white btn-round" href="?opcion=asistenciaPersonal_main">Volver al Menú</a>   
         </div>
         <?php
         }

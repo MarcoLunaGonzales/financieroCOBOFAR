@@ -27,7 +27,7 @@ if (isset($_GET['datos'])) {
 
 // var_dump($datos);
 try{
-    $stmtPersonal = $dbh->prepare("SELECT p.paterno,p.materno,p.primer_nombre,c.nombre as cargo,a.nombre as area,DATE_FORMAT(p.ing_planilla,'%d/%m/%Y')as ing_planilla_x,DATE_FORMAT(p.fecha_validacion_vacaciones,'%d/%m/%Y')as fecha_validacion_x
+    $stmtPersonal = $dbh->prepare("SELECT p.paterno,p.materno,p.primer_nombre,c.nombre as cargo,a.nombre as area,DATE_FORMAT(p.ing_planilla,'%d/%m/%Y')as ing_planilla_x,DATE_FORMAT(p.fecha_validacion_vacaciones,'%d/%m/%Y')as fecha_validacion_x,(select CONCAT_WS(' ',p2.primer_nombre,p2.paterno,p2.materno) from personal p2 where p2.codigo=p.cod_personal_validacion )as personal_validacion
     from personal p join cargos c on p.cod_cargo=c.codigo join areas a on p.cod_area=a.codigo
     WHERE p.codigo=$cod_personal");
     $stmtPersonal->execute();
@@ -39,6 +39,7 @@ try{
     $area = $result['area'];
     $ing_planilla=$result['ing_planilla_x'];
     $fecha_validacion=$result['fecha_validacion_x'];
+    $personal_validacion=$result['personal_validacion'];
 
 $html = '';
 $html.='<html>'.
@@ -72,7 +73,7 @@ $html.=  '<header class="header">'.
                             if($fecha_actual<>date('Y-m-d')){
                                 $html.='<br>Fecha de Retiro:'.date('d/m/Y',strtotime($fecha_actual));    
                             }
-                            $html.='<br>Fecha de Validación:'.$fecha_validacion.
+                            $html.='<br>Fecha de Validación : '.$fecha_validacion.'<br> Personal Validación : '.$personal_validacion.
                         '</td >
                         <td class="td-border-none" width="25%"><center>Fecha Imp.: '.date('d/m/Y').'</center></td>'.
                     '</tr>

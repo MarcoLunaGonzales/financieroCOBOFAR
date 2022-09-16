@@ -28,6 +28,6 @@ if($saldo_modal>=$dias_obtenidos){?>
     <input  type='number' style="color: green;" class='form-control'  id='dias_vacacion'  name='dias_vacacion' min="5" value="<?=$dias_obtenidos?>" required readonly>
 <?php }else{?>
     <input  type='hidden'  id='dias_vacacion'  name='dias_vacacion' value="0" required>
-    <input  type='text' style="color: red;" class='form-control'  value="Días Solicitadas Insufucientes" readonly>
+    <input  type='text' style="color: red;" class='form-control'  value="Días Solicitados Insufucientes" readonly>
 <?php }
 ?>

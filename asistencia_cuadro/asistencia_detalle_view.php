@@ -26,7 +26,6 @@ $fecha_final_x=date('Y-m-t',strtotime($fecha_inicio_x));
 $total_dias_mes=obtenerTotalDias_fechas($fecha_inicio_x,$fecha_final_x);
 $total_domingos_mes=obtenerTotaldomingos_fechas($fecha_inicio_x,$fecha_final_x);
 $total_feriados_mes=obtenerTotalferiados_fechas($fecha_inicio_x,$fecha_final_x);
-
 $dias_trabajado=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
 ?>
 

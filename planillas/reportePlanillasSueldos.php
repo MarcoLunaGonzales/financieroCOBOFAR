@@ -216,7 +216,7 @@ $html.=  '<header class="header">'.
               }
 
               $html.='<tr >'.
-                '<td class="text-center" style="height: 20px !important;">'.$row['correlativo_planilla'].'</td>'.
+                '<td class="text-center" style="height: 15px !important;">'.$row['correlativo_planilla'].'</td>'.
                 '<td class="text-left">'.$row['ci'].' '.$emision.'</td>'.
                 '<td class="text-left">'.$row['paterno'].'</td>'.
                 '<td class="text-left">'.$row['materno'].'</td>'.

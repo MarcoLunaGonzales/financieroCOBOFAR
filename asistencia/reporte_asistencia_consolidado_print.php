@@ -7,8 +7,7 @@ require_once '../functionsGeneral.php';
 require_once '../conexion.php';
 $dbh = new Conexion();
 
-
-$cod_sucursales=$_POST['cod_sucursal'];
+$cod_sucursales=$_POST['areas'];
 $stringSucursales=implode(",",$cod_sucursales);
 $fechaInicio=$_POST['fecha_inicio'];
 $fechaFinal=$_POST['fecha_fin'];

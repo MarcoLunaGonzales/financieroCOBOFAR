@@ -221,7 +221,7 @@
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="fecha_fac" class="bmd-label-floating" style="color: #4a148c;">Fecha</label>      -->
-                                <input type="date" class="form-control" name="fecha_fac_edit" id="fecha_fac_edit" value="<?=$fechaActualModal?>">
+                                <input type="date" class="form-control" name="fecha_fac_edit" id="fecha_fac_edit" value="<?=$fechaActualModal?>" min="<?=$fecha_ini_factura?>"  max="<?=$fecha_fin_factura?>">
                               </div>
                             </div>
                           </div>
@@ -250,14 +250,14 @@
                           <!--No tiene funcion este campo-->
                           <div class="row">                                            
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasas</label>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                               <div class="form-group">
                                 <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
                                 <input class="form-control" type="text" name="taza_fac_edit" id="taza_fac_edit" required="true" value="0" />
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Autorizaci&oacute;n</label>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <div class="form-group" id="">
                                 <!-- <label for="aut_fac" class="bmd-label-floating" style="color: #4a148c;">Nro. Autorizaci&oacute;n</label>      -->
                                 <input class="form-control" type="text" name="aut_fac_edit" id="aut_fac_edit" required="true"/>
@@ -296,8 +296,6 @@
                               </div>
                             </div>   
                         </div>
-                        
-                          
                         </div>                     
                         <div class="form-group float-right">
                           <button type="button" class="btn btn-info btn-round" onclick="saveFacturaEdit()">Guardar</button>
@@ -640,6 +638,11 @@
                         <span class="material-icons">filter_center_focus</span> QR quincho
                       </a>
                     </li>
+                    <li class="nav-item">
+                      <a id="nav_boton4" class="nav-link" data-toggle="tab" href="#link113" role="tablist">
+                        <span class="material-icons">upload_file</span> UPLOAD SIAT
+                      </a>
+                    </li>
                   </ul>
                   <div class="tab-content tab-space">
                     <div class="tab-pane active" id="link110" style="background: #e0e0e0">
@@ -673,6 +676,9 @@
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Fecha</label>
                             <div class="col-sm-3">
                               <div class="form-group">
+                                <input type="hidden" class="form-control" name="fecha_min_hiden" id="fecha_min_hiden" value="<?=$fecha_ini_factura?>" required="true">
+                                <input type="hidden" class="form-control" name="fecha_max_hiden" id="fecha_max_hiden" value="<?=$fecha_fin_factura?>" required="true">
+
                                 <input type="date" class="form-control" name="fecha_fac" id="fecha_fac" min="<?=$fecha_ini_factura?>"  max="<?=$fecha_fin_factura?>" required="true">
                                 <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
@@ -704,7 +710,7 @@
                           <!--No tiene funcion este campo-->
                           <div class="row">                                            
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasas</label>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                               <div class="form-group">
                                 <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
                                 <input class="form-control" type="number" step="0.01" name="taza_fac" id="taza_fac" required="true" value="0" />
@@ -712,7 +718,7 @@
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Autorizaci&oacute;n</label>
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <div class="form-group" id="divNroAutoFacturaDetalle">
                                 <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
                                 <div class="invalid-feedback"><?=$valorNoValido;?></div>
@@ -730,10 +736,10 @@
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tipo</label>
                             <div class="col-sm-2">
                               <div class="form-group">
-                                <select class="selectpicker form-control form-control-sm" name="tipo_fac" id="tipo_fac" data-style="btn btn-primary">                                  
+                                <select class="selectpicker form-control form-control-sm" name="tipo_fac" id="tipo_fac" data-style="btn btn-primary">
                                    <?php
-                                         $stmt = $dbh->prepare("SELECT codigo, nombre FROM tipos_compra_facturas where cod_estadoreferencial=1");
-                                       $stmt->execute();
+                                      $stmt = $dbh->prepare("SELECT codigo, nombre FROM tipos_compra_facturas where cod_estadoreferencial=1");
+                                      $stmt->execute();
                                       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         $codigoX=$row['codigo'];
                                         $nombreX=$row['nombre'];
@@ -768,6 +774,19 @@
                            <span class="fileinput-new">Subir archivo .txt</span>
                            <span class="fileinput-exists">Subir archivo .txt</span>
                            <input type="file" name="qrquincho" id="qrquincho" accept=".txt"/>
+                         </span>
+                        </div>
+                       </div>
+                       <p>Los archivos cargados se adjuntaran a la lista de facturas existente</p>
+                    </div>
+                    <div class="tab-pane" id="link113">
+                     <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                          <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                         <div>
+                         <span class="btn btn-rose btn-round btn-file">
+                           <span class="fileinput-new">Subir archivo .txt</span>
+                           <span class="fileinput-exists">Subir archivo .txt</span>
+                           <input type="file" name="txtsiat" id="txtsiat" accept=".txt"/>
                          </span>
                         </div>
                        </div>

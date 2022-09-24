@@ -20,8 +20,8 @@ while($dat_detalle=mysqli_fetch_array($resp_detalle))
 {
   $cod_material=$dat_detalle[0];
   $nombre_material=$dat_detalle[1];
-  $loteProducto=$dat_detalle[2];
-  $fechaVencimiento=$dat_detalle[3];
+  // $loteProducto=$dat_detalle[2];
+  // $fechaVencimiento=$dat_detalle[3];
   $cantidad_unitaria=number_format($dat_detalle[4],0,'.','');
   // $precioUnitario=$dat_detalle[5];
   // $precioUnitario=redondear2($precioUnitario);

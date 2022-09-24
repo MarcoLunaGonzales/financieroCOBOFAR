@@ -18,27 +18,43 @@ $fecha_fin=date('Y-m-t');
 				</div>
 			  </div>
 			  <div class="card-body ">
+
           <div class="row">
-            <label class="col-sm-2 col-form-label">Sucursal</label>
+            <label class="col-sm-2 col-form-label">Oficina</label>
             <div class="col-sm-7">
               <div class="form-group">
-                <select name="cod_sucursal[]" id="cod_sucursal" class="selectpicker form-control form-control-sm" required data-style="select-with-transition" data-size="5" data-actions-box="true" multiple data-live-search="true">
-                    <?php
-                      $sql="SELECT a.codigo,a.nombre from areas a where a.cod_estado=1 and a.centro_costos=1 order by a.nombre";
-                      $stmtg = $dbh->prepare($sql);
-                      $stmtg->execute();
-                      while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
-                        $codigo=$rowg['codigo'];
-                        $nombre=$rowg['nombre'];
-                      ?>
-                      <option  value="<?=$codigo;?>"><?=$nombre;?></option>
-                      <?php 
-                      }
+                <select class="selectpicker form-control" title="Seleccione una opcion" 
+                name="unidad_organizacional[]" id="unidad_organizacional" 
+                data-style="select-with-transition" data-size="5" 
+                data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true" onChange="ajaxRPTAF_oficina();">
+                  <?php
+                    $sql="SELECT codigo,nombre,abreviatura FROM unidades_organizacionales where cod_estado=1 order by nombre";
+                    $stmt = $dbh->prepare($sql);
+                    $stmt->execute();
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                      $codigoX=$row['codigo'];
+                      $nombreX=$row['nombre'];
                     ?>
+                    <option value="<?=$codigoX;?>"><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
+                    <?php 
+                    }
+                  ?>
                 </select>
               </div>
             </div>
-          </div><!--fin campo gestion -->
+          </div>
+          <!--  fin de seleccion unidad organizacional-->
+          <div class="row">
+            <label class="col-sm-2 col-form-label">Area</label>
+            <div class="col-sm-7">
+            <div class="form-group">
+              <div id="contenedor_areas_reporte">
+                
+              </div>
+            </div>
+            </div>
+          </div>
+          
           <div class="row">
             <label class="col-sm-2 col-form-label">Fecha Inicio</label>
             <div class="col-sm-3">

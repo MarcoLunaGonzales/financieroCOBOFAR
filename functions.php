@@ -3983,8 +3983,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
     join areas a on pm.cod_area=a.codigo
     join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
-    where pm.cod_planilla=$codigo 
-    order by pm.correlativo_planilla";
+    where pm.cod_planilla=$codigo
+    order by pm.correlativo_planilla";//and  p.cod_unidadorganizacional=1
     // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -14192,6 +14192,19 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
         $hora_1=$row['hora_1'];$hora_2=$row['hora_2'];$hora_3=$row['hora_3'];$hora_4=$row['hora_4'];
      }
      return array($hora_1,$hora_2,$hora_3,$hora_4);
+  }
+
+
+   function codigoPersonalIdentificacion($ci){
+      $dbh = new Conexion();
+      $sql="SELECT codigo FROM personal where identificacion like '$ci'";
+      $stmt = $dbh->prepare($sql);      
+      $stmt->execute();
+      $codigo=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $codigo=$row['codigo'];
+      }
+      return($codigo);
   }
 
 ?>

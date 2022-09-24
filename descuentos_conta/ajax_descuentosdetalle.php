@@ -17,7 +17,7 @@ $idFila=$_GET['idFila'];
     <div class="col-sm-1">
       <div class="form-group">
         <select class="selectpicker form-control form-control-sm" data-live-search="true" name="cod_sucursal<?=$idFila;?>" id="cod_sucursal<?=$idFila;?>" data-style="btn btn-primary" required="true">
-              <option disabled selected="selected" value="">Sucursales</option>
+          <option disabled selected="selected" value="">Sucursales</option>
               <?php                 
                 $sql="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1";
                 $stmt3 = $dbh->prepare($sql);
@@ -29,7 +29,7 @@ $idFila=$_GET['idFila'];
                   ?><option value="<?=$codigoX;?>" data-subtext="<?=$nombreX?>"><?=$abreviaturaX?></option><?php 
                 }
               ?>
-          </select>
+        </select>
       </div>
     </div>
     <div class="col-sm-1">
@@ -68,7 +68,7 @@ $idFila=$_GET['idFila'];
                 while ($rowsuc = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                   $codigoX=$rowsuc['codigo'];
                   $nombreX=$rowsuc['nombre'];
-                  ?><option value="<?=$codigoX;?>"><?=$nombreX?></option><?php 
+                  ?><option value="<?=$codigoX;?>"><?=$nombreX?> (<?=$codigoX?>)</option><?php 
                 }
               ?>
           </select>
@@ -111,12 +111,12 @@ $idFila=$_GET['idFila'];
               </div>        
           </div>
       </div>
-  </div>
+    </div>
 
 
     <div class="col-sm-2">
       <div class="form-group">
-        <textarea rows="1" class="form-control" name="glosa<?=$idFila;?>" id="glosa<?=$idFila;?>" required="true"></textarea>
+        <textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>" required="true"></textarea>
       </div>
     </div>
     <div class="col-sm-1">

@@ -149,6 +149,7 @@ $html.=  '<header class="header">'.
                             '<p>'.
                                 '<b>Código Activo : </b>'.$codigoactivo.'<br>'.
                                 '<b>Descripción : </b>'.$activo.'<br>'.
+                                '<b>Otro Dato : </b>'.$otrodato.'<br>'.
                                 '<b>Oficina : </b>'.$nombre_uo2.' <br>'.
                                 '<b>Area : </b>'.$nombre_area.' <br>'.
                                 '<b>Rubro : </b>'.$nombre_depreciaciones.' <br>'.

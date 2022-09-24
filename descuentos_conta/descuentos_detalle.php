@@ -20,7 +20,6 @@ if($codigo>0){
     $fecha_cabecera = $result['fecha'];
     // $array_mesdesc=explode("-", $fecha_cabecera);
     $codigo_nuevoGes=$fecha_cabecera;
-    
     $sql="select count(*) as contador from descuentos_conta_detalle d  where d.cod_descuento=$codigo";
     $stmtContador = $dbh->prepare($sql);
     $stmtContador->execute();
@@ -57,8 +56,7 @@ if($codigo>0){
                             <div class="row">
                                 <label class="col-sm-1 col-form-label" >Glosa</label>
                                 <div class="col-sm-6">
-                                    <!-- <input type="text" name="glosa_cabecera" id="glosa_cabecera" class="form-control" value="<?=$glosa_cabecera?>" required="true"> -->
-                                    <textarea rows="1" class="form-control" name="glosa_cabecera" id="glosa_cabecera" required="true"><?=$glosa_cabecera?></textarea>
+                                    <textarea rows="1" class="form-control" name="glosa" id="glosa" required="true"><?=$glosa_cabecera?></textarea>
                                 </div>
                                 <label class="col-sm-1 col-form-label" >Mes Descuento</label>
                                 <div class="col-sm-2">
@@ -84,14 +82,19 @@ if($codigo>0){
                                   </select>
                                 </div>
                                 <div class="col-sm-2">
-                                    <center>
-                                        <div class="btn-group">
-                                            <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-sm">Archivos 
-                                                <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
-                                            </a>
-                                        </div> 
-                                    </center>
+                                    <div class="btn-group">
+                                      <a title="Copiar Glosa (shift+g)" href="#modalCopy" data-toggle="modal" data-target="#modalCopy" class="<?=$buttonCeleste?> btn-fab btn-sm">
+                                            <i class="material-icons"><?=$iconCopy?></i>
+                                        </a>
+                                       <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-fab btn-sm">
+                                            <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
+                                        </a>
+                                        <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-success btn-fab btn-sm">
+                                            <i class="material-icons">content_paste</i>
+                                        </a>
+                                    </div>
                                 </div>
+
                             </div>
                         
                             <fieldset id="fiel" style="width:100%;border:0;">
@@ -252,7 +255,7 @@ if($codigo>0){
                                                    
                                                     <div class="col-sm-2">
                                                       <div class="form-group">
-                                                        <textarea rows="1" class="form-control" name="glosa<?=$idFila;?>" id="glosa<?=$idFila;?>" required="true"><?=$glosa?></textarea>
+                                                        <textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>" required="true"><?=$glosa?></textarea>
                                                       </div>
                                                     </div>
                                                     <div class="col-sm-1">
@@ -272,6 +275,10 @@ if($codigo>0){
                                     <div class="h-divider"></div>
                                 </div>
                             </fieldset>
+
+                            <script>
+                                window.onload = calcularTotalesDescuentosConta;
+                            </script>
 
                             <div class="row">
                                 <div class="col-sm-6">
@@ -323,7 +330,6 @@ if($codigo>0){
                                             </div>
                                         </div>
                                        
-
                         </div>
                         <?php // require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
                     </div>
@@ -337,10 +343,90 @@ if($codigo>0){
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
-     <p class="text-white">Aguarde; un momento por favor</p>  
+     <p class="text-white">Aguarde un momento por favor</p>  
   </div>
 </div>
-
+<div class="modal fade modal-arriba" id="modalPegarDatosComprobante" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+        <div class="card-text">
+          <h4>Pegar Datos - Excel</h4>      
+        </div>
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="card-body"> 
+        <div class="row">                      
+            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
+            <div class="col-sm-12">
+                <table class="table table-condensed table-bordered table-sm">
+                   <tr class="bg-primary text-white">
+                     <td><small>SUCURSAL/AREA</small></td>
+                     <td><small>FECHA</small></td>
+                     <td><small>CI PERSONAL</small></td>
+                     <td><small>TIPO DESCUENTO</small></td>
+                     <td><small>CONTRA CUENTA</small></td>
+                     <td><small>MONTO SIS</small></td>
+                     <td><small>DEPOSITADO</small></td>
+                     <td><small>DESCUENTO</small></td>
+                     <td><small>GLOSA</small></td>
+                   </tr>
+                   <tr class="bg-warning">
+                        <td><small>ADMINISTRACION</small></td>
+                        <td><small>22/09/2022</small></td>
+                        <td><small>10916889</small></td>
+                        <td><small>1</small></td>
+                        <td><small>110202001</small></td>
+                        <td><small>100</small></td>
+                        <td><small>80</small></td>
+                        <td><small>20</small></td>
+                        <td><small>ESTO ES UN GLOSA</small></td>
+                   </tr>
+                 </table>  
+             </div>
+        </div>
+        <div class="row">                      
+            <label class="col-sm-2 col-form-label" style="color: #4a148c;">Pega los datos del EXCEL aquí</label>
+            <div class="col-sm-12">
+                <div class="form-group">  
+                  <div id="">
+                   <textarea class="form-control" style="background-color:#E3CEF6;text-align: left;" rows="10" name="data_excel" id="data_excel"></textarea>                        
+                 </div>                                                                                                
+               </div>
+             </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos" onclick="cargarExcelDescuentos()">Cargar Datos</a>
+            <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas" onclick="generarExcelDescuentos()">Generar Filas</a>
+            <a href="#" class="btn btn-default btn-round" onclick="limpiarExcelDescuentos()">Limpiar Datos</a>
+      </div>
+      <hr>
+      <div id="div_datos_excel"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade modal-mini modal-primary" id="modalCopy" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-small">
+    <div class="modal-content bg-info text-white">
+      <div class="modal-header">
+        <i class="material-icons" data-notify="icon"><?=$iconCopy?></i>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Desea copiar la glosa a todos los detalles?.</p> 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal"> <-- Volver </button>
+        <button type="button" onclick="copiarGlosa()" class="btn btn-white btn-link" data-dismiss="modal">Aceptar
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
 function valida(f) {

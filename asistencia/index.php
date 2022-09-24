@@ -3,7 +3,6 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 
-
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION["globalUnidad"];
@@ -68,7 +67,14 @@ $globalUnidad=$_SESSION["globalUnidad"];
                   </tr>
                </table>
                <center><a class="btn btn-sm" href="asistencia/procesar_asistencia_personal.php" >Sucursales</a><br>
-               <a class="btn btn-sm" href="#" style="background: #dc7633 !important;">Of. Central</a></center>
+                  <?php
+                  if($globalUser==32){?>
+
+
+                     <a class="btn btn-sm" href="asistencia/procesar_asistencia_personal_ofcen.php" style="background: #dc7633 !important;">Of. Central</a></center>
+                  <?php }
+                  ?>
+               
             </div>
          </div>
       </div>

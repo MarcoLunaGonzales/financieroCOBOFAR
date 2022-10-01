@@ -104,11 +104,6 @@ if($alert==true){
                         }
                         $contador_excel++;
                     }
-                    // //****aporte al sindicato
-                    // $aporte_sindicato=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
-                    // $stmtSindicato=$dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-                    //     VALUES ($cod_descuento_as,$cod_personal,$codGestion,$codMes,$aporte_sindicato,$codEstado)");
-                    // $flagSuccess=$stmtSindicato->execute();
                 }
             }
         }

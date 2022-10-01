@@ -7528,7 +7528,7 @@ function buscarCuentaNumero(numeros,val){
             if(nn>=0){
              textoAux+="<tr >"+
                "<td class='text-left small'>"+itemCuentasAux[j].codigo+"</td>"+
-               "<td class='text-left small'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre.toUpperCase()+"</a></td>"+
+               "<td class='text-left small pruebita12'><a  href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre.toUpperCase()+"</a></td>"+
              "</tr>";  
             }      
           }
@@ -21175,3 +21175,43 @@ function generarExcelDescuentos(){
     }); 
 }
 
+function mover(event, to) {
+   let list = $('.clase_saldo');
+   let index = list.index($(event.target));
+   // index = (index + to) % list.length;//izquierda derecha
+   index = (index + to) % list.length;
+   list.eq(index).focus().select();
+}
+
+function moverFlechas(e){
+   // if(e.keyCode==37){
+   //      mover(e,-1);
+   // }//38 para arriba
+   // if(e.keyCode==39){
+   //       mover(e,1);
+   // }//40 para abajo
+
+   //38 para arriba
+   //40 para arriba
+   //37 para izquierda
+   //39 para derecha
+   if(e.keyCode==38){
+        mover(e,-2);
+   }
+   if(e.keyCode==40){    
+         mover(e,2);
+   }
+}
+
+function valideKey(evt){      
+    // code is the decimal ASCII representation of the pressed key.
+    var code = (evt.which) ? evt.which : evt.keyCode;
+    
+    if(code==8||code==45 ||code==46) { // backspace. - .
+      return true;
+    } else if(code>=48 && code<=57) { // is a number.
+      return true;
+    } else{ // other keys.
+      return false;
+    }
+}

@@ -18,6 +18,22 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION['globalUnidad'];
 $globalGestion=$_SESSION['globalNombreGestion'];
 
+$globalUser=$_SESSION["globalUser"];
+//CODIGO PERSONAL PARA PROCESAR Y REPROCESAR PLANILLAS
+$StringPersonalAdmin=obtenerValorConfiguracion(119);
+if($StringPersonalAdmin==-100){
+  $edicionHabilitado=true;
+}else{
+  $array_personal=explode(',',$StringPersonalAdmin);
+  $edicionHabilitado=false;
+  for ($i=0; $i <count($array_personal) ; $i++) { 
+    $cod_personalAdmin=$array_personal[$i];
+    if($globalUser==$cod_personalAdmin){
+      $edicionHabilitado=true;
+    }  
+  }  
+}
+
 $cod_uo=$_GET['cod_uo'];
 $tipo=$_GET['tipo'];
 $fechaI=$_GET['fechaI'];
@@ -244,27 +260,32 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
           }
           ?>
               <?php
-              if($codigoSol[1]==0){
-                if($existeCuenta==0){
-                   $codCajaChica=existeCajaChicaRelacionado($codigo);
-              if($codCajaChica>0){
-                $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
-                ?><a href='#' rel="tooltip" class="btn btn-primary" title="No Editable Caja Chica :<?=$nombreCaja?>">
-                      <i class="material-icons"><?=$iconEdit;?></i>
-                    </a><?php
-               }else{
-                ?><a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
-                      <i class="material-icons"><?=$iconEdit;?></i>
-                    </a><?php
-               }
-                  }else{
-                      ?>
-                      <a href='#' rel="tooltip" class="btn btn-danger" title="No Editable <?=obtenerNombresComprobanteCerrados($codigo)?>">
-                        <i class="material-icons text-dark"><?=$iconEdit;?></i>
-                       </a>
-                  <?php
-                    } 
+          if($codigoSol[1]==0){
+            if($existeCuenta==0){//estado de cuenta cerrado
+              $codCajaChica=existeCajaChicaRelacionado($codigo);
+              $codDescuentoConta=existeDescuentoContaRelacionado($codigo);
+              if($codCajaChica>0 || $codDescuentoConta>0){
+                // $nombreCaja=obtenerObservacionCajaChica($codCajaChica); ?>
+                <a href='#' href='#'rel="tooltip" class="btn btn-primary" title="No Editable, Descuento Relacionado">
+                  <i class="material-icons "><?=$iconEdit;?></i>
+                </a><?php
+              }else{
+                if($edicionHabilitado || $salvadoC==1){//solo personal encargado para edicion ?>
+                  <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="<?=$buttonEdit;?>"  title="Editar">
+                    <i class="material-icons"><?=$iconEdit;?></i>
+                  </a><?php
+                }else{?>
+                  <a href='#' class="btn btn-danger" title="Personal No autorizado para edición">
+                    <i class="material-icons text-dark"><?=$iconEdit;?></i>
+                 </a><?php 
+                }
               }
+            }else{ ?>
+              <a href='#' class="btn btn-danger" title="<?=obtenerNombresComprobanteCerrados($codigo)?>">
+                <i class="material-icons text-dark"><?=$iconEdit;?></i>
+              </a> <?php
+            }  
+          }
 
               ?>
               

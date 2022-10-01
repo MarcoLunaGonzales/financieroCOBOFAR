@@ -34,7 +34,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 
 $fecha_venta="";
 $fecha_venta1="";
-$sql="select DATE_FORMAT(fecha,'%d/%m/%Y') as fecha_2,fecha from salida_almacenes where cod_almacen=$cod_almacen and cod_tiposalida=1001 and salida_anulada=0 limit 1";
+$sql="select DATE_FORMAT(created_at,'%d/%m/%Y %H:%i:%s') as fecha_2,fecha from salida_almacenes where cod_almacen=$cod_almacen and cod_tiposalida=1001 and salida_anulada=0 limit 1";
 $resp = mysqli_query($enlaceCon,$sql);
 while ($dat = mysqli_fetch_array($resp)) {
   $fecha_venta=$dat['fecha_2'];
@@ -98,7 +98,7 @@ $html.=  '<table class="table">
               <tr>
                 <td>
                   <p><BR><BR>
-                    FECHA APERTURA : <BR><BR>
+                    FECHA INICIO FACTURACION : <BR><BR>
                     LUGAR:  <BR><BR>
                     NOMBRE : <BR><BR>
                   </p>
@@ -123,8 +123,8 @@ $html.=  '<table class="table">
                     <BR><BR>
                     <BR><BR>
                     _______________________<BR>
-                    Ing. Marco Luna<br>
-                    JEFE DPTO. SISTEMAS
+                    Ing. David Huarina<BR>
+                    DEPTO. SISTEMAS
                 </p></td>
                 <td class="text-center" ><p><BR><BR>
                     <BR><BR>

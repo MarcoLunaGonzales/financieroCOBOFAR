@@ -24,7 +24,7 @@ $stmtFecha->bindColumn('fecha', $fechaUltimoProc);
 while ($rowFecha = $stmtFecha->fetch()) {
   $fechaUltimoProc=$fechaUltimoProc;
 }
-// $fechaUltimoProc="2022-08-07";
+$fechaUltimoProc="2022-08-01";
 
 $fechaFinal=date('Y-m-d');
 // $fechaFinal="2022-08-07";
@@ -280,22 +280,7 @@ if($fechaFinal>$fechaUltimoProc){//validacion para no repetir ese día
         $stmtInsert = $dbhFin->prepare($sqlInsert);
         $flagSuccessInsert=$stmtInsert->execute();
       ?>
-      <tr>
-        <td><?=$fechaMarcado_x?></td>
-        <td><?=$cod_funcionario?></td> 
-        <td><?=$cod_areax?></td> 
-        <td><?=$cod_horario?></td> 
-        <td><?=$hora_entrada?></td> 
-        <td><?=$hora_salida?></td> 
-        <td><?=$horaMarcado?></td>
-        <td><?=$horaMarcadoFin?></td>
-        <td><?=$minutosAsignados?></td>
-        <td><?=$minutosTrabajados?></td>
-        <td><?=$minutosAtraso?></td>
-        <td><?=$minutosExtras?></td>
-        <td><?=$minutosAbandono?></td>
-        <td><?=$estadoAsistencia?></td>
-      </tr><?php
+      <?php
     }
   }
 }
@@ -374,22 +359,7 @@ while ($row = $stmtPersonal->fetch()) {
       $stmtInsert = $dbhFin->prepare($sqlInsert);
       $flagSuccessInsert=$stmtInsert->execute();
       ?>
-      <tr>
-        <td><?=$fechaInicioxy?></td>
-        <td><?=$cod_personaly?></td> 
-        <td><?=$cod_areay?></td> 
-        <td><?=$cod_horarioy?></td> 
-        <td><?=$hora_entradaxy?></td> 
-        <td><?=$hora_salidaxy?></td> 
-        <td>-</td>
-        <td>-</td>
-        <td><?=$minutosAsignadosxy?></td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td><?=$estadoAsistencia?></td>
-      </tr>
+      
       <?php
 
     } 

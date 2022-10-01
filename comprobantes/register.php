@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 require_once '../layouts/bodylogin2.php';
@@ -8,6 +9,19 @@ require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
 
+?>
+<style>
+  /*td a{
+    
+    color: blue;
+  }*/
+  td a:focus{
+    
+    color: blue;
+    outline: none;
+  }
+</style>
+<?php
 setlocale(LC_TIME, "Spanish");
 
 set_time_limit(0);

@@ -12,6 +12,24 @@ $globalMesTrabajo=$_SESSION['globalMes'];
 
 $dbh = new Conexion();
 
+$globalUser=$_SESSION["globalUser"];
+//CODIGO PERSONAL PARA PROCESAR Y REPROCESAR PLANILLAS
+$StringPersonalAdmin=obtenerValorConfiguracion(119);
+if($StringPersonalAdmin==-100){
+  $edicionHabilitado=true;
+}else{
+  $array_personal=explode(',',$StringPersonalAdmin);
+  $edicionHabilitado=false;
+  for ($i=0; $i <count($array_personal) ; $i++) { 
+    $cod_personalAdmin=$array_personal[$i];
+    if($globalUser==$cod_personalAdmin){
+      $edicionHabilitado=true;
+    }  
+  }  
+}
+
+
+
 // Preparamos
 $codTipoComprobanteDefault="3";
 
@@ -60,7 +78,6 @@ from comprobantes c where c.cod_estadocomprobante!=2 GROUP BY tipo_comprobante o
 $stmtTipoComprobante->execute();
 $stmtTipoComprobante->bindColumn('tipo_comprobante', $nombre_tipo_comprobante);
 $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
-
 ?>
 
 <div class="content">
@@ -158,9 +175,9 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                 </button>
                                 <div class="dropdown-menu">
                                   <a href="#" onclick="javascript:window.open('<?=$urlImp;?>?comp=<?=$codigo;?>&mon=-1')" class="dropdown-item">
-                                                 <i class="material-icons text-muted">monetization_on</i> BIMONETARIO (Bs - Usd)
-                                      </a>
-                                      <div class="dropdown-divider"></div>
+                                    <i class="material-icons text-muted">monetization_on</i> BIMONETARIO (Bs - Usd)
+                                  </a>
+                                  <div class="dropdown-divider"></div>
                                   <?php
                                     $stmtMoneda = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas where cod_estadoreferencial=1 order by 2");
                                    $stmtMoneda->execute();
@@ -191,29 +208,31 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   <?php
                                   $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
                                   if($codigoSol[1]==0){
-                                    if($existeCuenta==0){
+                                    if($existeCuenta==0){//estado de cuenta cerrado
                                       $codCajaChica=existeCajaChicaRelacionado($codigo);
-                                       if($codCajaChica>0){
-                                        $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
-                                        ?><a href='#' class="dropdown-item" title="No Editable Caja Chica :<?=$nombreCaja?>">
-                                        <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
-                                         </a><?php
-                                       }else{
-                                        ?><a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
-                                        <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
-                                      </a><?php
-                                       }
-                                    }else{
-                                      ?>
+                                      $codDescuentoConta=existeDescuentoContaRelacionado($codigo);
+                                      if($codCajaChica>0 || $codDescuentoConta>0){
+                                        // $nombreCaja=obtenerObservacionCajaChica($codCajaChica); ?>
+                                        <a href='#' class="dropdown-item" title="No Editable Descuento Relacionado">
+                                          <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
+                                        </a><?php
+                                      }else{
+                                        if($edicionHabilitado || $salvadoC==1){//solo personal encargado para edicion ?>
+                                          <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
+                                            <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
+                                          </a><?php
+                                        }else{?>
+                                          <a href='#' class="dropdown-item" title="Personal No autorizado para edición">
+                                            <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
+                                         </a><?php 
+                                        }
+                                      }
+                                    }else{ ?>
                                       <a href='#' class="dropdown-item" title="<?=obtenerNombresComprobanteCerrados($codigo)?>">
-                                         <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
-                                      </a>
-                                  <?php
+                                        <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
+                                      </a> <?php
                                     }  
                                   }
-                                  ?>
-                                  
-                                  <?php 
                                   
                                   if($codigoSol[0]!=0){
                                    ?>

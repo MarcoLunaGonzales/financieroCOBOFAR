@@ -22,7 +22,7 @@ $fechaFinal=date('Y-m-d');
 // $fechaFinal="2022-08-07";
 //if($fechaFinal>$fechaUltimoProc){//validacion para no repetir ese día
 
-// $fechaUltimoProc="2022-09-01";
+$fechaUltimoProc="2022-09-01";
 // $fechaFinal="2022-09-30";
 
 

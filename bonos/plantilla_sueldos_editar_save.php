@@ -59,26 +59,26 @@ if($flagSuccess){
 	$stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$prestamos_e
 	where cod_descuento=1 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
 	$flagSuccess=$stmtDescuentos->execute();    
-	//inventarios
-	$stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$inventarios_e
-	where cod_descuento=2 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
-	$flagSuccess=$stmtDescuentos->execute();    
-	//vencidos
-	$stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$vencidos_e
-	where cod_descuento=3 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
-	$flagSuccess=$stmtDescuentos->execute();    
+	// //inventarios
+	// $stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$inventarios_e
+	// where cod_descuento=2 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
+	// $flagSuccess=$stmtDescuentos->execute();    
+	// //vencidos
+	// $stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$vencidos_e
+	// where cod_descuento=3 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
+	// $flagSuccess=$stmtDescuentos->execute();    
 	//atrasos
 	$stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$atrasos_e
 	where cod_descuento=4 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
 	$flagSuccess=$stmtDescuentos->execute();    
-	//faltante caja
-	$stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$faltante_caja_e
-	where cod_descuento=5 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
-	$flagSuccess=$stmtDescuentos->execute();    
-	//otros descuentos
-	$stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$otros_descuentos_e
-	where cod_descuento=6 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
-	$flagSuccess=$stmtDescuentos->execute();    
+	// //faltante caja
+	// $stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$faltante_caja_e
+	// where cod_descuento=5 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
+	// $flagSuccess=$stmtDescuentos->execute();    
+	// //otros descuentos
+	// $stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$otros_descuentos_e
+	// where cod_descuento=6 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");
+	// $flagSuccess=$stmtDescuentos->execute();    
 	//aporte sindicado
 	$stmtDescuentos = $dbh->prepare("UPDATE descuentos_personal_mes set monto=$aporte_sindicato_e
 	where cod_descuento=100 and cod_personal='$codigo_e' and cod_gestion='$cod_gestion_e' and cod_mes='$cod_mes_e' and cod_estadoreferencial=1");

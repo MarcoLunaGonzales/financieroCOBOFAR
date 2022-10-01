@@ -78,13 +78,13 @@ if($tipo==1){
                             <select class="selectpicker form-control form-control-sm" onchange="cargarChequesPagoDetalle_lotes(this)" data-live-search="true" name="banco_pago_s" id="banco_pago_s" data-style="btn btn-danger">
                               <option disabled selected="selected" value="">--BANCOS--</option>
                               <?php 
-                               $stmt3 = $dbh->prepare("SELECT * from bancos where cod_estadoreferencial=1");
+                               $stmt3 = $dbh->prepare("SELECT codigo,nombre from bancos where cod_estadoreferencial=1 order by nombre");
                                $stmt3->execute();
                                while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                 $codigoSel=$rowSel['codigo'];
                                 $nombreSelX=$rowSel['nombre'];
                                 $abrevSelX=$rowSel['abreviatura'];?>
-                              <option value="<?=$codigoSel;?>"><?=$abrevSelX?></option><?php 
+                              <option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
                               } ?>
                             </select>
                           </div>

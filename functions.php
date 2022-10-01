@@ -10945,6 +10945,16 @@ function existeCajaChicaRelacionado($codigo){
    return($valor);
 }
 
+function existeDescuentoContaRelacionado($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT codigo from descuentos_conta where cod_contabilizado=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['codigo'];
+   }
+   return($valor);
+}
 
 function obtenerObservacionCajaChica($codigo){
      $dbh = new Conexion();

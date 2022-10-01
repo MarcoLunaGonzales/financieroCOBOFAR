@@ -61,13 +61,13 @@ while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
             <table class='table table-bordered table-condensed' style='width:80% !important'>
               
               <?php
-              echo obtenerDetalleAtrasosPersonal($cod_personal,$fechaInicio,$fechaFinal,$cod_area,0,$sw_otrosistema,$dbh);//marcacion de sucrusal que pertenece
+               obtenerDetalleAtrasosPersonal($cod_personal,$fechaInicio,$fechaFinal,$cod_area,0,$sw_otrosistema,$dbh);//marcacion de sucrusal que pertenece
               ?>
               <tr style='background:#808b96 !important;color:#000 !important;height:30px;'>
                 <td colspan="11"><b>OTROS MARCADOS</b></td>
               </tr>
               <?php
-              echo obtenerDetalleAtrasosPersonal($cod_personal,$fechaInicio,$fechaFinal,$cod_area,-1000,$sw_otrosistema,$dbh);//marcacion de otras sucursales
+               obtenerDetalleAtrasosPersonal($cod_personal,$fechaInicio,$fechaFinal,$cod_area,-1000,$sw_otrosistema,$dbh);//marcacion de otras sucursales
               ?>
 
             </table></center>

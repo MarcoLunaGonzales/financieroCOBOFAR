@@ -382,13 +382,13 @@ if($estado_planilla==0){ // registrar plaanilla mes
           <label class="col-sm-2 col-form-label text-dark  text-right">Inventarios : </label>
           <div class="col-sm-1">
             <div class="form-group" >              
-              <input type="text" class="form-control" name="inventarios_e" id="inventarios_e"  >
+              <input type="text" class="form-control" name="inventarios_e" id="inventarios_e" readonly="true" style="background:#d98880;" >
             </div>
           </div>
           <label class="col-sm-2 col-form-label text-dark  text-right">Vencidos : </label>
           <div class="col-sm-1">
             <div class="form-group" >
-              <input type="text" class="form-control" name="vencidos_e" id="vencidos_e"  >              
+              <input type="text" class="form-control" name="vencidos_e" id="vencidos_e"  readonly="true" style="background:#d98880;">              
             </div>
           </div>
         </div>
@@ -402,13 +402,13 @@ if($estado_planilla==0){ // registrar plaanilla mes
           <label class="col-sm-2 col-form-label text-dark  text-right">Faltante en Caja : </label>
           <div class="col-sm-1">
             <div class="form-group" >
-              <input type="text" class="form-control" name="faltante_caja_e" id="faltante_caja_e"  >              
+              <input type="text" class="form-control" name="faltante_caja_e" id="faltante_caja_e"  readonly="true" style="background:#d98880;">              
             </div>
           </div>
           <label class="col-sm-2 col-form-label text-dark  text-right">Otros Descuentos : </label>
           <div class="col-sm-1">
             <div class="form-group" >
-              <input type="text" class="form-control" name="otros_descuentos_e" id="otros_descuentos_e"  >
+              <input type="text" class="form-control" name="otros_descuentos_e" id="otros_descuentos_e" readonly="true" style="background:#d98880;">
             </div>
           </div>
           <label class="col-sm-2 col-form-label text-dark  text-right">Aporte Sindicato : </label>

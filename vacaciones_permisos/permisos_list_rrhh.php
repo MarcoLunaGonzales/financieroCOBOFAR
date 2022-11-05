@@ -120,9 +120,10 @@ $stmt->bindColumn('minutos_permiso', $minutos_permiso);
                       <td class="text-center"><?=$observaciones;?></td>
                       <td class="text-center"><?=$label.$nombre_estado;?></span></td>
                       <td class="td-actions">
-                        <a href='vacaciones_permisos/aprobar_permiso.php?codigo=<?=$codigo?>&sw=<?=$sw?>&cod_tipopermiso=<?=$cod_tipopermiso?>'  rel="tooltip" class="btn btn-success btn-sm <?=$btn_ws?>">
+                         <button rel="tooltip" class="btn btn-info btn-sm <?=$btn_ws?>" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','vacaciones_permisos/aprobar_permiso.php?codigo=<?=$codigo?>&sw=<?=$sw?>&cod_tipopermiso=<?=$cod_tipopermiso?>')">
                           <i class="material-icons" title="<?=$titulo_icono?>">check_circle</i>
-                        </a>
+                        </button>
+
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud_permiso" onclick="modalDevolverSolicitud_permiso('<?=$datos_devolucion;?>')">
                           <i class="material-icons" title="Rechazar Solicitud de Permiso">dangerous</i>
                         </button>

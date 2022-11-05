@@ -1,4 +1,21 @@
-<?php //ESTADO FINALIZADO
+
+<?php
+
+$formato=$_GET['f'];
+if($formato==2){ ?>
+  <meta charset="utf-8">
+  <style type="text/css">
+      .header_titulo_texto{text-align: center; font-size: 30px; font-weight: bold;}
+  </style>
+  <?php
+    header("Pragma: public");
+    header("Expires: 0");
+    $filename = "COBOFAR - FINIQUITO.xls";
+    header("Content-type: MIME");
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Pragma: no-cache");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+}
 
 require_once __DIR__.'/../conexion3.php';
 // require '../assets/phpqrcode/qrlib.php';
@@ -9,16 +26,21 @@ require_once __DIR__.'/../functionsGeneral.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 $dbh = new Conexion3();
 // set_time_limit(300)
-$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
+//$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
+
 
 $codigo = $_GET["codigo"];//
 
 
 $numero_cuenta_pagadora=obtenerValorConfiguracionPlanillas(35);
 $nombre_cuenta_pagadora=obtenerValorConfiguracionPlanillas(36);
+
+// $numero_cuenta_pagadora=obtenerValorConfiguracionPlanillas(35);
+// $nombre_cuenta_pagadora=obtenerValorConfiguracionPlanillas(36);
 try{
     //====================================
+
 
     $sql="SELECT f.*,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as nombre_personal,(select nombre from tipos_estado_civil tec where tec.codigo=p.cod_estadocivil)as estado_civil,p.fecha_nacimiento,p.direccion,(select c.nombre from cargos c where c.codigo=p.cod_cargo)as cargo,identificacion,(select pd.abreviatura from personal_departamentos pd where pd.codigo=cod_lugar_emision)as lugar_emision,lugar_emision_otro,(
         select  CONCAT_WS('-',m.abreviatura,g.nombre)as fecha from planillas p join gestiones g on p.cod_gestion=g.codigo join meses m on p.cod_mes=m.codigo where p.codigo=f.cod_planilla1)as fecha1,(
@@ -48,7 +70,8 @@ try{
     $meses_aguinaldo=$result['meses_aguinaldo'];
     $dias_aguinaldo=$result['dias_aguinaldo'];
 
-    $observaciones=$result['observaciones'];
+
+       $observaciones=$result['observaciones'];
 
     //cantidad de dias,meses y años trabajados
     $datos=obtenerTiempoDosFechas2($result['fecha_ingreso'],$result['fecha_retiro']);
@@ -79,6 +102,10 @@ try{
     $cod_planilla2=$result["cod_planilla2"];
     $cod_planilla3=$result["cod_planilla3"];
 
+    $numero_cuenta_pagadora=$result["cuenta_bancaria"];
+    $fecha_finiquito=$result["fecha_pago"];
+    
+
     $cod_personal=$result["cod_personal"];
     $datos_planilla=obtenerdatos_planilla2($cod_personal,$cod_planilla1);
     $renumeracion_mensual1=$datos_planilla[0];
@@ -91,6 +118,8 @@ try{
     $bferiados1=$datos_planilla[6];
     $breintegro1=$datos_planilla[7];
     $bextras1=$datos_planilla[8];    
+    $bnoches1=$datos_planilla[9];    
+    $bventas1=$datos_planilla[10];    
 
     $datos_planilla=obtenerdatos_planilla2($cod_personal,$cod_planilla2);
     $renumeracion_mensual2=$datos_planilla[0];
@@ -102,6 +131,8 @@ try{
     $bferiados2=$datos_planilla[6];
     $breintegro2=$datos_planilla[7];
     $bextras2=$datos_planilla[8];    
+    $bnoches2=$datos_planilla[9];    
+    $bventas2=$datos_planilla[10];    
     $datos_planilla=obtenerdatos_planilla2($cod_personal,$cod_planilla3);
     $renumeracion_mensual3=$datos_planilla[0];
     $bono_antiguedad3=$datos_planilla[1];
@@ -113,7 +144,8 @@ try{
     $bferiados3=$datos_planilla[6];
     $breintegro3=$datos_planilla[7];
     $bextras3=$datos_planilla[8];    
-
+    $bnoches3=$datos_planilla[9];    
+    $bventas3=$datos_planilla[10];    
 
 
     $entero=floor($result["total_a_pagar"]);
@@ -125,12 +157,14 @@ try{
 
 
 $html = '';
-$html.='<html>'.
-            '<head>'.
-                '<!-- CSS Files -->'.
-                '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
-                '<link href="../assets/libraries/plantillaPDFFiniquito.css" rel="stylesheet" />'.
-           '</head>';
+$html.='<html>';
+if($formato==1){
+    $html.='<head>'.
+        '<!-- CSS Files -->'.
+        '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
+        '<link href="../assets/libraries/plantillaPDFFiniquito.css" rel="stylesheet" />'.
+   '</head>';
+}
 $html.='<body>'.
             '<script type="text/php">'.
               'if ( isset($pdf) ) {'. 
@@ -141,24 +175,17 @@ $html.='<body>'.
                 '$pdf->page_text($x, $y, "{PAGE_NUM}/{PAGE_COUNT}", $font, $size);'.
               '}'.
             '</script>';
-    $html.=  '<header class="header">'.
-                '</header>'.
-                '<table  border="1" align="center" style="width: 100%;">                
+    $html.=  '<table  border="1" align="center" style="width: 100%;">                
                     <tbody>
                         <tr>
                             <td colspan="2">'.
-                                '<table style="width: 100%;"    >'.
+                                '<table style="width: 100%;">'.
                                     '<tbody>'.
                                         '<tr>'.
-                                            '<td width="25%" ><img class="imagen_izq" src="../assets/img/bolivia.jpg"><br><p class="header_texto_inf" style="font-size: 9px;">'.obtenerValorConfiguracionEmpresa(1).'<BR></p></td>'.
-                                            '<td ><p  class="header_titulo_texto">FINIQUITO</p></td>'.
-                                            '<td width="25%" style="text-align: right;"><img width="200px" src="../assets/img/ministerio.jpg"></td>'.
+                                            '<td width="25%" colspan="2"><img class="imagen_izq" src="../assets/img/bolivia.jpg" style="width:70px;height:70px;"><br><p class="header_texto_inf" style="font-size: 9px;">'.obtenerValorConfiguracionEmpresa(1).'</p></td>'.
+                                            '<td colspan="4"><p class="header_titulo_texto">FINIQUITO</p></td>'.
+                                            '<td width="25%" style="text-align: right;" colspan="3"><img width="200px" src="../assets/img/ministerio.jpg"></td>'.
                                         '</tr>'.
-                                        // '<tr>'.
-                                        //     '<td><p class="header_texto_inf" style="font-size: 9px;">'.obtenerValorConfiguracionEmpresa(1).'<BR>'.obtenerValorConfiguracionEmpresa(8).'</p></td>'.
-                                        //     '<td width="40%"><p  class="header_titulo_texto">FINIQUITO</p></td>'.
-                                        //     '<td><p class="header_texto_inf">'.obtenerValorConfiguracionEmpresa(2).'</p></td>'.
-                                        // '</tr>'.
                                     '</tbody>'.
                                 '</table>'.
                             '</td>
@@ -168,46 +195,43 @@ $html.='<body>'.
                         '</tr>'.
                         '<tr>'.
                             '<td colspan="2">'.
-                                '<table border="1" class="table_hijo">
-                                
+                                '<table border="1" class="table_hijo" style="width: 100%;">
                                     <tr>
                                         <td colspan="4">RAZÓN SOCIAL O NOMBRE DE LA EMPRESA</td>                                    
-                                        <td colspan="7" align="center">'.strtoupper(obtenerValorConfiguracionEmpresa(3)).'</td>
+                                        <td colspan="6" align="center"><b>'.strtoupper(obtenerValorConfiguracionEmpresa(3)).'</b></td>
                                         <td style="width: 3%">1</td>
                                         <td style="width: 3%">2</td>
                                     </tr>
                                     <tr>
                                         <td colspan="4">RAMA DE ACTIVIDAD ECONÓMICA</td>                                    
                                         <td></td>
-                                        <td></td>
                                         <td colspan="2">DOMICILIO</td>
                                         <td colspan="5" align="center">'.obtenerValorConfiguracionEmpresa(6).'</td>                                    
                                     </tr>
                                     <tr>
                                         <td colspan="4">NOMBRE DEL TRABAJADOR</td>
-                                        <td colspan="7" align="center">'.strtoupper($result["nombre_personal"]).'</td>
+                                        <td colspan="6" align="center"><b>'.strtoupper($result["nombre_personal"]).'</b></td>
                                         <td>1</td>
                                         <td>2</td>
                                     </tr>
                                     <tr>
-                                        <td >ESTADO CIVIL</td>
-                                        <td colspan="2" align="center">'.$result["estado_civil"].'</td>
-                                        <td></td>
+                                        <td colspan="2">ESTADO CIVIL</td>
+                                        <td align="center">'.$result["estado_civil"].'</td>
                                         <td colspan="1">EDAD</td>
-                                        <td align="center">'.$edad_personal.'</td>
+                                        <td align="center"><b>'.$edad_personal.'</b></td>
                                         <td align="center">años</td>
-                                        <td colspan="1">DOMICILIO</td>
-                                        <td align="center" colspan="5">'.$result["direccion"].'</td>                                
+                                        <td colspan="2">DOMICILIO</td>
+                                        <td align="center" colspan="4">'.$result["direccion"].'</td>                                
                                     </tr>
                                     <tr>
                                         <td colspan="3">PROFESION U OCUPACIÓN</td>
-                                        <td colspan="8" align="center">'.$result["cargo"].'</td>
+                                        <td colspan="7" align="center">'.$result["cargo"].'</td>
                                         <td></td>
                                         <td></td>                                                                    
                                     </tr>
                                     <tr>
-                                        <td>CI</td>
-                                        <td colspan="3" align="center">'.$result["identificacion"].' '.$result['lugar_emision'].' '.$result['lugar_emision_otro'].'</td>
+                                        <td colspan="2">CI</td>
+                                        <td align="center">'.$result["identificacion"].' '.$result['lugar_emision'].' '.$result['lugar_emision_otro'].'</td>
                                         <td colspan="2">FECHA DE INGRESO</td>
                                         <td colspan="2" align="center">'.date('d/m/Y',strtotime($result["fecha_ingreso"])).'</td>
                                         <td colspan="2">FECHA RETIRO</td>
@@ -216,21 +240,20 @@ $html.='<body>'.
                                     <tr>
                                         <td colspan="2">MOTIVO DEL RETIRO</td>
                                         <td colspan="3" align="center">QUINQUENIO<br>'.$observaciones.'</td>
-                                        <td ></td>
+                                        
                                         <td colspan="4">REMUNERACION MENSUAL Bs</td>
                                         <td colspan="3" align="center">'.formatNumberDec($sueldo_promedio).'</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" >TIEMPO DE SERVICIO</td>
-                                        <td >'.$anios_servicio.'</td>
+                                        <td ><b>'.$anios_servicio.'</b></td>
                                         <td >AÑOS</td>
-                                        <td colspan="2">'.$meses_servicio.'</td>
+                                        <td colspan="2"><b>'.$meses_servicio.'</b></td>
                                         <td colspan="2">MESES</td>
-                                        <td >'.$dias_servicio.'</td>
+                                        <td ><b>'.$dias_servicio.'</b></td>
                                         <td >DIAS</td>
                                         <td ></td>
                                         <td ></td>
-                                        <td ></td>                                    
                                     </tr>
                                 </table>'.
                             '</td>'.
@@ -240,91 +263,103 @@ $html.='<body>'.
                         '</tr>'.
                         '<tr>
                             <td colspan="2">
-                                <table border="1" class="table_hijo">
+                                <table border="1" class="table_hijo" style="width: 100%;">
                                     <tr>
-                                        <td>A) MESES</td>
-                                        <td align="center" colspan="2">'.$result["fecha3"].'</td>
-                                        <td align="center" colspan="2">'.$result["fecha2"].'</td>
-                                        <td align="center" colspan="2">'.$result["fecha1"].'</td>
-                                        <td align="center" colspan="2">TOTALES</td>                                    
+                                        <td colspan="2">A) MESES</td>
+                                        <td align="center" colspan="2"><b>'.$result["fecha3"].'</b></td>
+                                        <td align="center" colspan="2"><b>'.$result["fecha2"].'</b></td>
+                                        <td align="center" colspan="3"><b>'.$result["fecha1"].'</b></td>
+                                        <td align="center" colspan="3">TOTALES</td>                                    
                                     </tr>
                                     <tr>
-                                        <td>B)REMUNERACIÓN MENSUAL</td>
+                                        <td colspan="2">B)REMUNERACIÓN MENSUAL</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($renumeracion_mensual3).'</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($renumeracion_mensual2).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="right">'.formatNumberDec($renumeracion_mensual1).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($renumeracion_mensual1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="right">'.formatNumberDec($renumeracion_mensual1+$renumeracion_mensual2+$renumeracion_mensual3).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($renumeracion_mensual1+$renumeracion_mensual2+$renumeracion_mensual3).'</td>
                                     </tr>
                                     <tr>
-                                        <td>BONO DE ANTIGÜEDAD</td>
+                                        <td colspan="2">BONO DE ANTIGÜEDAD</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($bono_antiguedad3).'</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($bono_antiguedad2).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="right">'.formatNumberDec($bono_antiguedad1).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($bono_antiguedad1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td>'.formatNumberDec($bono_antiguedad1+$bono_antiguedad2+$bono_antiguedad3).'</td>                                    
+                                        <td align="right" colspan="2">'.formatNumberDec($bono_antiguedad1+$bono_antiguedad2+$bono_antiguedad3).'</td>                                    
                                     </tr>
                                     <tr>
-                                        <td>Turno rotatorio domingo o feriado y/o reemplazos</td>
+                                        <td colspan="2">Turno rotatorio domingo o feriado y/o reemplazos</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="right">'.formatNumberDec($domingos_feriados3+$bferiados3+$breintegro3+$bextras3).'</td>
+                                        <td align="right">'.formatNumberDec($domingos_feriados3+$bferiados3+$breintegro3+$bextras3+$bnoches3).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="right">'.formatNumberDec($domingos_feriados2+$bferiados2+$breintegro2+$bextras2).'</td>
+                                        <td align="right" >'.formatNumberDec($domingos_feriados2+$bferiados2+$breintegro2+$bextras2+$bnoches2).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="right">'.formatNumberDec($domingos_feriados1+$bferiados1+$breintegro1+$bextras1).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($domingos_feriados1+$bferiados1+$breintegro1+$bextras1+$bnoches1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td >'.formatNumberDec($domingos_feriados1+$bferiados1+$breintegro1+$bextras1+$domingos_feriados2+$bferiados2+$breintegro2+$bextras2+$domingos_feriados3+$bferiados3+$breintegro3+$bextras3).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($domingos_feriados1+$bferiados1+$breintegro1+$bextras1+$domingos_feriados2+$bferiados2+$breintegro2+$bextras2+$domingos_feriados3+$bferiados3+$breintegro3+$bextras3+$bnoches3+$bnoches2+$bnoches1).'</td>
                                     </tr>
                                     <tr>
-                                        <td>Bono Refrigerio</td>
+                                        <td colspan="2">Bono Refrigerio</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($bono_refrigerio3).'</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($bono_refrigerio2).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="right">'.formatNumberDec($bono_refrigerio1).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($bono_refrigerio1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td >'.formatNumberDec($bono_refrigerio1+$bono_refrigerio2+$bono_refrigerio3).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($bono_refrigerio1+$bono_refrigerio2+$bono_refrigerio3).'</td>
                                     </tr>
                                     <tr>
-                                        <td>Falla de Caja</td>
+                                        <td colspan="2">Fallo de Caja</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($falla_caja3).'</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($falla_caja2).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="right">'.formatNumberDec($falla_caja1).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($falla_caja1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td >'.formatNumberDec($falla_caja1+$falla_caja2+$falla_caja3).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($falla_caja1+$falla_caja2+$falla_caja3).'</td>
                                     </tr>
                                     <tr>
-                                        <td>Bono Movilidad</td>
+                                        <td colspan="2">Bono Movilidad</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($movilidad3).'</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($movilidad2).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="right">'.formatNumberDec($movilidad1).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($movilidad1).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td >'.formatNumberDec($movilidad1+$movilidad2+$movilidad3).'</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($movilidad1+$movilidad2+$movilidad3).'</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2">Comisión en Ventas</td>
+                                        <td style="width: 3%">Bs</td>
+                                        <td align="right">'.formatNumberDec($bventas3).'</td>
+                                        <td style="width: 3%">Bs</td>
+                                        <td align="right">'.formatNumberDec($bventas2).'</td>
+                                        <td style="width: 3%">Bs</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($bventas1).'</td>
+                                        <td style="width: 3%">Bs</td>
+                                        <td align="right" colspan="2">'.formatNumberDec($bventas1+$bventas2+$bventas3).'</td>
                                     </tr>
                                 
                                     <tr>
-                                        <td>TOTAL</td>
+                                        <td colspan="2">TOTAL</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="center">'.formatNumberDec($sueldo_3_atras).'</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="center">'.formatNumberDec($sueldo_2_atras).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="center">'.formatNumberDec($sueldo_1_atras).'</td>
+                                        <td align="center" colspan="2">'.formatNumberDec($sueldo_1_atras).'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="center">'.formatNumberDec($suma_sueldos).'</td>
+                                        <td align="center" colspan="2">'.formatNumberDec($suma_sueldos).'</td>
                                     </tr>
                                 </table>
                             </td>
@@ -335,16 +370,14 @@ $html.='<body>'.
                         '</tr>'.
                         '<tr>
                             <td colspan="2">
-                                <table border="1" class="table_hijo">
+                                <table border="1" class="table_hijo" style="width: 100%;">
                                     <tr>
-                                        <td colspan="11">C) DESAHUCIO  TRES MESES (EN CASO DE RETIRO FORZOSO)</td>
+                                        <td colspan="10">C) DESAHUCIO  TRES MESES (EN CASO DE RETIRO FORZOSO)</td>
                                         <td style="width: 3%">Bs</td>
                                         <td align="right">'.formatNumberDec($result["desahucio_monto"]).'</td>
                                     </tr>
                                     <tr>
-
-
-                                        <td colspan="4">D) INDEMNIZACIÓN POR TIEMPO DE TRABAJO:</td>
+                                        <td colspan="3">D) INDEMNIZACIÓN POR TIEMPO DE TRABAJO:</td>
                                         <td style="width: 3%">DE</td>
                                         <td class="text-right" >'.$anios_indemnizacion.'</td>
                                         <td colspan="2">AÑOS</td>
@@ -354,7 +387,7 @@ $html.='<body>'.
                                         <td align="right">'.formatNumberDec($indemnizacion_anios_monto).'</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"></td>
+                                        <td colspan="3"></td>
                                         <td style="width: 3%">DE</td>
                                         <td class="text-right">'.$meses_indemnizacion.'</td>
                                         <td colspan="2">MESES</td>
@@ -364,7 +397,7 @@ $html.='<body>'.
                                         <td align="right">'.formatNumberDec($indemnizacion_meses_monto).'</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"></td>
+                                        <td colspan="3"></td>
                                         <td style="width: 3%">DE</td>
                                         <td class="text-right" class="text-right">'.$dias_indemnizacion.'</td>
                                         <td colspan="2">DIAS</td>
@@ -374,7 +407,7 @@ $html.='<body>'.
                                         <td align="right">'.formatNumberDec($indemnizacion_dias_monto).'</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4">AGUINALDO DE NAVIDAD</td>
+                                        <td colspan="3">AGUINALDO DE NAVIDAD</td>
                                         <td style="width: 3%">DE</td>
                                         <td class="text-right">'.$meses_aguinaldo.'</td>
                                         <td colspan="2">MESES Y</td>
@@ -384,7 +417,7 @@ $html.='<body>'.
                                         <td align="right">'.formatNumberDec($aguinaldo_total).'</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4">VACACIÓN</td>
+                                        <td colspan="3">VACACIÓN</td>
                                         <td style="width: 3%">DE</td>
                                         <td ></td>
                                         <td colspan="2">MESES Y</td>
@@ -394,7 +427,7 @@ $html.='<body>'.
                                         <td align="right">'.formatNumberDec($vacacion_total).'</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4">PRIMA LEGAL (SI CORRESPONDE)</td>
+                                        <td colspan="3">PRIMA LEGAL (SI CORRESPONDE)</td>
                                         <td style="width: 3%">DE</td>
                                         <td ></td>
                                         <td colspan="2">MESES Y</td>
@@ -404,16 +437,16 @@ $html.='<body>'.
                                         <td ></td>
                                     </tr>
                                     <tr>
-                                        <td >OTROS</td>
-                                        <td colspan="10"></td>
+                                        <td colspan="10">OTROS</td>
+                                        
                                         
                                         <td style="width: 3%">Bs</td>
                                         <td ></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2"></td>
-                                        <td >GESTION</td>
-                                        <td colspan="4"></td>
+                                        <td></td>
+                                        <td colspan="2">GESTION</td>
+                                        <td colspan="3"></td>
                                         <td style="width: 3%">DE</td>
                                         <td colspan="2"></td>
                                         <td >DIAS</td>                                    
@@ -429,47 +462,47 @@ $html.='<body>'.
                         '</tr>'.
                         '<tr>
                             <td colspan="2">
-                                <table border="1" class="table_hijo">
+                                <table border="1" class="table_hijo" style="width: 100%;">
                                     <tr>
-                                        <td style="width: 20%">E) DEDUCCIONES:</td>
-                                        <td style="width: 35%"></td>
+                                        <td style="width: 20%" colspan="4">E) DEDUCCIONES:</td>
+                                        <td style="width: 35%" colspan="2"></td>
                                         <td style="width: 3%">Bs</td>
-                                        <td align="center"></td>
+                                        <td align="center" colspan="5"></td>
                                         
                                     </tr>
                                     <tr>
-                                        <td style="width: 20%">RC-IVA 13 %</td>
-                                        <td style="width: 35%"></td>
+                                        <td style="width: 20%" colspan="4">RC-IVA 13 %</td>
+                                        <td style="width: 35%" colspan="2"></td>
                                         <td style="width: 3%">Bs</td>
-                                        <td class="text-right"> '.formatNumberDec($result['deducciones_total']).'</td>
+                                        <td class="text-right" colspan="5"> '.formatNumberDec($result['deducciones_total']).'</td>
                                         
                                     </tr>
                                     <tr>
-                                        <td style="width: 20%"></td>
-                                        <td style="width: 35%"></td>
+                                        <td style="width: 20%" colspan="4"></td>
+                                        <td style="width: 35%" colspan="2"></td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td colspan="5"></td>
                                         
                                     </tr>
                                     <tr>
-                                        <td style="width: 20%"></td>
-                                        <td style="width: 35%"></td>
+                                        <td style="width: 20%" colspan="4"></td>
+                                        <td style="width: 35%" colspan="2"></td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td colspan="5"></td>
                                         
                                     </tr>
                                     <tr>
-                                        <td style="width: 20%"></td>
-                                        <td style="width: 35%"></td>
+                                        <td style="width: 20%" colspan="4"></td>
+                                        <td style="width: 35%" colspan="2"></td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td colspan="5"></td>
                                         
                                     </tr>
                                     <tr>
-                                        <td style="width: 20%"></td>
-                                        <td style="width: 35%"></td>
+                                        <td style="width: 20%" colspan="4"></td>
+                                        <td style="width: 35%" colspan="2"></td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td colspan="5"></td>
                                         
                                     </tr>
                                 </table>
@@ -479,11 +512,10 @@ $html.='<body>'.
                             '<td>V. IMPORTE LÍQUIDO A PAGAR C + D - E =</td>'.
                             '<td style="width: 20%" class="text-right">Bs '.formatNumberDec($result["total_a_pagar"]).'</td>'.
                         '</tr>'.
-                        
                     '</tbody>
-                </table>'.            
-            
+                </table>'.
 
+            
                 '<hr style="page-break-after: always;
                     border: none;
                     margin: 0;
@@ -492,29 +524,28 @@ $html.='<body>'.
                 '<table border="1" align="center" style="width: 100%;">
                     <tbody>
                         <tr>
-                            <td ><p align="justify" style="padding-left:20px;padding-right:20px;"> FORMA DE PAGO: &nbsp;&nbsp;EFECTIVO (&nbsp;&nbsp;&nbsp;) &nbsp;&nbsp;&nbsp; TRANSFERENCIA ( X ) N° de cuenta '.$numero_cuenta_pagadora.' '.$nombre_cuenta_pagadora.'<br>
+                            <td colspan="5"><p align="justify" style="padding-left:20px;padding-right:20px;"> FORMA DE PAGO: &nbsp;&nbsp;EFECTIVO (&nbsp;&nbsp;&nbsp;) &nbsp;&nbsp;&nbsp; TRANSFERENCIA ( X ) N° de cuenta '.$numero_cuenta_pagadora.' '.$nombre_cuenta_pagadora.'<br>
                                 IMPORTE DE LA SUMA CANCELADA:  &nbsp;&nbsp; '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos <br>';
                                 $html.='</p></td>
                         </tr>
                         <tr>
-                            <td ><p align="justify" style="padding-left:20px;padding-right:20px;"> YO  &nbsp;&nbsp;&nbsp; '.$result['nombre_personal'].' <br>
-
+                            <td colspan="5"><p align="justify" style="padding-left:20px;padding-right:20px;"> YO  &nbsp;&nbsp;&nbsp; '.$result['nombre_personal'].' <br>
                             MAYOR DE EDAD, CON C.I. Nº '.$result['identificacion'].' '.$result['lugar_emision'].' DECLARO QUE EN LA FECHA RECIBO A MI ENTERA
                             SATISFACCIÓN, EL IMPORTE DE Bs &nbsp '.formatNumberDec($result["total_a_pagar"]).' &nbsp&nbsp POR CONCEPTO DE LA LIQUIDACIÓN DE MIS BENEFICIOS SOCIALES, DE CONFORMIDAD CON LA LEY GENERAL DEL TRABAJO, SU DECRETO REGLAMENTARIO Y DISPOSICIONES CONEXAS.<br><br><br>
 
-                            LUGAR Y FECHA &nbsp; La Paz, '.date('d').' de '.nombreMes(date('m')).' de '.date('Y').'
+                            LUGAR Y FECHA &nbsp; La Paz, '.date('d',strtotime($fecha_finiquito)).' de '.nombreMes(date('m',strtotime($fecha_finiquito))).' de '.date('Y',strtotime($fecha_finiquito)).'
                             <p>
                             <br><br><br><br><br><br>
                             <table style="width: 100%;">
                                 <tr>
-                                <td><p align="center">_______________________________<br>INTERESADO</p></td>
-                                <td><p align="center">_______________________________<br>GERENTE GENERAL</p></td>
+                                <td colspan="3"><p align="center">_______________________________<br>INTERESADO</p></td>
+                                <td colspan="3"><p align="center">_______________________________<br>GERENTE GENERAL</p></td>
                                 </tr>
                             </table><br><br><br><br><br>
                             <table style="width: 100%;">
                                 <tr>
-                                <td><p align="center">_______________________________<br>Vo. Bo. MINISTERIO DE TRABAJO</p></td>
-                                <td> <p align="center"> _______________________________<br>SELLO</p></td>
+                                <td colspan="3"><p align="center">_______________________________<br>Vo. Bo. MINISTERIO DE TRABAJO</p></td>
+                                <td colspan="3"><p align="center"> _______________________________<br>SELLO</p></td>
                                 </tr>
                             </table>
                             <br>
@@ -522,11 +553,11 @@ $html.='<body>'.
                             </td>
                         </tr>
                         <tr>
-                            <td ><p class="titulo_texto" align="center">INSTRUCCIONES<p>
+                            <td colspan="2"><p class="titulo_texto" align="center">INSTRUCCIONES<p>
                                 <table align="center" style="width: 80%;">
                                 <tr>
                                     <td style="width: 5%;"  VALIGN="TOP"><p> 1. </p></td>
-                                    <td>
+                                    <td colspan="3">
                                         <p align="justify" >
                                             En todos los casos en los cuales proceda el pago de beneficios sociales y que no estén comprendidos en el despido por las causales en el Art. 16 de la Ley General del Trabajo y el Art. 9 de su Reglamento, el Finiquito de contrato se suscribirá en el presente FORMULARIO
                                         </p>
@@ -534,7 +565,7 @@ $html.='<body>'.
                                 </tr>
                                 <tr>
                                     <td VALIGN="TOP" style="width: 5%;"><p> 2. </p></td>
-                                    <td>
+                                    <td colspan="3">
                                         <p align="justify" >
                                             Los señores Directores, Jefes Departamentales e Inspectores Regionales, son los únicos funcionarios facultados para revisar y refrendar todo finiquito de contrato de trabajo, con cuya intervención alcanzará la correspondiente eficacia jurídica, en aplicación del Art. 22 de la Ley General del Trabajo.<br><br>
                                             La intervención de cualquier otro funcionario del Ministerio de Trabajo y Microempresa carecerá de toda validez legal.
@@ -543,7 +574,7 @@ $html.='<body>'.
                                 </tr>
                                 <tr>
                                     <td VALIGN="TOP" style="width: 5%;"><p> 3. </p></td>
-                                    <td>
+                                    <td colspan="3">
                                         <p align="justify" >
                                             Las partes intervinientes en la suscripción del presente FINIQUITO, deberán acreditar su identidad personal con los documentos señalados por ley.
                                         </p>
@@ -551,7 +582,7 @@ $html.='<body>'.
                                 </tr>
                                 <tr>
                                     <td  VALIGN="TOP" style="width: 5%;"><p> 4. </p></td>
-                                    <td>
+                                    <td colspan="3">
                                         <p align="justify" >
                                             Este Formulario no constituye Ley entre partes por su carácter esencialmente revisable, por lo tanto las cifras en él contenidas no causan estado ni revisten el sello de cosa juzgada.
                                         </p>
@@ -568,7 +599,13 @@ $html.='<body>'.
         '</body>'.
       '</html>';       
       // echo    $html;
-descargarPDFFiniquito("COBOFAR - FINIQUITO ".$result["nombre_personal"],$html);
+
+if($formato==1){
+    descargarPDFFiniquito("COBOFAR - FINIQUITO ".$result["nombre_personal"],$html);
+}else{
+    echo $html;
+}
+
 
 ?>
 

@@ -31,12 +31,12 @@ $dbhDet = new Conexion();
 
 echo "<h6>Hora Inicio Proceso: " . date("Y-m-d H:i:s")."</h6><br>";
 
-$fecha_inicio='2022-07-01';
-$fecha_fin='2022-07-31';
+$fecha_inicio='2022-09-01';
+$fecha_fin='2022-09-30';
 
 //para el costo promedio***
-$cod_mes=1;
-$cod_gestion=2022;
+// $cod_mes=1;
+// $cod_gestion=2022;
 //****
 
 //correr por fechas
@@ -77,9 +77,6 @@ while ($row = $statementUO1->fetch()){
 
     echo "SUC: $cod_ciudad F: $fecha <br>";
   }
-  
-
-  
 
 }
 

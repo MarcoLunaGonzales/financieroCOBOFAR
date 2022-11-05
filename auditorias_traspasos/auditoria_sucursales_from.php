@@ -11,7 +11,7 @@ $fechaActual=date('Y-m-d');
       <div class="card">
         <div class="card-header <?=$colorCard;?> card-header-text">
           <div class="card-text">
-            <h4 class="card-title">Auditoria Sucursales</h4>
+            <h4 class="card-title">Auditoria de Traspasos</h4>
           </div>
         </div>
         <div class="card-body">
@@ -71,6 +71,7 @@ $fechaActual=date('Y-m-d');
               <div class="form-group">
                 <select class="selectpicker form-control" title="Seleccione una opcion" name="tipo" id="tipo" data-style="select-with-transition" data-size="5" data-actions-box="true" required data-show-subtext="true" data-live-search="true">
                      <option value="1">Pendientes de Ingreso</option>
+                     <option value="-1">Pendientes de Ingreso Detallado</option>
                      <option value="2">Tiempos en Traspasos Observados</option>
                      <option value="3">Tiempos en Traspasos TODO</option>
                 </select>

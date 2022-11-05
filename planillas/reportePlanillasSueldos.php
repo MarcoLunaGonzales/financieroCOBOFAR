@@ -86,25 +86,25 @@ $html.=  '<header class="header">'.
             </table>'.
          '</header>';
 
-          $html.='<table class="table" style="font-size: 5px !important;">'.
+          $html.='<table class="table" style="font-size: 6px !important;">'.
             '<thead>'.
-            '<tr class="table-title bold text-center" style="font-size: 7px !important;">'.
+            '<tr class="table-title bold text-center">'.
               '<td width="1%">Nro</td>'.
               '<td width="4%">CI EXT</td>'.
-              '<td width="3%">Paterno</td>'.
-              '<td width="3%">Materno</td>'.
+              '<td width="4%">Paterno</td>'.
+              '<td width="4%">Materno</td>'.
               '<td width="4%">Nombres</td>'.
-              '<td width="2%">Sex</td>'.
+              '<td width="1%">Sex</td>'.
               // '<td width="2%">Nac ión</td>'.
-              '<td width="4%">Fech Nac</td>'.
+              '<td width="3%">Fech Nac</td>'.
               '<td width="7%">Cargo</td>'.
               // '<td>Turn</td>'.
-              '<td>Fech Ing</td>'.
-              '<td width="2%">Hrs Trab</td>'.
-              '<td width="2%">Días Trab</td>'.
+              '<td width="3%">Fech Ing</td>'.
+              '<td width="1%">Hr Tra</td>'.
+              '<td width="1%">Ds Tra</td>'.
               '<td width="3%">Haber Basico</td>'.
               '<td width="3%">Haber Basico DTrab</td>'.
-              '<td>Bono Ant</td>'.
+              '<td width="3%">Bono Ant</td>'.
               // '<td width="4%">Otr Bonos</td>'.
               '<td>Noch</td>'.
               '<td>Dom</td>'.
@@ -208,15 +208,15 @@ $html.=  '<header class="header">'.
                 }
               }else{
                 if($cod_turno_aux!=$cod_turno){
-                  $html.='<tr style="font-size: 7px !important;">'.
+                  $html.='<tr style="font-size: 7px !important;" >'.
                         '<td colspan="38"><center>Departamento / Sucursal: <b>'.$row['area'].' '.$turno_nombre.'</b></center></td>';
                       $html.='</tr>';
                   $cod_turno_aux=$cod_turno;
                 }  
               }
 
-              $html.='<tr>'.
-                '<td class="text-center">'.$row['correlativo_planilla'].'</td>'.
+              $html.='<tr >'.
+                '<td class="text-center" style="height: 15px !important;">'.$row['correlativo_planilla'].'</td>'.
                 '<td class="text-left">'.$row['ci'].' '.$emision.'</td>'.
                 '<td class="text-left">'.$row['paterno'].'</td>'.
                 '<td class="text-left">'.$row['materno'].'</td>'.
@@ -226,7 +226,7 @@ $html.=  '<header class="header">'.
                 '<td><small><small>'.strftime('%d/%m/%Y',strtotime($fechaNac)).'</small></small></td>'.
                 '<td class="text-left">'.$row['cargo'].'</td>'.
                 // '<td class="text-left">'.$turno_nombre.'</td>'.
-                '<td class="text-left">'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</td>'.
+                '<td class="text-left"><small><small>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</small></small></td>'.
                 '<td class="text-right">'.$hrsTrabajadas.'</td>'.
                 '<td class="text-right">'.$dias_trabajados_planilla.'</td>'.
                 '<td class="text-right">'.formatNumberDec($row['haber_basico_pactado']*$porcentaje/100).'</td>'.
@@ -359,8 +359,8 @@ $html.=  '<header class="header">'.
               $index++;
             }
       $html.='</tbody>';
-      $html.='<tfoot><tr>'.
-          '<td style="border: 0;" colspan="11" class="text-right"><b>'.formatNumberDec($subtotal_dias).'</b></td>'.
+      $html.='<tfoot><tr style="font-size: 5px !important;">'.
+          '<td style="border: 0;" colspan="11" class="text-right"><b></b></td>'.
           '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_haberbasico).'</b></td>'.
           '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_haberbasico_traba).'</b></td>'.
           '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_bantig).'</b></td>'.

@@ -562,22 +562,24 @@ function minusCuentaContable(idF){
      // $('#div'+idF).remove();
       var elem = document.getElementById('div'+idF);
       elem.parentNode.removeChild(elem);
-      if(idF<numFilas){
-      for (var i = parseInt(idF); i < (numFilas+1); i++) {
-        var nuevoId=i+1;
-        cambiarValorElementosComprobante(nuevoId,i,'','');
-      }
-     } 
-     $('.selectpicker').selectpicker(['refresh']);
-      itemFacturas.splice((idF-1), 1);
-      itemEstadosCuentas.splice((idF-1), 1);
-      numFilas=numFilas-1;
-      cantidadItems=cantidadItems-1;
-      filaActiva=numFilas;
-      document.getElementById("cantidad_filas").value=numFilas;
-      document.getElementById("totalhab").value=numFilas;
-      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems+" fila:"+idF); 
-      calcularTotalesComprobante("null");   
+     //  if(idF<numFilas){
+     //  for (var i = parseInt(idF); i < (numFilas+1); i++) {
+     //    var nuevoId=i+1;
+     //    cambiarValorElementosComprobante(nuevoId,i,'','');
+     //  }
+     // } 
+     // $('.selectpicker').selectpicker(['refresh']);
+     //  itemFacturas.splice((idF-1), 1);
+     //  itemEstadosCuentas.splice((idF-1), 1);
+     //  numFilas=numFilas-1;
+     //  cantidadItems=cantidadItems-1;
+     //  filaActiva=numFilas;
+     //  document.getElementById("cantidad_filas").value=numFilas;
+     //  document.getElementById("totalhab").value=numFilas;
+     //  console.log("num: "+numFilas+" cantidadItems: "+cantidadItems+" fila:"+idF); 
+      calcularTotalesComprobante("null");
+
+   
 }
 
 function setFormValidation(id) {
@@ -735,61 +737,64 @@ function saveFactura(){
     tazaFac: setValCeroToStringNull($('#taza_fac').val()),
     tipoFac: $('#tipo_fac').val()
   }
+  
+  var fecha_min_hiden = $("#fecha_min_hiden").val();
+  var fecha_max_hiden = $("#fecha_max_hiden").val();
+
   var monto_debe_total_comprobante = $("#totaldeb").val();
   var monto_suma_factura=parseInt($('#imp_fac').val())+parseInt($('#ice_fac').val())+parseInt($('#exe_fac').val());
-  console.log("FILA:"+index+",SUMAS FACTURAS NIT:"+$('#nit_fac').val()+" monto,"+monto_suma_factura+" "+monto_debe_total_comprobante);
-  //if(monto_suma_factura != monto_debe_total_comprobante){
-    //alert("El monto registrado en las facturas difiere del total!");
-  //}else{
+  //console.log("FILA:"+index+",SUMAS FACTURAS NIT:"+$('#nit_fac').val()+" monto,"+monto_suma_factura+" "+monto_debe_total_comprobante);
+  if(fecha_min_hiden <= $('#fecha_fac').val() && $('#fecha_fac').val() <= fecha_max_hiden){
+    var nro_factura=$('#nro_fac').val();
+    var autorizacion=$('#aut_fac').val();
+    var sw_duplicado=verificar_duplicidadFac(autorizacion,nro_factura);
+    // console.log(sw_duplicado);
+    if(sw_duplicado==0){
+      var contadorError=0;  
+      if(($('#nit_fac').val()==''||$('#nit_fac').val()==0)){
+        contadorError++;
+        errorCampoAjaxMensaje($('#nit_fac'),'Campo requerido');
+      }
+      if(($('#nro_fac').val()==''||$('#nro_fac').val()==0)){
+       contadorError++;
+       errorCampoAjaxMensaje($('#nro_fac'),'campo requerido');
+      }
+      if(($('#fecha_fac').val()==''||isValidDate($('#fecha_fac').val())==false)){
+        contadorError++;
+        errorCampoAjaxMensaje($('#fecha_fac'),'Campo fecha inválido');
+      }        
+      if(($('#imp_fac').val()==''||$('#imp_fac').val()==0)){
+        contadorError++;
+        errorCampoAjaxMensaje($('#imp_fac'),'Monto > 0');
+      }
+      if($('#aut_fac').val()=='' || $('#aut_fac').val()==0 ){
+        contadorError++;
+        errorCampoAjaxMensaje($('#aut_fac'),'campo requerido');
+      }              
+      if($('#razon_fac').val()==''){
+        contadorError++;
+        errorCampoAjaxMensaje($('#razon_fac'),'campo requerido');
+      }
 
-  var nro_factura=$('#nro_fac').val();
-  var autorizacion=$('#aut_fac').val();
-  var sw_duplicado=verificar_duplicidadFac(autorizacion,nro_factura);
-  // console.log(sw_duplicado);
-  if(sw_duplicado==0){
-    var contadorError=0;  
-    if(($('#nit_fac').val()==''||$('#nit_fac').val()==0)){
-      contadorError++;
-      errorCampoAjaxMensaje($('#nit_fac'),'Campo requerido');
-    }
-    if(($('#nro_fac').val()==''||$('#nro_fac').val()==0)){
-     contadorError++;
-     errorCampoAjaxMensaje($('#nro_fac'),'campo requerido');
-    }
-    if(($('#fecha_fac').val()==''||isValidDate($('#fecha_fac').val())==false)){
-      contadorError++;
-      errorCampoAjaxMensaje($('#fecha_fac'),'Campo fecha inválido');
-    }        
-    if(($('#imp_fac').val()==''||$('#imp_fac').val()==0)){
-      contadorError++;
-      errorCampoAjaxMensaje($('#imp_fac'),'Monto > 0');
-    }
-    if($('#aut_fac').val()=='' || $('#aut_fac').val()==0 ){
-      contadorError++;
-      errorCampoAjaxMensaje($('#aut_fac'),'campo requerido');
-    }              
-    if($('#razon_fac').val()==''){
-      contadorError++;
-      errorCampoAjaxMensaje($('#razon_fac'),'campo requerido');
-    }
-
-    if(contadorError==0){
-       itemFacturas[index-1].push(factura);
-       limpiarFormFac();
-       listarFact(index);
-       //$("#debe"+index).val(anterior+importeIva);
-       if($("#debe"+index).length){
-        calcularTotalesComprobante();  
-       } 
-       $("#nfac"+index).html(itemFacturas[index-1].length);
-       $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
-       $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");                
+      if(contadorError==0){
+         itemFacturas[index-1].push(factura);
+         limpiarFormFac();
+         listarFact(index);
+         //$("#debe"+index).val(anterior+importeIva);
+         if($("#debe"+index).length){
+          calcularTotalesComprobante();  
+         } 
+         $("#nfac"+index).html(itemFacturas[index-1].length);
+         $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");$("#link113").removeClass("active");
+         $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active"); $("#nav_boton4").removeClass("active");                
+      }
+    }else{
+      Swal.fire("ERROR","Ésta Factura ya se encuentra registrado en el libro de compras!", "warning");
     }
   }else{
-    Swal.fire("ERROR","Ésta Factura ya se encuentra registrado en el libro de compras!", "warning");
+    // alert("La Fecha no corresponde al mes de comprobante.");
+    errorCampoAjaxMensaje($('#fecha_fac'),'Fecha no corresponde al mes de comprobante');
   }
-                
- // }
 }
 
 function setValCeroToStringNull(cadena){
@@ -1377,17 +1382,17 @@ var itemDatosComprobante=[];
 function cargarComprobanteExcel() {
   itemDatosComprobante=[];
   $('#div_datos_excel').html("");
-    var data = $('textarea[name=data_excel]').val();
-    console.log(data);
-    var rows = data.split("\n");
-    var table = $('<table />');
-    table.addClass("table").addClass("table-condensed").addClass("table-bordered").addClass("table-sm");
-    var index=0;
-    for(var y in rows) {
-      var cells = rows[y].split("\t");
-      var row = $('<tr />'); 
-      var coli=0;
-      var itemsFila=[];
+  var data = $('textarea[name=data_excel]').val();
+  console.log(data);
+  var rows = data.split("\n");
+  var table = $('<table />');
+  table.addClass("table").addClass("table-condensed").addClass("table-bordered").addClass("table-sm");
+  var index=0;
+  for(var y in rows) {
+    var cells = rows[y].split("\t");
+    var row = $('<tr />'); 
+    var coli=0;
+    var itemsFila=[];
     for(var x in cells) {
         if(!(coli==7||coli==8)){
           itemsFila.push(cells[x]);
@@ -1395,7 +1400,6 @@ function cargarComprobanteExcel() {
         }
         coli++;
     }
-    
     if(index==0){
       row.addClass("bg-success").addClass("text-white"); 
     }else{
@@ -1406,15 +1410,15 @@ function cargarComprobanteExcel() {
     }
     table.append(row);
     index++;
-}
-if(index>1){
-  if($("#boton_generar_filas").hasClass("d-none")){
-    $("#boton_generar_filas").removeClass("d-none");
-    $("#boton_cargar_datos").addClass("d-none");
   }
-}
-// Insert into DOM
-$('#div_datos_excel').html(table);
+  if(index>1){
+    if($("#boton_generar_filas").hasClass("d-none")){
+      $("#boton_generar_filas").removeClass("d-none");
+      $("#boton_cargar_datos").addClass("d-none");
+    }
+  }
+  // Insert into DOM
+  $('#div_datos_excel').html(table);
 }
 
 function modalPlantilla(){
@@ -1440,16 +1444,19 @@ function guardarPlantilla(){
   var detalle=[];
   if(cod!=""&&titulo!=""){
     for (var i = 0; i < numFilas; i++) {
-      detalle.push({
-        cuenta:$("#cuenta"+(i+1)).val(),
-        cuenta_auxiliar:$("#cuenta_auxiliar"+(i+1)).val(),
-        unidad:$("#unidad"+(i+1)).val(),
-        area:$("#area"+(i+1)).val(),
-        debe:$("#debe"+(i+1)).val(),
-        haber:$("#haber"+(i+1)).val(),
-        glosa_detalle:$("#glosa_detalle"+(i+1)).val(),
-        orden:(i+1)
-      });
+      if($("#cuenta"+(i+1)).length > 0){
+        detalle.push({
+          cuenta:$("#cuenta"+(i+1)).val(),
+          cuenta_auxiliar:$("#cuenta_auxiliar"+(i+1)).val(),
+          unidad:$("#unidad"+(i+1)).val(),
+          area:$("#area"+(i+1)).val(),
+          debe:$("#debe"+(i+1)).val(),
+          haber:$("#haber"+(i+1)).val(),
+          glosa_detalle:$("#glosa_detalle"+(i+1)).val(),
+          orden:(i+1)
+        });  
+      }
+      
       //alert(JSON.stringify(detalle));
     }
    var parametros={"codigo":cod,"titulo":titulo,"tipo":tipo,"glosa":glosa,"des":descrip,"cantidad_filas":num,"det":JSON.stringify(detalle)}; 
@@ -2030,6 +2037,51 @@ function readSingleFile(evt) {
          r.readAsText(f);
       } else {
                     alert("Failed to load file");
+      }
+  
+  }
+
+
+ function pulsar(e,inp) {
+    if (e.keyCode === 13 && !e.shiftKey) {
+      buscarCuentaList(inp);//  buscarCuenta();
+    }
+}
+
+function readSingleFileSiat(evt) {
+    var f = evt.target.files[0];
+      if (f) {
+          var r = new FileReader();
+          r.onload = function(e) { 
+              var contents = e.target.result;
+              const lines = contents.split('\n').map(function (line){
+                return line.split(',')
+              })
+              var index=$('#codCuenta').val();
+              for (var i = 1; i < lines.length; i++) {
+                if(String(lines[i]).trim()!=""){
+                  lines[i]=String(lines[i]).split("|");
+                  // var fecha =lines[i][6];
+                  // let arr = fecha.split('/');
+                  // var fecha_conv=arr[2]+"-"+arr[1]+"-"+arr[0];
+                  // console.log(lines[i][6]);
+                  $('#fecha_fac').val(lines[i][6]);
+                  $('#nit_fac').val(lines[i][1]);
+                  $('#razon_fac').val(lines[i][2]);
+                  $('#nro_fac').val(lines[i][3]);
+                  $('#aut_fac').val(lines[i][4]);
+                  $('#imp_fac').val(lines[i][7]);
+                  $('#ice_fac').val(0);
+                  $('#taza_fac').val(0);
+                  $('#con_fac').val(5);
+                  saveFactura();
+                 } 
+                }
+               $("#txtsiat").val(""); 
+          }
+         r.readAsText(f);
+      } else {
+          alert("Failed to load file");
       }
   
   }
@@ -7481,7 +7533,7 @@ function buscarCuentaNumero(numeros,val){
             if(nn>=0){
              textoAux+="<tr >"+
                "<td class='text-left small'>"+itemCuentasAux[j].codigo+"</td>"+
-               "<td class='text-left small'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre.toUpperCase()+"</a></td>"+
+               "<td class='text-left small pruebita12'><a  href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre.toUpperCase()+"</a></td>"+
              "</tr>";  
             }      
           }
@@ -7690,7 +7742,7 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
   $("#mensaje_estadoscuenta").html("");
   
   var detalle_resp=valor.split('####');
-  console.log("antes: "+detalle_resp);
+  //console.log("antes: "+detalle_resp);
   var existeEstadoCuentas=0;var filaEstado=0;var montoMatado=0;
   for (var i = 0; i < itemEstadosCuentas.length; i++) {
     var estadosCuenta=itemEstadosCuentas[i];
@@ -7711,36 +7763,32 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
   var cuenta=$("#cuenta"+fila).val();
   var montoCerrar=$("#monto_estadocuenta").val();
 
-  console.log(tipo+" "+tipo_proveedorcliente);
-  
+  // console.log(tipo+" "+tipo_proveedorcliente);
   //var resp = $("#cuentas_origen").val().split('###');
-
-  console.log("antes: "+detalle_resp);
+  // console.log("antes: "+detalle_resp);
   var codComproDet=detalle_resp[0];
   var cuenta_auxiliar=detalle_resp[1];
   var saldo_estadocuenta=parseFloat(detalle_resp[3]);
-  console.log("MONTO : "+montoCerrar+", MONTO EC : "+(saldo_estadocuenta+1));
-  if(detalle_resp[0]!=null && montoCerrar<=(saldo_estadocuenta+1)){
-    console.log("entro y DetalleResp: "+detalle_resp);
+  // console.log("MONTO : "+montoCerrar+", MONTO EC : "+(saldo_estadocuenta+0.02));
+  if(detalle_resp[0]!=null && montoCerrar<=(saldo_estadocuenta+0.02)){
+    // console.log("entro y DetalleResp: "+detalle_resp);
     var nfila={
       cod_plancuenta:cuenta,
       cod_plancuentaaux:cuenta_auxiliar,
       cod_comprobantedetalle:codComproDet,
       cod_proveedor:0,//$("#proveedores").val(),
       monto:$("#monto_estadocuenta").val()
-    }    
+    }   
     itemEstadosCuentas[fila-1]=[];
     itemEstadosCuentas[fila-1].push(nfila);
-    
-    console.log("EC:**"+JSON.stringify(itemEstadosCuentas[fila-1]));
-
+    //console.log("EC:**"+JSON.stringify(itemEstadosCuentas[fila-1]));
     $("#nestado"+fila).addClass("estado");
     //verEstadosCuentas(fila,cuenta);
     $('#modalEstadosCuentas').modal('hide');
     $("#debe"+fila).focus();
-   }else{
+  }else{
     Swal.fire('Estados de Cuenta!','El monto a Cerrar no puede ser mayor al saldo!','warning');  
-   }
+  }
   //}else{
     //Swal.fire('Estados de Cuenta!','El estado de cuentas ya se está cerrando en la fila: '+filaEstado,'warning'); 
   //}
@@ -11455,7 +11503,7 @@ function ponerNumeroChequePagoDetalle_lotes(combo){
   var valor=combo.value;
   var valor2= valor.split("####");
   $("#numero_cheque_s").val(valor2[1]);
-  $("#numero_cheque_s").attr("min",valor2[1]);
+  // $("#numero_cheque_s").attr("min",valor2[1]);
   if(valor==""||valor==null){
     if(!($("#numero_cheque_s").is("[readonly]"))){
       $("#numero_cheque_s").attr("readonly",true);
@@ -13953,9 +14001,12 @@ function editFac(fila,i){
 function saveFacturaEdit(){
   var nro_factura=$('#nro_fac_edit').val();
   var autorizacion=$('#aut_fac_edit').val();
-  var sw_duplicado=verificar_duplicidadFac(autorizacion,nro_factura);
+  var fecha_min_hiden = $("#fecha_min_hiden").val();
+  var fecha_max_hiden = $("#fecha_max_hiden").val();
+  if(fecha_min_hiden <= $('#fecha_fac_edit').val() && $('#fecha_fac_edit').val() <= fecha_max_hiden){
+  //var sw_duplicado=verificar_duplicidadFac(autorizacion,nro_factura);
   // console.log(sw_duplicado);
-  // sw_duplicado=0;
+  //sw_duplicado=0;
   // if(sw_duplicado==0){
     var contadorError=0;  
     if(($('#nit_fac_edit').val()==''||$('#nit_fac_edit').val()==0)){
@@ -14007,6 +14058,11 @@ function saveFacturaEdit(){
   // }else{
   //   Swal.fire("ERROR","Ésta Factura ya se encuentra registrado en el libro de compras!", "warning");
   // }
+
+  }else{
+    // alert("La Fecha no corresponde al mes de comprobante.");
+    errorCampoAjaxMensaje($('#fecha_fac_edit'),'Fecha no corresponde al mes de comprobante');
+  }
 }
 
 function calcularTotalesSolicitud(){
@@ -19892,7 +19948,77 @@ function historico_ingresos_almacen_nuevo(fi,ff,idprov){
 
 
 function procesar_bonos_descuentos_planilla(nombre_mes,cod_mes,estado_planilla){
-  
+  var sw_planilla=false;
+  var txt="Hubo un error en la transacción";
+  switch (estado_planilla) {
+    case '100':
+      var txt="Los descuentos del Mes de "+nombre_mes+", Aún no se encuentran vigentes.";
+      var sw_planilla=false;
+      break;
+    case '0':
+      var txt="Por favor, Registrar la PLANILLA del mes de "+nombre_mes+", Gracias. :)";
+      var sw_planilla=false;
+      break;
+    case '3':
+      var txt="La PLANILLA del Mes de "+nombre_mes+", No se encuentra disponible.";
+      var sw_planilla=false;
+      break;
+    case '1':
+    var sw_planilla=true;
+      break;
+    case '2': 
+      var sw_planilla=true;
+      break;
+  }
+  if(sw_planilla){
+    Swal.fire({
+      title: '¿Estás Segur@?',
+      text: "Se procesará o reprocesará la PLANTILLA del mes de "+nombre_mes,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonClass: 'btn btn-warning',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonText: 'SI',
+      cancelButtonText: 'NO',
+      buttonsStyling: false
+      }).then((result) => {
+        if (result.value) {
+          iniciarCargaAjax();
+          $.ajax({
+            type:"POST",
+            data:"cod_mes="+cod_mes,
+            url:"bonos/plantilla_sueldos_procesar.php", 
+            success:function(r){
+              detectarCargaAjax();
+              if(r==1){              
+                  alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+              }else{
+                Swal.fire("Ocurrió un error! :(", "Contáctese con el administrador.", "warning");
+              }
+            }
+          });
+          return(true);
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          return(false);
+        }
+      });
+  }else{
+    Swal.fire({
+      title: 'LO SIENTO :(',
+      text: txt,
+      type: 'error',
+      confirmButtonClass: 'btn btn-danger',
+      confirmButtonText: 'Aceptar',
+      buttonsStyling: false
+      }).then((result) => {
+        if (result.value) {
+          return(false);
+        } 
+      });
+  }
+}
+
+function procesar_bonos_descuentos_planilla_bk(nombre_mes,cod_mes,estado_planilla){
   if(estado_planilla==0){
      Swal.fire({
         title: 'Informativo',
@@ -19946,7 +20072,6 @@ function procesar_bonos_descuentos_planilla(nombre_mes,cod_mes,estado_planilla){
           title: 'LO SIENTO :(',
           text: "La PLANILLA del Mes de "+nombre_mes+", No se encuentra disponible.",
           type: 'error',
-          
           confirmButtonClass: 'btn btn-danger',
           confirmButtonText: 'Aceptar',
           buttonsStyling: false
@@ -20008,7 +20133,6 @@ function botonBuscar_pagoproveedores(){
   }
   ajax.send(null)
 }
-
 
 function agregardatosModalEdicionPlantillaSueldos(datos){  
   var d=datos.split('/');
@@ -20627,44 +20751,48 @@ function AgregarDescuentosPersonalConta(obj) {
 function borrarItemDescuentoPersonalConta(idF){ 
   var elem = document.getElementById('div'+idF);
   elem.parentNode.removeChild(elem);
-  if(idF<numFilas){
-    for (var i = parseInt(idF); i < (numFilas+1); i++) {
-      var nuevoId=i+1;
-      $("#div"+nuevoId).attr("id","div"+i);
-      $("#cod_personal"+nuevoId).attr("name","cod_personal"+i);
-      $("#cod_personal"+nuevoId).attr("id","cod_personal"+i);
-      $("#cod_tipodescuento"+nuevoId).attr("name","cod_tipodescuento"+i);
-      $("#cod_tipodescuento"+nuevoId).attr("id","cod_tipodescuento"+i);
+  // if(idF<numFilas){
+  //   for (var i = parseInt(idF); i < (numFilas+1); i++) {
+  //     var nuevoId=i+1;
+  //     $("#div"+nuevoId).attr("id","div"+i);
+  //     $("#cod_personal"+nuevoId).attr("name","cod_personal"+i);
+  //     $("#cod_personal"+nuevoId).attr("id","cod_personal"+i);
+  //     $("#cod_tipodescuento"+nuevoId).attr("name","cod_tipodescuento"+i);
+  //     $("#cod_tipodescuento"+nuevoId).attr("id","cod_tipodescuento"+i);
 
-      $("#cod_contracuenta"+nuevoId).attr("name","cod_contracuenta"+i);
-      $("#cod_contracuenta"+nuevoId).attr("id","cod_contracuenta"+i);
-      $("#monto_sistema"+nuevoId).attr("name","monto_sistema"+i);
-      $("#monto_sistema"+nuevoId).attr("id","monto_sistema"+i);       
+  //     $("#cod_contracuenta"+nuevoId).attr("name","cod_contracuenta"+i);
+  //     $("#cod_contracuenta"+nuevoId).attr("id","cod_contracuenta"+i);
+  //     $("#monto_sistema"+nuevoId).attr("name","monto_sistema"+i);
+  //     $("#monto_sistema"+nuevoId).attr("id","monto_sistema"+i);       
 
-      $("#monto_deposito"+nuevoId).attr("name","monto_deposito"+i);
-      $("#monto_deposito"+nuevoId).attr("id","monto_deposito"+i);       
+  //     $("#monto_deposito"+nuevoId).attr("name","monto_deposito"+i);
+  //     $("#monto_deposito"+nuevoId).attr("id","monto_deposito"+i);       
 
-      $("#monto_diferencia"+nuevoId).attr("name","monto_diferencia"+i);
-      $("#monto_diferencia"+nuevoId).attr("id","monto_diferencia"+i);       
+  //     $("#monto_diferencia"+nuevoId).attr("name","monto_diferencia"+i);
+  //     $("#monto_diferencia"+nuevoId).attr("id","monto_diferencia"+i);       
 
-      $("#glosa"+nuevoId).attr("name","glosa"+i);
-      $("#glosa"+nuevoId).attr("id","glosa"+i);       
-    }
-  } 
-  numFilas=numFilas-1;
+  //     $("#glosa"+nuevoId).attr("name","glosa"+i);
+  //     $("#glosa"+nuevoId).attr("id","glosa"+i);       
+  //   }
+  // } 
+  // numFilas=numFilas-1;
   // cantidadItems=cantidadItems-1;
   // filaActiva=numFilas;
-  document.getElementById("cantidad_filas").value=numFilas;
+  
+
+  // document.getElementById("cantidad_filas").value=numFilas;
+  // $("#monto_total").val(numFilas);
+  calcularTotalesDescuentosConta("null");
+
   // document.getElementById("totalhab").value=numFilas;
   // $("#monto_total").val(numFilas);
-  // console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+  // console.log("num: "+numFilas+" cantidadItems: "+cantidadItems); 
 }
 
 
 function diferencia_descuento_personal(id){
   var monto_sistema=$("#monto_sistema"+id).val();
   var monto_deposito=$("#monto_deposito"+id).val();
-
   if(monto_sistema<0 || monto_sistema==0 || monto_sistema==null){
     // Swal.fire("Informativo!", "El monto del sistema NO debe ser 0 o número negativo!", "warning");
   }else{
@@ -20674,11 +20802,41 @@ function diferencia_descuento_personal(id){
       var monto_descuento=parseFloat(monto_sistema)-parseFloat(monto_deposito);
       monto_descuento=Math.round((monto_descuento + Number.EPSILON) * 100) / 100;//redondeamos a dos decimales
        //agregamos al total      
-      $("#monto_diferencia"+id).val(monto_descuento);//irá en hidden 
+      $("#monto_diferencia"+id).val(monto_descuento);
+
+      calcularTotalesDescuentosConta(id);
       // $("#modal_importe_dos_add"+id).val(number_format(monto_descuento,2));//para mostrar con formato
     // }
   }  
 }
+
+
+function calcularTotalesDescuentosConta(id){
+  
+  var sumasistema=0;
+  var sumaDepositado=0;  
+  var formulariop = document.getElementById("formDesceuntosConta");
+  for (var i=0;i<formulariop.elements.length;i++){
+    if (formulariop.elements[i].id.indexOf("monto_sistema") !== -1 ){    
+      //console.log("debe "+formulariop.elements[i].value);    
+      sumasistema += (formulariop.elements[i].value) * 1; 
+    }
+    if (formulariop.elements[i].id.indexOf("monto_deposito") !== -1 ){        
+      //console.log("haber "+formulariop.elements[i].value);    
+      sumaDepositado += (formulariop.elements[i].value) * 1;
+    }
+  }
+  document.getElementById("totalSistema").value=redondeo(sumasistema,2).toFixed(2);  
+  document.getElementById("totalDepos").value=redondeo(sumaDepositado,2).toFixed(2); 
+  document.getElementById("total_dif").value=redondeo(sumasistema-sumaDepositado,2).toFixed(2);  
+  document.getElementById("totalsistema_fijo").value=document.getElementById("totalSistema").value;
+  document.getElementById("totalDepos_fijo").value=document.getElementById("totalDepos").value;
+  document.getElementById("total_dif_fijo").value=document.getElementById("total_dif").value;
+
+}
+
+
+
 
 function modalDetalleDescuentos(datos){  
   var d=datos.split('###');
@@ -20935,4 +21093,130 @@ function ajaxCalcualrFechaFinVacaciones(){
     }
   }
   ajax.send(null)
+}
+
+
+//FORMULARIO DE DESCUENTOS
+
+function limpiarExcelDescuentos(){
+  $('textarea[name=data_excel]').val("");
+   $('#div_datos_excel').html("");
+   if($("#boton_cargar_datos").hasClass("d-none")){
+    $("#boton_cargar_datos").removeClass("d-none");
+    $("#boton_generar_filas").addClass("d-none");
+  }
+  itemDatosDescuentosExcel=[];
+}
+
+var itemDatosDescuentosExcel=[];
+function cargarExcelDescuentos() {
+  itemDatosDescuentosExcel=[];
+  $('#div_datos_excel').html("");
+  var data = $('textarea[name=data_excel]').val();
+  console.log(data);
+  var rows = data.split("\n");
+  var table = $('<table />');
+  table.addClass("table").addClass("table-condensed").addClass("table-bordered").addClass("table-sm");
+  var index=0;
+  for(var y in rows) {
+    var cells = rows[y].split("\t");
+    var row = $('<tr />'); 
+    var coli=0;
+    var itemsFila=[];
+    for(var x in cells) {
+      if(!(coli==9||coli==10)){
+        itemsFila.push(cells[x]);
+        row.append('<td>'+cells[x]+'</td>');   
+      }
+      coli++;
+    }
+    if(index==0){//cabecera
+      row.addClass("bg-success").addClass("text-white"); 
+    }else{
+      if(itemsFila.length>0&&itemsFila[0]!=""&&itemsFila[1]!=""&&itemsFila[2]!=""){ //validacion para mas de una fila
+        itemDatosDescuentosExcel.push(itemsFila);
+      }
+      row.addClass("font-weight-bold").addClass("small"); 
+    }
+    table.append(row);
+    index++;
+  }
+  if(index>1){
+    if($("#boton_generar_filas").hasClass("d-none")){
+      $("#boton_generar_filas").removeClass("d-none");
+      $("#boton_cargar_datos").addClass("d-none");
+    }
+  }
+  // Insert into DOM
+  $('#div_datos_excel').html(table);
+}
+
+function generarExcelDescuentos(){
+  iniciarCargaAjax();
+  var datos=itemDatosDescuentosExcel;
+  var parametros={"filas":$("#cantidad_filas").val(),"datos":JSON.stringify(datos)};
+  $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "ajaxCargarExcelDescuentos.php",
+        data: parametros,
+        beforeSend:function(){
+          iniciarCargaAjax();
+          $("#texto_ajax_titulo").html("Generando Filas..");
+        },
+        success:  function (resp) {
+          $("#texto_ajax_titulo").html("Procesando Datos");
+          var fi=$("#fiel");
+          fi.append(resp);
+          calcularTotalesDescuentosConta("null"); 
+          $('.selectpicker').selectpicker("refresh");
+          $("#div_datos_excel").html("");
+          $("#data_excel").val("");
+          $("#boton_cargar_datos").removeClass("d-none");
+          $("#boton_generar_filas").addClass("d-none");
+          $("#modalPegarDatosComprobante").modal("hide");     
+          detectarCargaAjax();
+        }
+    }); 
+}
+
+function mover(event, to) {
+   let list = $('.clase_saldo');
+   let index = list.index($(event.target));
+   // index = (index + to) % list.length;//izquierda derecha
+   index = (index + to) % list.length;
+   list.eq(index).focus().select();
+}
+
+function moverFlechas(e){
+   // if(e.keyCode==37){
+   //      mover(e,-1);
+   // }//38 para arriba
+   // if(e.keyCode==39){
+   //       mover(e,1);
+   // }//40 para abajo
+
+   //38 para arriba
+   //40 para arriba
+   //37 para izquierda
+   //39 para derecha
+   if(e.keyCode==38){
+        mover(e,-2);
+   }
+   if(e.keyCode==40){    
+         mover(e,2);
+   }
+}
+
+function valideKey(evt){      
+    // code is the decimal ASCII representation of the pressed key.
+    var code = (evt.which) ? evt.which : evt.keyCode;
+    
+    if(code==8||code==45 ||code==46) { // backspace. - .
+      return true;
+    } else if(code>=48 && code<=57) { // is a number.
+      return true;
+    } else{ // other keys.
+      return false;
+    }
 }

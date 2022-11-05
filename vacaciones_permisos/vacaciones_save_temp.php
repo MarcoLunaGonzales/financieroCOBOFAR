@@ -79,16 +79,19 @@ while(($fechainicio<=$fecha_actual) and $sw_aux){
         $dias_utilizadas=obtenerDiasVacacionUzadas($cod_personal_p,$gestion);
         $saldo=$dias_vacacion-$dias_utilizadas;
         if($saldo>0){//todavia hay saldo
-        	if($saldo>$dias_permiso_p){
+        	if($saldo>=$dias_permiso_p){
+
         		$sql="INSERT INTO personal_vacaciones (cod_personal, fecha_inicial,hora_inicial,fecha_final,hora_final,observaciones,cod_estadoreferencial,dias_vacacion,created_at,created_by,gestion,modulo,cod_tipovacacion) VALUES ($cod_personal_p, '$fecha_inicial_p','$hora_inicial_p','$fecha_final_p','$hora_final_p','$observaciones_p','$cod_estadoreferencial','$dias_permiso_p',NOW(),'$globalUser','$gestion',2,'$tipo_vacacion')";
-        		$stmt = $dbh->prepare($sql);
-					$flagSuccess=$stmt->execute();
-					$sw_aux=false;
+	        	$stmt = $dbh->prepare($sql);
+						$flagSuccess=$stmt->execute();
+						$sw_aux=false;
         	}else{
-     			$dias_permiso_p=$dias_permiso_p-$saldo;	
-     			$sql="INSERT INTO personal_vacaciones (cod_personal, fecha_inicial,hora_inicial,fecha_final,hora_final,observaciones,cod_estadoreferencial,dias_vacacion,created_at,created_by,gestion,modulo,cod_tipovacacion) VALUES ($cod_personal_p, '$fecha_inicial_p','$hora_inicial_p','$fecha_final_p','$hora_final_p','$observaciones_p','$cod_estadoreferencial','$saldo',NOW(),'$globalUser','$gestion',2,'$tipo_vacacion')";
-     			$stmt = $dbh->prepare($sql);
-     			$flagSuccess=$stmt->execute();
+        		if($saldo>0){
+        			$dias_permiso_p=$dias_permiso_p-$saldo;	
+		     			$sql="INSERT INTO personal_vacaciones (cod_personal, fecha_inicial,hora_inicial,fecha_final,hora_final,observaciones,cod_estadoreferencial,dias_vacacion,created_at,created_by,gestion,modulo,cod_tipovacacion) VALUES ($cod_personal_p, '$fecha_inicial_p','$hora_inicial_p','$fecha_final_p','$hora_final_p','$observaciones_p','$cod_estadoreferencial','$saldo',NOW(),'$globalUser','$gestion',2,'$tipo_vacacion')";
+		     			$stmt = $dbh->prepare($sql);
+		     			$flagSuccess=$stmt->execute();
+        		}
         	}
         }
 			break;

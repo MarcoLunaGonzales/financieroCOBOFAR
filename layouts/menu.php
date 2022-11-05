@@ -446,24 +446,20 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> AF En Custodia</span>
                     </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=inventario_af_list">
+                    <span class="sidebar-mini"> IAF </span>
+                    <span class="sidebar-normal"><div class="row"><div>Inventario de AF</div><div><i class="material-icons" style="color: red;">new_releases</i></div></div></span>
+                  </a>
+                </li>
 
-                
-                <?php
-                $valor=8;
-                $VariableConf=obtenerValorConfiguracion($valor);
-                  if($globalUserX==$VariableConf){
-                ?>
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=aftransaccion">
                       <span class="sidebar-mini"> TAF </span>
                       <span class="sidebar-normal"> Transacción De AF</span>
                     </a>
                 </li>
-                <?php
-                  }
-                ?>
-                
-                
+            
 
               </ul>
             </div>
@@ -525,6 +521,18 @@ if($menuModulo==0){
                     <a class="nav-link" href="?opcion=rptDepreciacionesDetalladoFiltro">
                       <span class="sidebar-mini"> RMD </span>
                       <span class="sidebar-normal">Dep. Por Rubro, por Mes Detallado</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptDepreciacionesGestion">
+                      <span class="sidebar-mini"> RMD </span>
+                      <span class="sidebar-normal">Dep. Activos por gestión</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptDepreciacionesMesConsolidado">
+                      <span class="sidebar-mini"> RMD </span>
+                      <span class="sidebar-normal">Dep. Activos por Mes Consolidado</span>
                     </a>
                 </li>
               </ul>

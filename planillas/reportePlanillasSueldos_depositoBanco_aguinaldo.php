@@ -166,9 +166,9 @@ $html.='<table class="table">
   	</tfoot>               
  	</table><br><br><br>';
 
- 	$html.='<table width="100%">
- 	<tr><td><center><p>______________________________<br>'.obtenerValorConfiguracionPlanillas(23).'<br>JEFE DE SISTEMAS</p></center></td></tr>
- 	</table>';
+ 	// $html.='<table width="100%">
+ 	// <tr><td><center><p>______________________________<br>'.obtenerValorConfiguracionPlanillas(23).'<br>JEFE DE SISTEMAS</p></center></td></tr>
+ 	// </table>';
 $html.='</body>'.
       '</html>';
 

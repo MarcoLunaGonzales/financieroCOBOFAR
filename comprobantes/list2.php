@@ -10,6 +10,23 @@ $globalMesTrabajo=$_SESSION['globalMes'];
 
 $dbh = new Conexion();
 
+$globalUser=$_SESSION["globalUser"];
+//CODIGO PERSONAL PARA PROCESAR Y REPROCESAR PLANILLAS
+$StringPersonalAdmin=obtenerValorConfiguracion(119);
+if($StringPersonalAdmin==-100){
+  $edicionHabilitado=true;
+}else{
+  $array_personal=explode(',',$StringPersonalAdmin);
+  $edicionHabilitado=false;
+  for ($i=0; $i <count($array_personal) ; $i++) { 
+    $cod_personalAdmin=$array_personal[$i];
+    if($globalUser==$cod_personalAdmin){
+      $edicionHabilitado=true;
+    }  
+  }  
+}
+
+
 $codTipoComprobanteDefault="3";
 
 //preparamos el array con los codigo de comprobante
@@ -208,39 +225,43 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           <i class="material-icons">attachment</i>
                         </a>
                         <?php 
-          $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
-          if($codigoSol[0]!=0){
-           ?>
-           <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol[0];?>&comp=1" target="_blank" class="btn btn-success">
-             <i class="material-icons">preview</i>
-          </a>
-          <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol[0];?>&mon=1')" class="btn btn-info">
-            <i class="material-icons"><?=$iconImp;?></i>
-          </a><?php
-          }
-          ?>
-                        <?php
-                        if($codigoSol[1]==0){
-                          if($existeCuenta==0){
-                                      $codCajaChica=existeCajaChicaRelacionado($codigo);
-              if($codCajaChica>0){
-                $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
-                ?><a href='#' rel="tooltip" class="btn btn-primary" title="No Editable Caja Chica :<?=$nombreCaja?>">
-                      <i class="material-icons"><?=$iconEdit;?></i>
-                    </a><?php
-               }else{
-                ?><a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
-                      <i class="material-icons"><?=$iconEdit;?></i>
-                    </a><?php
-               }
-                                    }else{
-                                      ?>
-                                      <a href='#' rel="tooltip" class="btn btn-danger" title="No Editable <?=obtenerNombresComprobanteCerrados($codigo)?>">
-                                        <i class="material-icons text-dark"><?=$iconEdit;?></i>
-                                      </a>
-                                  <?php
-                                    }
-                        }
+                          $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
+                          if($codigoSol[1]==0){
+                            if($existeCuenta==0){//estado de cuenta cerrado
+                              $codCajaChica=existeCajaChicaRelacionado($codigo);
+                              $codDescuentoConta=existeDescuentoContaRelacionado($codigo);
+                              if($codCajaChica>0 || $codDescuentoConta>0){
+                                // $nombreCaja=obtenerObservacionCajaChica($codCajaChica); ?>
+                                <a href='#' class="btn btn-primary" title="No Editable Descuento Relacionado">
+                                  <i class="material-icons"><?=$iconEdit;?></i>
+                                </a><?php
+                              }else{
+                                if($edicionHabilitado || $salvadoC==1){//solo personal encargado para edicion ?>
+                                  <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="btn btn-success" title="Editar">
+                                    <i class="material-icons"><?=$iconEdit;?></i>
+                                  </a><?php
+                                }else{?>
+                                  <a href='#' class="btn btn-danger" title="Personal No autorizado para edición">
+                                    <i class="material-icons text-dark"><?=$iconEdit;?></i>
+                                 </a><?php 
+                                }
+                              }
+                            }else{ ?>
+                              <a href='#' class="btn btn-danger" title="<?=obtenerNombresComprobanteCerrados($codigo)?>">
+                                <i class="material-icons text-dark"><?=$iconEdit;?></i>
+                              </a> <?php
+                            }  
+                          }
+                          
+                          if($codigoSol[0]!=0){
+                           ?>
+                           <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol[0];?>&comp=1" target="_blank" class="btn btn-success">
+                             <i class="material-icons">preview</i>
+                          </a>
+                          <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol[0];?>&mon=1')" class="btn btn-info">
+                            <i class="material-icons"><?=$iconImp;?></i>
+                          </a><?php
+                          }
                         ?>
                         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
                           <i class="material-icons"><?=$iconDelete;?></i>

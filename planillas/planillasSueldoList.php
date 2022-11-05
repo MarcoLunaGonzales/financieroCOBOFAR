@@ -28,6 +28,7 @@ $nombre_mes=nombreMes($cod_mes_global);
 $codGestionActiva=$_SESSION['globalGestion'];
 $globalNombreGestion=$_SESSION['globalNombreGestion'];
 
+//VALIDAMOS PLANILLA
 $sql="SELECT cod_estadoplanilla from planillas where cod_mes=$cod_mes_global and cod_gestion=$codGestionActiva";
 //echo "<br><br><br><br>".$sql;
 $stmtVerifPlani=$dbh->prepare($sql);
@@ -36,7 +37,16 @@ $estado_planilla=0;
 while ($rowVerifPlani = $stmtVerifPlani->fetch(PDO::FETCH_ASSOC)) {
   $estado_planilla=$rowVerifPlani['cod_estadoplanilla'];
 }
-
+//VALIDAMOS DESCUENTOS VALIDADOS
+$sql="SELECT codigo FROM  descuentos_conta_consolidado where mes=$cod_mes_global and gestion=$globalNombreGestion";
+// echo "<br><br><br><br>".$sql;
+$stmtVerifDesc=$dbh->prepare($sql);
+$stmtVerifDesc->execute();
+$estado_planilla_x=100;
+while ($rowVerifPlani = $stmtVerifDesc->fetch(PDO::FETCH_ASSOC)) {
+  $estado_planilla_x=$estado_planilla;
+}
+$estado_planilla=$estado_planilla_x;
 
 $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,dias_trabajo,
 (select m.nombre from meses m where m.codigo=cod_mes)as mes,
@@ -118,9 +128,6 @@ $stmtAdmnin->bindColumn('dias_trabajo', $dias_trabajados);
                     }
                     if($cod_estadoplanilla==2){
                       $label='<span class="badge badge-warning">';
-                      
-                      
-                      
                     }
                     if($cod_estadoplanilla==3){                      
                       $label='<span class="badge badge-success">';

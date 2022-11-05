@@ -73,19 +73,22 @@ $flagSuccess=$stmtUpdate->execute();
 
 //guardar las ediciones
 for ($i=1;$i<=$cantidadFilas;$i++){
-	$cuenta=$_POST["cuenta".$i];
 
-	if($cuenta!=0 || $cuenta!=""){
-    $data[$i-1][0]=$_POST["cuenta".$i]; 
-    $data[$i-1][1]=$_POST["cuenta_auxiliar".$i]; 
-    $data[$i-1][2]=$_POST["unidad".$i]; 
-    $data[$i-1][3]=$_POST["area".$i]; 
-    $data[$i-1][4]=$_POST["debe".$i]; 	    	
-    $data[$i-1][5]=$_POST["haber".$i]; 
-    $data[$i-1][6]=$_POST["glosa_detalle".$i];
-    $data[$i-1][7]=$i;
-    //$dataInsert 	
-	}
+    if(isset($_POST["cuenta".$i])){
+    	$cuenta=$_POST["cuenta".$i];
+
+    	if($cuenta!=0 || $cuenta!=""){
+        $data[$i-1][0]=$_POST["cuenta".$i]; 
+        $data[$i-1][1]=$_POST["cuenta_auxiliar".$i]; 
+        $data[$i-1][2]=$_POST["unidad".$i]; 
+        $data[$i-1][3]=$_POST["area".$i]; 
+        $data[$i-1][4]=$_POST["debe".$i]; 	    	
+        $data[$i-1][5]=$_POST["haber".$i]; 
+        $data[$i-1][6]=$_POST["glosa_detalle".$i];
+        $data[$i-1][7]=$i;
+        //$dataInsert 	
+    	}
+    }
 } 
 $cab[0]="cod_cuenta";
 $cab[1]="cod_cuentaauxiliar";

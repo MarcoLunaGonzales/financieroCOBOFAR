@@ -26,7 +26,6 @@ $fecha_final_x=date('Y-m-t',strtotime($fecha_inicio_x));
 $total_dias_mes=obtenerTotalDias_fechas($fecha_inicio_x,$fecha_final_x);
 $total_domingos_mes=obtenerTotaldomingos_fechas($fecha_inicio_x,$fecha_final_x);
 $total_feriados_mes=obtenerTotalferiados_fechas($fecha_inicio_x,$fecha_final_x);
-
 $dias_trabajado=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
 ?>
 
@@ -43,9 +42,10 @@ $dias_trabajado=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table id="tablePaginatorHeaderFooter" class="table table-bordered table-condensed table-striped  table-sm table-secondary" style="width:100%">
+              
+                <table id="tablePaginatorHeaderFooterColStatic" class="table table-bordered table-condensed table-striped  table-sm table-secondary">
                 <thead>                              
-                  <tr style="background:#5d6b89;color:white;">
+                  <!-- <tr style="background:#5d6b89;color:white;">
                     <th width="2%"><small><b>Nro</b></small></th>
                     <th width="15%"><small><b>Apellidos y Nombres</b></small></th>
                     <th width="10%"><small><b>Cargo</b></small></th>
@@ -61,7 +61,37 @@ $dias_trabajado=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
                     <th width="5%"><small><b>Horas Extras</b></small></th>
                     <th width="5%"><small><b>Noches</b></small></th>
                     <th><small><b>Observaciones (Reintregro, Domingos y/o horas extras no pagadas)</b></small></th>
-                  </tr>                                  
+                  </tr> -->                                  
+                  <tr style="background:#138d75;color:white;">
+                      <th style="background:#64a095;color:white;"><small>Nro</small></th>
+                      <th style="background:#64a095;color:white;"><small>Apellidos y Nombres</small></th>
+                      <th style="background:#64a095;color:white;"><small>Cargo</small></th>
+                      <th ><small>Dias<br>Normls L-S</small></th>
+                      <th ><small>Faltas</small></th>
+                      <th ><small>Fecha Falta</small></th>
+                      <th ><small>Bajas Medicas</small></th>
+                      <th ><small>F.Inicio</small></th>
+                      <th ><small>F.Fin</small></th>
+                      <th ><small>Dias Vacacion</small></th>
+                      <th ><small>F.Inicio</small></th>
+                      <th ><small>F.Fin</small></th>
+                      <th ><small>Domingos Normal</small></th>
+                      <th ><small>F. Dom</small></th>
+                      <th ><small>Feriados Normal</small></th>
+                      <th ><small>F Feria</small></th>
+                      <th ><small>Noche Normal</small></th>
+                      <!-- <th ><small>Horas Extras</small></th> -->
+                      <th ><small>Domingo Reemp</small></th>
+                      <th ><small>Feriado Reemp</small></th>
+                      <th ><small>Reemp</small></th>
+                      <th ><small>Tipo de Reemp</small></th>
+                      <th ><small>Fecha</small></th>
+                      <th ><small>Nombre de Personal que Reemp</small></th>
+                      <th ><small>HXDOMINGO EXTRAS</small></th>
+                      <th ><small>HXFERIADO EXTRAS</small></th>
+                      <th ><small>HXDNORMAL EXTRAS</small></th>
+                      <th><small>Observaciones (Reint, Domigs y/o hrs extras no pagadas)</small></th>
+                    </tr>                                  
                 </thead>
                 <tbody>
                   <?php
@@ -83,23 +113,48 @@ $dias_trabajado=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
                     $personal=$paterno." ".$materno." ".$primer_nombre;
                     
                     $datosAsistencia=obtenerDatosAsistenciaPersonal($codigo,$codigo_personal,$dias_trabajado);
+                    // $dias_normales=$datosAsistencia[0];
+                    // $faltas=$datosAsistencia[1];
+                    // $fecha_faltas=$datosAsistencia[2];
+                    // $bajas_medicas=$datosAsistencia[3];
+                    // $dias_vacacion=$datosAsistencia[4];
+                    // $domingos=$datosAsistencia[5];
+                    // $fecha_domingos=$datosAsistencia[6];
+                    // $feriados=$datosAsistencia[7];
+                    // $fecha_feriados=$datosAsistencia[8];
+                    // $horas_extras=$datosAsistencia[9];
+                    // $noches=$datosAsistencia[10];
+                    // $observaciones=$datosAsistencia[11];
+
                     $dias_normales=$datosAsistencia[0];
-                    $faltas=$datosAsistencia[1];
-                    $fecha_faltas=$datosAsistencia[2];
-                    $bajas_medicas=$datosAsistencia[3];
-                    $dias_vacacion=$datosAsistencia[4];
-                    $domingos=$datosAsistencia[5];
-                    $fecha_domingos=$datosAsistencia[6];
-                    $feriados=$datosAsistencia[7];
-                    $fecha_feriados=$datosAsistencia[8];
-                    $horas_extras=$datosAsistencia[9];
-                    $noches=$datosAsistencia[10];
-                    $observaciones=$datosAsistencia[11];
+                      $faltas=$datosAsistencia[1];
+                      $fecha_faltas=$datosAsistencia[2];
+                      $bajas_medicas=$datosAsistencia[3];
+                      $bajas_medicas_fi=$datosAsistencia[4];
+                      $bajas_medicas_ff=$datosAsistencia[5];
+                      $dias_vacacion=$datosAsistencia[6];
+                      $dias_vacacion_fi=$datosAsistencia[7];
+                      $dias_vacacion_ff=$datosAsistencia[8];
+                      $domingos=$datosAsistencia[9];
+                      $fecha_domingos=$datosAsistencia[10];
+                      $feriados=$datosAsistencia[11];
+                      $fecha_feriados=$datosAsistencia[12];
+                      $noches=$datosAsistencia[13];
+                      $domingo_reemp=$datosAsistencia[14];
+                      $feriado_reemp=$datosAsistencia[15];
+                      $reemp=$datosAsistencia[16];
+                      $tipo_reemplazo=$datosAsistencia[17];
+                      $fecha_reemp=$datosAsistencia[18];
+                      $nombre_per_reemp=$datosAsistencia[19];
+                      $horas_extras_dom=$datosAsistencia[20];
+                      $horas_extras_feri=$datosAsistencia[21];
+                      $horas_extras=$datosAsistencia[22];
+                      $observaciones=$datosAsistencia[23];
 
                     $estilo_input="style='width:40px !important;text-align: right; color:000' data-toggle='tooltip'";
                     $estilo_glosa="style='width:120px !important;height:40px !important;text-align: right;color:000;font-size:12px;' data-toggle='tooltip' ";
                     ?>
-                    <tr>
+                    <!-- <tr>
                       <td class="text text-left"><small><?=$index?></small></td>
                       <td class="text text-left"><small><?=$personal?></small></td>
                       <td class="text text-left"><small><?=$cargo?></small></td>
@@ -115,7 +170,45 @@ $dias_trabajado=$total_dias_mes-$total_domingos_mes-$total_feriados_mes;
                       <td><?=$horas_extras?></td>
                       <td><?=$noches?></td>
                       <td><?=$observaciones?></td>
-                    </tr>
+                    </tr> -->
+
+                    <tr>
+                        <td class="text text-left"><?=$index?></td>
+                        <td class="text text-left"><?=$personal?></td>
+                        <td class="text text-left"><?=$cargo?></td>
+                        <td class="text text-center"><?=$dias_normales?></td>
+                        <td><?=$faltas?></td>
+                        <td><?=$fecha_faltas?></td>
+
+                        <td><?=$bajas_medicas?></td>
+                        <td><?=$bajas_medicas_fi?></td>
+                        <td><?=$bajas_medicas_ff?></td>
+
+                        <td><?=$dias_vacacion?></td>
+                        <td><?=$dias_vacacion_fi?></td>
+                        <td><?=$dias_vacacion_ff?></td>
+
+                        <td><?=$domingos?></td>
+                        <td><?=$fecha_domingos?></td>
+                        <td><?=$feriados?></td>
+                        <td><?=$fecha_feriados?></td>
+                        <td><?=$noches?></td>
+
+                        <td><?=$domingo_reemp?></td>
+                        <td><?=$feriado_reemp?></td>
+                        
+                        <td><?=$reemp?></td>
+                        <td><?=$tipo_reemplazo?></td>
+
+                        <td><?=$fecha_reemp?></td>
+                        <td><?=$nombre_per_reemp?></td>
+
+                        <td><?=$horas_extras_dom?></td>
+                        <td><?=$horas_extras_feri?></td>
+                        <td><?=$horas_extras?></td>
+                        <td><?=$observaciones?></td>
+                      </tr>
+
                     <?php
                   } ?>
                 </tbody>

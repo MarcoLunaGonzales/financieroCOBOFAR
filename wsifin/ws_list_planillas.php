@@ -124,7 +124,7 @@ function ObtenerDatosPersonal($codigo_personal){
     require_once '../conexion.php';
     $dbh = new Conexion();
     // Preparamos
-    $sql="SELECT p.paterno,p.materno,p.primer_nombre,c.nombre as cargo
+    $sql="SELECT p.paterno,p.materno,p.primer_nombre,c.nombre as cargo,p.cod_area
         from personal p join cargos c on p.cod_cargo=c.codigo
         where p.codigo=$codigo_personal";
     $stmt = $dbh->prepare($sql);

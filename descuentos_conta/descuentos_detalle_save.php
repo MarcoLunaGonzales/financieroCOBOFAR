@@ -1,6 +1,7 @@
 <?php
 require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
+// require_once '../conexion2.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 
@@ -8,14 +9,15 @@ ini_set('display_errors',1);
 session_start();
 $globalUser=$_SESSION["globalUser"];
 $codigo=$_POST["codigo"];
-$glosaCabecera=$_POST["glosa_cabecera"];
+$glosaCabecera=$_POST["glosa"];//fecha de descuento
 $fecha=$_POST["fecha_cabecera"];
 
 $gestion=date('Y',strtotime($fecha));
 $mes=date('m',strtotime($fecha));
 
 $dbh = new Conexion();
-$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
+// $dbh_detalle = new Conexion2();
+// $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 $flagSuccess=false;
 if($codigo==0){
@@ -32,36 +34,40 @@ if($codigo==0){
 }
 if($flagSuccess){
     //borrar 
-    $sqldelte="DELETE from descuentos_conta_detalle where cod_descuento='$codigo'";
-    $stmtDelete = $dbh->prepare($sqldelte);
-    $flagSuccess=$stmtDelete->execute();
 
-    $sqldelteMes="DELETE from descuentos_conta_detalle_mes order by cod_descuento_detalle in (select codigo from descuentos_conta_detalle where cod_descuento='$codigo')";
+    $sqldelteMes="DELETE from descuentos_conta_detalle_mes where cod_descuento_detalle in (select codigo from descuentos_conta_detalle where cod_descuento='$codigo');";
     $stmtDeleteMes = $dbh->prepare($sqldelteMes);
     $flagSuccess=$stmtDeleteMes->execute();
+
+    $sqldelte="DELETE from descuentos_conta_detalle where cod_descuento='$codigo';";
+    $stmtDelete = $dbh->prepare($sqldelte);
+    $flagSuccess=$stmtDelete->execute();
 
     // detalle de descuentos
     $cantidad_filas = $_POST["cantidad_filas"];
     for ($i=1;$i<=$cantidad_filas;$i++){                
-        $cod_sucursal=$_POST["cod_sucursal".$i];
-        $fecha=$_POST["fecha".$i];
-        $cod_personal=$_POST["cod_personal".$i];  
-        $cod_tipodescuento=$_POST["cod_tipodescuento".$i];
-        $cod_contracuenta=$_POST["cod_contracuenta".$i];
-        $monto_sistema=$_POST["monto_sistema".$i]; 
-        $monto_deposito=$_POST["monto_deposito".$i]; 
-        $monto_diferencia=$_POST["monto_diferencia".$i]; 
-        $glosa=$_POST["glosa".$i];
-        $codigoDetalle=obtenerCodigoDescuentoDetalle();
-        $sql="INSERT INTO descuentos_conta_detalle(codigo,cod_descuento,cod_area,fecha,cod_personal,cod_tipodescuento,cod_contracuenta,monto_sistema,monto_depositado,diferencia,glosa)
-        values ('$codigoDetalle','$codigo','$cod_sucursal','$fecha','$cod_personal','$cod_tipodescuento','$cod_contracuenta','$monto_sistema','$monto_deposito','$monto_diferencia','$glosa')";
-        $stmt = $dbh->prepare($sql);                
-        $flagSuccess=$stmt->execute();
+        if(isset($_POST["cod_sucursal".$i])){
+            $cod_sucursal=$_POST["cod_sucursal".$i];
+            $fecha=$_POST["fecha".$i];
+            $cod_personal=$_POST["cod_personal".$i];  
+            $cod_tipodescuento=$_POST["cod_tipodescuento".$i];
+            $cod_contracuenta=$_POST["cod_contracuenta".$i];
+            $monto_sistema=$_POST["monto_sistema".$i]; 
+            $monto_deposito=$_POST["monto_deposito".$i]; 
+            $monto_diferencia=$_POST["monto_diferencia".$i]; 
+            $glosa=$_POST["glosa_detalle".$i];
+            $codigoDetalle=obtenerCodigoDescuentoDetalle();
+            $sql="INSERT INTO descuentos_conta_detalle(codigo,cod_descuento,cod_area,fecha,cod_personal,cod_tipodescuento,cod_contracuenta,monto_sistema,monto_depositado,diferencia,glosa)
+            values ('$codigoDetalle','$codigo','$cod_sucursal','$fecha','$cod_personal','$cod_tipodescuento','$cod_contracuenta','$monto_sistema','$monto_deposito','$monto_diferencia','$glosa')";
+            $stmt = $dbh->prepare($sql);                
+            $flagSuccess=$stmt->execute();
+            
+            $sql="INSERT INTO descuentos_conta_detalle_mes(cod_descuento_detalle,mes,gestion,monto,cod_comprobante_detalle,cod_estado)
+            values ('$codigoDetalle','$mes','$gestion','$monto_diferencia',0,1)";
+            $stmtDesMes = $dbh->prepare($sql);                
+            $flagSuccess=$stmtDesMes->execute();
+        }
         
-        $sql="INSERT INTO descuentos_conta_detalle_mes(cod_descuento_detalle,mes,gestion,monto,cod_comprobante_detalle,cod_estado)
-        values ('$codigoDetalle','$mes','$gestion','$monto_diferencia',0,1)";
-        $stmtDesMes = $dbh->prepare($sql);                
-        $flagSuccess=$stmtDesMes->execute();
     }    
     //subir archivos al servidor
     if(isset($_POST["cantidad_archivosadjuntos"])){

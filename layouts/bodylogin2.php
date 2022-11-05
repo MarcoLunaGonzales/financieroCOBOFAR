@@ -95,7 +95,7 @@
   <script>
     $(document).ready(function() {
       // Initialise the wizard
-      demo.initMaterialWizard();
+      // demo.initMaterialWizard();
       setTimeout(function() {
         $('.card.card-wizard').addClass('active');
       }, 600);
@@ -1109,9 +1109,19 @@
     }
       //}    
     });
-   document.getElementById('qrquincho').addEventListener('change', readSingleFile, false);
-   document.getElementById('archivos').addEventListener('change', archivosPreview, false);
-   document.getElementById('archivosDetalle').addEventListener('change', archivosPreviewDetalle, false);
+    if(document.getElementById('qrquincho')){
+      document.getElementById('qrquincho').addEventListener('change', readSingleFile, false);
+    }
+    if(document.getElementById('txtsiat')){
+      document.getElementById('txtsiat').addEventListener('change', readSingleFileSiat, false);
+    }
+    if(document.getElementById('archivos')){
+      document.getElementById('archivos').addEventListener('change', archivosPreview, false);
+    }
+    if(document.getElementById('archivosDetalle')){
+      document.getElementById('archivosDetalle').addEventListener('change', archivosPreviewDetalle, false);
+    }
+   
   });
   </script>
 
@@ -2446,6 +2456,29 @@
                   buttons:[                 
                 ]
               });
+
+    var tableColStatic = $('#tablePaginatorHeaderFooterColStatic').DataTable({
+        scrollY:        "450px",
+            scrollX:        true,
+            scrollCollapse: true,
+            paging:         false,
+            bFilter:        true,
+            ordering:       false,
+            bInfo:          false,
+            fixedColumns:   {
+                leftColumns: 3
+            },
+            language: {
+             emptyTable: "No hay datos en la tabla"
+            },
+            columnDefs: [
+                { targets: 0, width: 10},
+                { targets: 1, width: 200},
+                { targets: 2, width: 150}
+            ]
+    });
+
+
 
         var table_afxU=$('#tablePaginatorHeader').DataTable({
                 "paging":   false,

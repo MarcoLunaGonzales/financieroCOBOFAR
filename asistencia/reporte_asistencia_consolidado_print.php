@@ -7,8 +7,7 @@ require_once '../functionsGeneral.php';
 require_once '../conexion.php';
 $dbh = new Conexion();
 
-
-$cod_sucursales=$_POST['cod_sucursal'];
+$cod_sucursales=$_POST['areas'];
 $stringSucursales=implode(",",$cod_sucursales);
 $fechaInicio=$_POST['fecha_inicio'];
 $fechaFinal=$_POST['fecha_fin'];
@@ -25,7 +24,7 @@ $fechaFinal=$_POST['fecha_fin'];
         <div class="card-body ">
           <div class="table-responsive">
             <center>
-            <table class='table table-bordered table-condensed' style='width:80% !important'>
+            <table id="tbl" class='table table-bordered table-condensed' style='width:80% !important'>
               <tr class='bg-info text-white' style='background:#A6F7C3 !important;color:#000 !important;height:30px;'>
                 <!-- <th>Personal</th>
                 <th>Sucursal</th>
@@ -51,7 +50,7 @@ $fechaFinal=$_POST['fecha_fin'];
               </tr>
               <?php
               $sqlPersonal="SELECT p.codigo,ap.fecha,ap.cod_personal,sum(ap.minutos_asignados)as minutos_asignados,sum(ap.minutos_trabajados)as minutos_trabajados,sum(ap.minutos_atraso)as minutos_atraso,sum(ap.minutos_extras)as minutos_extras,sum(ap.minutos_abandono)as minutos_abandono,a.nombre as area,p.turno,p.paterno,p.materno,p.primer_nombre,p.haber_basico
-                from asistencia_procesada ap join areas a on ap.cod_sucursal=a.codigo join personal p on ap.cod_personal=p.codigo
+                from asistencia_procesada ap  join personal p on ap.cod_personal=p.codigo join areas a on p.cod_area=a.codigo
                 where  ap.fecha between '$fechaInicio' and '$fechaFinal' and a.codigo in ($stringSucursales) 
                 GROUP BY p.codigo
                 order by a.nombre,p.turno";
@@ -90,9 +89,8 @@ $fechaFinal=$_POST['fecha_fin'];
                 if($minutos_abandono>0){                  
                   $label_abandono="style='color:red;font-weight:bold;'";
                 }
-
-                
                 $descuento_atraso=obtenerDescuentoMinutosPersonal($minutos_atraso,$haber_basico);
+                $minutos_permiso=0;
                 ?>
                 <tr >
                   <td style='background:#A6B1F7' class="text-left"><b><?=$area?></b></td>
@@ -103,8 +101,8 @@ $fechaFinal=$_POST['fecha_fin'];
                   <td><?=$minutos_asignados?></td>
                   <td><?=$minutos_trabajados?></td>
                   <td <?=$label_atraso?>><?=$minutos_atraso?></td>
-                  <td <?=$label_atraso?>><?=$minutos_atraso?></td>
-                  <td <?=$label_extras?>><?=$minutos_extras?></td>
+                  <td <?=$label_atraso?>><?=$minutos_extras?></td>
+                  <td <?=$label_extras?>><?=$minutos_abandono?></td>
                   <td <?=$label_abandono?> class="text-right"><?=formatNumberDec($descuento_atraso)?></td>
                   <td  class="td-actions text-right"><a  target='_blank' href='reporte_asistencia_personal_print.php?cod_personal=<?=$cod_personal?>&fecha_inicio=<?=$fechaInicio?>&fecha_fin=<?=$fechaFinal?>'  class="btn btn-dark"  >
                       <i class="material-icons" title="Ver Detalle">visibility</i>

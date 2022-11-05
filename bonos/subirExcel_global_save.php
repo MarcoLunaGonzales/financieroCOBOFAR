@@ -27,14 +27,15 @@ foreach ($_FILES as $key){
 }
 //tipo_descuento=1 descuento no fijo que refleja en plantilla
 $flagSuccess=false;
-$stmt = $dbh->prepare("SELECT codigo,nombre from descuentos where cod_estadoreferencial=1 and tipo_descuento=1 order by codigo");
+$stmt = $dbh->prepare("SELECT codigo,nombre,tipo_descuento from descuentos where cod_estadoreferencial=1 and tipo_descuento in (1,3) order by codigo");
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo_descuento);
 $stmt->bindColumn('nombre', $nombre_descuento);
+$stmt->bindColumn('tipo_descuento', $tipo_descuento);
 $descuentos_array=array();
 $i=0;
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-    $descuentos_array[$i]=$codigo_descuento;
+    $descuentos_array[$i]=array($codigo_descuento,$tipo_descuento);
     $i++;
 }
 $cod_descuento_as=100; //aporte al sindicato
@@ -90,25 +91,24 @@ if($alert==true){
                     $flagSuccess=$stmtAnticipos->execute();
                     $contador_excel=20;
                     for ($j=0; $j <count($descuentos_array) ; $j++) { 
-                        $codDescuento=$descuentos_array[$j];
+                        $codDescuento=$descuentos_array[$j][0];
+                        $TipoDescuento=$descuentos_array[$j][1];
                         if(isset($datos[$contador_excel])){
                             $monto=formatearNumerosExcel($datos[$contador_excel]);
                         }else{
                             $monto=0;
                         }
                         //inserta nuevos
-                        if(verificarExistenciaPersona($cod_personal)){
-                            $stmtDescuentos = $dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-                            VALUES ($codDescuento,$cod_personal,$codGestion,$codMes,$monto,$codEstado)");
-                            $flagSuccess=$stmtDescuentos->execute();    
+                        if($TipoDescuento==1){
+                            if(verificarExistenciaPersona($cod_personal)){
+                                $stmtDescuentos = $dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
+                                VALUES ($codDescuento,$cod_personal,$codGestion,$codMes,$monto,$codEstado)");
+                                $flagSuccess=$stmtDescuentos->execute();    
+                            }
                         }
+                        
                         $contador_excel++;
                     }
-                    // //****aporte al sindicato
-                    // $aporte_sindicato=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
-                    // $stmtSindicato=$dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-                    //     VALUES ($cod_descuento_as,$cod_personal,$codGestion,$codMes,$aporte_sindicato,$codEstado)");
-                    // $flagSuccess=$stmtSindicato->execute();
                 }
             }
         }

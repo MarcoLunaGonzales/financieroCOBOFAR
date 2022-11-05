@@ -2,15 +2,24 @@
 
 // error_reporting(E_ALL);
 // ini_set('display_errors', '1');
+session_start();
 require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once  __DIR__.'/../fpdf_html.php';
 require_once '../layouts/bodylogin2.php';
 
+$perfilGlobal=$_SESSION['globalPerfil'];
+// echo $perfilGlobal;
+if($perfilGlobal==2 || $perfilGlobal==13 || $perfilGlobal==1){//perfil de Jefe de RRHH,asistente y admin
+  $perfil_sw=true;
+  $estilo_perfil="";
+}else{
+  $perfil_sw=false;
+  $estilo_perfil="d-none";
+}
 
 $dbh = new Conexion();
-
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
@@ -35,7 +44,6 @@ $stringAreas="";
 foreach ($areas as $valor ) {    
     $stringAreas.=" ".abrevArea($valor)." ";
 }
-
 
 //para la fecha de cumple
 $fecha_inicio=date('m-01');
@@ -95,10 +103,10 @@ $stmtActivos->bindColumn('turno', $turno);
                           <th class="font-weight-bold">C.I.</th>
                           <th class="font-weight-bold">Of/Area</th>
                           <th class="font-weight-bold">Turno</th>
-                          <th class="font-weight-bold">F. Nac.</th>
-                          <th class="font-weight-bold">F. Ing.</th>
+                          <th class="font-weight-bold <?=$estilo_perfil?>">F. Nac.</th>
+                          <th class="font-weight-bold <?=$estilo_perfil?>">F. Ing.</th>
                           <th class="font-weight-bold">Cargo</th>
-                          <th class="font-weight-bold">H.Básico</th>
+                          <th class="font-weight-bold <?=$estilo_perfil?>">H.Básico</th>
                           <th class="font-weight-bold">Afp</th>
                         </tr>
                       </thead>
@@ -129,16 +137,16 @@ $stmtActivos->bindColumn('turno', $turno);
                           }
                           if($identificacion=="")$identificacion=0;
                           $contador++;?>
-                          <tr <?=$label?>>
+                          <tr <?=$label?> >
                             <td class="text-center <?=$label_td?>"><?=$contador?></td>
                             <td class="text-left <?=$label_td?>"><?=$personal?></td>
-                            <td class="text-left <?=$label_td?>"><?=obtenerNombreIdentificacionPersona($cod_tipo_identificacion,1).' '.$identificacion.' '.obtenerlugarEmision($cod_lugar_emision,1)?></td>
+                            <td class="text-left <?=$label_td?>"><?=$identificacion.' '.obtenerlugarEmision($cod_lugar_emision,1)?></td>
                             <td class="text-left <?=$label_td?>"><?=abrevUnidad_solo($cod_unidadorganizacional).'/'.abrevArea_solo($cod_area)?></td>
                             <td class="text-left <?=$label_td?>"><?=$nombre_turno?></td>
-                            <td class="text-right <?=$label_td?>"><?=$fecha_nacimiento_x?></td>
-                            <td class="text-right <?=$label_td?>"><?=$ing_planilla?></td>
+                            <td class="text-right <?=$label_td?> <?=$estilo_perfil?>"><?=$fecha_nacimiento_x?></td>
+                            <td class="text-right <?=$label_td?> <?=$estilo_perfil?>"><?=$ing_planilla?></td>
                             <td class="text-left <?=$label_td?>"><?=nameCargo($cod_cargo)?></td>
-                            <td class="text-center <?=$label_td?>"><?=formatNumberDec($haber_basico)?></td>
+                            <td class="text-center <?=$label_td?> <?=$estilo_perfil?>"><?=formatNumberDec($haber_basico)?></td>
                             <td class="text-left <?=$label_td?>"><?=obtenerNameAfp($cod_tipoafp,1)?></td>
                           </tr>
 
@@ -146,7 +154,6 @@ $stmtActivos->bindColumn('turno', $turno);
                         } ?>
                       </tbody>
                     </table>
-                    ?>
                   </div>
                 </div>
               </div>

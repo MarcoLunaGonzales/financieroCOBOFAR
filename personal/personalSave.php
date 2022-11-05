@@ -97,8 +97,8 @@ try {
         $stmt = $dbh->prepare($sql);
         $flagSuccess=$stmt->execute();
         //pesonal area distribucion 
-        $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_uo,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 
-        values ('$codigo','$cod_unidadorganizacional','$cod_area','$porcentaje','$cod_estadoreferencial','$created_by','$modified_by')");
+        $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_uo,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by,monto) 
+        values ('$codigo','$cod_unidadorganizacional','$cod_area','$porcentaje','$cod_estadoreferencial','$created_by','$modified_by','$haber_basico')");
         $stmtDistribucion->execute(); 
         //insertamos el contrato indefinido
 
@@ -171,21 +171,21 @@ try {
         // showAlertSuccessError($flagSuccess,$urlListPersonal);
 
     }else{
-        $sqlUpdate="UPDATE personal set cod_tipo_identificacion='$cod_tipoIdentificacion',tipo_identificacion_otro='$tipo_identificacionOtro',identificacion='$identificacion',cod_lugar_emision='$cod_lugar_emision',lugar_emision_otro='$lugar_emisionOtro',fecha_nacimiento='$fecha_nacimiento',cod_cargo='$cod_cargo',cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',jubilado='$jubilado',cod_genero='$cod_genero',cod_tipopersonal='$cod_tipopersonal',haber_basico='$haber_basico',paterno='$paterno',materno='$materno',apellido_casada='$apellido_casada',primer_nombre='$primer_nombre',otros_nombres='$otros_nombres',nua_cua_asignado='$nua_cua_asignado',direccion='$direccion',cod_tipoafp='$cod_tipoafp',cod_tipoaporteafp='$cod_tipoaporteafp',nro_seguro='$nro_seguro',cod_estadopersonal='$cod_estadopersonal',telefono='$telefono',celular='$celular',email='$email',persona_contacto='$persona_contacto',celular_contacto='$celular_contacto',modified_by='$modified_by',modified_at=NOW(),cod_nacionalidad='$cod_nacionalidad',cod_estadocivil='$cod_estadocivil',cod_pais='$cod_pais',cod_departamento='$cod_departamento',cod_ciudad='$cod_ciudad',ciudad_otro='$ciudadOtro',cod_grado_academico='$grado_academico',ing_contr='$ing_contr',ing_planilla='$ing_planilla',email_empresa='$email_empresa',bandera='$bandera',personal_confianza='$personal_confianza',cuenta_bancaria='$cuenta_bancaria',turno='$turno',tipo_trabajo='$tipo_trabajo',cod_cajasalud='$cod_cajasalud',cuenta_habilitada='$cuenta_habilitada' where codigo=$codigo";
+        $sqlUpdate="UPDATE personal set cod_tipo_identificacion='$cod_tipoIdentificacion',tipo_identificacion_otro='$tipo_identificacionOtro',identificacion='$identificacion',cod_lugar_emision='$cod_lugar_emision',lugar_emision_otro='$lugar_emisionOtro',fecha_nacimiento='$fecha_nacimiento',cod_cargo='$cod_cargo',cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',jubilado='$jubilado',cod_genero='$cod_genero',cod_tipopersonal='$cod_tipopersonal',paterno='$paterno',materno='$materno',apellido_casada='$apellido_casada',primer_nombre='$primer_nombre',otros_nombres='$otros_nombres',nua_cua_asignado='$nua_cua_asignado',direccion='$direccion',cod_tipoafp='$cod_tipoafp',cod_tipoaporteafp='$cod_tipoaporteafp',nro_seguro='$nro_seguro',cod_estadopersonal='$cod_estadopersonal',telefono='$telefono',celular='$celular',email='$email',persona_contacto='$persona_contacto',celular_contacto='$celular_contacto',modified_by='$modified_by',modified_at=NOW(),cod_nacionalidad='$cod_nacionalidad',cod_estadocivil='$cod_estadocivil',cod_pais='$cod_pais',cod_departamento='$cod_departamento',cod_ciudad='$cod_ciudad',ciudad_otro='$ciudadOtro',cod_grado_academico='$grado_academico',ing_contr='$ing_contr',ing_planilla='$ing_planilla',email_empresa='$email_empresa',bandera='$bandera',personal_confianza='$personal_confianza',cuenta_bancaria='$cuenta_bancaria',turno='$turno',tipo_trabajo='$tipo_trabajo',cod_cajasalud='$cod_cajasalud',cuenta_habilitada='$cuenta_habilitada' where codigo=$codigo";
         $stmt = $dbh->prepare($sqlUpdate);
         $flagSuccess=$stmt->execute();
         //sacamos el id de area distribucion area distribucion
-        $stmtPer = $dbhS->prepare("SELECT codigo 
-                from personal_area_distribucion 
-                where cod_personal='$codigo' ORDER BY 1 DESC");
-        $stmtPer->execute();
-        $resultPer=$stmtPer->fetch();
-        $codigo_areaDP=$resultPer['codigo'];
-        $sql="UPDATE personal_area_distribucion 
-            set cod_uo='$cod_unidadorganizacional',cod_area='$cod_area',porcentaje='$porcentaje',monto='$haber_basico' where codigo='$codigo_areaDP'";
+        // $stmtPer = $dbhS->prepare("SELECT codigo 
+        //         from personal_area_distribucion 
+        //         where cod_personal='$codigo' ORDER BY 1 DESC");
+        // $stmtPer->execute();
+        // $resultPer=$stmtPer->fetch();
+        // $codigo_areaDP=$resultPer['codigo'];
+        // $sql="UPDATE personal_area_distribucion 
+        //     set cod_uo='$cod_unidadorganizacional',cod_area='$cod_area',porcentaje='$porcentaje',monto='$haber_basico' where codigo='$codigo_areaDP'";
         
-        $stmtDistribucion = $dbh->prepare($sql);
-        $stmtDistribucion->execute();
+        // $stmtDistribucion = $dbh->prepare($sql);
+        // $stmtDistribucion->execute();
         
         //actualizamos contrato activo
         $sql="SELECT codigo 

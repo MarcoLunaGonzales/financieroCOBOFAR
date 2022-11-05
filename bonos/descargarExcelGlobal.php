@@ -80,15 +80,7 @@ $total_domingos_mes=obtenerTotaldomingos_fechas($fecha_inicio,$fecha_final);
 $total_feriados_mes=obtenerTotalferiados_fechas($fecha_inicio,$fecha_final);
 
 // $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional FROM personal p where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1 order by p.cod_unidadorganizacional,2,p.turno,p.paterno";
-$sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,p.ing_contr as fecha,1 as tipo
-  FROM personal p
-  where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1 and p.ing_planilla<'$fecha_final'
-  UNION
-  select p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,pr.fecha_retiro as fecha,2
-  from personal p join personal_retiros pr on p.codigo=pr.cod_personal
-  where pr.fecha_retiro BETWEEN '$fecha_inicio' and '$fecha_final'
-  order by 6,2,5,4";
-  // echo $sql;
+
 ?>
 <table class="table table-condensed table-bordered">
   <thead>
@@ -114,25 +106,38 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
       <th><small><b>OBS REINTEGRO (BS)</b></small></th>
       <th><small><b>ANTICIPOS</b></small></th>
     <?php
-      $sqldes="SELECT codigo,nombre from descuentos where cod_estadoreferencial=1 and tipo_descuento=1 order by codigo";
-      $contador=0;
+      $sqldes="SELECT codigo,nombre,tipo_descuento from descuentos where cod_estadoreferencial=1 and tipo_descuento in (1,3) order by codigo";
       $stmtDes = $dbh->prepare($sqldes);
       $stmtDes->execute();
+      $array_descuentos=[];
+      $contadorDesc=0;
       while ($row1 = $stmtDes->fetch(PDO::FETCH_ASSOC)) { 
         $nombre_descuento=$row1['nombre'];
+        $tipo_descuento=$row1['tipo_descuento'];
+        $codigo_descuento=$row1['codigo'];
+        $array_descuentos[$contadorDesc]=array($codigo_descuento,$tipo_descuento);
         ?>
         <th><small><b><?=$nombre_descuento?></b></small></th><?php   
-        $contador++;
+        $contadorDesc++;
       }
       ?>
     </tr>
   </thead>
   <tbody>
     <?php
+    $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,p.ing_contr as fecha,1 as tipo
+      FROM personal p
+      where p.cod_estadopersonal=1 and p.cod_estadoreferencial=1 and p.ing_planilla<'$fecha_final'
+      UNION
+      select p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as areas,p.identificacion,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as personal,p.turno,p.cod_unidadorganizacional,pr.fecha_retiro as fecha,2
+      from personal p join personal_retiros pr on p.codigo=pr.cod_personal
+      where pr.fecha_retiro BETWEEN '$fecha_inicio' and '$fecha_final'
+      order by 6,2,5,4";
+      // echo $sql;
     $stmtDet = $dbh->prepare($sql);
     $stmtDet->execute();
     while ($row = $stmtDet->fetch(PDO::FETCH_ASSOC)) { 
-      $codigo=$row['codigo'];
+      $codigoPersonal=$row['codigo'];
       $areas=$row['areas'];
       $identificacion=$row['identificacion'];
       $personal=$row['personal'];
@@ -164,7 +169,7 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
         }else{
           $areas=$areas." TT";
         }
-        $datosAsistencia=obtenerDatosAsistenciaPersonal_planilla($cod_mes,$nombreGestion,$codigo);
+        $datosAsistencia=obtenerDatosAsistenciaPersonal_planilla($cod_mes,$nombreGestion,$codigoPersonal);
         $faltas=$datosAsistencia[0];
         $permisos_sin_desc=$datosAsistencia[1];
         $dias_vacacion=$datosAsistencia[2];
@@ -181,7 +186,7 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
         $reintegro_obs="";
         $anticipos=0;
       }else{//oficina central
-        // $datosAsistencia=obtenerDatosAsistenciaPersonal_planilla($cod_mes,$nombreGestion,$codigo);
+        // $datosAsistencia=obtenerDatosAsistenciaPersonal_planilla($cod_mes,$nombreGestion,$codigoPersonal);
         // $faltas=$datosAsistencia[0];
         // $permisos_sin_desc=$datosAsistencia[1];
         // $dias_vacacion=$datosAsistencia[2];
@@ -206,7 +211,7 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
       }
       ?>
       <tr>
-        <td class="text text-left"><small><?=$codigo?></small></td>
+        <td class="text text-left"><small><?=$codigoPersonal?></small></td>
         <td class="text text-left"><small><?=$identificacion?></small></td>
         <td class="text text-left"><small><?=$personal?></small></td>
         <td class="text text-left"><small><?=$areas?></small></td>
@@ -226,9 +231,20 @@ $sql="SELECT p.codigo,(select a.nombre from areas a where a.codigo=p.cod_area)as
         <td class="text text-left"><small><?=$reintegro?></small></td>
         <td class="text text-left"><small><?=$reintegro_obs?></small></td>
         <td class="text text-left"><small><?=$anticipos?></small></td><?php
-        for ($x=0; $x <$contador ; $x++) { ?>
-          <td class="text text-left"><small></small></td>
-        <?php }
+        for ($x=0; $x <$contadorDesc ; $x++) { 
+          $codigoDescuentox=$array_descuentos[$x][0];
+          $tipoDescuentox=$array_descuentos[$x][1];
+          if($tipoDescuentox==1){//tipo de descuento ingresado desde plantilla
+            ?>
+              <td class="text text-left"><small>0</small></td>
+            <?php
+          }elseif($tipoDescuentox==3){//tipo de descuento calculado por sistema, solo visible
+            $montoDescuentox=obtenerDescuentoPersonalMes($codigoPersonal,$cod_mes,$nombreGestion,$codigoDescuentox);
+            ?>
+              <td class="text text-left" style="background:#d98880;"><small><?=$montoDescuentox?></small></td>
+            <?php
+          }
+        }
         ?>
       </tr>
       <?php } ?>

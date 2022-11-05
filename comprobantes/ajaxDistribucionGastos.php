@@ -99,16 +99,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
     <div class="col-sm-1">
           <div class="form-group">
             <span id="numero_fila<?=$idFila?>" style="position:absolute;left:-15px; font-size:16px;font-weight:600; color:#386D93;"><?=$idFila?></span>
-          <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="btn btn-primary" onChange="relacionSolicitudesSIS(<?=$idFila;?>)">
+          <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="btn btn-primary" onChange="relacionSolicitudesSIS(<?=$idFila;?>)" data-live-search="true">
                <?php
-                                   $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+                                   $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 3");
                                    $stmt->execute();
                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     $codigoX=$row['codigo'];
                                     $nombreX=$row['nombre'];
                                     $abrevX=$row['abreviatura'];
                                     if($codigoX==$unidadDet){
-                                             ?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
+                                             ?><option value="<?=$codigoX;?>" selected data-subtext="<?=$nombreX?>"><?=$abrevX;?></option><?php
                                     }
                                     }
                                     ?>
@@ -117,36 +117,36 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
     <div class="col-sm-1">
           <div class="form-group">
-          <select class="selectpicker form-control form-control-sm" name="area<?=$idFila;?>" id="area<?=$idFila;?>" data-style="btn btn-primary">
+          <select class="selectpicker form-control form-control-sm" name="area<?=$idFila;?>" id="area<?=$idFila;?>" data-style="btn btn-primary" data-live-search="true">
           <?php
                                   
-                                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
-                                $stmt->execute();
-                                $cont=0;
-                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo'];
-                                  $nombreX=$row['nombre'];
-                                  $abrevX=$row['abreviatura'];
-                                  if($codigoX==$areaDet){
-                                    $cont=1;     
-                                    }
-                                }
-                                if($cont==0) {
-                                  ?><option value="<?=$areaDet;?>" selected>SA</option><?php
-                                }else{
-                                $stmt2 = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
-                                $stmt2->execute();
-                                  while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row2['codigo'];
-                                  $nombreX=$row2['nombre'];
-                                  $abrevX=$row2['abreviatura'];
-                                  if($codigoX==$areaDet){
-                                      ?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
-                                    }
-                                   }  
+              $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 3");
+            $stmt->execute();
+            $cont=0;
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              $codigoX=$row['codigo'];
+              $nombreX=$row['nombre'];
+              $abrevX=$row['abreviatura'];
+              if($codigoX==$areaDet){
+                $cont=1;     
+                }
+            }
+            if($cont==0) {
+              ?><option value="<?=$areaDet;?>" selected>SA</option><?php
+            }else{
+            $stmt2 = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 3");
+            $stmt2->execute();
+              while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+              $codigoX=$row2['codigo'];
+              $nombreX=$row2['nombre'];
+              $abrevX=$row2['abreviatura'];
+              if($codigoX==$areaDet){
+                  ?><option value="<?=$codigoX;?>" selected data-subtext="<?=$nombreX?>"><?=$abrevX;?></option><?php
+                }
+               }  
 
-                                }  
-                                   ?>
+            }  
+               ?>
       </select>
     </div>
   </div>
@@ -204,13 +204,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
     <div class="col-sm-1">
             <div class="form-group">
               <!--<label class="bmd-label-static">Debe</label>      -->
-              <input class="form-control small" type="number" placeholder="0" value="<?=$debe?>" <?=$estadodebe?> name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 
+              <input class="form-control small clase_saldo" type="text" placeholder="0" value="<?=$debe?>" <?=$estadodebe?> name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onblur="calcularTotalesComprobante(this.id,event);" onkeypress="return valideKey(event);" onkeyup="moverFlechas(event);" step="0.01"> 
       </div>
     </div>
     <div class="col-sm-1">
             <div class="form-group">
               <!--<label class="bmd-label-static">Haber</label>     -->
-              <input class="form-control small" type="number" placeholder="0" value="<?=$haber?>" <?=$estadohaber?> name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">   
+              <input class="form-control small clase_saldo" type="text" placeholder="0" value="<?=$haber?>" <?=$estadohaber?> name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onblur="calcularTotalesComprobante(this.id,event);" onkeypress="return valideKey(event);" onkeyup="moverFlechas(event);" step="0.01">   
       </div>
     </div>
     <div class="col-sm-3">

@@ -221,8 +221,8 @@ $p=$_GET['p'];
       var autoriza_edit=$('#autoriza_edit').val();
       var codigocontrol_edit=$('#codigocontrol_edit').val();
 
-      if(autoriza_edit==null || autoriza_edit==0 || autoriza_edit=='' || autoriza_edit==' '){
-        Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
+      if(autoriza_edit==null  || autoriza_edit=='' || autoriza_edit==' '){
+        Swal.fire("Informativo!", "Por favor introduzca el codigo de autorización.", "warning");
        }else{        
         guardar_edit_ingreso_alm(dcto_edit,factura_edit,fecha_edit,monto_edit,nit_edit,autoriza_edit,codigocontrol_edit,fecha_desde,fecha_hasta);
        }      

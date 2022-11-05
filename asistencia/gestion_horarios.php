@@ -124,8 +124,7 @@ $stmt->bindColumn('activo', $estadoActivo);
         <div class="card-footer fixed-bottom">           
           <a class="btn btn-rose text-white btn-round btn-fab" href="#" onClick="nuevoHorario();return false;"><i class="material-icons">add</i></a>
           <a class="btn btn-default text-white btn-round" href="?opcion=rpt_gestion_horarios_des">Deshabilitados</a>
-          <a class="btn btn-default text-white btn-round" style="background:#7CC6A8 !important;" href="?opcion=asistenciaPersonal_main">Volver al Menú</a>
-
+          <a class="btn btn-danger text-white btn-round"  href="?opcion=asistenciaPersonal_main">Volver al Menú</a>
         </div>
         <?php
         }

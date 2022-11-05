@@ -892,6 +892,9 @@
 		if ($_GET['opcion']=='rptDepreciacionesGestion') {
             require_once('reportes_activosfijos/reporte_depreciacion_gestion_from.php');
 		}
+		if ($_GET['opcion']=='rptDepreciacionesMesConsolidado') {
+            require_once('reportes_activosfijos/reporte_depreciacion_mes_consolidado_from.php');
+		}
 		if ($_GET['opcion']=='rptactivosfijosxunidad') {
 			require_once('activosFijos/rptactivosfijosxunidad.php');
 		}
@@ -2166,6 +2169,18 @@
 			require_once('cierre_diario_tesoreria/reporte_diario.php');
 		}
 
+		//INVETARIO DE ACTIVOS FIJOS
+		if ($_GET['opcion']=='inventario_af_list') {
+			require_once('inventario_af/list.php');
+		}
+
+		if ($_GET['opcion']=='inventario_af_register') {
+			require_once('inventario_af/register.php');
+		}
+
+		if ($_GET['opcion']=='inventario_af_save') {
+			require_once('inventario_af/save.php');
+		}
 
 	}else{
 		//require("paginaprincipal.php");

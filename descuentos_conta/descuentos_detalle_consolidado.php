@@ -35,10 +35,11 @@ $dbh = new Conexion();
                         </div>
                         <div class="card-body ">                            
                             <div class="table-responsive">              
-                                <table class="table table-condensed table-bordered table-striped table-secondary" >
+                                <table id="libro_mayor_rep" class="table table-condensed table-bordered table-striped table-secondary" >
                                     <thead >
                                         <tr style="background:#18537e;color:white;">
                                           <th class="text-center small"><small>#</small></th>
+                                          <th class="text-center small"><small>Personal</small></th>
                                           <th class="text-center small"><small>Personal</small></th>
                                           <th class="text-center small"><small>Haber Básico</small></th>
                                           <th class="text-center small"><small>Descuento (<?=$nombreMes?>)</small></th>
@@ -53,17 +54,18 @@ $dbh = new Conexion();
                                         $index=1;
                                         $Sumadescuento=0;
                                         $Sumasaldo_descuento=0;
-                                        $sql="SELECT dd.cod_personal,sum(ddm.monto)as descuento,p.haber_basico,p.primer_nombre,p.paterno,p.materno
+                                        $sql="SELECT dd.cod_personal,sum(ddm.monto)as descuento,p.haber_basico,p.identificacion,p.primer_nombre,p.paterno,p.materno
                                             from descuentos_conta d  join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento join personal p on dd.cod_personal=p.codigo join descuentos_conta_detalle_mes  ddm on ddm.cod_descuento_detalle=dd.codigo
                                             where d.cod_estado=3 and ddm.mes=$globalMes and ddm.gestion=$globalGestion
                                             GROUP BY dd.cod_personal
-                                            order by p.paterno";
-                                             // echo $sql;
+                                            order by p.primer_nombre";
+                                              // echo $sql;
                                         $stmt = $dbh->prepare($sql);
                                         $stmt->execute();
                                         $stmt->bindColumn('cod_personal', $cod_personal);
                                         $stmt->bindColumn('descuento', $descuento);
                                         $stmt->bindColumn('haber_basico', $haber_basico);
+                                        $stmt->bindColumn('identificacion', $identificacion);
                                         $stmt->bindColumn('primer_nombre', $primer_nombre);
                                         $stmt->bindColumn('paterno', $paterno);
                                         $stmt->bindColumn('materno', $materno);
@@ -78,7 +80,7 @@ $dbh = new Conexion();
                                                 $contadorError++;
                                                 $label_error="<span class='badge badge-danger'>";
                                             }
-                                            $nombre_personal=$paterno." ".$materno." ".$primer_nombre;
+                                            $nombre_personal=$primer_nombre." ".$paterno." ".$materno;
                                             $datos_modal=$cod_personal."###".$nombre_personal."###".$haber_basico."###".$descuento."###".$globalMes."###".$globalGestion;
                                             $queryDet ="SELECT sum(dd.diferencia)as descuento_ingreso,(SELECT sum(ddm.monto) from descuentos_conta d2 join descuentos_conta_detalle dd2 on d2.codigo=dd2.cod_descuento join descuentos_conta_detalle_mes ddm on ddm.cod_descuento_detalle=dd2.codigo where d2.cod_estado=3 and dd2.cod_personal=$cod_personal and ddm.cod_estado in (3,4,5))as descontado
                                                 from descuentos_conta d join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento
@@ -104,6 +106,7 @@ $dbh = new Conexion();
                                             ?>
                                             <tr>
                                                 <td class="text-left"><small><?=$index?></small></td>
+                                                <td class="text-left"><small><?=$identificacion?></small></td>
                                                 <td class="text-left"><small><?=$nombre_personal?></small></td>
                                                 <td class="text-right"><small><?=formatNumberDec($haber_basico,2);?></small></td>
                                                 <td class="text-right" ><small><?=formatNumberDec($descuento,2)?></small></td>
@@ -187,7 +190,7 @@ $dbh = new Conexion();
       </div>
       <div class="modal-footer">
         <!-- <a  type="button" href="../descuentos_conta/descuentos_detalle_consolidado.php?codigo=0" class="btn btn-danger btn-sm close"  aria-label="Close">Cerrar</a> -->
-        <a  type="button"  data-dismiss="modal" class="btn btn-danger btn-sm close"  aria-label="Close">Cerrar</a>
+        <a  type="button"  data-dismiss="modal" class="btn btn-danger btn-sm text-white" >Cerrar</a>
       </div>
     </div>
   </div>
@@ -222,8 +225,8 @@ $dbh = new Conexion();
          </table>
       </div>
       <div class="modal-footer">
-        <button  type="button" onclick="cambiarMesDescuentoPersonal()" class="btn btn-success btn-sm close" aria-label="Close">Guardar</button>
-        <a  type="button"  data-dismiss="modal" class="btn btn-danger btn-sm close"  aria-label="Close">Cancelar</a>
+        <button  type="button" onclick="cambiarMesDescuentoPersonal()" class="btn btn-success btn-sm text-white" aria-label="Close">Guardar</button>
+        <a  type="button"  data-dismiss="modal" class="btn btn-danger btn-sm text-white"  >Cancelar</a>
       </div>
     </div>
   </div>

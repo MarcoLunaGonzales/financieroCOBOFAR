@@ -17,16 +17,20 @@ require_once '../conexion.php';
 require_once '../functions.php';
 $dbhFin = new Conexion();
 $minutos_tolerancia=obtenerValorConfiguracionPlanillas(37);
-$sql="SELECT IFNULL(max(fecha),'2022-07-01') as fecha from asistencia_procesada";
+$sql="SELECT max(fecha) as fecha from asistencia_procesada where cod_uo=2";
 $stmtFecha = $dbhFin->prepare($sql);
 $stmtFecha->execute();
 $stmtFecha->bindColumn('fecha', $fechaUltimoProc);
 while ($rowFecha = $stmtFecha->fetch()) {
   $fechaUltimoProc=$fechaUltimoProc;
 }
-// $fechaUltimoProc="2022-08-07";
+// $fechaUltimoProc="2022-08-01";
 
-$fechaFinal=date('Y-m-d');
+//$fechaFinal=date('Y-m-d',strtotime(date('Y-m-d')-));
+
+$fecha_actual = date("Y-m-d");
+//RESTO 1 día
+$fechaFinal=date("Y-m-d",strtotime($fecha_actual."- 1 days")); 
 // $fechaFinal="2022-08-07";
 if($fechaFinal>$fechaUltimoProc){//validacion para no repetir ese día
 
@@ -146,7 +150,7 @@ if($fechaFinal>$fechaUltimoProc){//validacion para no repetir ese día
       where r.fecha_marcado BETWEEN '$fechaUltimoProc 00:00:00' and '$fechaFinal 23:59:59' and r.cod_ciudad in (select c.cod_ciudad from ciudades c where c.cod_area=$cod_areax)
       group by r.cod_funcionario,DATE(r.fecha_marcado)
       order by r.fecha_marcado";
-     // echo $sqlPersonal."<br><br>";
+      // echo $sqlPersonal."<br><br>";
     $respPersonal=mysqli_query($dbh,$sqlPersonal);
     // echo $sqlPersonal;
     while($datPersonal=mysqli_fetch_array($respPersonal)){
@@ -274,28 +278,13 @@ if($fechaFinal>$fechaUltimoProc){//validacion para no repetir ese día
           $minutosAbandono+=$minutosAsignados;
         }
       }
-      $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono) 
-        VALUES ('$fechaMarcado_x','$cod_funcionario','$cod_areax','$cod_horario','$hora_entrada','$hora_salida','$horaMarcado','$horaMarcadoFin','$minutosAsignados','$minutosTrabajados','$minutosAtraso','$minutosExtras','$estadoAsistencia','$minutosAbandono')";
+      $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono,cod_uo) 
+        VALUES ('$fechaMarcado_x','$cod_funcionario','$cod_areax','$cod_horario','$hora_entrada','$hora_salida','$horaMarcado','$horaMarcadoFin','$minutosAsignados','$minutosTrabajados','$minutosAtraso','$minutosExtras','$estadoAsistencia','$minutosAbandono','2')";
         // echo $sqlInsert."RRRR"; 
         $stmtInsert = $dbhFin->prepare($sqlInsert);
         $flagSuccessInsert=$stmtInsert->execute();
       ?>
-      <tr>
-        <td><?=$fechaMarcado_x?></td>
-        <td><?=$cod_funcionario?></td> 
-        <td><?=$cod_areax?></td> 
-        <td><?=$cod_horario?></td> 
-        <td><?=$hora_entrada?></td> 
-        <td><?=$hora_salida?></td> 
-        <td><?=$horaMarcado?></td>
-        <td><?=$horaMarcadoFin?></td>
-        <td><?=$minutosAsignados?></td>
-        <td><?=$minutosTrabajados?></td>
-        <td><?=$minutosAtraso?></td>
-        <td><?=$minutosExtras?></td>
-        <td><?=$minutosAbandono?></td>
-        <td><?=$estadoAsistencia?></td>
-      </tr><?php
+      <?php
     }
   }
 }
@@ -368,28 +357,13 @@ while ($row = $stmtPersonal->fetch()) {
         $minutosAsignadosxy=0;
         $estadoAsistencia=2;
       }
-      $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono) 
-      VALUES ('$fechaInicioxy','$cod_personaly','$cod_areay','$cod_horarioy','$hora_entradaxy','$hora_salidaxy','-','-','$minutosAsignadosxy','0','0','0','$estadoAsistencia',0)";
+      $sqlInsert="INSERT INTO asistencia_procesada(fecha,cod_personal,cod_sucursal,cod_horario,entrada_asig,salida_asig,marcado1,marcado2,minutos_asignados,minutos_trabajados,minutos_atraso, minutos_extras,estado_asistencia,minutos_abandono,cod_uo) 
+      VALUES ('$fechaInicioxy','$cod_personaly','$cod_areay','$cod_horarioy','$hora_entradaxy','$hora_salidaxy','-','-','$minutosAsignadosxy','0','0','0','$estadoAsistencia',0,'2')";
       // echo $sqlInsert."RRRR"; 
       $stmtInsert = $dbhFin->prepare($sqlInsert);
       $flagSuccessInsert=$stmtInsert->execute();
       ?>
-      <tr>
-        <td><?=$fechaInicioxy?></td>
-        <td><?=$cod_personaly?></td> 
-        <td><?=$cod_areay?></td> 
-        <td><?=$cod_horarioy?></td> 
-        <td><?=$hora_entradaxy?></td> 
-        <td><?=$hora_salidaxy?></td> 
-        <td>-</td>
-        <td>-</td>
-        <td><?=$minutosAsignadosxy?></td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td><?=$estadoAsistencia?></td>
-      </tr>
+      
       <?php
 
     } 

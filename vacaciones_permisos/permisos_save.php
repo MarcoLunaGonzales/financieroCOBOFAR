@@ -29,8 +29,9 @@ if (isset($_POST["fecha_evento"])) {
 }
 
 $cod_estadoreferencial=1;
+$cod_sistema=1;
 // Prepare
-$sql="INSERT INTO personal_permisos (cod_personal, cod_tipopermiso,fecha_inicial,hora_inicial, fecha_final,hora_final,observaciones,cod_estado,created_at,created_by,fecha_evento,dias_permiso, cod_area,minutos_permiso) VALUES ($cod_personal,'$motivo' ,'$fecha_inicio','$hora_inicio','$fecha_final','$hora_final','$observaciones','$cod_estadoreferencial',NOW(),'$globalUser','$fecha_evento','$dias_permiso','$cod_sucursal','$minutos_solicitados')";
+$sql="INSERT INTO personal_permisos (cod_personal, cod_tipopermiso,fecha_inicial,hora_inicial, fecha_final,hora_final,observaciones,cod_estado,created_at,created_by,fecha_evento,dias_permiso, cod_area,minutos_permiso,cod_sistema) VALUES ($cod_personal,'$motivo' ,'$fecha_inicio','$hora_inicio','$fecha_final','$hora_final','$observaciones','$cod_estadoreferencial',NOW(),'$globalUser','$fecha_evento','$dias_permiso','$cod_sucursal','$minutos_solicitados','$cod_sistema')";
  // echo $sql;
 $stmt = $dbh->prepare($sql);
 $flagSuccess=$stmt->execute();

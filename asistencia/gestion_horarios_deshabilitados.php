@@ -75,7 +75,7 @@ $stmt->bindColumn('hora_salida', $hora_salidaX);
         if($globalAdmin==1){
         ?>
         <div class="card-footer fixed-bottom">           
-          <a class="btn btn-default text-white" href="?opcion=rpt_gestion_horarios_from">Volver</a>
+          <a class="btn btn-danger btn-round text-white" href="?opcion=rpt_gestion_horarios_from">Volver</a>
 
         </div>
         <?php

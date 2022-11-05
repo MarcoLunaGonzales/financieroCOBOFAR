@@ -3765,20 +3765,19 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
          $renumeracion_mensual1=$row['haber_basico'];
          $bono_antiguedad1=$row['bono_antiguedad'];
-         $domingos_feriados1=$row['bdomingos'];
          $bnoches=$row['bnoches'];
-         
+         $domingos_feriados1=$row['bdomingos'];
          $bferiados=$row['bferiados'];
-         $breintegro=$row['breintegro'];
-         $bextras=$row['bextras'];
-
-         $bono_refrigerio1=$row['brefrig'];
-         $falla_caja1=$row['bfallo'];
          $movilidad1=$row['bmovilidad'];
+         $bono_refrigerio1=$row['brefrig'];
+         $breintegro=$row['breintegro'];
+         $bventas=$row['bventas'];
+         $falla_caja1=$row['bfallo'];
+         $bextras=$row['bextras'];
       }
       $dbh = null;
       $stmt = null;
-      return array($renumeracion_mensual1,$bono_antiguedad1,$domingos_feriados1,$bono_refrigerio1,$falla_caja1,$movilidad1,$bferiados,$breintegro,$bextras);
+      return array($renumeracion_mensual1,$bono_antiguedad1,$domingos_feriados1,$bono_refrigerio1,$falla_caja1,$movilidad1,$bferiados,$breintegro,$bextras,$bnoches,$bventas);
   }
     
 
@@ -13692,8 +13691,9 @@ function cargarValoresVentasYSaldosProductosArray_prodrotacion_provPromedio($alm
       $stmt->execute();
       $valor="";
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $valor=$row['cod_area'];
+        $valor.=$row['cod_area'].",";
       }
+      $valor=trim($valor,",");
       return($valor);
    }
 

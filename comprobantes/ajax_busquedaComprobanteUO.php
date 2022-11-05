@@ -159,7 +159,7 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
                                       <div class="dropdown-divider"></div>
             <?php
               $stmtMoneda = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas where cod_estadoreferencial=1 order by 2");
-             $stmtMoneda->execute();
+              $stmtMoneda->execute();
               while ($row = $stmtMoneda->fetch(PDO::FETCH_ASSOC)) {
                 $codigoX=$row['codigo'];
                 $nombreX=$row['nombre'];
@@ -194,7 +194,8 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
           if($codigoSol[1]==0){
             if($existeCuenta==0){//estado de cuenta cerrado
               $codCajaChica=existeCajaChicaRelacionado($codigo);
-              $codDescuentoConta=existeDescuentoContaRelacionado($codigo);
+              //$codDescuentoConta=existeDescuentoContaRelacionado($codigo);
+              $codDescuentoConta=0;//temporal
               if($codCajaChica>0 || $codDescuentoConta>0){
                 // $nombreCaja=obtenerObservacionCajaChica($codCajaChica); ?>
                 <a href='#' href='#'rel="tooltip" class="btn btn-primary" title="No Editable, Descuento Relacionado">

@@ -195,134 +195,136 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
 		$flagSuccess=$stmtDel->execute();
 
 //ITERAMOS EL DETALLE
-for ($i=1;$i<=$cantidadFilas;$i++){ 	    	
-	$cuenta=$_POST["cuenta".$i];
+for ($i=1;$i<=$cantidadFilas;$i++){
+  if(isset($_POST["cuenta".$i])){
+  	$cuenta=$_POST["cuenta".$i];
 
-	if($cuenta!=0 || $cuenta!=""){
-		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
-		$unidadDetalle=$_POST["unidad".$i];
-		$area=$_POST["area".$i];
-    if($unidadDetalle==null){
-      $unidadDetalle=1;
-    }
-    if($area==null){
-      $area=522;
-    }
-
-		$debe=$_POST["debe".$i];
-		$haber=$_POST["haber".$i];
-		$glosaDetalle=$_POST["glosa_detalle".$i];
-		$codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];
-    $codActividadProyecto=$_POST["cod_actividadproyecto".$i];
-    $codAccNum=$_POST["cod_accnum".$i];
-    if($codSolicitudRecurso!=""||$codSolicitudRecurso!=0){
-      //actualizar SOLICITUDES SIS AL ESTADO PAGADO
-     //verificar que la validacion si tiene centro de costo SIS     
-      $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codSolicitudRecurso";
-      $stmtUpdate = $dbh->prepare($sqlUpdate);
-      $flagSuccess=$stmtUpdate->execute();
-
-    //habilitar cuando exista el estado pagado
-    /*$fechaHoraActual=date("Y-m-d H:i:s");
-    $idTipoObjeto=2708;
-    $idObjeto=2725; //regristado
-    $obs="Solicitud Contabilizada";
-    if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-     }*/
-    }
-    
-    $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso,cod_actividadproyecto,cod_accnum) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso','$codActividadProyecto','$codAccNum')";
-		$stmtDetalle = $dbh->prepare($sqlDetalle);
-		$flagSuccessDetalle=$stmtDetalle->execute();	
-    
-    if($_POST["cod_detallelibreta".$i]!=0){
-      $codDetalleLibreta=$_POST["cod_detallelibreta".$i];
-      $sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=$codComprobante, cod_comprobantedetalle=$codComprobanteDetalle,cod_estado=1 where codigo=$codDetalleLibreta";
-      $stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
-      $stmtDetalleUpdate->execute();  
-    }
-
-    /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA CON LA VALIDACION DE TIPO(DEBE/HABER)*/
-    $verificaEC=verificarCuentaEstadosCuenta($cuenta);
-    $tipoEstadoCuenta=verificarTipoEstadoCuenta($cuenta); // DEBE O HABER PARA ACUMULAR
-
-    $flagSuccessInsertEC=false;
-
-    if( ($verificaEC>0 && $tipoEstadoCuenta==1 && $debe>0) || ($verificaEC>0 && $tipoEstadoCuenta==2 && $haber>0) ) {
-      $codTipoEC=obtenerTipoEstadosCuenta($cuenta); //PFOVEEDOR O CLIENTE
-      $codProveedorCliente=obtenerCodigoProveedorClienteEC($cuentaAuxiliar);
-      //Insertamos el estado de cuentas por el detalle
-      $montoEC=0;
-      if($debe>0){
-        $montoEC=$debe;
-      }else{
-        $montoEC=$haber;
+  	if($cuenta!=0 || $cuenta!=""){
+  		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
+  		$unidadDetalle=$_POST["unidad".$i];
+  		$area=$_POST["area".$i];
+      if($unidadDetalle==null){
+        $unidadDetalle=1;
       }
-      $sqlInsertEC="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
-      VALUES ('$codComprobanteDetalle', '$cuenta', '$montoEC', '$codProveedorCliente', '$fechaHoraActual','0','$cuentaAuxiliar','$glosaDetalle')";
-      $stmtInsertEC = $dbh->prepare($sqlInsertEC);
-      $flagSuccessInsertEC=$stmtInsertEC->execute();      
-    }
-    //Fin insertar estado de cuentas acumular.
+      if($area==null){
+        $area=522;
+      }
+
+  		$debe=$_POST["debe".$i];
+  		$haber=$_POST["haber".$i];
+  		$glosaDetalle=$_POST["glosa_detalle".$i];
+  		$codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];
+      $codActividadProyecto=$_POST["cod_actividadproyecto".$i];
+      $codAccNum=$_POST["cod_accnum".$i];
+      if($codSolicitudRecurso!=""||$codSolicitudRecurso!=0){
+        //actualizar SOLICITUDES SIS AL ESTADO PAGADO
+       //verificar que la validacion si tiene centro de costo SIS     
+        $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codSolicitudRecurso";
+        $stmtUpdate = $dbh->prepare($sqlUpdate);
+        $flagSuccess=$stmtUpdate->execute();
+
+      //habilitar cuando exista el estado pagado
+      /*$fechaHoraActual=date("Y-m-d H:i:s");
+      $idTipoObjeto=2708;
+      $idObjeto=2725; //regristado
+      $obs="Solicitud Contabilizada";
+      if(isset($_GET['u'])){
+         $u=$_GET['u'];
+         actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+       }else{
+         actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+       }*/
+      }
+      
+      $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+  		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso,cod_actividadproyecto,cod_accnum) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso','$codActividadProyecto','$codAccNum')";
+  		$stmtDetalle = $dbh->prepare($sqlDetalle);
+  		$flagSuccessDetalle=$stmtDetalle->execute();	
+      
+      if($_POST["cod_detallelibreta".$i]!=0){
+        $codDetalleLibreta=$_POST["cod_detallelibreta".$i];
+        $sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=$codComprobante, cod_comprobantedetalle=$codComprobanteDetalle,cod_estado=1 where codigo=$codDetalleLibreta";
+        $stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
+        $stmtDetalleUpdate->execute();  
+      }
+
+      /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA CON LA VALIDACION DE TIPO(DEBE/HABER)*/
+      $verificaEC=verificarCuentaEstadosCuenta($cuenta);
+      $tipoEstadoCuenta=verificarTipoEstadoCuenta($cuenta); // DEBE O HABER PARA ACUMULAR
+
+      $flagSuccessInsertEC=false;
+
+      if( ($verificaEC>0 && $tipoEstadoCuenta==1 && $debe>0) || ($verificaEC>0 && $tipoEstadoCuenta==2 && $haber>0) ) {
+        $codTipoEC=obtenerTipoEstadosCuenta($cuenta); //PFOVEEDOR O CLIENTE
+        $codProveedorCliente=obtenerCodigoProveedorClienteEC($cuentaAuxiliar);
+        //Insertamos el estado de cuentas por el detalle
+        $montoEC=0;
+        if($debe>0){
+          $montoEC=$debe;
+        }else{
+          $montoEC=$haber;
+        }
+        $sqlInsertEC="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
+        VALUES ('$codComprobanteDetalle', '$cuenta', '$montoEC', '$codProveedorCliente', '$fechaHoraActual','0','$cuentaAuxiliar','$glosaDetalle')";
+        $stmtInsertEC = $dbh->prepare($sqlInsertEC);
+        $flagSuccessInsertEC=$stmtInsertEC->execute();      
+      }
+      //Fin insertar estado de cuentas acumular.
 
 
-        $nF=cantidadF($facturas[$i-1]);
-        
-         for($j=0;$j<$nF;$j++){
-         	  $nit=$facturas[$i-1][$j]->nit;
-         	  $nroFac=$facturas[$i-1][$j]->nroFac;
-         	  
-         	  $fechaFac=$facturas[$i-1][$j]->fechaFac;
+          $nF=cantidadF($facturas[$i-1]);
+          
+           for($j=0;$j<$nF;$j++){
+           	  $nit=$facturas[$i-1][$j]->nit;
+           	  $nroFac=$facturas[$i-1][$j]->nroFac;
+           	  
+           	  $fechaFac=$facturas[$i-1][$j]->fechaFac;
 
-            $razonFac=$facturas[$i-1][$j]->razonFac;
-            $impFac=$facturas[$i-1][$j]->impFac;            
-            $autFac=$facturas[$i-1][$j]->autFac;
-            $conFac=$facturas[$i-1][$j]->conFac;
-            
-            $exeFac=$facturas[$i-1][$j]->exeFac;
-            $tipoFac=$facturas[$i-1][$j]->tipoFac;
-            $tazaFac=$facturas[$i-1][$j]->tazaFac;
-            $iceFac=$facturas[$i-1][$j]->iceFac;
+              $razonFac=$facturas[$i-1][$j]->razonFac;
+              $impFac=$facturas[$i-1][$j]->impFac;            
+              $autFac=$facturas[$i-1][$j]->autFac;
+              $conFac=$facturas[$i-1][$j]->conFac;
+              
+              $exeFac=$facturas[$i-1][$j]->exeFac;
+              $tipoFac=$facturas[$i-1][$j]->tipoFac;
+              $tazaFac=$facturas[$i-1][$j]->tazaFac;
+              $iceFac=$facturas[$i-1][$j]->iceFac;
 
-            // echo "razonFac:".$razonFac."<br>";
-            // echo "autFac:".$autFac."<br>";
-            // echo "impFac:".$impFac."<br>";
-            // echo "iceFac:".$iceFac."<br>";
-            // echo "exc:".$exeFac."<br>";
-            // echo "tipo:".$tipoFac."<br>";
-            // echo "tasa:".$tazaFac."<br>";
-            // echo "nit:".$nit."<br>";
+              // echo "razonFac:".$razonFac."<br>";
+              // echo "autFac:".$autFac."<br>";
+              // echo "impFac:".$impFac."<br>";
+              // echo "iceFac:".$iceFac."<br>";
+              // echo "exc:".$exeFac."<br>";
+              // echo "tipo:".$tipoFac."<br>";
+              // echo "tasa:".$tazaFac."<br>";
+              // echo "nit:".$nit."<br>";
 
-		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra,tasas) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','0','$tipoFac','$tazaFac')";
-		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
-		      $flagSuccessDetalle2=$stmtDetalle2->execute();
-         }
+  		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra,tasas) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','0','$tipoFac','$tazaFac')";
+  		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+  		      $flagSuccessDetalle2=$stmtDetalle2->execute();
+           }
 
-         //itemEstadosCuenta
-         if($flagSuccessInsertEC==false){
-          $nC=cantidadF($estadosCuentas[$i-1]);
-          for($j=0;$j<$nC;$j++){
-              $fecha=date("Y-m-d H:i:s");
-            if(isset($estadosCuentas[$i-1][$j]->cod_plancuenta)){
-              $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
-              $codPlanCuentaAux=$estadosCuentas[$i-1][$j]->cod_plancuentaaux;
-              $monto=$estadosCuentas[$i-1][$j]->monto;
-              $codProveedor=obtenerCodigoProveedorCuentaAux($codPlanCuentaAux);
-              $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
-              $fecha=$fecha;
-              $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
-              $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
-              $flagSuccessDetalle3=$stmtDetalle3->execute();
-             }
-          }    
-         }
-         //FIN DE ESTADOS DE CUENTA
-	}
+           //itemEstadosCuenta
+           if($flagSuccessInsertEC==false){
+            $nC=cantidadF($estadosCuentas[$i-1]);
+            for($j=0;$j<$nC;$j++){
+                $fecha=date("Y-m-d H:i:s");
+              if(isset($estadosCuentas[$i-1][$j]->cod_plancuenta)){
+                $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
+                $codPlanCuentaAux=$estadosCuentas[$i-1][$j]->cod_plancuentaaux;
+                $monto=$estadosCuentas[$i-1][$j]->monto;
+                $codProveedor=obtenerCodigoProveedorCuentaAux($codPlanCuentaAux);
+                $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
+                $fecha=$fecha;
+                $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
+                $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
+                $flagSuccessDetalle3=$stmtDetalle3->execute();
+               }
+            }    
+           }
+           //FIN DE ESTADOS DE CUENTA
+  	}
+  }
 } 
 
 if($desdeSR==0){

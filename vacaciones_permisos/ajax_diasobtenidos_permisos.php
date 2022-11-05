@@ -46,7 +46,8 @@ $horas_obtenidos=number_format($minutos/60, 2, '.', '');
 
 $dias_obtenidos=$dias_obtenidos-$total_domingos_mes-$total_feriados_mes;
 
-$string_hora="Solicitar: Días: $dias_obtenidos, Minutos : $minutos_obtenidos ($horas_obtenidos Hrs) ";
+// $string_hora="Solicitar: Días: $dias_obtenidos, Minutos : $minutos_obtenidos ($horas_obtenidos Hrs) ";
+$string_hora="$dias_obtenidos Días, $minutos_obtenidos minutos  ($horas_obtenidos Hrs) ";
 ?>
 <input  type='text' class='form-control' readonly="true" style="background: white;color:green;font-size: 18px;"  value="<?=$string_hora?>">
 <input  type='hidden' id="dias_solicitadas" name="dias_solicitadas" value="<?=$dias_obtenidos?>">

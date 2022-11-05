@@ -40,6 +40,7 @@ $dbh = new Conexion();
                                         <tr style="background:#18537e;color:white;">
                                           <th class="text-center small"><small>#</small></th>
                                           <th class="text-center small"><small>Personal</small></th>
+                                          <th class="text-center small"><small>Personal</small></th>
                                           <th class="text-center small"><small>Haber Básico</small></th>
                                           <th class="text-center small"><small>Descuento (<?=$nombreMes?>)</small></th>
                                           <th class="text-center small"><small>Saldo</small></th>
@@ -53,7 +54,7 @@ $dbh = new Conexion();
                                         $index=1;
                                         $Sumadescuento=0;
                                         $Sumasaldo_descuento=0;
-                                        $sql="SELECT dd.cod_personal,sum(ddm.monto)as descuento,p.haber_basico,p.primer_nombre,p.paterno,p.materno
+                                        $sql="SELECT dd.cod_personal,sum(ddm.monto)as descuento,p.haber_basico,p.identificacion,p.primer_nombre,p.paterno,p.materno
                                             from descuentos_conta d  join descuentos_conta_detalle dd on d.codigo=dd.cod_descuento join personal p on dd.cod_personal=p.codigo join descuentos_conta_detalle_mes  ddm on ddm.cod_descuento_detalle=dd.codigo
                                             where d.cod_estado=3 and ddm.mes=$globalMes and ddm.gestion=$globalGestion
                                             GROUP BY dd.cod_personal
@@ -64,6 +65,7 @@ $dbh = new Conexion();
                                         $stmt->bindColumn('cod_personal', $cod_personal);
                                         $stmt->bindColumn('descuento', $descuento);
                                         $stmt->bindColumn('haber_basico', $haber_basico);
+                                        $stmt->bindColumn('identificacion', $identificacion);
                                         $stmt->bindColumn('primer_nombre', $primer_nombre);
                                         $stmt->bindColumn('paterno', $paterno);
                                         $stmt->bindColumn('materno', $materno);
@@ -104,6 +106,7 @@ $dbh = new Conexion();
                                             ?>
                                             <tr>
                                                 <td class="text-left"><small><?=$index?></small></td>
+                                                <td class="text-left"><small><?=$identificacion?></small></td>
                                                 <td class="text-left"><small><?=$nombre_personal?></small></td>
                                                 <td class="text-right"><small><?=formatNumberDec($haber_basico,2);?></small></td>
                                                 <td class="text-right" ><small><?=formatNumberDec($descuento,2)?></small></td>

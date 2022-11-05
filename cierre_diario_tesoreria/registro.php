@@ -38,7 +38,7 @@ if($tipo==1){
 				  <label class="col-sm-2 col-form-label text-dark font-weight-bold">COMPROBANTE</label>
 				  <div class="col-sm-3">
 					<div class="form-group">
-					  <input class="form-control" placeholder="Ejemplo T07-450" type="text" name="comprobante" id="comprobante" onkeypress="verificarComprobanteExiste();" onkeyup="verificarComprobanteExiste();" onblur="verificarComprobanteExiste();" required>
+					  <input class="form-control" placeholder="Ejemplo T07-450" type="text" name="comprobante" id="comprobante" onkeypress="verificarComprobanteExiste();" onkeyup="verificarComprobanteExiste();" onblur="verificarComprobanteExiste();" >
 					</div>
 				  </div>
 				  <input type="hidden" name="cod_comprobante" id="cod_comprobante">

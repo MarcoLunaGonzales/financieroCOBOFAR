@@ -69,8 +69,11 @@ where f.cod_estadoreferencial=1 and f.tipo_beneficio=1 limit 20");//f.tipo_benef
                         <?php
                           if($globalAdmin==1){
                         ?>
-                          <a href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
+                          <a href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>&f=1' target="_blank" rel="tooltip" class="btn btn-danger">
                             <i class="material-icons" title="Imprimir Finiquito">print</i>
+                          </a>
+                          <a href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>&f=2' target="_blank" rel="tooltip" class="btn btn-success">
+                            <i class="material-icons" title="Descargar en Excel">file_download</i>
                           </a>
                           <a href="index.php?opcion=vacacionesPersonalLista&cf=<?=$cod_personal?>" target="_blank" class="btn btn-sm btn-warning"><i class="material-icons" title="Ir a Vacaciones">arrow_right_alt</i></a>
                           <a href='<?=$urlFormFiniquitos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
@@ -106,91 +109,3 @@ where f.cod_estadoreferencial=1 and f.tipo_beneficio=1 limit 20");//f.tipo_benef
       </div>
     </div>
   </div>
-  <!--modal procesar-->
-  <!-- <div class="modal fade" id="modalProcesarNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="codigo_planillaNA" id="codigo_planillaNA" value="0">
-          <input type="hidden" name="codigo_uoNA" id="codigo_uoNA" value="0"> 
-          Esta acción Procesará La planilla Del Mes En Curso. ¿Deseas Continuar?
-          <div id="cargaPNA" style="display:none">
-            <h3><b>Por favor espere...</b></h3>
-          </div>
-        </div>       
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="AceptarProcesoNA">Aceptar</button>
-          <button type="button" class="btn btn-danger" id="CancelarProcesoNA" data-dismiss="modal" > <-- Volver </button>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <!--modal Reprocesar-->
- <!--  <div class="modal fade" id="modalreProcesarNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="codigo_planillaRPNA" id="codigo_planillaRPNA" value="0">        
-          <input type="hidden" name="codigo_uoRPNA" id="codigo_uoRPNA" value="0">        
-          Esta acción ReProcesará La planilla Del Mes En Curso. ¿Deseas Continuar?
-          <div id="cargaRNA" style="display:none">
-            <h3><b>Por favor espere...</b></h3>
-          </div>
-        </div>    
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="AceptarReProcesoNA" >Aceptar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal" id="CancelarReProcesoNA"> <-- Volver </button>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <!--modal Cerrra-->
-  <!-- <div class="modal fade" id="modalCerrarNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="codigo_planillaCPNA" id="codigo_planillaCPNA" value="0">        
-          <input type="hidden" name="codigo_uoCPNA" id="codigo_uoCPNA" value="0">        
-          Esta acción Cerrará La planilla Del Mes En Curso. ¿Deseas Continuar?
-        </div>       
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="AceptarCerrarNA" data-dismiss="modal">Aceptar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <!-- <script type="text/javascript">
-    $(document).ready(function(){
-      $('#AceptarProcesoNA').click(function(){      
-        var cod_planilla=document.getElementById("codigo_planillaNA").value;
-        var cod_uo=document.getElementById("codigo_uoNA").value;            
-        ProcesarPlanillaNA(cod_planilla,cod_uo);
-      });
-      $('#AceptarReProcesoNA').click(function(){      
-        cod_planilla=document.getElementById("codigo_planillaRPNA").value; 
-        cod_uo=document.getElementById("codigo_uoRPNA").value;      
-        ReprocesarPlanillaNA(cod_planilla,cod_uo);
-      });
-      $('#AceptarCerrarNA').click(function(){      
-        cod_planilla=document.getElementById("codigo_planillaCPNA").value;
-        cod_uo=document.getElementById("codigo_uoCPNA").value;      
-
-        CerrarPlanillaNA(cod_planilla,cod_uo);
-      });
-      
-    });
-  </script> -->
-

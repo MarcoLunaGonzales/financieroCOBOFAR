@@ -12,14 +12,16 @@ date_default_timezone_set('America/La_Paz');
 $user=$_POST["user"];
 $password=$_POST["password"];
 
+$password_mds5=md5($password);
+
 //OBTENEMOS EL VALOR DE LA CONFIGURACION 1 -> LOGIN PROPIO DE MONITOREO    2-> LOGIN POR SERVICIO WEB
 
 $banderaLogin=0;
 
-	$sql="";
-		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil,pd.admin
+
+	$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil,pd.admin
 			from personal p, personal_datosadicionales pd 
-			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";
+			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password_mds5' and pd.cod_estado=1";
 	// echo $sql;
 
 	$stmt = $dbh->prepare($sql);

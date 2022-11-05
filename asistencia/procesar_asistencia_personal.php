@@ -17,16 +17,20 @@ require_once '../conexion.php';
 require_once '../functions.php';
 $dbhFin = new Conexion();
 $minutos_tolerancia=obtenerValorConfiguracionPlanillas(37);
-$sql="SELECT IFNULL(max(fecha),'2022-08-01') as fecha from asistencia_procesada and cod_uo=2";
+$sql="SELECT max(fecha) as fecha from asistencia_procesada where cod_uo=2";
 $stmtFecha = $dbhFin->prepare($sql);
 $stmtFecha->execute();
 $stmtFecha->bindColumn('fecha', $fechaUltimoProc);
 while ($rowFecha = $stmtFecha->fetch()) {
   $fechaUltimoProc=$fechaUltimoProc;
 }
-$fechaUltimoProc="2022-08-01";
+// $fechaUltimoProc="2022-08-01";
 
-$fechaFinal=date('Y-m-d');
+//$fechaFinal=date('Y-m-d',strtotime(date('Y-m-d')-));
+
+$fecha_actual = date("Y-m-d");
+//RESTO 1 día
+$fechaFinal=date("Y-m-d",strtotime($fecha_actual."- 1 days")); 
 // $fechaFinal="2022-08-07";
 if($fechaFinal>$fechaUltimoProc){//validacion para no repetir ese día
 

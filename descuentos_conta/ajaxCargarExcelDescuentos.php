@@ -14,13 +14,10 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-// $globalNombreGestion=$_SESSION["globalNombreGestion"];
-// $globalUser=$_SESSION["globalUser"];
-// $globalGestion=$_SESSION["globalGestion"];
-// $globalUnidad=$_SESSION["globalUnidad"];
-// $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
-// $globalArea=$_SESSION["globalArea"];
-// $globalAdmin=$_SESSION["globalAdmin"];
+$cod_mes=$_SESSION['globalMes'];
+$cod_mes = str_pad($cod_mes, 2, "0", STR_PAD_LEFT);//
+$fecha_inicio=$nombreGestion.'-'.$cod_mes.'-01';
+$fecha_final=date('Y-m-t',strtotime($fecha_inicio));
 
 $filas=$_POST['filas'];
 $datos=json_decode($_POST['datos']);
@@ -99,7 +96,13 @@ for ($fila=0; $fila < count($datos); $fila++) {
             <select class="selectpicker form-control form-control-sm" data-live-search="true" name="cod_personal<?=$idFila;?>" id="cod_personal<?=$idFila;?>" data-style="btn btn-primary" required="true">
                 <option disabled selected="selected" value="">Personal</option>
                 <?php                 
-                  $sql="SELECT codigo,identificacion,paterno,materno,primer_nombre from personal where cod_estadopersonal in (1) and cod_estadoreferencial=1";
+                  $sql="SELECT codigo,identificacion,paterno,materno,primer_nombre from personal where cod_estadopersonal in (1) and cod_estadoreferencial=1
+                  union
+                  select p.codigo,p.identificacion,p.paterno,p.materno,p.primer_nombre
+                  from personal p join personal_retiros pr on p.codigo=pr.cod_personal
+                  where pr.fecha_retiro BETWEEN '$fecha_inicio' and '$fecha_final'
+                  order by 1";
+                  
                   $stmt3 = $dbh->prepare($sql);
                   $stmt3->execute();
                   while ($rowsuc = $stmt3->fetch(PDO::FETCH_ASSOC)) {

@@ -66,7 +66,7 @@ if(isset($resultPendintes['contador'])){
   $pendientes_aprobacion=0;
 }
 
-$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,pp.minutos_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.cod_personal_autorizado,pp.observaciones_rechazo,pp.created_at,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_autorizado)as nombre_personal_autorizado,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_aprobado)as nombre_personal_aprobado,a.abreviatura as area,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.created_by)as nombre_personal_solicitado
+$sql="SELECT pp.codigo,pp.cod_personal,pp.cod_tipopermiso,tpp.nombre as nombre_tipopermiso,pp.fecha_inicial,pp.hora_inicial,pp.fecha_final,pp.hora_final,pp.fecha_retorno,pp.observaciones,pp.cod_estado,epp.nombre as nombre_estado,pp.fecha_evento,pp.dias_permiso,pp.minutos_permiso,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal)as nombre_personal,pp.cod_personal_autorizado,pp.observaciones_rechazo,pp.created_at,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_autorizado)as nombre_personal_autorizado,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.cod_personal_aprobado)as nombre_personal_aprobado,a.abreviatura as area,(select CONCAT_WS(' ',p.primer_nombre,p.paterno) from personal p where p.codigo=pp.created_by)as nombre_personal_solicitado
 from personal_permisos pp join estados_permisos_personal epp on pp.cod_estado=epp.codigo join tipos_permisos_personal tpp on pp.cod_tipopermiso=tpp.codigo join areas a on pp.cod_area=a.codigo
  where (pp.created_by=$cod_personal_q or pp.cod_personal=$cod_personal_q)   order by pp.created_at desc limit 50";
   // echo "<br><br><br>".$sql;//and cod_area in ($cod_area)
@@ -80,6 +80,7 @@ $stmt->bindColumn('nombre_tipopermiso', $nombre_tipopermiso);
 $stmt->bindColumn('fecha_inicial', $fecha_inicial);
 $stmt->bindColumn('hora_inicial', $hora_inicial);
 $stmt->bindColumn('fecha_final', $fecha_final);
+$stmt->bindColumn('fecha_retorno', $fecha_retorno);
 $stmt->bindColumn('hora_final', $hora_final);
 $stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_estado', $cod_estado);
@@ -114,14 +115,15 @@ $stmt->bindColumn('nombre_personal_solicitado', $nombre_personal_solicitado);
             <div class="table-responsive">
               <table id="tablePaginator100" class="table table-condensed table-bordered">
                 <thead>
-                  <tr  class='bg-dark text-white'>
+                  <tr class='bg-dark text-white'>
                     <th class="text-left" width="2%">#</th>
                     <th class="text-center" width="5%">Area/Suc.</th>
                     <th class="text-center" width="15%">Personal</th>
                     <th class="text-center" width="15%">Tipo Permiso</th>
                     <th class="text-center" width="5%">Fecha<br>Solicitud</th>
-                    <th class="text-center" width="5%">Salida</th>
-                    <th class="text-center" width="5%">Retorno</th>
+                    <th class="text-center" width="5%">F.Inicio</th>
+                    <th class="text-center" width="5%">F.Fin</th>
+                    <th class="text-center" width="5%">F.Retorno</th>
                     <th class="text-center" width="2%">Total Días</th>
                     <th class="text-center" width="2%">Total Min</th>
                     <th class="text-center">Observaciones</th>
@@ -201,6 +203,7 @@ $stmt->bindColumn('nombre_personal_solicitado', $nombre_personal_solicitado);
                       <td class="text-center"><?=date('d/m/Y',strtotime($created_at));?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($fecha_inicial));?></td>
                       <td class="text-center"><?=date('d/m/Y',strtotime($fecha_final));?></td>
+                      <td class="text-center"><?=date('d/m/Y',strtotime($fecha_retorno));?></td>
                       <td class="text-center"><?=$dias_permiso;?></td>
                       <td class="text-center"><?=$minutos_permiso;?></td>
                       <td class="text-center"><?=$observaciones." ".$observaciones_rechazo;?></td>

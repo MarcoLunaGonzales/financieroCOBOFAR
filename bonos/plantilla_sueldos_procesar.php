@@ -115,7 +115,7 @@ if (isset($_POST["cod_mes"])) {
         // var_dump($array_descuentos);
         for ($j=0; $j < $contadorDescuentos; $j++) { 
             $codigoDescuento=$array_descuentos[$j];
-            if($codigoDescuento==$cod_descuento_as){// Aporte al sindicato
+            if($codigoDescuento==$cod_descuento_as){// Aporte al sindicato//tipo 2
                 $montoDescuento=obtenerBonoDescuentoPactado($cod_personal,$cod_descuento_as,2);
             }else{//tipo 3 procesado por sistema
                 $montoDescuento=obtenerDescuentoPersonalMes($cod_personal,$codMes,$globalNombreGestion,$codigoDescuento);

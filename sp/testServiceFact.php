@@ -7,15 +7,54 @@ $sIde = "bolfincobo";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 
 $direccion=obtenerValorConfiguracion(45);//direccion del servicio web ifinanciero
-// $direccion="localhost:8090/financieroCOBOFAR/wsifin/";
+ $direccion="localhost:8090/financieroCOBOFAR/wsifin/";
 
-$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
-    "accion"=>"listPlanillasSueldos", 
-    "codPersonal"=>32);
+//planillas
+
+// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+//     "accion"=>"listPlanillasSueldos", 
+//     "codPersonal"=>32);
+// $parametros=json_encode($parametros);
+// // abrimos la sesiรณn cURL
+// $ch = curl_init();
+// curl_setopt($ch, CURLOPT_URL,$direccion."ws_list_planillas.php");
+// // indicamos el tipo de peticiรณn: POST
+// curl_setopt($ch, CURLOPT_POST, TRUE);
+// // definimos cada uno de los parรกmetros
+// curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+// // recibimos la respuesta y la guardamos en una variable
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// $remote_server_output = curl_exec ($ch);
+// curl_close ($ch);
+
+//permisos
+
+// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+//     "accion"=>"listTipoPermisos", 
+//     "codPersonal"=>32);
+// $parametros=json_encode($parametros);
+// // abrimos la sesiรณn cURL
+// $ch = curl_init();
+// curl_setopt($ch, CURLOPT_URL,$direccion."ws_operaciones_permisos.php");
+// // indicamos el tipo de peticiรณn: POST
+// curl_setopt($ch, CURLOPT_POST, TRUE);
+// // definimos cada uno de los parรกmetros
+// curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+// // recibimos la respuesta y la guardamos en una variable
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// $remote_server_output = curl_exec ($ch);
+// curl_close ($ch);
+
+
+
+ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+    "accion"=>"totalFeriados", 
+    "fi"=>'2022-10-20',
+    "ff"=>'2022-10-20');
 $parametros=json_encode($parametros);
 // abrimos la sesiรณn cURL
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL,$direccion."ws_list_planillas.php");
+curl_setopt($ch, CURLOPT_URL,$direccion."ws_operaciones_permisos.php");
 // indicamos el tipo de peticiรณn: POST
 curl_setopt($ch, CURLOPT_POST, TRUE);
 // definimos cada uno de los parรกmetros
@@ -24,6 +63,8 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $remote_server_output = curl_exec ($ch);
 curl_close ($ch);
+
+
 
 $respuesta=json_decode($remote_server_output);
 // imprimir en formato JSON

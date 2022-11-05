@@ -17,7 +17,7 @@ $stmtX->execute();
 
 $sql="SELECT afa.cod_activosfijos,(select activo from activosfijos where codigo=afa.cod_activosfijos)as activo,afa.fechaasignacion,(select abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional)as cod_unidadorganizacional,(select abreviatura from areas where codigo=afa.cod_area)as cod_area,(select CONCAT_WS(' ',paterno,materno,primer_nombre) from personal where codigo=afa.cod_personal)as nom_personal,afa.cod_personal,afa.estadobien_asig,(select nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf)as estado_asignacionaf,afa.cod_estadoasignacionaf,afa.fecha_recepcion,afa.observaciones_recepcion,afa.fecha_devolucion,afa.observaciones_devolucion
 FROM activofijos_asignaciones afa
-order by 2";
+order by 2 limit 100";
 
 $stmt = $dbh->prepare($sql);
 //ejecutamos
@@ -90,7 +90,6 @@ $stmt->bindColumn('observaciones_devolucion', $observaciones_devolucion);
                             if($cod_estadoasignacionaf==5){
                               $label='<span class="badge badge-dark">';
                             }
-
                           ?>
                             <tr>
                                 <td  class="td-actions text-right">

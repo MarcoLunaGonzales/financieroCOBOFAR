@@ -143,11 +143,8 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                                 }
                                 ?>
                                 <tr class="d-none fila_<?=$gestion?>" style="background: #6EFCE6; color:#000;">
-                                <td align="center"><?=$fecha_inicialDet?></td><td align="center"><?=$fecha_finalDet?></td><td align="center"><?=round($dias_vacacionDet)?></td><td><?=$tipo_vacacionDet?></td><td align="center" ><b><?=$saldo_gestionDet?></b></td>
+                                <td align="center"><?=$fecha_inicialDet?></td><td align="center"><?=$fecha_finalDet?></td><td align="center"><?=$dias_vacacionDet?></td><td><?=$tipo_vacacionDet?></td><td align="center" ><b><?=$saldo_gestionDet?></b></td>
                                 <td class="td-actions text-right">
-                                  <!-- <button type="button" class="btn btn-success btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalEdit" onclick="agregaformVacaciones_edit('<?=$datosModal;?>')">
-                                    <i class="material-icons" title="Editar Vacación">edit</i>
-                                 </button>-->                                 
                                   <button rel="tooltip" class="btn btn-danger  btn-sm" onclick="alerts.showSwal('warning-message-and-confirmation','index.php?opcion=vacacionesdeletepersonal&codigo=<?=$cod_detalle;?>&cod_personal=<?=$cod_personal;?>&ing_planilla=<?=$ing_planilla;?>&fecha_actual=<?=$fecha_actual;?>')">
                                   <i class="material-icons" ><?=$iconDelete;?></i>
                                 </button>
@@ -201,6 +198,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
           <div class="card-footer ml-auto mr-auto ">
             <a href="index.php?opcion=vacacionesPersonalLista" class="btn btn-sm btn-danger"> <-- Volver </a>
             <a href="vacaciones_permisos/vacaciones_pdf.php?cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>&aa=<?=$anios_antiguedad?>&datos=<?=$array_datos?>" target="_blank" class="btn btn-sm btn-warning"><i class="material-icons">print</i> Imprimir </a>
+            <a href="vacaciones_permisos/vacaciones_pdf2.php?cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>&aa=<?=$anios_antiguedad?>&datos=<?=$array_datos?>" target="_blank" class="btn btn-sm btn-warning"><i class="material-icons">print</i> Imprimir 2</a>
             <a href="index.php?opcion=vacacionesValidacion&cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>" class="btn btn-sm btn-info"><i class="material-icons">access_time</i> Capturar Fecha Validación </a>
             <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalAgregarGeneral">
               <i class="material-icons" title="Vacaciones Generales">add</i>

@@ -109,7 +109,7 @@ if($tipo==1){
                           $suma_inicial_altas=0;
                           $sqlActivosAlta="SELECT codigoactivo,otrodato,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechaltax, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable2) as cod_responsables_responsable2, cod_estadoactivofijo,fecha_baja,obs_baja,valorinicial,valorresidual
                           from activosfijos 
-                          where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd
+                          where  cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd
                           and fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59' and fechalta <> '2021-01-01'
                           order by fechalta";  
                           $stmtActivosAlta = $dbh->prepare($sqlActivosAlta);
@@ -198,7 +198,7 @@ if($tipo==1){
                           $contador = 0;
                           $sqlActivosBaja="SELECT codigo,codigoactivo,otrodato,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechalta, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable2) as cod_responsables_responsable2, cod_estadoactivofijo,fecha_baja,obs_baja
                           from activosfijos 
-                          where cod_estadoactivofijo = 3 and tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd
+                          where cod_estadoactivofijo = 3 and  cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd
                           and fecha_baja BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59'
                           order by fecha_baja";  
                           $stmtActivosBajas = $dbh->prepare($sqlActivosBaja);

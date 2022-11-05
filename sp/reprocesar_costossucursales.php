@@ -31,8 +31,8 @@ $dbhDet = new Conexion();
 
 echo "<h6>Hora Inicio Proceso: " . date("Y-m-d H:i:s")."</h6><br>";
 
-$fecha_inicio='2022-08-01';
-$fecha_fin='2022-08-31';
+$fecha_inicio='2022-09-01';
+$fecha_fin='2022-09-30';
 
 //para el costo promedio***
 // $cod_mes=1;

@@ -82,7 +82,7 @@ $html.=  '<header class="header">'.
             $html.='</header>';
 
                     $html.='<table class="table"><thead>
-                        <tr style="background:#45b39d;color:black;"><td></td><td align="center">F.INICIO</td><td align="center">F.FIN</td><td align="center">TOTAL DIAS</td><td align="center">TIPO</td><td align="center">SALDO</td></tr></thead><tbody>';
+                        <tr style="background:#45b39d;color:black;"><td align="center">TIPO</td><td align="center">F.INICIO</td><td align="center">F.FIN</td><td align="center">TOTAL DIAS</td><td align="center">SALDO</td></tr></thead><tbody>';
                     $saldo_total=0;
                     $contador_items=count($datos);
                     for ($i=0; $i <$contador_items; $i++) {
@@ -108,7 +108,7 @@ $html.=  '<header class="header">'.
                             $stmt->execute();
                             
                             $contador_det=0;
-                            $html.='<tr style="padding:0px !important"><td align="center" rowspan="'.$total_det.'">GESTION<BR><b>'.$nombre_gestion.'</b><BR>ACUMULADO <b>'.$acumulado_gestion.'</b> DIAS</td>';
+                            
                             while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 $fecha_inicial=$result['fecha_inicial'];
                                 $hora_inicial=$result['hora_inicial'];
@@ -124,14 +124,18 @@ $html.=  '<header class="header">'.
                                     $fecha_final="-";
                                 }
                                 
-                                if($contador_det>0){
-                                    $html.='<tr>';
+                                // if($contador_det>0){
+                                //     $html.='<tr>';
+                                // }
+                                if($contador_det==0){
+                                    $html.='<tr><td colspan="5"><span style="font-size:12px"><center><b>GESTION '.$nombre_gestion.' <br>ACUMULADO '.$acumulado_gestion.' DIAS </b></center></span></td></tr>';
                                 }
+
                                 $contador_det++;
-                                $html.='<td align="center">'.$fecha_inicial.'</td><td align="center">'.$fecha_final.'</td><td align="center">'.round($dias_vacacion).'</td><td>'.$tipo_vacacion.'</td><td align="center" ><b>'.$saldo_gestion.'</b></td></tr>';
+                                $html.='<tr style="padding:0px !important"><td>'.$tipo_vacacion.'</td><td align="center">'.$fecha_inicial.'</td><td align="center">'.$fecha_final.'</td><td align="center">'.round($dias_vacacion).'</td><td align="center" ><b>'.$saldo_gestion.'</b></td></tr>';
                             }
                             if($contador_det==0){
-                                $html.='<td></td><td></td><td></td><td></td><td align="center"><h2>'.$saldo_gestion.'</h2></td></tr>';
+                                $html.='<tr><td ><center><b>GESTION '.$nombre_gestion.'<br>ACUMULADO '.$acumulado_gestion.' DIAS</b></center></td><td></td><td></td><td></td><td align="center"><h2>'.$saldo_gestion.'</h2></td></tr>';
                             }
                             $saldo_total+=$saldo_gestion;
                         }else{
@@ -140,7 +144,7 @@ $html.=  '<header class="header">'.
                             $doudecimas=$acumulado_gestion;
                         }
                     }
-                    $html.='<tr style="background:#45b39d;color:black;"><td colspan="5" align="right">SALDO TOTAL AL '.date("d/m/Y").' </td><td align="center"><h2>'.$saldo_total.' días</h2></td></tr>';
+                    $html.='<tr style="background:#45b39d;color:black;"><td colspan="4" align="right">SALDO TOTAL AL '.date("d/m/Y").' </td><td align="center"><h2>'.$saldo_total.' días</h2></td></tr>';
 
                     
 

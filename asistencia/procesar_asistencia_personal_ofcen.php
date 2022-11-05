@@ -10,7 +10,7 @@ $dbhFin = new Conexion();
 
 $minutos_tolerancia=obtenerValorConfiguracionPlanillas(37);
 
-$sql="SELECT IFNULL(max(fecha),'2022-09-01') as fecha from asistencia_procesada and cod_uo=1";
+$sql="SELECT max(fecha) as fecha from asistencia_procesada where cod_uo=1";
 $stmtFecha = $dbhFin->prepare($sql);
 $stmtFecha->execute();
 $stmtFecha->bindColumn('fecha', $fechaUltimoProc);
@@ -18,12 +18,16 @@ while ($rowFecha = $stmtFecha->fetch()) {
   $fechaUltimoProc=$fechaUltimoProc;
 }
 
-$fechaFinal=date('Y-m-d');
+// $fechaFinal=date('Y-m-d');
+$fecha_actual = date("Y-m-d");
+//RESTO 1 día
+$fechaFinal=date("Y-m-d",strtotime($fecha_actual."- 1 days"));
+
 // $fechaFinal="2022-08-07";
 //if($fechaFinal>$fechaUltimoProc){//validacion para no repetir ese día
 
-$fechaUltimoProc="2022-09-01";
-// $fechaFinal="2022-09-30";
+// $fechaUltimoProc="2022-09-01";
+ $fechaFinal="2022-10-31";//es necesario esta linea, por que el biometrico solo se carga hasta el ultimo mes
 
 
 ?>

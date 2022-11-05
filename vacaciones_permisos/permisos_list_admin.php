@@ -135,13 +135,15 @@ $stmt->bindColumn('nombre_personal_solicitado', $nombre_personal_solicitado);
                       <td class="td-actions">
                         <?php
                         if(isset($_GET['q'])){?>
-                          <a href='index.php?opcion=permisosPersonalSaveSW&codigo=<?=$codigo?>&sw=<?=$sw?>&q=<?=$q?>&a=<?=$a?>&s=<?=$s?>&t=1'  rel="tooltip" class="btn btn-info btn-sm <?=$btn_ws?>">
+                          
+                          <button rel="tooltip" class="btn btn-info btn-sm <?=$btn_ws?>" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','index.php?opcion=permisosPersonalSaveSW&codigo=<?=$codigo?>&sw=<?=$sw?>&q=<?=$q?>&a=<?=$a?>&s=<?=$s?>&t=1')">
                             <i class="material-icons" title="<?=$titulo_icono?>">check_circle</i>
-                          </a>
+                          </button>
+
                         <?php }else{?>
-                          <a href='index.php?opcion=permisosPersonalSaveSW&codigo=<?=$codigo?>&sw=<?=$sw?>&t=1'  rel="tooltip" class="btn btn-info btn-sm <?=$btn_ws?>">
+                          <button rel="tooltip" class="btn btn-info btn-sm <?=$btn_ws?>" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','index.php?opcion=permisosPersonalSaveSW&codigo=<?=$codigo?>&sw=<?=$sw?>&t=1')">
                             <i class="material-icons" title="<?=$titulo_icono?>">check_circle</i>
-                          </a>
+                          </button>
                         <?php }
                         ?>
                           <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud_permiso" onclick="modalDevolverSolicitud_permiso('<?=$datos_devolucion;?>')">

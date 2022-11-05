@@ -562,22 +562,24 @@ function minusCuentaContable(idF){
      // $('#div'+idF).remove();
       var elem = document.getElementById('div'+idF);
       elem.parentNode.removeChild(elem);
-      if(idF<numFilas){
-      for (var i = parseInt(idF); i < (numFilas+1); i++) {
-        var nuevoId=i+1;
-        cambiarValorElementosComprobante(nuevoId,i,'','');
-      }
-     } 
-     $('.selectpicker').selectpicker(['refresh']);
-      itemFacturas.splice((idF-1), 1);
-      itemEstadosCuentas.splice((idF-1), 1);
-      numFilas=numFilas-1;
-      cantidadItems=cantidadItems-1;
-      filaActiva=numFilas;
-      document.getElementById("cantidad_filas").value=numFilas;
-      document.getElementById("totalhab").value=numFilas;
-      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems+" fila:"+idF); 
-      calcularTotalesComprobante("null");   
+     //  if(idF<numFilas){
+     //  for (var i = parseInt(idF); i < (numFilas+1); i++) {
+     //    var nuevoId=i+1;
+     //    cambiarValorElementosComprobante(nuevoId,i,'','');
+     //  }
+     // } 
+     // $('.selectpicker').selectpicker(['refresh']);
+     //  itemFacturas.splice((idF-1), 1);
+     //  itemEstadosCuentas.splice((idF-1), 1);
+     //  numFilas=numFilas-1;
+     //  cantidadItems=cantidadItems-1;
+     //  filaActiva=numFilas;
+     //  document.getElementById("cantidad_filas").value=numFilas;
+     //  document.getElementById("totalhab").value=numFilas;
+     //  console.log("num: "+numFilas+" cantidadItems: "+cantidadItems+" fila:"+idF); 
+      calcularTotalesComprobante("null");
+
+   
 }
 
 function setFormValidation(id) {
@@ -1442,16 +1444,19 @@ function guardarPlantilla(){
   var detalle=[];
   if(cod!=""&&titulo!=""){
     for (var i = 0; i < numFilas; i++) {
-      detalle.push({
-        cuenta:$("#cuenta"+(i+1)).val(),
-        cuenta_auxiliar:$("#cuenta_auxiliar"+(i+1)).val(),
-        unidad:$("#unidad"+(i+1)).val(),
-        area:$("#area"+(i+1)).val(),
-        debe:$("#debe"+(i+1)).val(),
-        haber:$("#haber"+(i+1)).val(),
-        glosa_detalle:$("#glosa_detalle"+(i+1)).val(),
-        orden:(i+1)
-      });
+      if($("#cuenta"+(i+1)).length > 0){
+        detalle.push({
+          cuenta:$("#cuenta"+(i+1)).val(),
+          cuenta_auxiliar:$("#cuenta_auxiliar"+(i+1)).val(),
+          unidad:$("#unidad"+(i+1)).val(),
+          area:$("#area"+(i+1)).val(),
+          debe:$("#debe"+(i+1)).val(),
+          haber:$("#haber"+(i+1)).val(),
+          glosa_detalle:$("#glosa_detalle"+(i+1)).val(),
+          orden:(i+1)
+        });  
+      }
+      
       //alert(JSON.stringify(detalle));
     }
    var parametros={"codigo":cod,"titulo":titulo,"tipo":tipo,"glosa":glosa,"des":descrip,"cantidad_filas":num,"det":JSON.stringify(detalle)}; 
@@ -11498,7 +11503,7 @@ function ponerNumeroChequePagoDetalle_lotes(combo){
   var valor=combo.value;
   var valor2= valor.split("####");
   $("#numero_cheque_s").val(valor2[1]);
-  $("#numero_cheque_s").attr("min",valor2[1]);
+  // $("#numero_cheque_s").attr("min",valor2[1]);
   if(valor==""||valor==null){
     if(!($("#numero_cheque_s").is("[readonly]"))){
       $("#numero_cheque_s").attr("readonly",true);

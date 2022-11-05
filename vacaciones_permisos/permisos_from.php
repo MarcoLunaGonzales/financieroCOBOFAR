@@ -13,6 +13,7 @@ if(isset($_GET["q"])){
 	$cod_personal_q=$q;
 	$cod_sucursal=$s;
 	$add_sqlArea=" and a.codigo in ($cod_sucursal)";
+	$cod_uo=0;
 }else{
 	$cod_personal_q=$_SESSION['globalUser'];
 	$cod_sucursal=$_SESSION['globalArea'];
@@ -37,6 +38,8 @@ if(isset($_GET["q"])){
 	}else{
 		$add_sqlArea=" and a.codigo in ($cod_sucursal)";
 	}
+
+	$cod_uo=$_SESSION['globalUnidad'];
 }
 
 $dbh = new Conexion();
@@ -130,9 +133,19 @@ $fecha_actual=date('Y-m-d');
 							while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 								$codigoX=$row['codigo'];
 								$nombreX=$row['nombre'];
-							?>
-							<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
-							<?php
+
+								if($codigoX==14){//solo visible para of Central
+									if($cod_uo==1){?>
+										<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	<?php	
+									}
+									?>
+
+								<?php }else{
+									?>
+									<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
+									<?php
+								}
+
 						  	}
 						  	?>
 						</select>
@@ -215,6 +228,7 @@ $fecha_actual=date('Y-m-d');
 <script type="text/javascript">
     function valida(f) {
        	var ok = true;
+       	// ok=false;
         var msg="";
        	var dias_solicitadas=$("#dias_solicitadas").val();
         var dias_disponibles=$("#dias_disponibles").val();
@@ -222,20 +236,20 @@ $fecha_actual=date('Y-m-d');
         var motivo=$("#motivo").val();
         dias_solicitadas = !isNaN(dias_solicitadas) ? parseInt(dias_solicitadas, 10) : 0; //si es una cadena vacia o cualquier cosa que no sea numero total = 0
 		minutos_solicitados = !isNaN(minutos_solicitados) ? parseInt(minutos_solicitados, 10) : 0; //si es una cadena vacia o cualquier cosa que no sea numero total = 0
-		alert(minutos_solicitados.' - '.dias_solicitadas);
+		// alert(minutos_solicitados.' - '.dias_solicitadas);
         if(dias_solicitadas<=0 && minutos_solicitados<=0){
 			msg += "Días solicitadas debe ser mayor a 0 (Presione Botón 'Calcular días Permiso'). \n ";        
 			ok = false;
         }
 
-        if(motivo==7){
-        	if( parseInt(dias_solicitadas, 10)>parseInt(dias_disponibles, 10)){
-				msg += "No tienes disponible "+dias_solicitadas+" días :(";        
+        if(parseInt(motivo, 10)==7){
+        	if(parseInt(dias_solicitadas, 10)>parseInt(dias_disponibles, 10)){
+				msg += "Días solicitados NO disponible ( "+dias_solicitadas+" días) :(";        
 				ok = false;
 	        }
         }
 
-        
+        // ok=false;
         if(ok == false)    
             Swal.fire("error!",msg, "error");
         return ok;

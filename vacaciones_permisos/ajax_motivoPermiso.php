@@ -35,7 +35,8 @@ if($codigo_permiso==7){//tipo permiso a cuenta de vacaciones
     $dias_uzadas=obtenerDiasVacacionUzadas($codigo_personal,-100);
     $saldo_vacacion=$total_dias_vacacion-$dias_uzadas;
 
-    $comentario_tipopermiso="Tienes $saldo_vacacion días disponibles de vacación";
+     // $comentario_tipopermiso="Tienes $saldo_vacacion días disponibles de vacación";
+    $comentario_tipopermiso="Tienes días disponibles de vacación";
 }
 ?>
 

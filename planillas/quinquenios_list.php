@@ -66,9 +66,13 @@ where f.cod_estadoreferencial=1 and f.tipo_beneficio=2 limit 20");//f.tipo_benef
                         <?php
                           if($globalAdmin==1){
                         ?>
-                          <a href='planillas/quinquenios_print.php?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
+                          <a href='planillas/quinquenios_print.php?codigo=<?=$codigo;?>&f=1' target="_blank" rel="tooltip" class="btn btn-danger">
                             <i class="material-icons" title="Imprimir Quinquenio">print</i>
-                          </a>                          
+                          </a>
+                           <a href='planillas/quinquenios_print.php?codigo=<?=$codigo;?>&f=2' target="_blank" rel="tooltip" class="btn btn-success">
+                            <i class="material-icons" title="Descargar en Excel">file_download</i>
+                          </a>
+                          
                           <a href='?opcion=quinquenios_form&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                             <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                           </a>

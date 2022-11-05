@@ -50,13 +50,13 @@ if($desde==$hasta){
                     <td colspan="10">DETALLE DE MOVIMIENTOS</td> 
                   </tr>
                   <tr class="bg-celeste s3 text-center">
-                    <td><small>#</small></td>
-                    <td><small>FECHA</small></td>
-                    <td><small>COMPROBANTE</small></td>
-                    <td><small>TIPO</small></td>
+                    <td width="1%"><small>#</small></td>
+                    <td width="8%"><small>FECHA</small></td>
+                    <td><small>COMP.</small></td>
+                    <td width="4%"><small>TIPO</small></td>
                     <td><small>TOKEN</small></td>
-                    <td><small>CHEQUE</small></td> 
-                    <td><small>GLOSA</small></td>  
+                    <td width="4%"><small>CHEQ</small></td> 
+                    <td width="40%"><small>GLOSA</small></td>  
                     <td><small>ENTRADA</small></td>  
                     <td><small>SALIDA</small></td>  
                     <td><small>SALDO</small></td>  
@@ -67,9 +67,9 @@ if($desde==$hasta){
                 $dbh = new Conexion();
 
 				// Preparamos
-				$stmt = $dbh->prepare("SELECT c.codigo,t.nombre as tipo,c.fecha,c.comprobante,c.token,c.nro_trasaccion_cheque,c.glosa,c.importe,CONCAT(p.primer_nombre,' ',p.paterno) as personal,c.cod_tipocierre,c.cod_comprobante,c.created_by,(SELECT numero from cheques_emitidos where cod_registrotesoreria=c.codigo) as nro_cheque,
+				$stmt = $dbh->prepare("SELECT c.codigo,t.nombre as tipo,c.fecha,c.comprobante,c.token,c.nro_trasaccion_cheque,c.glosa,ROUND(c.importe,2) as importe,(SELECT CONCAT(p.primer_nombre,' ',p.paterno) from personal p WHERE p.codigo=c.cod_personal) as personal,c.cod_tipocierre,c.cod_comprobante,c.created_by,(SELECT numero from cheques_emitidos where cod_registrotesoreria=c.codigo) as nro_cheque,
           (SELECT abreviatura from tipos_pagoproveedor where codigo=c.cod_tipopago) as tipo_pago 
-          FROM cierre_tesoreria c join personal p on p.codigo=c.cod_personal join tipos_cierre t on t.codigo=c.cod_tipocierre
+          FROM cierre_tesoreria c join tipos_cierre t on t.codigo=c.cod_tipocierre
 				where c.estado=1 and c.fecha>='$desde' and c.fecha<='$hasta' order by c.created_at;");
 				// Ejecutamos
 				$stmt->execute();
@@ -100,7 +100,7 @@ if($desde==$hasta){
 						$nombre_usuario="";
 						$index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-						$nombre_usuario=namePersonal_2($created_byX);                          
+						            $nombre_usuario=namePersonal_2($created_byX);                          
                         $entrada="";    
                         $salida="";    
                         if($cod_tipocierreX==1){
@@ -186,5 +186,11 @@ if($desde==$hasta){
 
 <?php
 
+
 $html = ob_get_clean();
-descargarPDFSolicitudesRecursos("COBOFAR - Solicitud Recursos",$html);
+
+if(isset($_GET['nopdf'])&&$_GET['nopdf']==1){
+   echo $html; 
+}else{
+  descargarPDFLibroTesoreriaRepo("COBOFAR - Solicitud Recursos",$html);  
+}

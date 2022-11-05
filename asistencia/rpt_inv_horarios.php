@@ -124,7 +124,18 @@ $stmtActivos->bindColumn('cod_horario', $cod_horario);
                           while ($rowTipo = $stmtTipo->fetch()) {
                             $codigoTipo=$rowTipo['codigo'];                          
                             $dato=obtenerDatosTipoHorario($codigoTipo,$cod_horario);
-
+                            if($dato[0]==' A '){
+                              $dato[0]='';
+                            }
+                            if($dato[1]==' A '){
+                              $dato[1]='';
+                            }
+                            if($dato[2]==' A '){
+                              $dato[2]='';
+                            }
+                            if($dato[3]==' A '){
+                              $dato[3]='';
+                            }
                             $htmlCuerpo.='<td class="columna_m'.$codigoTipo.'">'.$dato[0].'</td>';
                             $htmlCuerpo.='<td class="columna_t'.$codigoTipo.'">'.$dato[1].'</td>';
                             $htmlCuerpo.='<td class="columna_n'.$codigoTipo.'">'.$dato[2].'</td>';

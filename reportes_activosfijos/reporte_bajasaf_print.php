@@ -191,7 +191,7 @@ if($tipo==1){
                             <td style="display: none;"></td>
                             <td style="display: none;"></td>
                             <td style="display: none;"></td>
-                            <td style="display: none;"></td>
+                            <!--<td style="display: none;"></td>-->
                             <td colspan="12"><b>BAJAS</b></td>
                           </tr>
                           <?php  

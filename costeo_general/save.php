@@ -46,7 +46,7 @@ $codEmpresa=1;
 $codAnio=$_SESSION['globalNombreGestion'];
 $codMoneda=1;
 $codEstadoComprobante=1;
-$tipoComprobante=3;
+$tipoComprobanteGeneral=3;
 
 //echo $fechaActual;
 //$fechaActual=$fechaActualModal;
@@ -85,12 +85,13 @@ for ($i=1; $i <= (int)$items ; $i++) {
       $nombreTraspaso=$_POST["nombre_traspasos".$i];    
       $concepto_contabilizacion=$glosa_ingreso." ".$nombreTraspaso;
 
-      if($tipoComprobante!=$_POST["tipo_comprobante".$i]){
-      }      
+      // if($tipoComprobante!=$_POST["tipo_comprobante".$i]){
 
-        $numeroComprobante =numeroCorrelativoComprobante($globalGestion,$cod_uo_solicitud,$tipoComprobante,$codMesActiva);
+      // }      
+
+        $numeroComprobante =numeroCorrelativoComprobante($globalGestion,$cod_uo_solicitud,$tipoComprobanteGeneral,$codMesActiva);
         $codComprobante=obtenerCodigoComprobante();
-        $flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser);        
+        $flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobanteGeneral,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser);        
         $tipoComprobante=$_POST["tipo_comprobante".$i];
       if($flagSuccess!=false){
           $sql="UPDATE salida_almacenes set costeo_cod_comprobante='$codComprobante' where cod_salida_almacenes in ($cod_traspasos);";

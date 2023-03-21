@@ -10,6 +10,10 @@ $fecha_actual=$_GET['fecha_actual'];
 $anios_antiguedad=$_GET['anios_antiguedad'];
 
 
+$globalAdmin = $_SESSION["globalAdmin"];
+$globalUser = $_SESSION["globalUser"];
+
+
 $date1 = new DateTime($ing_planilla);
 $date2 = new DateTime($fecha_actual);
 $diff = $date1->diff($date2);    
@@ -41,22 +45,22 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
             <div class="card-icon">
               <i class="material-icons"><?= $iconCard; ?></i>
             </div>
-            <h4 class="card-title"><b>Información Vacaciones Personal</b></h4>
+            <h4 class="card-title"><b>InformaciÃ³n Vacaciones Personal</b></h4>
             <h4 class="card-title"><center><b>Nombre Completo : </b><?=$nombre_personal?></center></h4>
-            <h4 class="card-title"><center><b>Fecha Ingreso : </b><?=date('d/m/Y',strtotime($ing_planilla))?> - <b> Antiguedad : </b><?=$diferencia_anios?> Años</center></h4>
+            <h4 class="card-title"><center><b>Fecha Ingreso : </b><?=date('d/m/Y',strtotime($ing_planilla))?> - <b> Antiguedad : </b><?=$diferencia_anios?> AÃ±os</center></h4>
           </div>
           <div class="card-body">
-            <h4 style="color:#212f3d;"><b><i>Días de vacación disponible</i></b></h4>
+            <h4 style="color:#212f3d;"><b><i>DÃ­as de vacaciÃ³n disponible</i></b></h4>
             <div class="table-responsive">
               <table class="table table-condensed small table-bordered" id="tablePaginatorHorarios"><!---->
                 <thead>
                   <tr class='bg-dark text-white'>
-                    <th class="text-center">Gestión</th>
+                    <th class="text-center">GestiÃ³n</th>
                     <th class="text-center">Acumulados</th>
                     <th class="text-center">Utilizados</th>
                     <th class="text-center">Disponible</th>
                     <th class="text-center">Estado</th>
-                    <th class="text-center">Acción</th>
+                    <th class="text-center">AcciÃ³n</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -86,7 +90,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                             $dias_utilizadas=obtenerDiasVacacionUzadas($cod_personal,$gestion);
                             $saldo=$dias_vacacion-$dias_utilizadas;
                             if($saldo<=0){
-                              $estado='<span class="badge badge-danger ">Días Agotados';
+                              $estado='<span class="badge badge-danger ">DÃ­as Agotados';
                             }else{
                               $estado='<span class="badge badge-success">disponible';
                             }
@@ -113,7 +117,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                             <tr class="d-none fila_<?=$gestion?>" style="background: #6EFCaa; color:#000;">
                               <td>Fecha Inicial</td>
                               <td>Fecha Fin</td>
-                              <td>Total Días</td>
+                              <td>Total DÃ­as</td>
                               <td>Tipo</td>
                               <td>Saldos</td>                                
                               <td>
@@ -163,12 +167,22 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
                       if($fechainicio!=$ing_planilla){
                         $fechainicio=date('Y-m-d',strtotime($fechainicio.'-1 year'));
                       }
-                      // echo $fechainicio."**".$fecha_actual;
+                      //****FORMULA ANTERIOR 
+                      // $date1 = new DateTime($fechainicio);
+                      // $date2 = new DateTime($fecha_actual);
+                      // $diff = $date1->diff($date2);
+                      // $diferencia_dias_sobrante=$diff->days;
+                      // $duodecimas=$dias_vacacion/360*$diferencia_dias_sobrante;
+                      //****FORMULA NUEVA DADO POR LIC LUNA.
+                      //((meses_indemnizacion*30+diasindeminiciaon)*numero de dias acumulados)/360;
                       $date1 = new DateTime($fechainicio);
                       $date2 = new DateTime($fecha_actual);
                       $diff = $date1->diff($date2);
-                      $diferencia_dias_sobrante=$diff->days;
-                      $duodecimas=$dias_vacacion/360*$diferencia_dias_sobrante;
+                      // $anios_antiguedad=$diff->y;
+                      $meses_indemnizacion=($diff->m);
+                      $dias_indemnizacion=($diff->d);
+                      $duodecimas=(($meses_indemnizacion*30+$dias_indemnizacion)*$dias_vacacion)/360;
+
                       // echo $duodecimas."-".$dias_vacacion."-".$diferencia_dias_sobrante;
                       $array_datos[$index_x]="-100,".$duodecimas.",0,".$duodecimas;
                       // var_dump($array_datos);
@@ -199,10 +213,15 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
             <a href="index.php?opcion=vacacionesPersonalLista" class="btn btn-sm btn-danger"> <-- Volver </a>
             <a href="vacaciones_permisos/vacaciones_pdf.php?cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>&aa=<?=$anios_antiguedad?>&datos=<?=$array_datos?>" target="_blank" class="btn btn-sm btn-warning"><i class="material-icons">print</i> Imprimir </a>
             <a href="vacaciones_permisos/vacaciones_pdf2.php?cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>&aa=<?=$anios_antiguedad?>&datos=<?=$array_datos?>" target="_blank" class="btn btn-sm btn-warning"><i class="material-icons">print</i> Imprimir 2</a>
-            <a href="index.php?opcion=vacacionesValidacion&cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>" class="btn btn-sm btn-info"><i class="material-icons">access_time</i> Capturar Fecha Validación </a>
-            <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalAgregarGeneral">
-              <i class="material-icons" title="Vacaciones Generales">add</i>
-           </button>
+            <a href="index.php?opcion=vacacionesValidacion&cp=<?=$cod_personal?>&ip=<?=$ing_planilla?>&fa=<?=$fecha_actual?>" class="btn btn-sm btn-info"><i class="material-icons">access_time</i> Capturar Fecha ValidaciÃ³n </a>
+            <?php
+            if($globalUser==obtenerValorConfiguracion(41)){ //habilitado solo para encargado de RRHH?>
+              <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalAgregarGeneral">
+                <i class="material-icons" title="Vacaciones Generales">add</i>
+             </button>
+            <?php }
+            ?>
+            
           </div>
         </div>
        
@@ -219,7 +238,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
     <div class="modal-content">
       <div class="modal-header" style="background: #212f3d;">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="background: #212f3d; color:white;"><b>Vacación Solicitada</b></h4>
+        <h4 class="modal-title" id="myModalLabel" style="background: #212f3d; color:white;"><b>VacaciÃ³n Solicitada</b></h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personal_modal" id="codigo_personal_modal" value="0">
@@ -235,7 +254,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
           </div>
         </div>
         <div class="row">
-          <label class="col-sm-2 col-form-label">Total Días (*)</label>
+          <label class="col-sm-2 col-form-label">Total DÃ­as (*)</label>
           <div class="col-sm-9">
             <div class="form-group" id="contendor_fecha_fin_vacaciones">
                 <input  type='number' style="color: green;" class='form-control'  id='dias_vacacion'  name='dias_vacacion' min="5" value="0" required >
@@ -249,7 +268,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
               <input  type='date' class='form-control'  id='fecha_inicio_modal'  name='fecha_inicio_modal' min='2000-01-01' required onchange="ajaxCalcualrFechaFinVacaciones();return false;">
             </div>
           </div>
-          <label class="col-sm-3 col-form-label">Finalización (*)</label>
+          <label class="col-sm-3 col-form-label">FinalizaciÃ³n (*)</label>
           <div class="col-sm-3">
             <div class="form-group">
               <input type='date' class='form-control'  id='fecha_final_modal'  name='fecha_final_modal' min='2000-01-01' required onchange="ajaxCalcualrFechaFinVacaciones();return false;">
@@ -258,7 +277,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
         </div>
 
         <div class="row">
-          <label class="col-sm-2 col-form-label">Tipo de Vacación</label>
+          <label class="col-sm-2 col-form-label">Tipo de VacaciÃ³n</label>
           <div class="col-sm-9">
             <div class="form-group">
             <select class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-live-search="true" name="tipo_vacacion" id="tipo_vacacion" data-style="<?=$comboColor;?>" required="true">
@@ -306,7 +325,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
     <div class="modal-content">
       <div class="modal-header" style="background: #212f3d;">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel" style="background: #212f3d; color:white;"><b>Vacación Solicitada</b></h4>
+        <h4 class="modal-title" id="myModalLabel" style="background: #212f3d; color:white;"><b>VacaciÃ³n Solicitada</b></h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personal_modal_g" id="codigo_personal_modal_g" value="<?=$cod_personal?>">
@@ -317,12 +336,12 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
         <div class="row">
           <div class="col-sm-12">
             <div class="form-group">
-                <input style="background: white;color:blue;text-align: center;font: 15px;" type="text" class='form-control' id="datos_cabecera" name="datos_cabecera" readonly="true" value="Total días disponibles : <?=$total_dias_vacacion_saldo?>">
+                <input style="background: white;color:blue;text-align: center;font: 15px;" type="text" class='form-control' id="datos_cabecera" name="datos_cabecera" readonly="true" value="Total dÃ­as disponibles : <?=$total_dias_vacacion_saldo?>">
             </div>
           </div>
         </div>
         <div class="row">
-          <label class="col-sm-2 col-form-label">Total Días (*)</label>
+          <label class="col-sm-2 col-form-label">Total DÃ­as (*)</label>
           <div class="col-sm-9">
             <div class="form-group" id="contendor_fecha_fin_vacaciones">
                 <input  type='number' style="color: green;" class='form-control'  id='dias_vacacion_g'  name='dias_vacacion_g' value="0" required >
@@ -336,7 +355,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
               <input  type='date' class='form-control'  id='fecha_inicio_modal_g'  name='fecha_inicio_modal_g' min='2000-01-01' required onchange="ajaxCalcualrFechaFinVacaciones();return false;">
             </div>
           </div>
-          <label class="col-sm-3 col-form-label">Finalización (*)</label>
+          <label class="col-sm-3 col-form-label">FinalizaciÃ³n (*)</label>
           <div class="col-sm-3">
             <div class="form-group">
               <input type='date' class='form-control'  id='fecha_final_modal_g'  name='fecha_final_modal_g' min='2000-01-01' required onchange="ajaxCalcualrFechaFinVacaciones();return false;">
@@ -345,7 +364,7 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
         </div>
 
         <div class="row">
-          <label class="col-sm-2 col-form-label">Tipo de Vacación</label>
+          <label class="col-sm-2 col-form-label">Tipo de VacaciÃ³n</label>
           <div class="col-sm-9">
             <div class="form-group">
             <select class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-live-search="true" name="tipo_vacacion_g" id="tipo_vacacion_g" data-style="<?=$comboColor;?>" required="true">
@@ -436,15 +455,15 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
         Swal.fire('ERROR!','Cantidad Solicitado Insuficiente. :(','error'); 
       }else{
         if(gestion_modal==""){
-          Swal.fire('ERROR!','Gestión No Encontrada. :(','error'); 
+          Swal.fire('ERROR!','GestiÃ³n No Encontrada. :(','error'); 
         }else{
            // alert(saldo_modal+"--"+dias_vacacion);
           if(dias_vacacion=="" || dias_vacacion==0){//|| dias_vacacion>saldo_modal
-            Swal.fire('ERROR!','Días de vacación debe ser mayor a 0. GRACIAS.','error'); 
+            Swal.fire('ERROR!','DÃ­as de vacaciÃ³n debe ser mayor a 0. GRACIAS.','error'); 
           }else{
             if(tipo_vacacion=="" || tipo_vacacion==0){
-              //Swal.fire('ERROR!','Para las vacaciones menores a 5 días, se debe realizar una solicitud de permiso. GRACIAS.','error'); 
-              Swal.fire('ERROR!','Seleccione el tipo de vacación. GRACIAS.','error'); 
+              //Swal.fire('ERROR!','Para las vacaciones menores a 5 dÃ­as, se debe realizar una solicitud de permiso. GRACIAS.','error'); 
+              Swal.fire('ERROR!','Seleccione el tipo de vacaciÃ³n. GRACIAS.','error'); 
             }else{
               if((fecha_inicio_modal=="" || fecha_final_modal=="") && tipo_vacacion!=3 ){
                 Swal.fire('ERROR!','Fechas no admitidas ','error'); 
@@ -475,15 +494,15 @@ while ($rowEscalas = $stmtEscalas->fetch(PDO::FETCH_ASSOC))
         Swal.fire('ERROR!','Cantidad Solicitado Insuficiente. :(','error'); 
       }else{
         if(gestion_modal==""){
-          Swal.fire('ERROR!','Gestión No Encontrada. :(','error'); 
+          Swal.fire('ERROR!','GestiÃ³n No Encontrada. :(','error'); 
         }else{
            // alert(saldo_modal+"--"+dias_vacacion);
           if(dias_vacacion=="" || dias_vacacion==0){//|| dias_vacacion>saldo_modal
-            Swal.fire('ERROR!','Días de vacación debe ser mayor a 0. GRACIAS.','error'); 
+            Swal.fire('ERROR!','DÃ­as de vacaciÃ³n debe ser mayor a 0. GRACIAS.','error'); 
           }else{
             if(tipo_vacacion=="" || tipo_vacacion==0){
-              //Swal.fire('ERROR!','Para las vacaciones menores a 5 días, se debe realizar una solicitud de permiso. GRACIAS.','error'); 
-              Swal.fire('ERROR!','Seleccione el tipo de vacación. GRACIAS.','error'); 
+              //Swal.fire('ERROR!','Para las vacaciones menores a 5 dÃ­as, se debe realizar una solicitud de permiso. GRACIAS.','error'); 
+              Swal.fire('ERROR!','Seleccione el tipo de vacaciÃ³n. GRACIAS.','error'); 
             }else{
               if((fecha_inicio_modal=="" || fecha_final_modal=="") && tipo_vacacion!=3 ){
                 Swal.fire('ERROR!','Fechas no admitidas ','error'); 

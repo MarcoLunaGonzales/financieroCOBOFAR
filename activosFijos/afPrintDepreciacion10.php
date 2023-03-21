@@ -12,6 +12,14 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 $codigo_af = $_GET["codigo"];//codigoactivofijo
 
 try{
+    $stmt = $dbh->prepare("SELECT codigo from activosfijos WHERE codigoactivo=:codigo");
+    //Ejecutamos;
+    $stmt->bindParam(':codigo',$codigo_af);
+    $stmt->execute();
+    
+    $result = $stmt->fetch();
+    $codigo_af=$result['codigo'];
+    
     $stmt = $dbh->prepare("SELECT valorinicial,codigoactivo,tipoalta,DATE_FORMAT(fechalta ,'%d/%m/%Y')as fechalta,activo,otrodato,depreciacionacumulada,valorresidual,estadobien,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombre_personal,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable2) as nombre_personal2,(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo2,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area
         from activosfijos 
         WHERE codigo=$codigo_af");

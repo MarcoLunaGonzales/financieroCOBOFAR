@@ -57,7 +57,7 @@ while ($row = $stmtDescuento->fetch())
 
 //html del reporte
 $html = '';
-
+$html.='<html>';
    if($tipo==1){
          $html.='<head>'.
              '<!-- CSS Files -->'.
@@ -118,6 +118,7 @@ $html.=  '<header class="header">'.
               '<td width="3%">Tota Gana</td>'.
               '<td>AFP F</td>'.
               '<td>AFP P</td>'.
+              '<td>L.G.</td>'.
               '<td>Ap.Sol</td>'.
               '<td>RC-IVA</td>'.              
               '<td>Anti cipo</td>'.
@@ -160,6 +161,7 @@ $html.=  '<header class="header">'.
             $subtotal_totalganado=0;
             $subtotal_afpf=0;
             $subtotal_afpp=0;
+            $subtotal_afpg=0;
             $subtotal_rciva=0;
             $subtotal_anticipo=0;
             $subtotal_dprest=0;
@@ -199,13 +201,29 @@ $html.=  '<header class="header">'.
                   $turno_nombre="";
                   break;
               }
-              if($cod_turno==3){
-                if($codArea!=$row['cod_area']){
-                  $html.='<tr style="font-size: 7px !important;">'.
-                        '<td colspan="38"><center>Departamento / Sucursal: <b>'.$row['area'].'</b></center></td>';
-                      $html.='</tr>';
-                  $codArea=$row['cod_area'];
-                }
+
+              // if($cod_turno==3){
+              //   if($codArea!=$row['cod_area']){
+              //     $html.='<tr style="font-size: 7px !important;">'.
+              //           '<td colspan="38"><center>Departamento / Sucursal: <b>'.$row['area'].'</b></center></td>';
+              //         $html.='</tr>';
+              //     $codArea=$row['cod_area'];
+              //   }
+              // }else{
+              //   if($cod_turno_aux!=$cod_turno){
+              //     $html.='<tr style="font-size: 7px !important;" >'.
+              //           '<td colspan="38"><center>Departamento / Sucursal: <b>'.$row['area'].' '.$turno_nombre.'</b></center></td>';
+              //         $html.='</tr>';
+              //     $cod_turno_aux=$cod_turno;
+              //   }  
+              //}
+
+              if($codArea!=$row['cod_area']){
+                $html.='<tr style="font-size: 7px !important;" >'.
+                      '<td colspan="39"><center>Departamento / Sucursal: <b>'.$row['area'].' '.$turno_nombre.'</b></center></td>';
+                    $html.='</tr>';
+                $codArea=$row['cod_area'];
+                $cod_turno_aux=$cod_turno;
               }else{
                 if($cod_turno_aux!=$cod_turno){
                   $html.='<tr style="font-size: 7px !important;" >'.
@@ -292,6 +310,7 @@ $html.=  '<header class="header">'.
                 $html.='<td class="text-right">'.formatNumberDec($row['total_ganado']*$porcentaje/100).'</td>'.
                 '<td class="text-right">'.formatNumberDec($row['afp_1']*$porcentaje/100).'</td>'.
                 '<td class="text-right">'.formatNumberDec($row['afp_2']*$porcentaje/100).'</td>'.
+                '<td class="text-right">'.formatNumberDec($row['afp_3']*$porcentaje/100).'</td>'.
                 '<td class="text-right">'.formatNumberDec(($row['a_solidario_13000']+$row['a_solidario_25000'])*$porcentaje/100).'</td>'.
                 '<td class="text-right">'.formatNumberDec($rc_iva*$porcentaje/100).'</td>'.
                 '<td class="text-right">'.formatNumberDec($anticipo*$porcentaje/100).'</td>';
@@ -350,6 +369,7 @@ $html.=  '<header class="header">'.
               $subtotal_totalganado+=$row['total_ganado']*$porcentaje/100;
               $subtotal_afpf+=$row['afp_1']*$porcentaje/100; 
               $subtotal_afpp+=$row['afp_2']*$porcentaje/100; 
+              $subtotal_afpg+=$row['afp_3']*$porcentaje/100; 
               $subtotal_aporSol+=($row['a_solidario_13000']+$row['a_solidario_25000'])*$porcentaje/100; 
               $subtotal_rciva+=$rc_iva*$porcentaje/100;              
               //$total_otros_descuentos+=($sumaDescuentos_otros+$atrasos)*$porcentaje/100;
@@ -376,6 +396,7 @@ $html.=  '<header class="header">'.
           '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_totalganado).'</b></td>'.
           '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_afpf).'</b></td>'.
           '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_afpp).'</b></td>'.
+          '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_afpg).'</b></td>'.
           '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_aporSol).'</b></td>'.
           '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_rciva).'</b></td>'.              
           '<td style="border: 0;" class="text-right"><b>'.formatNumberDec($subtotal_anticipo).'</b></td>'.
